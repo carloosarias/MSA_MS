@@ -1,0 +1,177 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dao;
+
+
+import static dao.DAOUtil.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import model.Employee;
+
+/**
+ *
+ * @author Pavilion Mini
+ */
+public class EmployeeDAOJDBC implements EmployeeDAO{
+    // Constants ----------------------------------------------------------------------------------
+    private static final String SQL_FIND_BY_ID =
+            "SELECT id, user, first_name, last_name, hire_date FROM EMPLOYEE WHERE id = ?";
+    private static final String SQL_FIND_BY_USER_AND_PASSWORD =
+            "SELECT id, user, first_name, last_name, hire_date FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
+    private static final String SQL_LIST_ORDER_BY_ID =
+            "SELECT id, user, first_name, last_name, hire_date FROM EMPLOYEE ORDER BY id";
+    private static final String SQL_INSERT =
+            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date) "
+            +"VALUES (?, MD5(?), ?, ?, ?)";
+    private static final String SQL_UPDATE = 
+            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ? WHERE id = ?";
+    private static final String SQL_DELETE =
+            "DELETE FROM EMPLOYEE WHERE id = ?";
+    private static final String SQL_EXIST_USER =
+            "SELECT id FROM EMPLOYEE WHERE user = ?";
+    private static final String SQL_CHANGE_PASSWORD = 
+            "UPDATE EMPLOYEE SET password = MD5(?) WHERE id = ?";
+    
+    // Vars ---------------------------------------------------------------------------------------
+
+    private DAOFactory daoFactory;
+
+    // Constructors -------------------------------------------------------------------------------
+
+    /**
+     * Construct an Employee DAO for the given DAOFactory. Package private so that it can be constructed
+     * inside the DAO package only.
+     * @param daoFactory The DAOFactory to construct this Employee DAO for.
+     */
+    EmployeeDAOJDBC(DAOFactory daoFactory) {
+        this.daoFactory = daoFactory;
+    }
+    
+    // Actions ------------------------------------------------------------------------------------
+    
+    @Override
+    public Employee find(Integer id) throws DAOException {
+        return find(SQL_FIND_BY_ID, id);
+    }
+
+    @Override
+    public Employee find(String user, String password) throws DAOException {
+        return find(SQL_FIND_BY_USER_AND_PASSWORD, user, password);
+    }
+    
+    /**
+     * Returns the Employee from the database matching the given SQL query with the given values.
+     * @param sql The SQL query to be executed in the database.
+     * @param values The PreparedStatement values to be set.
+     * @return The user from the database matching the given SQL query with the given values.
+     * @throws DAOException If something fails at database level.
+     */
+    private Employee find(String sql, Object... values) throws DAOException {
+        Employee employee = null;
+
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, sql, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                employee = map(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+
+        return employee;
+    }
+
+    @Override
+    public List<Employee> list() throws DAOException {
+        List<Employee> employees = new ArrayList<>();
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                employees.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return employees;
+    }
+
+    @Override
+    public void create(Employee employee) throws IllegalArgumentException, DAOException {
+        if(employee.getId() != null){
+            throw new IllegalArgumentException("Employee is already created, the employee ID is not null.");
+        }
+        
+        Object[] values = {
+            employee.getUser(),
+            employee.getPassword(),
+            employee.getFirst_name(),
+            employee.getLast_name(),
+            toSqlDate(employee.getHire_date())
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating employee failed, no rows affected");
+            }
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
+}
+    @Override
+    public void update(Employee employee) throws IllegalArgumentException, DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(Employee employee) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean existUser(String user) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void changePassword(Employee employee) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    // Helpers ------------------------------------------------------------------------------------
+
+    /**
+     * Map the current row of the given ResultSet to an User.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an User.
+     * @return The mapped User from the current row of the given ResultSet.
+     * @throws SQLException If something fails at database level.
+     */
+    private static Employee map(ResultSet resultSet) throws SQLException {
+        Employee employee = new Employee();
+        employee.setId(resultSet.getInt("id"));
+        employee.setUser(resultSet.getString("user"));
+        employee.setFirst_name(resultSet.getString("first_name"));
+        employee.setLast_name(resultSet.getString("last_name"));
+        employee.setHire_date(resultSet.getDate("hire_date"));
+        return employee;
+    }
+    
+}
