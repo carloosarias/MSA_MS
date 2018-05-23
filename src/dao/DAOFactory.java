@@ -125,6 +125,7 @@ public abstract class DAOFactory {
     public EmployeeDAO getUserDAO() {
         return new EmployeeDAOJDBC(this);
     }
+    
     // You can add more DAO implementation getters here.
 }
 
