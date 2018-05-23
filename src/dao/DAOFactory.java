@@ -122,7 +122,9 @@ public abstract class DAOFactory {
      * Returns the User DAO associated with the current DAOFactory.
      * @return The User DAO associated with the current DAOFactory.
      */
-    
+    public EmployeeDAO getUserDAO() {
+        return new EmployeeDAOJDBC(this);
+    }
     // You can add more DAO implementation getters here.
 }
 

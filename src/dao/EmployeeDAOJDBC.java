@@ -132,13 +132,44 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             if (affectedRows == 0){
                 throw new DAOException("Creating employee failed, no rows affected");
             }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    employee.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating employee failed, no generated key obtained.");
+                }
+            }
+            
         } catch (SQLException e){
             throw new DAOException(e);
         }
-}
+    }
+    
     @Override
     public void update(Employee employee) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the employee ID is null.");
+        }
+        
+        Object[] values = {
+            employee.getUser(),
+            employee.getFirst_name(),
+            employee.getLast_name(),
+            toSqlDate(employee.getHire_date())
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating Employee failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
