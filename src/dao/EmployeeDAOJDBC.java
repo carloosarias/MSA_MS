@@ -113,7 +113,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     @Override
     public void create(Employee employee) throws IllegalArgumentException, DAOException {
         if(employee.getId() != null){
-            throw new IllegalArgumentException("Employee is already created, the employee ID is not null.");
+            throw new IllegalArgumentException("Employee is already created, the Employee ID is not null.");
         }
         
         Object[] values = {
@@ -130,14 +130,14 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
-                throw new DAOException("Creating employee failed, no rows affected");
+                throw new DAOException("Creating Employee failed, no rows affected.");
             }
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     employee.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new DAOException("Creating employee failed, no generated key obtained.");
+                    throw new DAOException("Creating Employee failed, no generated key obtained.");
                 }
             }
             
@@ -149,14 +149,15 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     @Override
     public void update(Employee employee) throws IllegalArgumentException, DAOException {
         if (employee.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the employee ID is null.");
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
         }
         
         Object[] values = {
             employee.getUser(),
             employee.getFirst_name(),
             employee.getLast_name(),
-            toSqlDate(employee.getHire_date())
+            toSqlDate(employee.getHire_date()),
+            employee.getId()
         };
         
         try(
@@ -174,17 +175,68 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
 
     @Override
     public void delete(Employee employee) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            employee.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting Employee failed, no rows affected.");
+            } else{
+                employee.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public boolean existUser(String user) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            user
+        };
+        
+        boolean exist = false;
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_EXIST_USER, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            exist = resultSet.next();
+        }catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return exist;
     }
 
     @Override
     public void changePassword(Employee employee) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(employee.getId() == null){
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        
+        Object[] values = {
+            employee.getPassword(),
+            employee.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_CHANGE_PASSWORD, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Changing password failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------

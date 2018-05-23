@@ -1,8 +1,10 @@
 package msa_ms;
 
 import dao.DAOFactory;
+import java.util.Date;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.Employee;
 
 /**
  *
@@ -14,7 +16,7 @@ public class MainApp extends Application{
     public void start(Stage primaryStage) throws Exception {
         DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
         
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.exit(1);
     }
     /**
      * @param args the command line arguments
