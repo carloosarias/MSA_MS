@@ -5,62 +5,35 @@
  */
 package model;
 
-import java.io.Serializable;
-import java.util.List;
-
 /**
  *
  * @author Pavilion Mini
  */
-public class Company implements Serializable{
+public class CompanyAddress {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private String name;
-    private boolean supplier;
-    private boolean client;
+    private String address;
     private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
-    public int getId() {
+    public Integer getId() {
         return id;
     }
-
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
-
-    public String getName() {
-        return name;
+    public String getAddress() {
+        return address;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setAddress(String address) {
+        this.address = address;
     }
-
-    public boolean isSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(boolean supplier) {
-        this.supplier = supplier;
-    }
-
-    public boolean isClient() {
-        return client;
-    }
-
-    public void setClient(boolean client) {
-        this.client = client;
-    }
-
     public boolean isActive() {
         return active;
     }
-
     public void setActive(boolean active) {
         this.active = active;
     }
-    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -69,8 +42,8 @@ public class Company implements Serializable{
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof Company) && (id != null)
-            ? id.equals(((Company) other).id)
+        return (other instanceof CompanyAddress) && (id != null)
+            ? id.equals(((CompanyAddress) other).id)
             : (other == this);
     }
 
@@ -91,8 +64,7 @@ public class Company implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("Company[id=%d,name=%s,supplier=%b,client=%b,active=%b",
-                id, name, supplier, client, active);
+        return String.format("CompanyAddress[id=%d,address=%s,active=%b",
+                id, address, active);
     }
-    
 }

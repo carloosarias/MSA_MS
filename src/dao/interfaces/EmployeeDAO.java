@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.interfaces;
 
+import dao.DAOException;
 import java.util.List;
 import model.Employee;
 

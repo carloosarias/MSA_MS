@@ -1,8 +1,9 @@
 package msa_ms;
 
-import dao.DAOFactory;
+import dao.JDBC.DAOFactory;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
 
 /**
  *
@@ -13,7 +14,6 @@ public class MainApp extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
         DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-        
         
         System.exit(1);
     }

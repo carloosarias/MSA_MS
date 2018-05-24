@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package dao.JDBC;
 
 
+import dao.DAOException;
+import dao.interfaces.EmployeeDAO;
 import static dao.DAOUtil.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,5 +1,17 @@
-package dao;
+package dao.JDBC;
 
+import dao.DAOConfigurationException;
+import dao.DAOProperties;
+import dao.JDBC.EmployeeDAOJDBC;
+import dao.JDBC.CompanyAddressDAOJDBC;
+import dao.JDBC.CompanyDAOJDBC;
+import dao.JDBC.ModuleEmployeeDAOJDBC;
+import dao.JDBC.ModuleDAOJDBC;
+import dao.interfaces.EmployeeDAO;
+import dao.interfaces.CompanyDAO;
+import dao.interfaces.ModuleEmployeeDAO;
+import dao.interfaces.ModuleDAO;
+import dao.interfaces.CompanyAddressDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -132,6 +144,30 @@ public abstract class DAOFactory {
      */
     public ModuleDAO getModuleDAO() {
         return new ModuleDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the ModuleEmployee DAO associated with the current DAOFactory.
+     * @return The Module DAO associated with the current DAOFactory.
+     */
+    public ModuleEmployeeDAO getModuleEmployeeDAO() {
+        return new ModuleEmployeeDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Module DAO associated with the current DAOFactory.
+     * @return The Module DAO associated with the current DAOFactory.
+     */
+    public CompanyDAO getCompanyDAO() {
+        return new CompanyDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Module DAO associated with the current DAOFactory.
+     * @return The Module DAO associated with the current DAOFactory.
+     */
+    public CompanyAddressDAO getCompanyAddressDAO() {
+        return new CompanyAddressDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.
