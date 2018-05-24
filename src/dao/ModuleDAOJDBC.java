@@ -6,7 +6,6 @@
 package dao;
 
 import static dao.DAOUtil.prepareStatement;
-import static dao.DAOUtil.toSqlDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,8 +33,7 @@ public class ModuleDAOJDBC implements ModuleDAO {
             "UPDATE MODULE SET name = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM MODULE WHERE id = ?";
-    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM EMPLOYEE_MODULE WHERE MODULE_ID = ? ORDER BY EMPLOYEE_ID";
+    
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -100,40 +98,6 @@ public class ModuleDAOJDBC implements ModuleDAO {
         }
         
         return modules;
-    }
-    
-    @Override
-    public List<Employee> listEmployee(Module module) throws DAOException {
-        if (module.getId() == null) {
-            throw new IllegalArgumentException("Module is not created yet, the Module ID is null.");
-        }
-        
-        List<Employee> employees = new ArrayList<>();
-        
-        Object[] values = {
-            module.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                employees.add(daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID")));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return employees;
-    }
-    
-    @Override
-    public List<Employee> listOtherEmployee(Module module) throws DAOException {
-        List<Employee> employee = listEmployee(module);
-        employee.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
-        return employee;
     }
     
     @Override

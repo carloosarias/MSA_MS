@@ -44,8 +44,6 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             "SELECT id FROM EMPLOYEE WHERE user = ? AND active = ?";
     private static final String SQL_CHANGE_PASSWORD = 
             "UPDATE EMPLOYEE SET password = MD5(?) WHERE id = ?";
-    private static final String SQL_LIST_MODULE_ORDER_BY_ID = 
-            "SELECT MODULE_ID FROM EMPLOYEE_MODULE WHERE EMPLOYEE_ID = ? ORDER BY MODULE_ID";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -139,40 +137,6 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         }
         
         return employees;
-    }
-    
-    @Override
-    public List<Module> listModule(Employee employee) throws DAOException {
-        if (employee.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
-        }
-        
-        List<Module> modules = new ArrayList<>();
-        
-        Object[] values = {
-            employee.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_MODULE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                modules.add(daoFactory.getModuleDAO().find(resultSet.getInt("MODULE_ID")));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return modules;
-    }
-    
-    @Override
-    public List<Module> listOtherModule(Employee employee) throws DAOException {
-        List<Module> modules = listModule(employee);
-        modules.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
-        return modules;
     }
     
     @Override

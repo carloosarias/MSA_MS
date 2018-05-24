@@ -55,23 +55,6 @@ public interface EmployeeDAO {
     public List<Employee> list(boolean active) throws DAOException;
     
     /**
-     * Returns a list of all Modules Employee is part of from the database ordered by user ID. The list is never null and
-     * is empty when the database does not contain any Employee.
-     * @param employee The employee to be searched for.
-     * @return A list of Modules Employee is part of from the database ordered by Module ID.
-     * @throws DAOException If something fails at database level.
-     */
-    public List<Module> listModule(Employee employee) throws DAOException;
-    
-    /**
-     * Returns a list of all Modules Employee is NOT part of from the database ordered by user ID. The list is never null and
-     * is empty when the database does not contain any Employee.
-     * @param employee The employee to be searched for.
-     * @return A list of Modules Employee is NOT part of from the database ordered by Module ID.
-     * @throws DAOException If something fails at database level.
-     */
-    public List<Module> listOtherModule(Employee employee) throws DAOException;
-    /**
      * Create the given Employee in the database. The Employee ID must be null, otherwise it will throw
      * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Employee.
      * @param employee The Employee to be created in the database.

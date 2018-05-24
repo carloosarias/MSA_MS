@@ -33,24 +33,6 @@ public interface ModuleDAO {
     public List<Module> list() throws DAOException;
     
     /**
-     * Returns a list of Employee that are part of Module from the database ordered by Employee ID. The list is never null and
-     * is empty when the database does not contain any Module.
-     * @param module The module to be searched for.
-     * @return A list of Employee that are part of Module from the database ordered by Employee ID.
-     * @throws DAOException If something fails at database level.
-     */ 
-    public List<Employee> listEmployee(Module module) throws DAOException;
-    
-    /**
-     * Returns a list of Employee that are NOT part of Module from the database ordered by Employee ID. The list is never null and
-     * is empty when the database does not contain any Module.
-     * @param module The module to be searched for.
-     * @return A list of Employee that are NOT part of Module from the database ordered by Employee ID.
-     * @throws DAOException If something fails at database level.
-     */ 
-    public List<Employee> listOtherEmployee(Module module) throws DAOException;
-    
-    /**
      * Create the given Module in the database. The Module ID must be null, otherwise it will throw
      * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Module.
      * @param module The Module to be created in the database.
@@ -58,7 +40,7 @@ public interface ModuleDAO {
      * @throws DAOException If something fails at database level.
      */
     public void create(Module module) throws IllegalArgumentException, DAOException;
-   
+    
     /**
      * Update the given Module in the database. The Module ID must not be null, otherwise it will throw
      * IllegalArgumentException.
@@ -75,4 +57,5 @@ public interface ModuleDAO {
      * @throws DAOException If something fails at database level.
      */
     public void delete(Module module) throws DAOException;
+    
 }
