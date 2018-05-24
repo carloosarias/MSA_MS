@@ -13,8 +13,8 @@ import java.io.Serializable;
  */
 public class Module implements Serializable {
     // Properties ---------------------------------------------------------------------------------
-    Integer id;
-    String name;
+    private Integer id;
+    private String name;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
