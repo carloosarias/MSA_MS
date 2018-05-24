@@ -58,11 +58,19 @@ public interface EmployeeDAO {
      * Returns a list of all Modules Employee is part of from the database ordered by user ID. The list is never null and
      * is empty when the database does not contain any Employee.
      * @param employee The employee to be searched for.
-     * @return A list of all Employees from the database ordered by Employee ID.
+     * @return A list of Modules Employee is part of from the database ordered by Module ID.
      * @throws DAOException If something fails at database level.
      */
     public List<Module> listModule(Employee employee) throws DAOException;
     
+    /**
+     * Returns a list of all Modules Employee is NOT part of from the database ordered by user ID. The list is never null and
+     * is empty when the database does not contain any Employee.
+     * @param employee The employee to be searched for.
+     * @return A list of Modules Employee is NOT part of from the database ordered by Module ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<Module> listOtherModule(Employee employee) throws DAOException;
     /**
      * Create the given Employee in the database. The Employee ID must be null, otherwise it will throw
      * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Employee.
@@ -104,7 +112,7 @@ public interface EmployeeDAO {
      * @return True if the given user exist in the database.
      * @throws DAOException If something fails at database level.
      */
-    public boolean existUser(String user, boolean active) throws DAOException;
+    public boolean existActive(String user, boolean active) throws DAOException;
 
     /**
      * Change the password of the given employee. The Employee ID must not be null, otherwise it will throw

@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import model.Employee;
 import model.Module;
@@ -39,7 +40,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             "DELETE FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_EXIST_USER =
             "SELECT id FROM EMPLOYEE WHERE user = ?";
-    private static final String SQL_EXIST_ACTIVE_USER =
+    private static final String SQL_EXIST_ACTIVE =
             "SELECT id FROM EMPLOYEE WHERE user = ? AND active = ?";
     private static final String SQL_CHANGE_PASSWORD = 
             "UPDATE EMPLOYEE SET password = MD5(?) WHERE id = ?";
@@ -77,7 +78,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
      * Returns the Employee from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The user from the database matching the given SQL query with the given values.
+     * @return The Module from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
     private Employee find(String sql, Object... values) throws DAOException {
@@ -141,10 +142,18 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     }
     
     @Override
+    public List<Module> listOtherModule(Employee employee) throws DAOException {
+        List<Module> modules = listModule(employee);
+        modules.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
+        return modules;
+    }
+    
+    @Override
     public List<Module> listModule(Employee employee) throws DAOException {
         if (employee.getId() == null) {
             throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
         }
+        
         List<Module> modules = new ArrayList<>();
         
         Object[] values = {
@@ -153,7 +162,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_MODULE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -162,7 +171,6 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         } catch(SQLException e){
             throw new DAOException(e);
         }
-        
         
         return modules;
     }
@@ -273,7 +281,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     }
     
     @Override
-    public boolean existUser(String user, boolean active) throws DAOException {
+    public boolean existActive(String user, boolean active) throws DAOException {
         Object[] values = {
             user,
             active
@@ -283,7 +291,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_EXIST_ACTIVE_USER, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_EXIST_ACTIVE, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             exist = resultSet.next();
@@ -333,6 +341,10 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         employee.setFirst_name(resultSet.getString("first_name"));
         employee.setLast_name(resultSet.getString("last_name"));
         employee.setHire_date(resultSet.getDate("hire_date"));
+        employee.setBirth_date(resultSet.getDate("birth_date"));
+        employee.setCurp(resultSet.getString("curp"));
+        employee.setAddress(resultSet.getString("address"));
+        employee.setActive(resultSet.getBoolean("active"));
         return employee;
     }
     
