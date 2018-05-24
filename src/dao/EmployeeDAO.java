@@ -7,7 +7,6 @@ package dao;
 
 import java.util.List;
 import model.Employee;
-import model.Module;
 
 /**
  * This interface represents a contract for a DAO for the {@link Employee} model.

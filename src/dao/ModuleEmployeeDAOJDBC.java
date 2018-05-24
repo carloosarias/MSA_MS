@@ -26,6 +26,9 @@ public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
             "SELECT MODULE_ID FROM EMPLOYEE_MODULE WHERE EMPLOYEE_ID = ? ORDER BY MODULE_ID";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
             "SELECT EMPLOYEE_ID FROM EMPLOYEE_MODULE WHERE MODULE_ID = ? ORDER BY EMPLOYEE_ID";
+    private static final String SQL_INSERT =
+            "INSERT INTO MODULE_EMPLOYEE (MODULE_ID, EMPLOYEE_ID) "
+            + "VALUES (?,?)";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -43,11 +46,6 @@ public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
     }
     
     // Actions ------------------------------------------------------------------------------------
-    
-    @Override
-    public void create(Module module, Employee employee) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public List<Module> list(Employee employee) throws DAOException {
@@ -116,7 +114,35 @@ public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
         modules.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
         return modules;
     }
-
+    
+    @Override
+    public void create(Module module, Employee employee) throws IllegalArgumentException, DAOException {
+        if (employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        if (module.getId() == null) {
+            throw new IllegalArgumentException("Module is not created yet, the Module ID is null.");
+        }
+        
+        Object[] values = {
+            module.getId(),
+            employee.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, false, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating Module Employee failed, no rows affected.");
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }  
+    }
+    
     @Override
     public void delete(Module module, Employee employee) throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

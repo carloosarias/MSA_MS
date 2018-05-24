@@ -18,16 +18,6 @@ public interface ModuleEmployeeDAO {
     // Actions ------------------------------------------------------------------------------------
     
     /**
-     * Register the given Module_Employee in the database. The Module ID and Employee ID must not be null, otherwise it will throw
-     * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Module.
-     * @param module The Module to be registered.
-     * @param employee The Employee to be registered
-     * @throws IllegalArgumentException If the Module ID is not null.
-     * @throws DAOException If something fails at database level.
-     */
-    public void create(Module module, Employee employee) throws IllegalArgumentException, DAOException;
-    
-    /**
      * Returns a list of all Modules Employee is part of from the database ordered by user ID. The list is never null and
      * is empty when the database does not contain any Employee.
      * @param employee The employee to be searched for.
@@ -62,6 +52,16 @@ public interface ModuleEmployeeDAO {
      * @throws DAOException If something fails at database level.
      */
     public List<Module> listInverse(Employee employee) throws DAOException;
+    
+    /**
+     * Create the given Module_employee in the database. The Module ID and Employee ID must not be null, otherwise it will throw
+     * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Module.
+     * @param module The Module to be registered.
+     * @param employee The Employee to be registered
+     * @throws IllegalArgumentException If the Module ID is not null.
+     * @throws DAOException If something fails at database level.
+     */
+    public void create(Module module, Employee employee) throws IllegalArgumentException, DAOException;
     
     /**
      * Delete the given Module from the database. After deleting, the DAO will set the ID of the given
