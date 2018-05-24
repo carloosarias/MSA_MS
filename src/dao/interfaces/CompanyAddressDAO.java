@@ -10,5 +10,6 @@ package dao.interfaces;
  * @author Pavilion Mini
  */
 public interface CompanyAddressDAO {
+    // Actions ------------------------------------------------------------------------------------
     
 }

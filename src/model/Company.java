@@ -6,7 +6,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  *
@@ -91,7 +90,7 @@ public class Company implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("Company[id=%d,name=%s,supplier=%b,client=%b,active=%b",
+        return String.format("Company[id=%d,name=%s,supplier=%b,client=%b,active=%b]",
                 id, name, supplier, client, active);
     }
     

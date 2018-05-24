@@ -64,7 +64,7 @@ public class CompanyAddress {
      */
     @Override
     public String toString() {
-        return String.format("CompanyAddress[id=%d,address=%s,active=%b",
+        return String.format("CompanyAddress[id=%d,address=%s,active=%b]",
                 id, address, active);
     }
 }
