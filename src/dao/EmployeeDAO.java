@@ -7,6 +7,7 @@ package dao;
 
 import java.util.List;
 import model.Employee;
+import model.Module;
 
 /**
  * This interface represents a contract for a DAO for the {@link Employee} model.
@@ -43,9 +44,27 @@ public interface EmployeeDAO {
      * @throws DAOException If something fails at database level.
      */
     public List<Employee> list() throws DAOException;
-
+    
     /**
-     * Create the given Employee in the database. The user ID must be null, otherwise it will throw
+     * Returns a list of all active/inactive Employees from the database ordered by user ID. The list is never null and
+     * is empty when the database does not contain any Employee.
+     * @param active The status of the employees to be returned.
+     * @return A list of all Employees from the database ordered by Employee ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<Employee> list(boolean active) throws DAOException;
+    
+    /**
+     * Returns a list of all Modules Employee is part of from the database ordered by user ID. The list is never null and
+     * is empty when the database does not contain any Employee.
+     * @param employee The employee to be searched for.
+     * @return A list of all Employees from the database ordered by Employee ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<Module> listModule(Employee employee) throws DAOException;
+    
+    /**
+     * Create the given Employee in the database. The Employee ID must be null, otherwise it will throw
      * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Employee.
      * @param employee The Employee to be created in the database.
      * @throws IllegalArgumentException If the employee ID is not null.
@@ -56,7 +75,7 @@ public interface EmployeeDAO {
     /**
      * Update the given Employee in the database. The Employee ID must not be null, otherwise it will throw
      * IllegalArgumentException. Note: the password will NOT be updated. Use changePassword() instead.
-     * @param employee The user to be updated in the database.
+     * @param employee The employee to be updated in the database.
      * @throws IllegalArgumentException If the Employee ID is null.
      * @throws DAOException If something fails at database level.
      */
@@ -64,7 +83,7 @@ public interface EmployeeDAO {
 
     /**
      * Delete the given Employee from the database. After deleting, the DAO will set the ID of the given
-     * user to null.
+     * Employee to null.
      * @param employee The Employee to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
@@ -77,6 +96,15 @@ public interface EmployeeDAO {
      * @throws DAOException If something fails at database level.
      */
     public boolean existUser(String user) throws DAOException;
+    
+    /**
+     * Returns true if the given user exist and is active/inactive in the database.
+     * @param user The user which is to be checked in the database.
+     * @param active The active status of the user.
+     * @return True if the given user exist in the database.
+     * @throws DAOException If something fails at database level.
+     */
+    public boolean existUser(String user, boolean active) throws DAOException;
 
     /**
      * Change the password of the given employee. The Employee ID must not be null, otherwise it will throw
@@ -86,5 +114,5 @@ public interface EmployeeDAO {
      * @throws DAOException If something fails at database level.
      */
     public void changePassword(Employee employee) throws DAOException;
-
+    
 }

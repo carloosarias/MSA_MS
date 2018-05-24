@@ -126,6 +126,14 @@ public abstract class DAOFactory {
         return new EmployeeDAOJDBC(this);
     }
     
+    /**
+     * Returns the Module DAO associated with the current DAOFactory.
+     * @return The Module DAO associated with the current DAOFactory.
+     */
+    public ModuleDAO getModuleDAO() {
+        return new ModuleDAOJDBC(this);
+    }
+    
     // You can add more DAO implementation getters here.
 }
 

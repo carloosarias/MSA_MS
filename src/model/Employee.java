@@ -21,6 +21,10 @@ public class Employee implements Serializable {
     private String first_name;
     private String last_name;
     private Date hire_date;
+    private Date birth_date;
+    private String curp;
+    private String address;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -71,6 +75,38 @@ public class Employee implements Serializable {
         this.hire_date = hire_date;
     }
     
+    public Date getBirth_date() {
+        return birth_date;
+    }
+
+    public void setBirth_date(Date birth_date) {
+        this.birth_date = birth_date;
+    }
+
+    public String getCurp() {
+        return curp;
+    }
+
+    public void setCurp(String curp) {
+        this.curp = curp;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
 
     /**
@@ -101,6 +137,6 @@ public class Employee implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Employee[id=%d,user=%s,first_name=%s,last_name=%s,hire_date=%s]", id, user, first_name, last_name, hire_date);
+        return String.format("Employee[id=%d,user=%s,first_name=%s,last_name=%s,hire_date=%s,birth_date=%s,curp=%s,address=%s,active=%b]", id, user, first_name, last_name, hire_date);
     }
 }

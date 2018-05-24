@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Employee;
+import model.Module;
 
 /**
  *
@@ -22,22 +23,28 @@ import model.Employee;
 public class EmployeeDAOJDBC implements EmployeeDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date FROM EMPLOYEE WHERE id = ?";
+            "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_FIND_BY_USER_AND_PASSWORD =
-            "SELECT id, user, first_name, last_name, hire_date FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
+            "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
     private static final String SQL_LIST_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date FROM EMPLOYEE ORDER BY id";
+            "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID =
+            "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date) "
-            +"VALUES (?, MD5(?), ?, ?, ?)";
+            "INSERT INTO EMPLOYEE (id, user, first_name, last_name, hire_date, birth_date, curp, address) "
+            +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ? WHERE id = ?";
+            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, birth_date = ?, curp = ?, address = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_EXIST_USER =
             "SELECT id FROM EMPLOYEE WHERE user = ?";
+    private static final String SQL_EXIST_ACTIVE_USER =
+            "SELECT id FROM EMPLOYEE WHERE user = ? AND active = ?";
     private static final String SQL_CHANGE_PASSWORD = 
             "UPDATE EMPLOYEE SET password = MD5(?) WHERE id = ?";
+    private static final String SQL_LIST_MODULE_ORDER_BY_ID = 
+            "SELECT MODULE_ID FROM EMPLOYEE_MODULE WHERE EMPLOYEE_ID = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -108,6 +115,56 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         }
         
         return employees;
+    }
+    
+    @Override
+    public List<Employee> list(boolean active) throws DAOException {
+        List<Employee> employees = new ArrayList<>();
+        
+        Object[] values = {
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                employees.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return employees;
+    }
+    
+    @Override
+    public List<Module> listModule(Employee employee) throws DAOException {
+        if (employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        List<Module> modules = new ArrayList<>();
+        
+        Object[] values = {
+            employee.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                modules.add(daoFactory.getModuleDAO().find(resultSet.getInt("MODULE_ID")));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        
+        return modules;
     }
 
     @Override
@@ -214,7 +271,29 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         
         return exist;
     }
-
+    
+    @Override
+    public boolean existUser(String user, boolean active) throws DAOException {
+        Object[] values = {
+            user,
+            active
+        };
+        
+        boolean exist = false;
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_EXIST_ACTIVE_USER, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            exist = resultSet.next();
+        }catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return exist;
+    }
+    
     @Override
     public void changePassword(Employee employee) throws DAOException {
         if(employee.getId() == null){
