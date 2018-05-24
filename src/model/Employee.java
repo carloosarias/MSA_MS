@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -21,6 +22,8 @@ public class Employee implements Serializable {
     private String first_name;
     private String last_name;
     private Date hire_date;
+    private Time entry_time;
+    private Time end_time;
     private Date birth_date;
     private String curp;
     private String address;
@@ -74,7 +77,22 @@ public class Employee implements Serializable {
     public void setHire_date(Date hire_date) {
         this.hire_date = hire_date;
     }
-    
+
+    public Time getEntry_time() {
+        return entry_time;
+    }
+
+    public void setEntry_time(Time entry_time) {
+        this.entry_time = entry_time;
+    }
+
+    public Time getEnd_time() {
+        return end_time;
+    }
+
+    public void setEnd_time(Time end_time) {
+        this.end_time = end_time;
+    }
     public Date getBirth_date() {
         return birth_date;
     }
@@ -137,6 +155,8 @@ public class Employee implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Employee[id=%d,user=%s,first_name=%s,last_name=%s,hire_date=%s,birth_date=%s,curp=%s,address=%s,active=%b]", id, user, first_name, last_name, hire_date);
+        return String.format("Employee[id=%d,user=%s,first_name=%s,last_name=%s,hire_date=%s,entry_time=%s,end_time=%s,birth_date=%s,curp=%s,address=%s,active=%b]",
+                id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active);
     }
+    
 }

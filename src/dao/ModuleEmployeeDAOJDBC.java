@@ -29,6 +29,8 @@ public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
     private static final String SQL_INSERT =
             "INSERT INTO MODULE_EMPLOYEE (MODULE_ID, EMPLOYEE_ID) "
             + "VALUES (?,?)";
+    private static final String SQL_DELETE =
+            "DELETE FROM MODULE_EMPLOYEE WHERE MODULE_ID = ? AND EMPLOYEE_ID = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -145,7 +147,24 @@ public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
     
     @Override
     public void delete(Module module, Employee employee) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            module.getId(),
+            employee.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting Module Employee failed, no rows affected.");
+            } else{
+                module.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
 }

@@ -22,18 +22,18 @@ import model.Employee;
 public class EmployeeDAOJDBC implements EmployeeDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE WHERE id = ?";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_FIND_BY_USER_AND_PASSWORD =
-            "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
     private static final String SQL_LIST_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE ORDER BY id";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active FROM EMPLOYEE ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE WHERE active = ? ORDER BY id";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active FROM EMPLOYEE WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date, birth_date, curp, address) "
-            +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, entry_time, end_time, hire_date, birth_date, curp, address) "
+            +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, birth_date = ?, curp = ?, address = ?, active = ? WHERE id = ?";
+            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, entry_time = ?, end_time = ?, birth_date = ?, curp = ?, address = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_EXIST_USER =
@@ -148,7 +148,13 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             employee.getPassword(),
             employee.getFirst_name(),
             employee.getLast_name(),
-            toSqlDate(employee.getHire_date())
+            toSqlDate(employee.getHire_date()),
+            employee.getEntry_time(),
+            employee.getEnd_time(),
+            toSqlDate(employee.getBirth_date()),
+            employee.getCurp(),
+            employee.getAddress(),
+            employee.isActive()
         };
         
         try(
@@ -184,6 +190,12 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             employee.getFirst_name(),
             employee.getLast_name(),
             toSqlDate(employee.getHire_date()),
+            employee.getEntry_time(),
+            employee.getEnd_time(),
+            toSqlDate(employee.getBirth_date()),
+            employee.getCurp(),
+            employee.getAddress(),
+            employee.isActive(),
             employee.getId()
         };
         
@@ -303,6 +315,8 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         employee.setFirst_name(resultSet.getString("first_name"));
         employee.setLast_name(resultSet.getString("last_name"));
         employee.setHire_date(resultSet.getDate("hire_date"));
+        employee.setEntry_time(resultSet.getTime("entry_time"));
+        employee.setEnd_time(resultSet.getTime("end_time"));
         employee.setBirth_date(resultSet.getDate("birth_date"));
         employee.setCurp(resultSet.getString("curp"));
         employee.setAddress(resultSet.getString("address"));
