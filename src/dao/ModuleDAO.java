@@ -6,6 +6,7 @@
 package dao;
 
 import java.util.List;
+import model.Employee;
 import model.Module;
 
 /**
@@ -24,12 +25,30 @@ public interface ModuleDAO {
     public Module find(Integer id) throws DAOException;
     
     /**
-     * Returns a list of all Modules from the database ordered by user ID. The list is never null and
+     * Returns a list of all Modules from the database ordered by Module ID. The list is never null and
      * is empty when the database does not contain any Module.
-     * @return A list of all Employees from the database ordered by Module ID.
+     * @return A list of all Modules from the database ordered by Module ID.
      * @throws DAOException If something fails at database level.
      */    
     public List<Module> list() throws DAOException;
+    
+    /**
+     * Returns a list of Employee that are part of Module from the database ordered by Employee ID. The list is never null and
+     * is empty when the database does not contain any Module.
+     * @param module The module to be searched for.
+     * @return A list of Employee that are part of Module from the database ordered by Employee ID.
+     * @throws DAOException If something fails at database level.
+     */ 
+    public List<Employee> listEmployee(Module module) throws DAOException;
+    
+    /**
+     * Returns a list of Employee that are NOT part of Module from the database ordered by Employee ID. The list is never null and
+     * is empty when the database does not contain any Module.
+     * @param module The module to be searched for.
+     * @return A list of Employee that are NOT part of Module from the database ordered by Employee ID.
+     * @throws DAOException If something fails at database level.
+     */ 
+    public List<Employee> listOtherEmployee(Module module) throws DAOException;
     
     /**
      * Create the given Module in the database. The Module ID must be null, otherwise it will throw

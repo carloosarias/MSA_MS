@@ -32,7 +32,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID =
             "SELECT id, user, first_name, last_name, hire_date, birth_date, curp, address, active FROM EMPLOYEE WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO EMPLOYEE (id, user, first_name, last_name, hire_date, birth_date, curp, address) "
+            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date, birth_date, curp, address) "
             +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, birth_date = ?, curp = ?, address = ?, active = ? WHERE id = ?";
@@ -45,7 +45,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     private static final String SQL_CHANGE_PASSWORD = 
             "UPDATE EMPLOYEE SET password = MD5(?) WHERE id = ?";
     private static final String SQL_LIST_MODULE_ORDER_BY_ID = 
-            "SELECT MODULE_ID FROM EMPLOYEE_MODULE WHERE EMPLOYEE_ID = ?";
+            "SELECT MODULE_ID FROM EMPLOYEE_MODULE WHERE EMPLOYEE_ID = ? ORDER BY MODULE_ID";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -142,13 +142,6 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     }
     
     @Override
-    public List<Module> listOtherModule(Employee employee) throws DAOException {
-        List<Module> modules = listModule(employee);
-        modules.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
-        return modules;
-    }
-    
-    @Override
     public List<Module> listModule(Employee employee) throws DAOException {
         if (employee.getId() == null) {
             throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
@@ -174,7 +167,14 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         
         return modules;
     }
-
+    
+    @Override
+    public List<Module> listOtherModule(Employee employee) throws DAOException {
+        List<Module> modules = listModule(employee);
+        modules.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
+        return modules;
+    }
+    
     @Override
     public void create(Employee employee) throws IllegalArgumentException, DAOException {
         if(employee.getId() != null){
@@ -329,9 +329,9 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an User.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an User.
-     * @return The mapped User from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an Employee.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an Employee.
+     * @return The mapped Employee from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     private static Employee map(ResultSet resultSet) throws SQLException {

@@ -6,10 +6,13 @@
 package dao;
 
 import static dao.DAOUtil.prepareStatement;
+import static dao.DAOUtil.toSqlDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import model.Employee;
 import model.Module;
@@ -25,10 +28,14 @@ public class ModuleDAOJDBC implements ModuleDAO {
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, name FROM MODULE ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO MODULE (id, name) "
-            + "VALUES (?,?)";
+            "INSERT INTO MODULE (name) "
+            + "VALUES (?)";
     private static final String SQL_UPDATE = 
             "UPDATE MODULE SET name = ? WHERE id = ?";
+    private static final String SQL_DELETE =
+            "DELETE FROM MODULE WHERE id = ?";
+    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
+            "SELECT EMPLOYEE_ID FROM EMPLOYEE_MODULE WHERE MODULE_ID = ? ORDER BY EMPLOYEE_ID";
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -78,24 +85,142 @@ public class ModuleDAOJDBC implements ModuleDAO {
     
     @Override
     public List<Module> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Module> modules = new ArrayList<>();
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                modules.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return modules;
     }
-
+    
+    @Override
+    public List<Employee> listEmployee(Module module) throws DAOException {
+        if (module.getId() == null) {
+            throw new IllegalArgumentException("Module is not created yet, the Module ID is null.");
+        }
+        
+        List<Employee> employees = new ArrayList<>();
+        
+        Object[] values = {
+            module.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                employees.add(daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID")));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return employees;
+    }
+    
+    @Override
+    public List<Employee> listOtherEmployee(Module module) throws DAOException {
+        List<Employee> employee = listEmployee(module);
+        employee.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
+        return employee;
+    }
+    
     @Override
     public void create(Module module) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(module.getId() != null){
+            throw new IllegalArgumentException("Module is already created, the Module ID is not null.");
+        }
+        
+        Object[] values = {
+            module.getName()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating Module failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    module.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating Module failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }    
     }
 
     @Override
     public void update(Module module) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (module.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        
+        Object[] values = {
+            module.getName(),
+            module.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating Employee failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(Module module) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            module.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting Module failed, no rows affected.");
+            } else{
+                module.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
+    // Helpers ------------------------------------------------------------------------------------
+
+    /**
+     * Map the current row of the given ResultSet to an Module.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an Module.
+     * @return The mapped Module from the current row of the given ResultSet.
+     * @throws SQLException If something fails at database level.
+     */
     public static Module map(ResultSet resultSet) throws SQLException{
         Module module = new Module();
         module.setId(resultSet.getInt("id"));
