@@ -39,7 +39,7 @@ public class CompanyAddress implements Serializable{
     // Object overrides ---------------------------------------------------------------------------
     
     /**
-     * This should compare Companies by ID only.
+     * This should compare CompanyAddresses by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -50,7 +50,7 @@ public class CompanyAddress implements Serializable{
     }
 
     /**
-     * Employee with same ID should return same hashcode.
+     * CompanyAddress with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -61,7 +61,7 @@ public class CompanyAddress implements Serializable{
     }
 
     /**
-     * Returns the String representation of this User. Not required, it just pleases reading logs.
+     * Returns the String representation of this CompanyAddress. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override

@@ -5,7 +5,11 @@
  */
 package dao.JDBC;
 
+import dao.DAOException;
 import dao.interfaces.CompanyAddressDAO;
+import java.util.List;
+import model.Company;
+import model.CompanyAddress;
 
 /**
  *
@@ -27,4 +31,32 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
     CompanyAddressDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
+    
+    // Actions ------------------------------------------------------------------------------------
+
+    @Override
+    public CompanyAddress find(Integer id) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<CompanyAddress> list(Company company) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void create(Company company, CompanyAddress address) throws IllegalArgumentException, DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(CompanyAddress address) throws IllegalArgumentException, DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(CompanyAddress address) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -101,7 +101,7 @@ public class Company implements Serializable{
     }
 
     /**
-     * Employee with same ID should return same hashcode.
+     * Company with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -112,7 +112,7 @@ public class Company implements Serializable{
     }
 
     /**
-     * Returns the String representation of this User. Not required, it just pleases reading logs.
+     * Returns the String representation of this Company. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override

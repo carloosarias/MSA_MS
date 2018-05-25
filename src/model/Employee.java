@@ -150,7 +150,7 @@ public class Employee implements Serializable {
     }
 
     /**
-     * Returns the String representation of this User. Not required, it just pleases reading logs.
+     * Returns the String representation of this Employee. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
