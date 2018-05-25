@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Pavilion Mini
  */
-public class Contact implements Serializable {
+public class CompanyContact implements Serializable {
     private Integer id;
     private String name;
     private String position;
