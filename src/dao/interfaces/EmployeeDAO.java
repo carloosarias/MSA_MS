@@ -38,21 +38,21 @@ public interface EmployeeDAO {
     public Employee find(String user, String password) throws DAOException;
 
     /**
-     * Returns a list of all Employees from the database ordered by user ID. The list is never null and
-     * is empty when the database does not contain any Employee.
-     * @return A list of all Employees from the database ordered by Employee ID.
+     * Returns a listActive of all Employees from the database ordered by user ID. The listActive is never null and
+ is empty when the database does not contain any Employee.
+     * @return A listActive of all Employees from the database ordered by Employee ID.
      * @throws DAOException If something fails at database level.
      */
     public List<Employee> list() throws DAOException;
     
     /**
-     * Returns a list of all active/inactive Employees from the database ordered by user ID. The list is never null and
-     * is empty when the database does not contain any Employee.
-     * @param active The status of the employees to be returned.
-     * @return A list of all Employees from the database ordered by Employee ID.
+     * Returns a listActive of all Employees that are active from the database ordered by Employee ID. The listActive is never null and
+ is empty when the database does not contain any Company active.
+     * @param active The state of the Employee if false then return Employees that are NOT active
+     * @return A listActive of all Employees that are active from the database ordered by Employee ID.
      * @throws DAOException If something fails at database level.
      */
-    public List<Employee> list(boolean active) throws DAOException;
+    public List<Employee> listActive(boolean active) throws DAOException;
     
     /**
      * Create the given Employee in the database. The Employee ID must be null, otherwise it will throw

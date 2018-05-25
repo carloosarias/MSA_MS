@@ -107,9 +107,9 @@ public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
 
     @Override
     public List<Employee> listInverse(Module module) throws DAOException {
-        List<Employee> employee = list(module);
-        employee.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
-        return employee;
+        List<Employee> employees = list(module);
+        employees.removeAll(new HashSet(daoFactory.getModuleDAO().list()));
+        return employees;
     }
 
     @Override

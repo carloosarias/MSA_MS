@@ -23,6 +23,7 @@ public interface ModuleEmployeeDAO {
      * is empty when the database does not contain any Employee.
      * @param employee The employee to be searched for.
      * @return A list of Modules Employee is part of from the database ordered by Module ID.
+     * @throws IllegalArgumentException If the Employee ID is null.
      * @throws DAOException If something fails at database level.
      */
     public List<Module> list(Employee employee) throws DAOException;
@@ -32,6 +33,7 @@ public interface ModuleEmployeeDAO {
      * is empty when the database does not contain any Module.
      * @param module The module to be searched for.
      * @return A list of Employee that are part of Module from the database ordered by Employee ID.
+     * @throws IllegalArgumentException If the Module ID is null.
      * @throws DAOException If something fails at database level.
      */ 
     public List<Employee> list(Module module) throws DAOException;
@@ -41,6 +43,7 @@ public interface ModuleEmployeeDAO {
      * is empty when the database does not contain any Module.
      * @param module The module to be searched for.
      * @return A list of Employee that are NOT part of Module from the database ordered by Employee ID.
+     * @throws IllegalArgumentException If the Module ID is null.
      * @throws DAOException If something fails at database level.
      */ 
     public List<Employee> listInverse(Module module) throws DAOException;
@@ -50,6 +53,7 @@ public interface ModuleEmployeeDAO {
      * is empty when the database does not contain any Employee.
      * @param employee The employee to be searched for.
      * @return A list of Modules Employee is NOT part of from the database ordered by Module ID.
+     * @throws IllegalArgumentException If the Employee ID is null.
      * @throws DAOException If something fails at database level.
      */
     public List<Module> listInverse(Employee employee) throws DAOException;
@@ -60,6 +64,7 @@ public interface ModuleEmployeeDAO {
      * @param module The Module to be registered.
      * @param employee The Employee to be registered
      * @throws IllegalArgumentException If the Module ID is not null.
+     * @throws IllegalArgumentException If the Employee ID is not null.
      * @throws DAOException If something fails at database level.
      */
     public void create(Module module, Employee employee) throws IllegalArgumentException, DAOException;

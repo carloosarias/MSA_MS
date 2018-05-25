@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Pavilion Mini
  */
-public class CompanyAddress {
+public class CompanyAddress implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String address;

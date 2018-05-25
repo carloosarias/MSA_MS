@@ -117,7 +117,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     }
     
     @Override
-    public List<Employee> list(boolean active) throws DAOException {
+    public List<Employee> listActive(boolean active) throws DAOException {
         List<Employee> employees = new ArrayList<>();
         
         Object[] values = {

@@ -8,7 +8,6 @@ package dao.interfaces;
 import dao.DAOException;
 import java.util.List;
 import model.Company;
-import model.Module;
 
 /**
  *
@@ -25,10 +24,64 @@ public interface CompanyDAO {
      */    
     public Company find(Integer id) throws DAOException;
     
-    public void create(Module module) throws IllegalArgumentException, DAOException;
-    public void update(Module module) throws IllegalArgumentException, DAOException;
-    public void delete(Module module) throws DAOException;
+    /**
+     * Returns a list of all Companies from the database ordered by Company ID. The list is never null and
+     * is empty when the database does not contain any Company.
+     * @return A list of all Companies from the database ordered by Company ID.
+     * @throws DAOException If something fails at database level.
+     */
     public List<Company> list() throws DAOException;
-    public List<Company> listSupplier() throws DAOException;
-    public List<Company> listClient() throws DAOException;
+    
+    /**
+     * Returns a list of all Companies that are suppliers from the database ordered by Company ID. The list is never null and
+     * is empty when the database does not contain any Company supplier.
+     * @param supplier The state of the company if false then return companies that are NOT suppliers
+     * @return A list of all Companies that are suppliers from the database ordered by Company ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<Company> listSupplier(boolean supplier) throws DAOException;
+    
+    /**
+     * Returns a list of all Companies that are clients from the database ordered by Company ID. The list is never null and
+     * is empty when the database does not contain any Company client.
+     * @param client The state of the company if false then return companies that are NOT clients
+     * @return A list of all Companies that are clients from the database ordered by Company ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<Company> listClient(boolean supplier) throws DAOException;
+    
+    /**
+     * Returns a list of all Companies that are active from the database ordered by Company ID. The list is never null and
+     * is empty when the database does not contain any Company active.
+     * @param active The state of the company if false then return companies that are NOT active
+     * @return A list of all Companies that are active from the database ordered by Company ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<Company> listActive(boolean active) throws DAOException;
+    
+    /**
+     * Create the given Company in the database. The Company ID must be null, otherwise it will throw
+     * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Company.
+     * @param company The Company to be created in the database.
+     * @throws IllegalArgumentException If the Company ID is not null.
+     * @throws DAOException If something fails at database level.
+     */
+    public void create(Company company) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Update the given Company in the database. The Company ID must not be null, otherwise it will throw
+     * IllegalArgumentException.
+     * @param company The company to be updated in the database.
+     * @throws IllegalArgumentException If the Company ID is null.
+     * @throws DAOException If something fails at database level.
+     */
+    public void update(Company company) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Delete the given Company from the database. After deleting, the DAO will set the ID of the given
+     * Company to null.
+     * @param company The Company to be deleted from the database.
+     * @throws DAOException If something fails at database level.
+     */
+    public void delete(Company company) throws DAOException;
 }

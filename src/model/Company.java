@@ -15,6 +15,9 @@ public class Company implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String name;
+    private String rfc;
+    private String tax_id;
+    private String payment_terms;
     private boolean supplier;
     private boolean client;
     private boolean active;
@@ -35,7 +38,31 @@ public class Company implements Serializable{
     public void setName(String name) {
         this.name = name;
     }
+    
+    public String getRfc() {
+        return rfc;
+    }
 
+    public void setRfc(String rfc) {
+        this.rfc = rfc;
+    }
+    
+    public String getTax_id() {
+        return tax_id;
+    }
+
+    public void setTax_id(String tax_id) {
+        this.tax_id = tax_id;
+    }
+
+    public String getPayment_terms() {
+        return payment_terms;
+    }
+
+    public void setPayment_terms(String payment_terms) {
+        this.payment_terms = payment_terms;
+    }
+    
     public boolean isSupplier() {
         return supplier;
     }
@@ -90,8 +117,8 @@ public class Company implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("Company[id=%d,name=%s,supplier=%b,client=%b,active=%b]",
-                id, name, supplier, client, active);
+        return String.format("Company[id=%d,name=%s,rfc=%s,tax_id=%s,payment_terms=%s,supplier=%b,client=%b,active=%b]",
+                id, name, rfc, tax_id,payment_terms, supplier, client, active);
     }
     
 }
