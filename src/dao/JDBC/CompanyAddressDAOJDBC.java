@@ -88,7 +88,7 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
             throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
         }
         
-        List<CompanyAddress> companyAddress = new ArrayList<>();
+        List<CompanyAddress> companyAddresses = new ArrayList<>();
         
         Object[] values = {
             company.getId(),
@@ -101,13 +101,13 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                companyAddress.add(map(resultSet));
+                companyAddresses.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return companyAddress;
+        return companyAddresses;
     }
 
     @Override
@@ -116,7 +116,7 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
             throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
         }
         if(address.getId() != null){
-            throw new IllegalArgumentException("Company is already created, the CompanyAddress ID is not null.");
+            throw new IllegalArgumentException("CompanyAddress is already created, the CompanyAddress ID is not null.");
         }
         
         Object[] values = {
@@ -150,7 +150,7 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
     @Override
     public void update(CompanyAddress address) throws IllegalArgumentException, DAOException {
         if(address.getId() == null){
-            throw new IllegalArgumentException("CompanyAddress is not created yet, the Company ID is null.");
+            throw new IllegalArgumentException("CompanyAddress is not created yet, the CompanyContact ID is null.");
         }
         
         Object[] values = {
@@ -196,9 +196,9 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an Employee.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an Employee.
-     * @return The mapped Employee from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an CompanyAddress.
+     * @param resultSet The ResultSet of which the current row is to be mapped to a CompanyAddress.
+     * @return The mapped CompanyAddress from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     private static CompanyAddress map(ResultSet resultSet) throws SQLException {
