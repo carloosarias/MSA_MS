@@ -6,17 +6,41 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.CompanyDAO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Company;
+import model.Employee;
 
 /**
  *
  * @author Pavilion Mini
  */
 public class CompanyDAOJDBC implements CompanyDAO{
+    // Constants ----------------------------------------------------------------------------------
+    private static final String SQL_FIND_BY_ID = 
+            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE id = ?";
+    private static final String SQL_LIST_ORDER_BY_ID = 
+            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY ORDER BY id";
+    private static final String SQL_LIST_SUPPLIER_ORDER_BY_ID =
+            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE supplier = ? ORDER BY id";
+    private static final String SQL_LIST_CLIENT_ORDER_BY_ID = 
+            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE client = ? ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE active = ? ORDER BY id";
+    private static final String SQL_INSERT = 
+            "INSERT INTO COMPANY (id, name, rfc, tax_id, payment_terms, supplier, client, active) "
+            +"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE = 
+            "UPDATE COMPANY SET name = ?, rfc = ?, tax_id = ?, payment_terms = ?, supplier = ?, client = ?, active = ? WHERE id = ?";
+    private static final String SQL_DELETE = 
+            "DELETE FROM COMPANY WHERE id = ?";
+
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -36,27 +60,120 @@ public class CompanyDAOJDBC implements CompanyDAO{
 
     @Override
     public Company find(Integer id) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return find(SQL_FIND_BY_ID, id);
     }
+    
+    /**
+     * Returns the Company from the database matching the given SQL query with the given values.
+     * @param sql The SQL query to be executed in the database.
+     * @param values The PreparedStatement values to be set.
+     * @return The Company from the database matching the given SQL query with the given values.
+     * @throws DAOException If something fails at database level.
+     */
+    private Company find(String sql, Object... values) throws DAOException {
+        Company company = null;
 
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, sql, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                company = map(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+
+        return company;
+    }
+    
     @Override
     public List<Company> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Company> company = new ArrayList<>();
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                company.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return company;
     }
 
     @Override
     public List<Company> listSupplier(boolean supplier) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Company> company = new ArrayList<>();
+        
+        Object[] values = {
+            supplier
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_SUPPLIER_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                company.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return company;
     }
 
     @Override
-    public List<Company> listClient(boolean supplier) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Company> listClient(boolean client) throws DAOException {
+        List<Company> company = new ArrayList<>();
+        
+        Object[] values = {
+            client
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_CLIENT_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                company.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return company;
     }
 
     @Override
     public List<Company> listActive(boolean active) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Company> company = new ArrayList<>();
+        
+        Object[] values = {
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                company.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return company;
     }
 
     @Override

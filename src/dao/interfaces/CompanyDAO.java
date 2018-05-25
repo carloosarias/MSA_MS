@@ -48,7 +48,7 @@ public interface CompanyDAO {
      * @return A list of all Companies that are clients from the database ordered by Company ID.
      * @throws DAOException If something fails at database level.
      */
-    public List<Company> listClient(boolean supplier) throws DAOException;
+    public List<Company> listClient(boolean client) throws DAOException;
     
     /**
      * Returns a list of all Companies that are active from the database ordered by Company ID. The list is never null and

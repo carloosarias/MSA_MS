@@ -76,7 +76,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
      * Returns the Employee from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The Module from the database matching the given SQL query with the given values.
+     * @return The Employee from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
     private Employee find(String sql, Object... values) throws DAOException {
