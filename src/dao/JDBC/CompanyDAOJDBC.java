@@ -24,7 +24,7 @@ public class CompanyDAOJDBC implements CompanyDAO{
     // Constructors -------------------------------------------------------------------------------
 
     /**
-     * Construct an Employee DAO for the given DAOFactory. Package private so that it can be constructed
+     * Construct a Company DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
      * @param daoFactory The DAOFactory to construct this Employee DAO for.
      */

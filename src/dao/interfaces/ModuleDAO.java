@@ -23,6 +23,13 @@ public interface ModuleDAO {
      * @throws DAOException If something fails at database level.
      */
     public Module find(Integer id) throws DAOException;
+    /**
+     * Returns the Module from the database matching the given name, otherwise null.
+     * @param name The name of the Module to be returned.
+     * @return The Module from the database matching the given name, otherwise null.
+     * @throws DAOException If something fails at database level.
+     */
+    public Module find(String name) throws DAOException;
     
     /**
      * Returns a list of all Modules from the database ordered by Module ID. The list is never null and

@@ -25,9 +25,9 @@ import model.Module;
 public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_LIST_MODULE_ORDER_BY_ID = 
-            "SELECT MODULE_ID FROM EMPLOYEE_MODULE WHERE EMPLOYEE_ID = ? ORDER BY MODULE_ID";
+            "SELECT MODULE_ID FROM MODULE_EMPLOYEE WHERE EMPLOYEE_ID = ? ORDER BY MODULE_ID";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM EMPLOYEE_MODULE WHERE MODULE_ID = ? ORDER BY EMPLOYEE_ID";
+            "SELECT EMPLOYEE_ID FROM MODULE_EMPLOYEE WHERE MODULE_ID = ? ORDER BY EMPLOYEE_ID";
     private static final String SQL_INSERT =
             "INSERT INTO MODULE_EMPLOYEE (MODULE_ID, EMPLOYEE_ID) "
             + "VALUES (?,?)";
@@ -41,7 +41,7 @@ public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
     // Constructors -------------------------------------------------------------------------------
 
     /**
-     * Construct an Employee DAO for the given DAOFactory. Package private so that it can be constructed
+     * Construct an ModuleEmployee DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
      * @param daoFactory The DAOFactory to construct this Employee DAO for.
      */
@@ -161,8 +161,6 @@ public class ModuleEmployeeDAOJDBC implements ModuleEmployeeDAO {
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
                 throw new DAOException("Deleting Module Employee failed, no rows affected.");
-            } else{
-                module.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);

@@ -25,13 +25,13 @@ public class Module implements Serializable {
         this.id = id;
     }
     
-    public Integer getName() {
-        return id;
+    public String getName() {
+        return name;
     }
     
     public void setName(String name) {
         this.name = name;
-    }    
+    }
     // Object overrides ---------------------------------------------------------------------------
 
     /**

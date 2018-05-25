@@ -24,6 +24,8 @@ public class ModuleDAOJDBC implements ModuleDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT id, name FROM MODULE WHERE id = ?";
+    private static final String SQL_FIND_BY_NAME =
+            "SELECT id, name FROM MODULE WHERE name = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, name FROM MODULE ORDER BY id";
     private static final String SQL_INSERT =
@@ -41,7 +43,7 @@ public class ModuleDAOJDBC implements ModuleDAO {
     // Constructors -------------------------------------------------------------------------------
 
     /**
-     * Construct an Employee DAO for the given DAOFactory. Package private so that it can be constructed
+     * Construct a Module DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
      * @param daoFactory The DAOFactory to construct this Employee DAO for.
      */
@@ -54,6 +56,11 @@ public class ModuleDAOJDBC implements ModuleDAO {
     @Override
     public Module find(Integer id) throws DAOException {
         return find(SQL_FIND_BY_ID, id);
+    }
+    
+    @Override
+    public Module find(String name) throws DAOException {
+        return find(SQL_FIND_BY_NAME, name);
     }
     
     /**
@@ -105,7 +112,7 @@ public class ModuleDAOJDBC implements ModuleDAO {
         if(module.getId() != null){
             throw new IllegalArgumentException("Module is already created, the Module ID is not null.");
         }
-        
+
         Object[] values = {
             module.getName()
         };
@@ -158,6 +165,7 @@ public class ModuleDAOJDBC implements ModuleDAO {
 
     @Override
     public void delete(Module module) throws DAOException {
+        System.out.println(module.getId());
         Object[] values = {
             module.getId()
         };
