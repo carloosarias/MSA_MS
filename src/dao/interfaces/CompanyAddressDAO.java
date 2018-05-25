@@ -26,17 +26,21 @@ public interface CompanyAddressDAO {
     public CompanyAddress find(Integer id) throws DAOException;
     
     /**
-     * Returns a list of all CompanyAddresses from the database ordered by CompanyAddress ID. The list is never null and
-     * is empty when the database does not contain any CompanyAddress.
-     * @return A list of all Companies from the database ordered by CompanyAddress ID.
+     * Returns a list of all active CompanyAddresses from a given Company from the database ordered by CompanyAddress ID. The Company ID must not be null
+     * otherwise it will throw IllegalArgumentException. The list is never null and
+     * is empty when the database does not contain any active CompanyAddress.
+     * @param company The Company to grab the CompanyAddresses from. 
+     * @param active The state of the CompanyAddresses.
+     * @return A list of all CompanyAddresses from the database ordered by CompanyAddress ID.
+     * @throws IllegalArgumentException If the Company ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public List<CompanyAddress> list(Company company) throws DAOException;
+    public List<CompanyAddress> listActive(Company company, boolean active) throws DAOException;
     
     /**
-     * Create the given CompanyAddress in the database. The Company ID must not be null and
+     * Create the given CompanyAddress for a given Company in the database. The Company ID must not be null and
      * the CompanyAddress ID must be null, otherwise it will throw IllegalArgumentException. 
-     * After creating, the DAO will set the obtained ID in the given Company.
+     * After creating, the DAO will set the obtained ID in the given CompanyAddress.
      * @param company The Company to be assigned the address.
      * @param address The CompanyAddress to be created.
      * @throws IllegalArgumentException If the Company ID is null.

@@ -7,6 +7,7 @@ import dao.interfaces.CompanyDAO;
 import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
+import dao.interfaces.CompanyContactDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -126,8 +127,8 @@ public abstract class DAOFactory {
     
     // DAO implementation getters -----------------------------------------------------------------
     /**
-     * Returns the User DAO associated with the current DAOFactory.
-     * @return The User DAO associated with the current DAOFactory.
+     * Returns the Employee DAO associated with the current DAOFactory.
+     * @return The Employee DAO associated with the current DAOFactory.
      */
     public EmployeeDAO getEmployeeDAO() {
         return new EmployeeDAOJDBC(this);
@@ -143,26 +144,34 @@ public abstract class DAOFactory {
     
     /**
      * Returns the ModuleEmployee DAO associated with the current DAOFactory.
-     * @return The Module DAO associated with the current DAOFactory.
+     * @return The ModuleEmployee DAO associated with the current DAOFactory.
      */
     public ModuleEmployeeDAO getModuleEmployeeDAO() {
         return new ModuleEmployeeDAOJDBC(this);
     }
     
     /**
-     * Returns the Module DAO associated with the current DAOFactory.
-     * @return The Module DAO associated with the current DAOFactory.
+     * Returns the Company DAO associated with the current DAOFactory.
+     * @return The Company DAO associated with the current DAOFactory.
      */
     public CompanyDAO getCompanyDAO() {
         return new CompanyDAOJDBC(this);
     }
     
     /**
-     * Returns the Module DAO associated with the current DAOFactory.
-     * @return The Module DAO associated with the current DAOFactory.
+     * Returns the CompanyAddress DAO associated with the current DAOFactory.
+     * @return The CompanyAddress DAO associated with the current DAOFactory.
      */
     public CompanyAddressDAO getCompanyAddressDAO() {
         return new CompanyAddressDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the CompanyContact DAO associated with the current DAOFactory.
+     * @return The CompanyContact DAO associated with the current DAOFactory.
+     */
+    public CompanyContactDAO getCompanyContactDAO() {
+        return new CompanyContactDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.

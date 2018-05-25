@@ -49,7 +49,7 @@ public class CompanyDAOJDBC implements CompanyDAO{
     /**
      * Construct a Company DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
-     * @param daoFactory The DAOFactory to construct this Employee DAO for.
+     * @param daoFactory The DAOFactory to construct this CompanyAddress DAO for.
      */
     CompanyDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
