@@ -2,11 +2,6 @@ package dao.JDBC;
 
 import dao.DAOConfigurationException;
 import dao.DAOProperties;
-import dao.JDBC.EmployeeDAOJDBC;
-import dao.JDBC.CompanyAddressDAOJDBC;
-import dao.JDBC.CompanyDAOJDBC;
-import dao.JDBC.ModuleEmployeeDAOJDBC;
-import dao.JDBC.ModuleDAOJDBC;
 import dao.interfaces.EmployeeDAO;
 import dao.interfaces.CompanyDAO;
 import dao.interfaces.ModuleEmployeeDAO;

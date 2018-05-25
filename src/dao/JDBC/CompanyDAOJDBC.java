@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Company;
-import model.Employee;
 
 /**
  *
@@ -34,8 +33,8 @@ public class CompanyDAOJDBC implements CompanyDAO{
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
             "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO COMPANY (id, name, rfc, tax_id, payment_terms, supplier, client, active) "
-            +"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO COMPANY (name, rfc, tax_id, payment_terms, supplier, client, active) "
+            +"VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE COMPANY SET name = ?, rfc = ?, tax_id = ?, payment_terms = ?, supplier = ?, client = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
@@ -178,17 +177,91 @@ public class CompanyDAOJDBC implements CompanyDAO{
 
     @Override
     public void create(Company company) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(company.getId() != null){
+            throw new IllegalArgumentException("Company is already created, the Company ID is not null.");
+        }
+        
+        Object[] values = {
+            company.getName(),
+            company.getRfc(),
+            company.getTax_id(),
+            company.getPayment_terms(),
+            company.isSupplier(),
+            company.isClient(),
+            company.isActive()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating Company failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    company.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating Company failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(Company company) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(company.getId() == null){
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        }
+        
+        Object[] values = {
+            company.getName(),
+            company.getRfc(),
+            company.getTax_id(),
+            company.getPayment_terms(),
+            company.isSupplier(),
+            company.isClient(),
+            company.isActive(),
+            company.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating Company failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(Company company) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            company.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting Company failed, no rows affected.");
+            } else{
+                company.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
