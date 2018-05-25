@@ -165,7 +165,6 @@ public class ModuleDAOJDBC implements ModuleDAO {
 
     @Override
     public void delete(Module module) throws DAOException {
-        System.out.println(module.getId());
         Object[] values = {
             module.getId()
         };
