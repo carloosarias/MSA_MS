@@ -5,7 +5,6 @@
  */
 package model;
 
-import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -28,7 +27,14 @@ public class EmployeeAttendance {
     public void setId(Integer id) {
         this.id = id;
     }
+    
+    public Date getDate() {
+        return date;
+    }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
     public LocalTime getEntry_time() {
         return entry_time;
     }
@@ -74,8 +80,8 @@ public class EmployeeAttendance {
      */
     @Override
     public String toString() {
-        return String.format("EmployeeAttendance[id=%d,entry_time=%s,end_time=%s]",
-                id, entry_time, end_time);
+        return String.format("EmployeeAttendance[id=%d,date=%s,entry_time=%s,end_time=%s]",
+                id, date, entry_time, end_time);
     }
     
 }
