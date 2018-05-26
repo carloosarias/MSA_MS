@@ -6,6 +6,8 @@
 package model;
 
 import java.sql.Timestamp;
+import java.time.LocalTime;
+import java.util.Date;
 
 /**
  *
@@ -14,8 +16,9 @@ import java.sql.Timestamp;
 public class EmployeeAttendance {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Timestamp entry_time;
-    private Timestamp end_time;
+    private Date date;
+    private LocalTime entry_time;
+    private LocalTime end_time;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -26,19 +29,19 @@ public class EmployeeAttendance {
         this.id = id;
     }
 
-    public Timestamp getEntry_time() {
+    public LocalTime getEntry_time() {
         return entry_time;
     }
 
-    public void setEntry_time(Timestamp entry_time) {
+    public void setEntry_time(LocalTime entry_time) {
         this.entry_time = entry_time;
     }
 
-    public Timestamp getEnd_time() {
+    public LocalTime getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(Timestamp end_time) {
+    public void setEnd_time(LocalTime end_time) {
         this.end_time = end_time;
     }
     // Object overrides ---------------------------------------------------------------------------

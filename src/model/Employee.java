@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.Date;
 
 /**
@@ -21,8 +22,8 @@ public class Employee implements Serializable {
     private String first_name;
     private String last_name;
     private Date hire_date;
-    private String entry_time;
-    private String end_time;
+    private LocalTime entry_time;
+    private LocalTime end_time;
     private Date birth_date;
     private String curp;
     private String address;
@@ -77,19 +78,19 @@ public class Employee implements Serializable {
         this.hire_date = hire_date;
     }
 
-    public String getEntry_time() {
+    public LocalTime getEntry_time() {
         return entry_time;
     }
 
-    public void setEntry_time(String entry_time) {
+    public void setEntry_time(LocalTime entry_time) {
         this.entry_time = entry_time;
     }
 
-    public String getEnd_time() {
+    public LocalTime getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(String end_time) {
+    public void setEnd_time(LocalTime end_time) {
         this.end_time = end_time;
     }
     public Date getBirth_date() {

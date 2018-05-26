@@ -10,6 +10,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.time.LocalTime;
 
 /**
  * Utility class for DAO's. This class contains commonly used DAO logic which is been refactored in
@@ -69,6 +71,14 @@ public final class DAOUtil {
      */
     public static Date toSqlDate(java.util.Date date) {
      return (date != null) ? new Date(date.getTime()) : null;
+    }
+
+    public static java.sql.Time toSqlTime(LocalTime time){
+        return Time.valueOf(time);
+}
+    
+    public static LocalTime toLocalTime(java.sql.Time time) {
+        return time.toLocalTime();
     }
 
 }

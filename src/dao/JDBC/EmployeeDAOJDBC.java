@@ -192,8 +192,8 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             employee.getFirst_name(),
             employee.getLast_name(),
             toSqlDate(employee.getHire_date()),
-            employee.getEntry_time(),
-            employee.getEnd_time(),
+            toSqlTime(employee.getEntry_time()),
+            toSqlTime(employee.getEnd_time()),
             toSqlDate(employee.getBirth_date()),
             employee.getCurp(),
             employee.getAddress(),
@@ -317,8 +317,8 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         employee.setFirst_name(resultSet.getString("first_name"));
         employee.setLast_name(resultSet.getString("last_name"));
         employee.setHire_date(resultSet.getDate("hire_date"));
-        employee.setEntry_time(resultSet.getString("entry_time"));
-        employee.setEnd_time(resultSet.getString("end_time"));
+        employee.setEntry_time(toLocalTime(resultSet.getTime("entry_time")));
+        employee.setEnd_time(toLocalTime(resultSet.getTime("end_time")));
         employee.setBirth_date(resultSet.getDate("birth_date"));
         employee.setCurp(resultSet.getString("curp"));
         employee.setAddress(resultSet.getString("address"));

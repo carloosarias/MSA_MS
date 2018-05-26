@@ -1,5 +1,6 @@
 
 import dao.JDBC.DAOFactory;
+import java.time.LocalTime;
 import java.util.Date;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -72,8 +73,8 @@ public class MainTest extends Application{
         employee.setFirst_name("fname");
         employee.setLast_name("lname");
         employee.setHire_date(new Date());
-        employee.setEntry_time("0:00");
-        employee.setEnd_time("7:00");
+        employee.setEntry_time(LocalTime.of(10, 30));
+        employee.setEnd_time(LocalTime.of(5, 30));
         employee.setBirth_date(new Date(1996,02,03));
         employee.setCurp("curp");
         employee.setAddress("address");
