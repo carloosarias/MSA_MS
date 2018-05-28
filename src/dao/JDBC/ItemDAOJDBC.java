@@ -7,7 +7,6 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.ItemTypeDAOJDBC.map;
 import dao.interfaces.ItemDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Item;
 import model.ItemType;
-import model.Module;
 
 /**
  *

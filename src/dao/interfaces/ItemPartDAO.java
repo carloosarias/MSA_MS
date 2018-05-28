@@ -18,27 +18,23 @@ public interface ItemPartDAO {
     // Actions ------------------------------------------------------------------------------------
     
     /**
+     * Returns the ItemPart from the database matching the given ID, otherwise null.
+     * @param id The ID of the ItemPart to be returned.
+     * @return The ItemPart from the database matching the given ID, otherwise null.
+     * @throws DAOException If something fails at database level.
+     */
+    public ItemPart find(Integer id) throws DAOException;
+    
+    /**
      * Returns the ItemPart from the database matching the given Item ID, otherwise null.
-     * @param item The Item to get the Item ID from.
+     * @param item The Item to get the Item ID from
      * @return The ItemPart from the database matching the given Item ID, otherwise null.
      * @throws DAOException If something fails at database level.
-     */    
-    public ItemPart find(Item item) throws DAOException;
-    
-    /**
-     * Returns the Item from the database matching the given Item ID, otherwise null.
-     * @param part The ItemPart to get the Item ID from.
-     * @return The Item from the database matching the given Item ID, otherwise null.
-     * @throws DAOException If something fails at database level.
      */
+    public ItemPart find(Item item) throws IllegalArgumentException, DAOException;
+    
     public Item findItem(ItemPart part) throws DAOException;
     
-    /**
-     * Returns the Metal from the database matching the given Metal ID, otherwise null.
-     * @param part The ItemPart to get the Metal ID from.
-     * @return The Metal from the database matching the given Metal ID, otherwise null.
-     * @throws DAOException If something fails at database level.
-     */
     public Metal findMetal(ItemPart part) throws DAOException;
     
     /**
@@ -48,6 +44,7 @@ public interface ItemPartDAO {
      * @throws DAOException If something fails at database level.
      */
     public ItemPart list() throws DAOException;
+    
     /**
      * Returns a list of all ItemPart from the database matching Metal ID ordered by Item ID. The Metal ID must not be null, otherwise it will throw
      * IllegalArgumentException. The list is never null and
@@ -74,14 +71,13 @@ public interface ItemPartDAO {
     /**
      * Update the given Item in the database. The Item ID and Metal ID must not be null, otherwise it will throw
      * IllegalArgumentException.
-     * @param item The Item to get the Item ID from
      * @param metal The Metal to get the Metal ID from
      * @param part the ItemPart to be updated.
      * @throws IllegalArgumentException If the Item ID is null.
      * @throws IllegalArgumentException If the Metal ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public void update(Item item, Metal metal, ItemPart part) throws IllegalArgumentException, DAOException;
+    public void update(Metal metal, ItemPart part) throws IllegalArgumentException, DAOException;
     
     /**
      * Delete the given ItemPart from the database.
