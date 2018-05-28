@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class ItemPart implements Serializable{
     // Properties ---------------------------------------------------------------------------------
+    private Integer item_id;
     private String part_number;
     private double area;
     private double initial_weight;
@@ -20,6 +21,14 @@ public class ItemPart implements Serializable{
     
     // Getters/setters ----------------------------------------------------------------------------
 
+    public Integer getId(){
+        return item_id;
+    }
+    
+    public void setId(Integer item_id){
+        this.item_id = item_id;
+    }
+    
     public String getPart_number() {
         return part_number;
     }
@@ -54,24 +63,24 @@ public class ItemPart implements Serializable{
     // Object overrides ---------------------------------------------------------------------------
 
     /**
-     * This should compare ItemPart by part_number only.
+     * This should compare ItemPart by Item ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof ItemPart) && (part_number != null)
-            ? part_number.equals(((ItemPart) other).part_number)
+        return (other instanceof ItemPart) && (item_id != null)
+            ? item_id.equals(((ItemPart) other).item_id)
             : (other == this);
     }
 
     /**
-     * ItemPart with same part_number should return same hashcode.
+     * ItemPart with same Item ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
-        return (part_number != null) 
-             ? (this.getClass().hashCode() + part_number.hashCode()) 
+        return (item_id != null) 
+             ? (this.getClass().hashCode() + item_id.hashCode()) 
              : super.hashCode();
     }
 
@@ -81,6 +90,6 @@ public class ItemPart implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("ItemPart[part_number=%s,area=%f,initial_weight=%f,after_weight=%f]", part_number, area, initial_weight, after_weight);
+        return String.format("ItemPart[item_id=%d,part_number=%s,area=%f,initial_weight=%f,after_weight=%f]", item_id, part_number, area, initial_weight, after_weight);
     }
 }
