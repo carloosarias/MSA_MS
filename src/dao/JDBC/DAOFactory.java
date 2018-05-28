@@ -2,6 +2,7 @@ package dao.JDBC;
 
 import dao.DAOConfigurationException;
 import dao.DAOProperties;
+import dao.interfaces.CoatingDAO;
 import dao.interfaces.EmployeeDAO;
 import dao.interfaces.CompanyDAO;
 import dao.interfaces.ModuleEmployeeDAO;
@@ -176,11 +177,19 @@ public abstract class DAOFactory {
     }
     
     /**
-     * Returns the Module DAO associated with the current DAOFactory.
-     * @return The Module DAO associated with the current DAOFactory.
+     * Returns the Metal DAO associated with the current DAOFactory.
+     * @return The Metal DAO associated with the current DAOFactory.
      */
     public MetalDAO getMetalDAO() {
         return new MetalDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Coating DAO associated with the current DAOFactory.
+     * @return The Coating DAO associated with the current DAOFactory.
+     */
+    public CoatingDAO getCoatingDAO() {
+        return new CoatingDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.
