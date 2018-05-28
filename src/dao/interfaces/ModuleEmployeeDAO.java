@@ -60,11 +60,11 @@ public interface ModuleEmployeeDAO {
     
     /**
      * Create the given Module_employee in the database. The Module ID and Employee ID must not be null, otherwise it will throw
-     * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Module.
+     * IllegalArgumentException.
      * @param module The Module to be registered.
      * @param employee The Employee to be registered
-     * @throws IllegalArgumentException If the Module ID is not null.
-     * @throws IllegalArgumentException If the Employee ID is not null.
+     * @throws IllegalArgumentException If the Module ID is null.
+     * @throws IllegalArgumentException If the Employee ID is null.
      * @throws DAOException If something fails at database level.
      */
     public void create(Module module, Employee employee) throws IllegalArgumentException, DAOException;

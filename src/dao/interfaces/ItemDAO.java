@@ -44,7 +44,7 @@ public interface ItemDAO {
     /**
      * Returns a list of all Item from the database ordered by Item ID. The list is never null and
      * is empty when the database does not contain any Item.
-     * @return A list of all Coating from the database ordered by Item ID.
+     * @return A list of all Item from the database ordered by Item ID.
      * @throws DAOException If something fails at database level.
      */    
     public List<Item> list() throws DAOException;
