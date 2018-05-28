@@ -302,9 +302,9 @@ public class ItemPartDAOJDBC implements ItemPartDAO{
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an Item.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an Item.
-     * @return The mapped Item from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an ItemPart.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an ItemPart.
+     * @return The mapped ItemPart from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     public static ItemPart map(ResultSet resultSet) throws SQLException{
