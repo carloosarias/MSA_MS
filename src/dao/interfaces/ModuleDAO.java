@@ -52,7 +52,7 @@ public interface ModuleDAO {
      * Update the given Module in the database. The Module ID must not be null, otherwise it will throw
      * IllegalArgumentException.
      * @param module The module to be updated in the database.
-     * @throws IllegalArgumentException If the Employee ID is null.
+     * @throws IllegalArgumentException If the Module ID is null.
      * @throws DAOException If something fails at database level.
      */
     public void update(Module module) throws IllegalArgumentException, DAOException;

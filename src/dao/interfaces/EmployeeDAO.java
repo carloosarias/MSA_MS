@@ -29,17 +29,17 @@ public interface EmployeeDAO {
     public Employee find(Integer id) throws DAOException;
 
     /**
-     * Returns the user from the database matching the given email and password, otherwise null.
-     * @param user The email of the user to be returned.
-     * @param password The password of the user to be returned.
-     * @return The user from the database matching the given email and password, otherwise null.
+     * Returns the Employee from the database matching the given email and password, otherwise null.
+     * @param user The user of the Employee to be returned.
+     * @param password The password of the Employee to be returned.
+     * @return The Employee from the database matching the given email and password, otherwise null.
      * @throws DAOException If something fails at database level.
      */
     public Employee find(String user, String password) throws DAOException;
 
     /**
      * Returns a listActive of all Employees from the database ordered by user ID. The listActive is never null and
- is empty when the database does not contain any Employee.
+     * is empty when the database does not contain any Employee.
      * @return A listActive of all Employees from the database ordered by Employee ID.
      * @throws DAOException If something fails at database level.
      */
@@ -47,7 +47,7 @@ public interface EmployeeDAO {
     
     /**
      * Returns a listActive of all Employees that are active from the database ordered by Employee ID. The listActive is never null and
- is empty when the database does not contain any Company active.
+     * is empty when the database does not contain any Employee active.
      * @param active The state of the Employee if false then return Employees that are NOT active
      * @return A listActive of all Employees that are active from the database ordered by Employee ID.
      * @throws DAOException If something fails at database level.

@@ -8,6 +8,7 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
+import dao.interfaces.MetalDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -172,6 +173,14 @@ public abstract class DAOFactory {
      */
     public CompanyContactDAO getCompanyContactDAO() {
         return new CompanyContactDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Module DAO associated with the current DAOFactory.
+     * @return The Module DAO associated with the current DAOFactory.
+     */
+    public MetalDAO getMetalDAO() {
+        return new MetalDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.

@@ -6,35 +6,35 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.interfaces.ModuleDAO;
 import static dao.DAOUtil.prepareStatement;
+import dao.interfaces.MetalDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Module;
+import model.Metal;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class ModuleDAOJDBC implements ModuleDAO {
+public class MetalDAOJDBC implements MetalDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, name FROM MODULE WHERE id = ?";
+            "SELECT id, name FROM METAL WHERE id = ?";
     private static final String SQL_FIND_BY_NAME =
-            "SELECT id, name FROM MODULE WHERE name = ?";
+            "SELECT id, name FROM METAL WHERE name = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name FROM MODULE ORDER BY id";
+            "SELECT id, name FROM METAL ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO MODULE (name) "
+            "INSERT INTO METAL (name) "
             + "VALUES (?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MODULE SET name = ? WHERE id = ?";
+            "UPDATE METAL SET name = ? WHERE id = ?";
     private static final String SQL_DELETE =
-            "DELETE FROM MODULE WHERE id = ?";
+            "DELETE FROM METAL WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -43,35 +43,35 @@ public class ModuleDAOJDBC implements ModuleDAO {
     // Constructors -------------------------------------------------------------------------------
 
     /**
-     * Construct a Module DAO for the given DAOFactory. Package private so that it can be constructed
+     * Construct a Metal DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
      * @param daoFactory The DAOFactory to construct this Employee DAO for.
      */
-    ModuleDAOJDBC(DAOFactory daoFactory) {
+    MetalDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
     
     // Actions ------------------------------------------------------------------------------------
 
     @Override
-    public Module find(Integer id) throws DAOException {
+    public Metal find(Integer id) throws DAOException {
         return find(SQL_FIND_BY_ID, id);
     }
     
     @Override
-    public Module find(String name) throws DAOException {
+    public Metal find(String name) throws DAOException {
         return find(SQL_FIND_BY_NAME, name);
     }
     
     /**
-     * Returns the Module from the database matching the given SQL query with the given values.
+     * Returns the Metal from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The Module from the database matching the given SQL query with the given values.
+     * @return The Metal from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
-    private Module find(String sql, Object... values) throws DAOException {
-        Module module = null;
+    private Metal find(String sql, Object... values) throws DAOException {
+        Metal metal = null;
 
         try (
             Connection connection = daoFactory.getConnection();
@@ -79,18 +79,18 @@ public class ModuleDAOJDBC implements ModuleDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                module = map(resultSet);
+                metal = map(resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
         }
 
-        return module;
+        return metal;
     }
     
     @Override
-    public List<Module> list() throws DAOException {
-        List<Module> modules = new ArrayList<>();
+    public List<Metal> list() throws DAOException {
+        List<Metal> metal = new ArrayList<>();
         
         try(
             Connection connection = daoFactory.getConnection();
@@ -98,23 +98,23 @@ public class ModuleDAOJDBC implements ModuleDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                modules.add(map(resultSet));
+                metal.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return modules;
+        return metal;
     }
     
     @Override
-    public void create(Module module) throws IllegalArgumentException, DAOException {
-        if(module.getId() != null){
-            throw new IllegalArgumentException("Module is already created, the Module ID is not null.");
+    public void create(Metal metal) throws IllegalArgumentException, DAOException {
+        if(metal.getId() != null){
+            throw new IllegalArgumentException("Metal is already created, the Metal ID is not null.");
         }
 
         Object[] values = {
-            module.getName()
+            metal.getName()
         };
         
         try(
@@ -123,14 +123,14 @@ public class ModuleDAOJDBC implements ModuleDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
-                throw new DAOException("Creating Module failed, no rows affected.");
+                throw new DAOException("Creating Metal failed, no rows affected.");
             }
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    module.setId(generatedKeys.getInt(1));
+                    metal.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new DAOException("Creating Module failed, no generated key obtained.");
+                    throw new DAOException("Creating Metal failed, no generated key obtained.");
                 }
             }
             
@@ -140,14 +140,14 @@ public class ModuleDAOJDBC implements ModuleDAO {
     }
 
     @Override
-    public void update(Module module) throws IllegalArgumentException, DAOException {
-        if (module.getId() == null) {
-            throw new IllegalArgumentException("Module is not created yet, the Module ID is null.");
+    public void update(Metal metal) throws IllegalArgumentException, DAOException {
+        if (metal.getId() == null) {
+            throw new IllegalArgumentException("Metal is not created yet, the Metal ID is null.");
         }
         
         Object[] values = {
-            module.getName(),
-            module.getId()
+            metal.getName(),
+            metal.getId()
         };
         
         try(
@@ -156,7 +156,7 @@ public class ModuleDAOJDBC implements ModuleDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Updating Module failed, no rows affected.");
+                throw new DAOException("Updating Metal failed, no rows affected.");
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -164,9 +164,9 @@ public class ModuleDAOJDBC implements ModuleDAO {
     }
 
     @Override
-    public void delete(Module module) throws DAOException {
+    public void delete(Metal metal) throws DAOException {
         Object[] values = {
-            module.getId()
+            metal.getId()
         };
         
         try(
@@ -175,9 +175,9 @@ public class ModuleDAOJDBC implements ModuleDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Deleting Module failed, no rows affected.");
+                throw new DAOException("Deleting Metal failed, no rows affected.");
             } else{
-                module.setId(null);
+                metal.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -192,10 +192,10 @@ public class ModuleDAOJDBC implements ModuleDAO {
      * @return The mapped Module from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static Module map(ResultSet resultSet) throws SQLException{
-        Module module = new Module();
-        module.setId(resultSet.getInt("id"));
-        module.setName(resultSet.getString("name"));
-        return module;
+    public static Metal map(ResultSet resultSet) throws SQLException{
+        Metal metal = new Metal();
+        metal.setId(resultSet.getInt("id"));
+        metal.setName(resultSet.getString("name"));
+        return metal;
     }
 }
