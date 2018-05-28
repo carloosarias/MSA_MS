@@ -81,6 +81,6 @@ public class Item implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Item[id=%d,name=%s,desc=%s,unit_price=%d]", id, name, desc);
+        return String.format("Item[id=%d,name=%s,desc=%s,unit_price=%f]", id, name, desc, unit_price);
     }
 }

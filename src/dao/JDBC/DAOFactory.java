@@ -9,6 +9,7 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
+import dao.interfaces.ItemDAO;
 import dao.interfaces.ItemTypeDAO;
 import dao.interfaces.MetalDAO;
 import java.sql.Connection;
@@ -199,6 +200,14 @@ public abstract class DAOFactory {
      */
     public ItemTypeDAO getItemTypeDAO() {
         return new ItemTypeDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the ItemType DAO associated with the current DAOFactory.
+     * @return The ItemType DAO associated with the current DAOFactory.
+     */
+    public ItemDAO getItemDAO() {
+        return new ItemDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.
