@@ -7,6 +7,7 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
+import static dao.JDBC.ItemTypeDAOJDBC.map;
 import dao.interfaces.ItemDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,7 +33,7 @@ public class ItemDAOJDBC implements ItemDAO{
             "SELECT ITEM_TYPE_ID FROM ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, name, desc, unit_price FROM ITEM ORDER BY id";
-    private static final String SQL_LIST_BY_TYPE_ORDER_BY_ID = 
+    private static final String SQL_LIST_OF_TYPE_ORDER_BY_ID = 
             "SELECT id, name, desc, unit_price FROM ITEM WHERE ITEM_TYPE_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO ITEM (ITEM_TYPE_ID, name, desc, unit_price) "
@@ -123,27 +124,129 @@ public class ItemDAOJDBC implements ItemDAO{
 
     @Override
     public List<Item> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Item> items = new ArrayList<>();
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                items.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return items;
     }
 
     @Override
     public List<Item> list(ItemType type) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (type.getId() == null) {
+            throw new IllegalArgumentException("ItemType is not created yet, the ItemType ID is null.");
+        }
+        
+        List<Item> items = new ArrayList<>();
+        
+        Object[] values = {
+            type.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_TYPE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                items.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return items;
     }
 
     @Override
     public void create(ItemType type, Item item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (type.getId() == null) {
+            throw new IllegalArgumentException("ItemType is not created yet, the ItemType ID is null.");
+        }
+        if (item.getId() != null) {
+            throw new IllegalArgumentException("Item is already created, the Item ID is not null.");
+        }
+        
+        Object[] values = {
+            type.getId(),
+            item.getName(),
+            item.getDesc(),
+            item.getUnit_price()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, false, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating Item failed, no rows affected.");
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(ItemType type, Item item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       if (type.getId() == null) {
+            throw new IllegalArgumentException("ItemType is not created yet, the ItemType ID is null.");
+        }
+        if (item.getId() == null) {
+            throw new IllegalArgumentException("Item is not created yet, the Item ID is null.");
+        }
+        
+        Object[] values = {
+            type.getId(),
+            item.getName(),
+            item.getDesc(),
+            item.getUnit_price(),
+            item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating Item failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(Item item) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting Item failed, no rows affected.");
+            } else{
+                item.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
