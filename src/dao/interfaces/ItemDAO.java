@@ -61,24 +61,24 @@ public interface ItemDAO {
     /**
      * Create the given Item in the database. The Item ID must be null and the ItemType must not be null, otherwise it will throw
      * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Item.
+     * @param type The ItemType to be assigned to the Item.
      * @param item The Item to be created in the database.
-     * @param type The ItemType of the item.
      * @throws IllegalArgumentException If the Item ID is not null.
      * @throws IllegalArgumentException If the ItemType ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public void create(Item item, ItemType type) throws IllegalArgumentException, DAOException;
+    public void create(ItemType type, Item item) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given Item in the database. The Item ID and ItemType ID must not be null, otherwise it will throw
      * IllegalArgumentException.
-     * @param item The Item to be updated in the database.
      * @param type The ItemType to be assigned to the Item.
+     * @param item The Item to be updated in the database.
      * @throws IllegalArgumentException If the Item ID is null.
      * @throws IllegalArgumentException If the ItemType ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public void update(Item item, ItemType type) throws IllegalArgumentException, DAOException;
+    public void update(ItemType type, Item item) throws IllegalArgumentException, DAOException;
     
     /**
      * Delete the given Item from the database. After deleting, the DAO will set the ID of the given
