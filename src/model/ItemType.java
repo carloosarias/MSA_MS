@@ -57,7 +57,7 @@ public class ItemType implements Serializable {
     }
 
     /**
-     * Returns the String representation of this Metal. Not required, it just pleases reading logs.
+     * Returns the String representation of this ItemType. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
