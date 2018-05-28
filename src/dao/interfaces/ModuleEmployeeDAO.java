@@ -70,9 +70,9 @@ public interface ModuleEmployeeDAO {
     public void create(Module module, Employee employee) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given Module from the database. After deleting, the DAO will set the ID of the given
-     * Module to null.
-     * @param module The Module to be deleted from the database.
+     * Delete the given ModuleEmployee from the database.
+     * @param module The Module to be searched for
+     * @param employee The Employee to be searched for
      * @throws DAOException If something fails at database level.
      */
     public void delete(Module module, Employee employee) throws DAOException;
