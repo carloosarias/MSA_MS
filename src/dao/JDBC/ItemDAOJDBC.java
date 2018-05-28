@@ -6,10 +6,17 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.ItemDAO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Item;
 import model.ItemType;
+import model.Module;
 
 /**
  *
@@ -54,17 +61,64 @@ public class ItemDAOJDBC implements ItemDAO{
 
     @Override
     public Item find(Integer id) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return find(SQL_FIND_BY_ID, id);
     }
 
     @Override
     public Item find(String name) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return find(SQL_FIND_BY_NAME, name);
     }
+    
+    /**
+     * Returns the Item from the database matching the given SQL query with the given values.
+     * @param sql The SQL query to be executed in the database.
+     * @param values The PreparedStatement values to be set.
+     * @return The Item from the database matching the given SQL query with the given values.
+     * @throws DAOException If something fails at database level.
+     */
+    private Item find(String sql, Object... values) throws DAOException {
+        Item item = null;
 
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, sql, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                item = map(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+
+        return item;
+    }
+    
     @Override
     public ItemType findType(Item item) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (item.getId() == null) {
+            throw new IllegalArgumentException("Item is not created yet, the Item ID is null.");
+        }
+        
+        ItemType type = new ItemType();
+        
+        Object[] values = {
+            item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_TYPE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            if(resultSet.next()){
+                type = daoFactory.getItemTypeDAO().find(resultSet.getInt("ITEM_TYPE_ID"));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return type;
     }
 
     @Override
@@ -90,5 +144,22 @@ public class ItemDAOJDBC implements ItemDAO{
     @Override
     public void delete(Item item) throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    // Helpers ------------------------------------------------------------------------------------
+
+    /**
+     * Map the current row of the given ResultSet to an Item.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an Item.
+     * @return The mapped Item from the current row of the given ResultSet.
+     * @throws SQLException If something fails at database level.
+     */
+    public static Item map(ResultSet resultSet) throws SQLException{
+        Item item = new Item();
+        item.setId(resultSet.getInt("id"));
+        item.setName(resultSet.getString("name"));
+        item.setDesc(resultSet.getString("desc"));
+        item.setUnit_price(resultSet.getDouble("unit_price"));
+        return item;
     }
 }
