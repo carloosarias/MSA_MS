@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import model.EmployeeAttendance;
+import model.Employee;
 
 /**
  *
@@ -17,7 +17,7 @@ public class MainApp extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
         DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-        EmployeeAttendance e = new EmployeeAttendance();
+        Employee e = new Employee();
         e.setEntry_time(LocalTime.now());
         System.out.println(e.getEntry_time().format(DateTimeFormatter.ofPattern("HH:mm")));
         System.exit(1);
