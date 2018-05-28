@@ -184,11 +184,19 @@ public class ItemDAOJDBC implements ItemDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, false, values);          
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
                 throw new DAOException("Creating Item failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    item.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating Item failed, no generated key obtained.");
+                }
             }
             
         } catch (SQLException e){

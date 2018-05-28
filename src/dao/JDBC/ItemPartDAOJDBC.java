@@ -7,6 +7,7 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
+import static dao.JDBC.ItemDAOJDBC.map;
 import dao.interfaces.ItemPartDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +18,6 @@ import java.util.List;
 import model.Item;
 import model.ItemPart;
 import model.Metal;
-import model.Module;
 
 /**
  *
@@ -33,6 +33,17 @@ public class ItemPartDAOJDBC implements ItemPartDAO{
             "SELECT ITEM_ID FROM ITEM_PART WHERE id = ?";
     private static final String SQL_FIND_METAL_BY_ID = 
             "SELECT METAL_ID FROM ITEM_PART WHERE id = ?";
+    private static final String SQL_LIST_ORDER_BY_ID = 
+            "SELECT id, part_number, area, initial_weight, after_weight FROM ITEM_PART ORDER BY id";
+    private static final String SQL_LIST_OF_METAL_ORDER_BY_ID = 
+            "SELECT id, part_number, area, initial_weight, after_weight, FROM ITEM_PART WHERE METAL_ID = ? ORDER BY id";
+    private static final String SQL_INSERT =
+            "INSERT INTO ITEM_PART (ITEM_ID, METAL_ID, part_number, area, initial_weight, after_weight) "
+            + "VALUES (?, ?, ?, ?)";
+    private static final String SQL_UPDATE = 
+            "UPDATE ITEM_PART SET ITEM_ID = ?, METAL_ID = ?, part_number = ?, area = ?, initial_weight = ?, after_weight = ? WHERE id = ?";
+    private static final String SQL_DELETE =
+            "DELETE FROM ITEM_PART WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -145,27 +156,147 @@ public class ItemPartDAOJDBC implements ItemPartDAO{
     }
     
     @Override
-    public ItemPart list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<ItemPart> list() throws DAOException {
+        List<ItemPart> parts = new ArrayList<>();
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                parts.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return parts;
     }
 
     @Override
-    public ItemPart list(Metal metal) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<ItemPart> list(Metal metal) throws IllegalArgumentException, DAOException {
+        if (metal.getId() == null) {
+            throw new IllegalArgumentException("Metal is not created yet, the Metal ID is null.");
+        }
+        
+        List<ItemPart> parts = new ArrayList<>();
+        
+        Object[] values = {
+            metal.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_METAL_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                parts.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return parts;
     }
     
     @Override
     public void create(Item item, Metal metal, ItemPart part) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (item.getId() == null) {
+            throw new IllegalArgumentException("Item is not created yet, the Item ID is null.");
+        }
+        if (metal.getId() == null) {
+            throw new IllegalArgumentException("Metal is not created yet, the Metal ID is null.");
+        }
+        if (part.getId() != null) {
+            throw new IllegalArgumentException("ItemPart is already created, the ItemPart ID is not null.");
+        }
+        
+        Object[] values = {
+            item.getId(),
+            metal.getId(),
+            part.getPart_number(),
+            part.getArea(),
+            part.getInitial_weight(),
+            part.getAfter_weight()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating ItemPart failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    part.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating ItemPart failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
-    public void update(Metal metal, ItemPart part) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(Item item, Metal metal, ItemPart part) throws IllegalArgumentException, DAOException {
+        if (item.getId() == null) {
+            throw new IllegalArgumentException("Item is not created yet, the Employee ID is null.");
+        }
+        if (metal.getId() == null) {
+            throw new IllegalArgumentException("Metal is not created yet, the Module ID is null.");
+        }
+        if (part.getId() == null) {
+            throw new IllegalArgumentException("ItemPart is not created yet, the ItemPart ID is null.");
+        }
+        
+        Object[] values = {
+            item.getId(),
+            metal.getId(),
+            part.getPart_number(),
+            part.getArea(),
+            part.getInitial_weight(),
+            part.getAfter_weight(),
+            part.getId()
+        };        
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating ItemPart failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     @Override
     public void delete(ItemPart part) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            part.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting ItemPart failed, no rows affected.");
+            } else{
+                part.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
