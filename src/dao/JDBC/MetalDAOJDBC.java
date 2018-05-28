@@ -187,9 +187,9 @@ public class MetalDAOJDBC implements MetalDAO {
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an Module.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an Module.
-     * @return The mapped Module from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an Metal.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an Metal.
+     * @return The mapped Metal from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     public static Metal map(ResultSet resultSet) throws SQLException{
