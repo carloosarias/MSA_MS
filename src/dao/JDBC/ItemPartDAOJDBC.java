@@ -12,9 +12,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import model.Item;
 import model.ItemPart;
 import model.Metal;
+import model.Module;
 
 /**
  *
@@ -58,6 +61,7 @@ public class ItemPartDAOJDBC implements ItemPartDAO{
         if (item.getId() == null) {
             throw new IllegalArgumentException("Item is not created yet, the Item ID is null.");
         }
+        
         return find(SQL_FIND_BY_ITEM_ID, item.getId());
     }
     
@@ -88,12 +92,56 @@ public class ItemPartDAOJDBC implements ItemPartDAO{
     
     @Override
     public Item findItem(ItemPart part) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (part.getId() == null) {
+            throw new IllegalArgumentException("Part is not created yet, the Part ID is null.");
+        }
+        
+        Item item = new Item();
+        
+        Object[] values = {
+            part.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_ITEM_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            if(resultSet.next()){
+                item = daoFactory.getItemDAO().find(resultSet.getInt("ITEM_ID"));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return item;
     }
 
     @Override
     public Metal findMetal(ItemPart part) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (part.getId() == null) {
+            throw new IllegalArgumentException("Part is not created yet, the Part ID is null.");
+        }
+        
+        Metal metal = new Metal();
+        
+        Object[] values = {
+            part.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_METAL_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            if(resultSet.next()){
+                metal = daoFactory.getMetalDAO().find(resultSet.getInt("METAL_ID"));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return metal;
     }
     
     @Override
