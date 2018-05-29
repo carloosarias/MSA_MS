@@ -2,16 +2,12 @@ package dao.JDBC;
 
 import dao.DAOConfigurationException;
 import dao.DAOProperties;
-import dao.interfaces.CoatingDAO;
 import dao.interfaces.EmployeeDAO;
 import dao.interfaces.CompanyDAO;
 import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
-import dao.interfaces.ItemDAO;
-import dao.interfaces.ItemTypeDAO;
-import dao.interfaces.MetalDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -176,38 +172,6 @@ public abstract class DAOFactory {
      */
     public CompanyContactDAO getCompanyContactDAO() {
         return new CompanyContactDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the Metal DAO associated with the current DAOFactory.
-     * @return The Metal DAO associated with the current DAOFactory.
-     */
-    public MetalDAO getMetalDAO() {
-        return new MetalDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the Coating DAO associated with the current DAOFactory.
-     * @return The Coating DAO associated with the current DAOFactory.
-     */
-    public CoatingDAO getCoatingDAO() {
-        return new CoatingDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the ItemType DAO associated with the current DAOFactory.
-     * @return The ItemType DAO associated with the current DAOFactory.
-     */
-    public ItemTypeDAO getItemTypeDAO() {
-        return new ItemTypeDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the ItemType DAO associated with the current DAOFactory.
-     * @return The ItemType DAO associated with the current DAOFactory.
-     */
-    public ItemDAO getItemDAO() {
-        return new ItemDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.
