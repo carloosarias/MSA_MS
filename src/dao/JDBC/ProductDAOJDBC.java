@@ -26,6 +26,8 @@ public class ProductDAOJDBC implements ProductDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT id, name, active FROM PRODUCT WHERE id = ?";
+    private static final String SQL_FIND_TYPE_BY_ID = 
+            "SELECT TYPE_ID FROM PRODUCT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, name, active FROM PRODUCT ORDER BY id";
     private static final String SQL_LIST_OF_TYPE_ORDER_BY_ID = 
@@ -62,6 +64,34 @@ public class ProductDAOJDBC implements ProductDAO{
     @Override
     public Product find(Integer id) throws DAOException {
         return find(SQL_FIND_BY_ID, id);
+    }
+    
+    @Override
+    public ProductType find(Product product) throws IllegalArgumentException, DAOException{
+        if (product.getId() == null) {
+            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
+        }
+        
+        ProductType type = null;
+        
+        Object[] values = {
+            product.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_TYPE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                type = daoFactory.getProductTypeDAO().find(resultSet.getInt("TYPE_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return type;
+
     }
     
     /**

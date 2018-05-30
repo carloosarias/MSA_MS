@@ -25,6 +25,8 @@ public interface ProductDAO {
      */
     public Product find(Integer id) throws DAOException;
     
+    public ProductType find(Product product) throws IllegalArgumentException, DAOException;
+    
     /**
      * Returns a list of all Products from the database ordered by Product ID. The list is never null and
      * is empty when the database does not contain any Product.
