@@ -18,7 +18,7 @@ public interface ProductTypeDAO {
     
     /**
      * Returns the ProductType from the database matching the given ID, otherwise null.
-     * @param id The ID of the ProductPart to be returned.
+     * @param id The ID of the ProductType to be returned.
      * @return The ProductType from the database matching the given ID, otherwise null.
      * @throws DAOException If something fails at database level.
      */
