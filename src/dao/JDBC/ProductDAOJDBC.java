@@ -7,7 +7,6 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.ProductTypeDAOJDBC.map;
 import dao.interfaces.ProductDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -51,9 +50,9 @@ public class ProductDAOJDBC implements ProductDAO{
     // Constructors -------------------------------------------------------------------------------
 
     /**
-     * Construct a ProductType DAO for the given DAOFactory. Package private so that it can be constructed
+     * Construct a Product DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
-     * @param daoFactory The DAOFactory to construct this Employee DAO for.
+     * @param daoFactory The DAOFactory to construct this Product DAO for.
      */
     ProductDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
@@ -64,34 +63,6 @@ public class ProductDAOJDBC implements ProductDAO{
     @Override
     public Product find(Integer id) throws DAOException {
         return find(SQL_FIND_BY_ID, id);
-    }
-    
-    @Override
-    public ProductType find(Product product) throws IllegalArgumentException, DAOException{
-        if (product.getId() == null) {
-            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
-        }
-        
-        ProductType type = null;
-        
-        Object[] values = {
-            product.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_TYPE_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                type = daoFactory.getProductTypeDAO().find(resultSet.getInt("TYPE_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-        
-        return type;
-
     }
     
     /**
@@ -117,6 +88,33 @@ public class ProductDAOJDBC implements ProductDAO{
         }
 
         return product;
+    }
+    
+    @Override
+    public ProductType findType(Product product) throws IllegalArgumentException, DAOException{
+        if (product.getId() == null) {
+            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
+        }
+        
+        ProductType type = null;
+        
+        Object[] values = {
+            product.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_TYPE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                type = daoFactory.getProductTypeDAO().find(resultSet.getInt("TYPE_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return type;
     }
     
     @Override
