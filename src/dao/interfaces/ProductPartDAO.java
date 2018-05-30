@@ -59,7 +59,7 @@ public interface ProductPartDAO {
     
     /**
      * Returns a list of all ProductParts from the database ordered by ProductPart ID. The list is never null and
-     * is empty when the database does not contain any Product.
+     * is empty when the database does not contain any ProductPart.
      * @return A list of all ProductParts from the database ordered by ProductPart ID.
      * @throws DAOException If something fails at database level.
      */
@@ -104,8 +104,8 @@ public interface ProductPartDAO {
     /**
      * Update the given ProductPart in the database. The ProductPart ID must not be null, 
      * otherwise it will throw IllegalArgumentException.
-     * @param part The Part to be updated.
-     * @throws IllegalArgumentException If the Product ID is null.
+     * @param part The ProductPart to be updated.
+     * @throws IllegalArgumentException If the ProductPart ID is null.
      * @throws DAOException If something fails at database level.
      */
     public void update(ProductPart part) throws IllegalArgumentException, DAOException;

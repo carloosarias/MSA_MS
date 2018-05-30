@@ -5,14 +5,17 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Pavilion Mini
  */
-public class ProductType {
+public class ProductType implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String name;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -29,6 +32,14 @@ public class ProductType {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active){
+        this.active = active;
     }
     
     // Object overrides ---------------------------------------------------------------------------
@@ -61,7 +72,7 @@ public class ProductType {
      */
     @Override
     public String toString() {
-        return String.format("ProductType[id=%d,name=%s]",
-                id, name);
+        return String.format("ProductType[id=%d,name=%s,active=%b]",
+                id, name, active);
     }
 }
