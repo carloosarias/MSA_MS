@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Product;
 import model.ProductPart;
@@ -34,20 +35,18 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
     private static final String SQL_FIND_SPECIFICATION_BY_ID = 
             "SELECT SPECIFICATION_ID FROM PRODUCT_PART WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, active FROM PRODUCT ORDER BY id";
-    private static final String SQL_LIST_OF_TYPE_ORDER_BY_ID = 
-            "SELECT id, name, active FROM PRODUCT WHERE TYPE_ID = ? ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, name, active FROM PRODUCT WHERE active = ? ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_OF_TYPE_ORDER_BY_ID = 
-            "SELECT id, name, active FROM PRODUCT WHERE TYPE_ID = ? AND active = ? ORDER BY id";
+            "SELECT id, part_number, rev, base_metal, area, base_weight, final_weight FROM PRODUCT_PART ORDER BY id";
+    private static final String SQL_LIST_OF_PRODUCT_ORDER_BY_ID = 
+            "SELECT id, part_number, rev, base_metal, area, base_weight, final_weight FROM PRODUCT_PART WHERE PRODUCT_ID = ? ORDER BY id";
+    private static final String SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID = 
+            "SELECT id, part_number, rev, base_metal, area, base_weight, final_weight FROM PRODUCT_PART WHERE SPECIFICATION_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO PRODUCT (TYPE_ID, name, active) "
-            + "VALUES (?, ?, ?)";
+            "INSERT INTO PRODUCT (PRODUCT_ID, part_number, rev, SPECIFICATION_ID, base_metal, area, base_weight, final_weight) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PRODUCT SET name = ?, active = ? WHERE id = ?";
+            "UPDATE PRODUCT_PART SET part_number = ?, rev = ?, base_metal = ?, area = ?, base_weight = ?, final_weight = ? WHERE id = ?";
     private static final String SQL_DELETE =
-            "DELETE FROM PRODUCT WHERE id = ?";
+            "DELETE FROM PRODUCT_PART WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -179,17 +178,73 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
 
     @Override
     public List<ProductPart> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<ProductPart> part = new ArrayList<>();
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                part.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part;
     }
 
     @Override
     public List<ProductPart> list(Product product) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(product.getId() == null){
+            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
+        }
+        List<ProductPart> part = new ArrayList<>();
+        
+        Object[] values = {
+            product
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PRODUCT_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                part.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part;
     }
 
     @Override
     public List<ProductPart> list(Specification specification) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(specification.getId() == null){
+            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
+        }
+        List<ProductPart> part = new ArrayList<>();
+        
+        Object[] values = {
+            specification
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                part.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part;
     }
 
     @Override
