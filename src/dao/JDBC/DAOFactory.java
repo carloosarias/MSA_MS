@@ -8,6 +8,8 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
+import dao.interfaces.ProductDAO;
+import dao.interfaces.ProductTypeDAO;
 import dao.interfaces.SpecificationDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -176,11 +178,27 @@ public abstract class DAOFactory {
     }
     
     /**
-     * Returns the CompanyContact DAO associated with the current DAOFactory.
-     * @return The CompanyContact DAO associated with the current DAOFactory.
+     * Returns the Specification DAO associated with the current DAOFactory.
+     * @return The Specification DAO associated with the current DAOFactory.
      */
     public SpecificationDAO getSpecificationDAO() {
         return new SpecificationDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the ProductType DAO associated with the current DAOFactory.
+     * @return The ProductType DAO associated with the current DAOFactory.
+     */
+    public ProductTypeDAO getProductTypeDAO() {
+        return new ProductTypeDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Product DAO associated with the current DAOFactory.
+     * @return The Product DAO associated with the current DAOFactory.
+     */
+    public ProductDAO getProductDAO() {
+        return new ProductDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.

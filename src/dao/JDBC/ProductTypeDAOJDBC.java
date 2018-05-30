@@ -7,7 +7,6 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.ModuleDAOJDBC.map;
 import dao.interfaces.ProductTypeDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,8 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Employee;
-import model.Module;
 import model.ProductType;
 
 /**
@@ -125,11 +122,12 @@ public class ProductTypeDAOJDBC implements ProductTypeDAO{
             throw new DAOException(e);
         }
         
-        return type;    }
+        return type;
+    }
 
     @Override
     public void create(ProductType type) throws IllegalArgumentException, DAOException {
-    if(type.getId() != null){
+        if(type.getId() != null){
             throw new IllegalArgumentException("ProductType is already created, the ProductType ID is not null.");
         }
 

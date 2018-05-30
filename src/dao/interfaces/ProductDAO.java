@@ -54,6 +54,18 @@ public interface ProductDAO {
     public List<Product> listActive(boolean active) throws DAOException;
     
     /**
+     * Returns a list of all Products matching ProductType and active from the database ordered by Product ID. The ProductType ID must not be null, otherwise it will throw
+     * IllegalArgumentException. The list is never null and
+     * is empty when the database does not contain any Product matching ProductType active.
+     * @param type The ProductType to be searched for.
+     * @param active The boolean value to be searched for.
+     * @return A list of all Products matching active and type from the database ordered by Product ID.
+     * @throws IllegalArgumentException If the ProductType ID is null.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<Product> listActive(ProductType type, boolean active) throws DAOException;
+    
+    /**
      * Create the given Product in the database. The ProductType ID must not be null and
      * the Product ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given Product.
