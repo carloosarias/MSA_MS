@@ -285,7 +285,7 @@ public class ProductDAOJDBC implements ProductDAO{
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Deleting ProductType failed, no rows affected.");
+                throw new DAOException("Deleting Product failed, no rows affected.");
             } else{
                 product.setId(null);
             }

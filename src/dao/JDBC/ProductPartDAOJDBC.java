@@ -249,25 +249,104 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
 
     @Override
     public void create(Product product, Specification specification, ProductPart part) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (product.getId() == null) {
+            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
+        }
+        if (specification.getId() == null) {
+            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
+        }
+        if(part.getId() != null){
+            throw new IllegalArgumentException("ProductPart is already created, the ProductPart ID is not null.");
+        }
+        
+        Object[] values = {
+            product.getId(),
+            part.getPart_number(),
+            part.getRev(),
+            specification.getId(),
+            part.getBase_metal(),
+            part.getArea(),
+            part.getBase_weight(),
+            part.getFinal_weight()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating ProductPart failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    part.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating ProductPart failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(ProductPart part) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (part.getId() == null) {
+            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
+        }
+        
+        Object[] values = {
+            part.getPart_number(),
+            part.getRev(),
+            part.getBase_metal(),
+            part.getArea(),
+            part.getBase_weight(),
+            part.getFinal_weight(),
+            part.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating ProductPart failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(ProductPart part) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        Object[] values = {
+            part.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting ProductPart failed, no rows affected.");
+            } else{
+                part.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }    }
     
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an Product.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an Product.
-     * @return The mapped Product from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an ProductPart.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an ProductPart.
+     * @return The mapped ProductPart from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     public static ProductPart map(ResultSet resultSet) throws SQLException{
