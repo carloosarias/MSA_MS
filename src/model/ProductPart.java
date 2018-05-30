@@ -5,19 +5,22 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Pavilion Mini
  */
-public class Part {
+public class ProductPart implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private String name;
-    private String desc;
+    private String part_number;
+    private String rev;
     private String base_metal;
     private double area;
     private double base_weight;
     private double final_weight;
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -27,20 +30,20 @@ public class Part {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getPart_number() {
+        return part_number;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPart_number(String part_number) {
+        this.part_number = part_number;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getRev() {
+        return rev;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setRev(String rev) {
+        this.rev = rev;
     }
 
     public String getBase_metal() {
@@ -77,18 +80,18 @@ public class Part {
     // Object overrides ---------------------------------------------------------------------------
     
     /**
-     * This should compare Parts by ID only.
+     * This should compare ProductPart by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof Part) && (id != null)
-            ? id.equals(((Part) other).id)
+        return (other instanceof ProductPart) && (id != null)
+            ? id.equals(((ProductPart) other).id)
             : (other == this);
     }
 
     /**
-     * Part with same ID should return same hashcode.
+     * ProductPart with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -99,12 +102,12 @@ public class Part {
     }
 
     /**
-     * Returns the String representation of this Part. Not required, it just pleases reading logs.
+     * Returns the String representation of this ProductPart. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return String.format("Part[id=%d,name=%s,desc=%s,base_metal=%s,area=%f,base_weight=%f,final_weight=%f]",
-                id, name, desc, base_metal, area, base_weight, final_weight);
+        return String.format("ProductPart[id=%d,part_number=%s,rev=%s,base_metal=%s,area=%f,base_weight=%f,final_weight=%f]",
+                id, part_number,rev,base_metal,area,base_weight,final_weight);
     }
 }

@@ -38,15 +38,15 @@ public interface EmployeeDAO {
     public Employee find(String user, String password) throws DAOException;
 
     /**
-     * Returns a listActive of all Employees from the database ordered by user ID. The listActive is never null and
+     * Returns a list of all Employees from the database ordered by Employee ID. The list is never null and
      * is empty when the database does not contain any Employee.
-     * @return A listActive of all Employees from the database ordered by Employee ID.
+     * @return A list of all Employees from the database ordered by Employee ID.
      * @throws DAOException If something fails at database level.
      */
     public List<Employee> list() throws DAOException;
     
     /**
-     * Returns a listActive of all Employees that are active from the database ordered by Employee ID. The listActive is never null and
+     * Returns a list of all Employees that are active from the database ordered by Employee ID. The listActive is never null and
      * is empty when the database does not contain any Employee active.
      * @param active The state of the Employee if false then return Employees that are NOT active
      * @return A listActive of all Employees that are active from the database ordered by Employee ID.
@@ -58,7 +58,7 @@ public interface EmployeeDAO {
      * Create the given Employee in the database. The Employee ID must be null, otherwise it will throw
      * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Employee.
      * @param employee The Employee to be created in the database.
-     * @throws IllegalArgumentException If the employee ID is not null.
+     * @throws IllegalArgumentException If the Employee ID is not null.
      * @throws DAOException If something fails at database level.
      */
     public void create(Employee employee) throws IllegalArgumentException, DAOException;

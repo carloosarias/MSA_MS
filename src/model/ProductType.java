@@ -9,29 +9,18 @@ package model;
  *
  * @author Pavilion Mini
  */
-public class Spec {
+public class ProductType {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private String spec_code;
     private String name;
-    private String desc;
     
     // Getters/setters ----------------------------------------------------------------------------
-
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getSpec_code() {
-        return spec_code;
-    }
-
-    public void setSpec_code(String spec_code) {
-        this.spec_code = spec_code;
     }
 
     public String getName() {
@@ -41,30 +30,22 @@ public class Spec {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
     
     // Object overrides ---------------------------------------------------------------------------
     
     /**
-     * This should compare Specs by ID only.
+     * This should compare ProductType by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof Spec) && (id != null)
-            ? id.equals(((Spec) other).id)
+        return (other instanceof ProductType) && (id != null)
+            ? id.equals(((ProductType) other).id)
             : (other == this);
     }
 
     /**
-     * Spec with same ID should return same hashcode.
+     * ProductType with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -75,12 +56,12 @@ public class Spec {
     }
 
     /**
-     * Returns the String representation of this Spec. Not required, it just pleases reading logs.
+     * Returns the String representation of this ProductType. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return String.format("Spec[id=%d,spec_code=%s,name=%s,desc=%s]",
-                id, spec_code, name, desc);
-    }    
+        return String.format("ProductType[id=%d,name=%s]",
+                id, name);
+    }
 }
