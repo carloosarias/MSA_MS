@@ -10,12 +10,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -68,16 +71,37 @@ public class ConfigFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        loadValues();
+        driver_field.setText(db_driver);
+        url_field.setText(db_url);
+        user_field.setText(db_user);
+        pass_field.setText(db_pass);
         
         edit_button.setOnAction((ActionEvent) -> {
-            driver_field.setEditable(true);
-            url_field.setEditable(true);
-            user_field.setEditable(true);
-            pass_field.setEditable(true);
-            config_field.setEditable(true);
-            current_field.setEditable(true);
-            save_button.setDisable(false);
+            driver_field.setDisable(false);
+            url_field.setDisable(false);
+            user_field.setDisable(false);
+            pass_field.setDisable(false);
+            config_field.setDisable(false);
+            current_field.setDisable(false);
             edit_button.setDisable(true);
+            save_button.setDisable(false);
+        });
+        
+        save_button.setOnAction((ActionEvent) -> {
+            if(current_field.getText().equals(config_pass)){
+                saveValues(driver_field.getText(), url_field.getText(),
+                user_field.getText(), pass_field.getText(), config_field.getText());
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setContentText("Los cambios fueron guardados con éxito.");
+                alert.setHeaderText(null);
+                alert.setTitle(null);
+                alert.showAndWait();
+                Stage stage = (Stage) root_pane.getScene().getWindow();
+                stage.close();
+            }else{
+                current_field.setStyle("-fx-border-color: red ;");
+            }
         });
     }    
     
@@ -91,5 +115,14 @@ public class ConfigFX implements Initializable {
         url_field.setText(db_url);
         user_field.setText(db_user);
         pass_field.setText(db_pass);
+        config_field.setText(config_pass);
+    }
+    
+    public void saveValues(String driver, String url, String user, String pass, String config){
+        DAOUtil.setProperty("dao.properties", "msabase.jdbc.driver", driver);
+        DAOUtil.setProperty("dao.properties", "msabase.jdbc.url", url);
+        DAOUtil.setProperty("dao.properties", "msabase.jdbc.username", user);
+        DAOUtil.setProperty("dao.properties", "msabase.jdbc.password", pass);
+        DAOUtil.setProperty("dao.properties", "config.password", config);
     }
 }

@@ -1,25 +1,25 @@
 package msa_ms;
 
-import dao.JDBC.DAOFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Employee;
 
 /**
  *
  * @author Pavilion Mini
  */
 public class MainApp extends Application{
-
+    public static Employee employee;
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
-        DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+        
         BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("LoginFX.fxml"));
         Scene scene = new Scene(root);
-        
         primaryStage.setTitle("MSA Manager");
         primaryStage.setResizable(false);
         primaryStage.initStyle(StageStyle.UTILITY);

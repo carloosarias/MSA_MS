@@ -5,23 +5,21 @@
  */
 package msa_ms;
 
-import dao.DAOUtil;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+
+import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -30,6 +28,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Employee;
 
 /**
  * FXML Controller class
@@ -66,6 +65,21 @@ public class LoginFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+        
+        enter_button.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                Employee employee = msabase.getEmployeeDAO().find(user_field.getText(), pass_field.getText());
+                if(employee != null){
+                    MainApp.employee = employee;
+                    showMain();
+                }else{
+                    user_field.setStyle("-fx-border-color: red ;");
+                    pass_field.setStyle("-fx-border-color: red ;");
+                }
+            }
+        });
         
         options_button.setOnAction((ActionEvent e) -> {
             options_button.setDisable(true);
@@ -84,8 +98,26 @@ public class LoginFX implements Initializable {
             configStage.setResizable(false);
             configStage.initStyle(StageStyle.UTILITY);
             configStage.setScene(scene);
+            configStage.setX(root_pane.getScene().getX() + root_pane.getScene().getWidth());
+            configStage.setY(root_pane.getScene().getY());
             configStage.showAndWait();
             options_button.setDisable(false);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void showMain(){
+        try {
+            Stage stage = (Stage) root_pane.getScene().getWindow();
+            stage.close();
+            stage = new Stage();
+            BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("MainFX.fxml"));
+            Scene scene = new Scene(root);
+            stage.setTitle("MSA Manager Main");
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.show();
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
         }
