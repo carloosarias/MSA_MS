@@ -5,6 +5,9 @@
  */
 package dao;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -12,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.Properties;
 
 /**
  * Utility class for DAO's. This class contains commonly used DAO logic which is been refactored in
@@ -80,5 +84,37 @@ public final class DAOUtil {
     public static LocalTime toLocalTime(java.sql.Time time) {
         return time.toLocalTime();
     }
-
+    
+    public static void setProperty(String file, String key, String value){
+        Properties props = new Properties();
+        String path = "./src/";
+        try {
+            //first load old one:
+            FileInputStream configStream = new FileInputStream(path+file);
+            props.load(configStream);
+            configStream.close();
+            //modifies existing or adds new property
+            props.setProperty(key, value);
+      
+            //save modified property file
+            FileOutputStream output = new FileOutputStream(path+file);
+            props.store(output, "Edited "+key+" with "+value);
+            output.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public static String getProperty(String file, String key){
+        Properties props = new Properties();
+        String path = "./src/";
+        try{
+            FileInputStream configStream = new FileInputStream(path+file);
+            props.load(configStream);
+            configStream.close();
+        } catch(IOException ex){
+            ex.printStackTrace();
+        }
+        return props.getProperty(key);
+    }
 }

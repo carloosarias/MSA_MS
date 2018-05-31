@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="msa_ms.ConfigFXController">
+   <padding>
+      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+   </padding>
+   <left>
+      <VBox fx:id="left_vbox" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="driver_label" text="Driver:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin></Label>
+            <TextField fx:id="driver_field" disable="true" promptText="JDBC Driver">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="label_url" text="Url:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="url_field" disable="true" prefWidth="300.0" promptText="JDBC Url">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="user_label" text="Username:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="user_field" disable="true" promptText="JDBC Username">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="pass_label" text="Password:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <PasswordField fx:id="pass_field" disable="true" promptText="*********">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </PasswordField>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Separator>
+            <Label fx:id="config_label" text="Contraseña de Opciones:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <PasswordField fx:id="config_field" disable="true" promptText="*********">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </PasswordField>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Separator>
+            <Label fx:id="current_label" text="*Contraseña de Opciones actual: (Necesaria para guardar cambios)">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <PasswordField fx:id="current_field" disable="true" promptText="*********">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </PasswordField>
+            <ButtonBar>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+               <buttons>
+                  <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Guardar" />
+                <Button fx:id="edit_button" focusTraversable="false" mnemonicParsing="false" text="Editar" />
+               </buttons>
+            </ButtonBar>
+         </children>
+      </VBox>
+   </left>
+</BorderPane>
