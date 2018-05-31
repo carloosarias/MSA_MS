@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package msa_ms;
+package controller;
 
 import dao.JDBC.DAOFactory;
 import java.net.URL;
@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import model.Module;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class

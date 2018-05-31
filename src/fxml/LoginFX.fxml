@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root_pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="msa_ms.LoginFX">
+<BorderPane fx:id="root_pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginFX">
    <center>
       <VBox fx:id="center_vbox" alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
          <children>

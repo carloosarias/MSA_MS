@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package msa_ms;
+package controller;
 
 
 import dao.JDBC.DAOFactory;
@@ -29,6 +29,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Employee;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -91,7 +92,7 @@ public class LoginFX implements Initializable {
     public void showConfig(){
         try {
             Stage configStage = new Stage();
-            BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("ConfigFX.fxml"));
+            BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/ConfigFX.fxml"));
             Scene scene = new Scene(root);
             
             configStage.setTitle("Opciones");
@@ -112,7 +113,7 @@ public class LoginFX implements Initializable {
             Stage stage = (Stage) root_pane.getScene().getWindow();
             stage.close();
             stage = new Stage();
-            BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("MainFX.fxml"));
+            BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/MainFX.fxml"));
             Scene scene = new Scene(root);
             stage.setTitle("MSA Manager Main");
             stage.setResizable(false);

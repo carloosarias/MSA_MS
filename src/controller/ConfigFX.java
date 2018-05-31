@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package msa_ms;
+package controller;
 
 import dao.DAOUtil;
 import java.net.URL;
