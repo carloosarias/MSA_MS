@@ -115,7 +115,7 @@ public class LoginFX implements Initializable {
             stage = new Stage();
             BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/MainFX.fxml"));
             Scene scene = new Scene(root);
-            stage.setTitle("MSA Manager Main");
+            stage.setTitle("MSA Manager");
             stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
