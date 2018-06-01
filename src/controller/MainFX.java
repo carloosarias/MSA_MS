@@ -34,70 +34,25 @@ public class MainFX implements Initializable {
     private BorderPane root_pane;
     @FXML
     private Tab hr_tab;
-    @FXML
-    private BorderPane hr_root_pane;
-    @FXML
-    private ComboBox<?> filter_combo;
-    @FXML
-    private ListView<?> emp_listview;
-    @FXML
-    private Button add_button;
-    @FXML
-    private TextField fname_field;
-    @FXML
-    private DatePicker dob_picker;
-    @FXML
-    private ComboBox<?> entry_combo;
-    @FXML
-    private TextField curp_field;
-    @FXML
-    private TextField lname_field;
-    @FXML
-    private DatePicker hire_picker;
-    @FXML
-    private ComboBox<?> end_combo;
-    @FXML
-    private TextArea address_area;
-    @FXML
-    private CheckBox active_check;
-    @FXML
-    private Button edit_button;
-    @FXML
-    private Button save_button;
-    @FXML
-    private Button cancel_button;
-    @FXML
-    private TextField id_field;
-    @FXML
-    private TextField user_field;
-    @FXML
-    private TextField pass_field;
-    @FXML
-    private ListView<?> module_list;
-    @FXML
-    private ListView<?> invmodule_list;
-    @FXML
-    private Button move_button;
-    @FXML
-    private Tab other;
 
     private List<Module> modules;
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+        
         modules = msabase.getModuleEmployeeDAO().list(MainApp.employee);
+        
         for(Module module : modules){
             switch(module.getName()){
                 default:
                     hr_tab.setDisable(true);
                 case "Recursos Humanos":
                     hr_tab.setDisable(false);
-                
             }
         }
-    }    
-    
+    }
 }
