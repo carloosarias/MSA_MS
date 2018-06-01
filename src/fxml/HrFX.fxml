@@ -8,13 +8,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="root_pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HrFX">
+<BorderPane fx:id="root_pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HrFX">
    <center>
       <HBox BorderPane.alignment="CENTER">
          <children>
@@ -35,19 +36,19 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <ListView fx:id="emp_listview">
+                  <ListView fx:id="emp_listview" prefHeight="274.0">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </ListView>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Agregar Empleado">
+                  <Button fx:id="add_button" mnemonicParsing="false" prefWidth="248.0" text="Agregar Empleado">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Button>
                </children>
                <HBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                  <Insets />
                </HBox.margin>
             </VBox>
             <Separator orientation="VERTICAL">
@@ -64,14 +65,14 @@
                   </Label>
                   <HBox>
                      <children>
-                        <VBox>
+                        <VBox fillWidth="false">
                            <children>
                               <Label text="Nombre:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField fx:id="fname_field" disable="true">
+                              <TextField fx:id="fname_field" disable="true" promptText="Nombre">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -86,22 +87,31 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </DatePicker>
-                              <Label text="Hora de Entrada:">
+                              <Label text="Horario de Entrada:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <ComboBox fx:id="entry_combo" disable="true" prefWidth="150.0">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </ComboBox>
+                              <HBox>
+                                 <children>
+                                    <Spinner fx:id="entry_hour" disable="true" prefHeight="25.0" prefWidth="75.0">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Spinner>
+                                    <Spinner fx:id="entry_min" disable="true" prefWidth="75.0">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Spinner>
+                                 </children>
+                              </HBox>
                               <Label text="Curp:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField fx:id="curp_field" disable="true">
+                              <TextField fx:id="curp_field" disable="true" promptText="Curp">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -111,14 +121,14 @@
                               <Insets />
                            </HBox.margin>
                         </VBox>
-                        <VBox>
+                        <VBox fillWidth="false">
                            <children>
                               <Label text="Apellido:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField fx:id="lname_field" disable="true">
+                              <TextField fx:id="lname_field" disable="true" promptText="Apellido">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -133,16 +143,25 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </DatePicker>
-                              <Label text="Hora de Salida:">
+                              <Label text="Horario de Salida:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <ComboBox fx:id="end_combo" disable="true" prefWidth="150.0">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </ComboBox>
+                              <HBox>
+                                 <children>
+                                    <Spinner fx:id="end_hour" disable="true" prefWidth="75.0">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Spinner>
+                                    <Spinner fx:id="end_min" disable="true" prefWidth="75.0">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Spinner>
+                                 </children>
+                              </HBox>
                            </children>
                            <HBox.margin>
                               <Insets />
@@ -155,7 +174,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <TextArea fx:id="address_area" disable="true" prefWidth="100.0">
+                  <TextArea fx:id="address_area" disable="true" maxHeight="50.0" maxWidth="400.0" promptText="Dirección">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
@@ -183,15 +202,18 @@
                            </HBox.margin>
                         </Button>
                      </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </HBox>
                </children>
                <HBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                  <Insets />
                </HBox.margin>
             </VBox>
-            <Separator orientation="VERTICAL" prefHeight="200.0">
+            <Separator orientation="VERTICAL">
                <HBox.margin>
-                  <Insets top="4.0" />
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
             </Separator>
             <VBox fillWidth="false">
@@ -206,7 +228,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="id_field" disable="true">
+                  <TextField fx:id="id_field" disable="true" promptText="ID">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
@@ -216,7 +238,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="user_field" disable="true">
+                  <TextField fx:id="user_field" disable="true" promptText="Usuario">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
@@ -226,7 +248,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="pass_field" disable="true">
+                  <TextField fx:id="pass_field" disable="true" promptText="*********">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
@@ -238,17 +260,20 @@
                   </Label>
                   <HBox>
                      <children>
-                        <ListView fx:id="module_list" disable="true" prefHeight="200.0" prefWidth="200.0">
+                        <ListView fx:id="module_list" disable="true" prefHeight="133.0" prefWidth="150.0">
                            <HBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </HBox.margin>
                         </ListView>
-                        <ListView fx:id="invmodule_list" disable="true" prefHeight="200.0" prefWidth="200.0">
+                        <ListView fx:id="invmodule_list" disable="true" prefHeight="125.0" prefWidth="150.0">
                            <HBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </HBox.margin>
                         </ListView>
                      </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </HBox>
                   <HBox>
                      <children>
@@ -261,7 +286,7 @@
                   </HBox>
                </children>
                <HBox.margin>
-                  <Insets top="4.0" />
+                  <Insets />
                </HBox.margin>
             </VBox>
          </children>
