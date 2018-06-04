@@ -88,11 +88,11 @@ public class HrFX implements Initializable {
     @FXML
     private Button move_button;
     
-    ObservableList<String> filter_list = 
-    FXCollections.observableArrayList(
+    ObservableList<String> filter_list = FXCollections.observableArrayList(
         "Empleados Activos",
         "Empleados Inactivos"
     );
+    
     DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
     /**
@@ -103,7 +103,7 @@ public class HrFX implements Initializable {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
         updateList();
-        
+
         entry_hour.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,23,0));
         entry_min.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,59,0));
         end_hour.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,23,0));
@@ -118,25 +118,22 @@ public class HrFX implements Initializable {
         });
         
         module_list.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
-            if(module_list.getSelectionModel().getSelectedItem() != null){
-                invmodule_list.getSelectionModel().clearSelection();
-            }
+            switchModuleList();
         });
         
         invmodule_list.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
-            if(invmodule_list.getSelectionModel().getSelectedItem() != null){
-                module_list.getSelectionModel().clearSelection();
-            }
+            switchModuleList();
         });
         
         add_button.setOnAction((ActionEvent) -> {
             setFieldValues(null);
-            enableFields();
+            disableFields(false);
         });
         
         edit_button.setOnAction((ActionEvent) -> {
             if(emp_listview.getSelectionModel().getSelectedItem() != null){
-                enableFields();
+                disableFields(false);
+                move_button.setDisable(false);
                 module_list.setDisable(false);
                 invmodule_list.setDisable(false);
             }
@@ -145,7 +142,7 @@ public class HrFX implements Initializable {
         cancel_button.setOnAction((ActionEvent) -> {
             filter_combo.getOnAction();
             setFieldValues(emp_listview.getSelectionModel().getSelectedItem());
-            disableFields();
+            disableFields(true);
         });
         
         save_button.setOnAction((ActionEvent) -> {
@@ -163,7 +160,7 @@ public class HrFX implements Initializable {
             
             setFieldValues(emp_listview.getSelectionModel().getSelectedItem());
             updateList();
-            disableFields();
+            disableFields(true);
         });
         
         move_button.setOnAction((ActionEvent) -> {
@@ -208,57 +205,44 @@ public class HrFX implements Initializable {
                 break;
         }        
     }
-    public void enableFields(){
-        fname_field.setDisable(false);
-        lname_field.setDisable(false);
-        dob_picker.setDisable(false);
-        hire_picker.setDisable(false);
-        entry_hour.setDisable(false);
-        entry_min.setDisable(false);
-        end_hour.setDisable(false);
-        end_min.setDisable(false);
-        user_field.setDisable(false);
-        curp_field.setDisable(false);
-        address_area.setDisable(false);
-        active_check.setDisable(false);
-        pass_field.setDisable(false);
-        save_button.setDisable(false);
-        cancel_button.setDisable(false);
-        emp_listview.setDisable(true);
-        filter_combo.setDisable(true);
-        edit_button.setDisable(true);
-        add_button.setDisable(true);
-        move_button.setDisable(false);
+
+    public void switchModuleList(){
+        if(invmodule_list.getSelectionModel().getSelectedItem() != null){
+            module_list.getSelectionModel().clearSelection();
+        }
+        if(invmodule_list.getSelectionModel().getSelectedItem() != null){
+            module_list.getSelectionModel().clearSelection();
+        }
     }
-    
-    public void disableFields(){
-        fname_field.setDisable(true);
-        lname_field.setDisable(true);
-        dob_picker.setDisable(true);
-        hire_picker.setDisable(true);
-        entry_hour.setDisable(true);
-        entry_min.setDisable(true);
-        end_hour.setDisable(true);
-        end_min.setDisable(true);
-        user_field.setDisable(true);
-        curp_field.setDisable(true);
-        address_area.setDisable(true);
-        active_check.setDisable(true);
-        pass_field.setDisable(true);
-        save_button.setDisable(true);
-        cancel_button.setDisable(true);
-        emp_listview.setDisable(false);
-        filter_combo.setDisable(false);
-        edit_button.setDisable(false);
-        add_button.setDisable(false);
-        move_button.setDisable(true);
-        module_list.setDisable(true);
-        invmodule_list.setDisable(true);
+    public void disableFields(boolean value){
+        fname_field.setDisable(value);
+        lname_field.setDisable(value);
+        dob_picker.setDisable(value);
+        hire_picker.setDisable(value);
+        entry_hour.setDisable(value);
+        entry_min.setDisable(value);
+        end_hour.setDisable(value);
+        end_min.setDisable(value);
+        user_field.setDisable(value);
+        curp_field.setDisable(value);
+        address_area.setDisable(value);
+        active_check.setDisable(value);
+        pass_field.setDisable(value);
+        save_button.setDisable(value);
+        cancel_button.setDisable(value);
+        emp_listview.setDisable(!value);
+        filter_combo.setDisable(!value);
+        edit_button.setDisable(!value);
+        add_button.setDisable(!value);
+        if(value){
+            move_button.setDisable(value);
+            module_list.setDisable(value);
+            invmodule_list.setDisable(value);
+        }
 
     }
     
     public void setFieldValues(Employee employee){
-        
         if(employee != null){
             fname_field.setText(employee.getFirst_name());
             lname_field.setText(employee.getLast_name());
@@ -276,29 +260,25 @@ public class HrFX implements Initializable {
             module_list.setItems(FXCollections.observableArrayList(msabase.getModuleEmployeeDAO().list(employee)));
             invmodule_list.setItems(FXCollections.observableArrayList(msabase.getModuleEmployeeDAO().listInverse(employee)));
         } else{
-            clearFieldValues();
+            fname_field.clear();
+            pass_field.clear();
+            lname_field.clear();
+            dob_picker.setValue(null);
+            hire_picker.setValue(null);
+            emp_listview.getSelectionModel().clearSelection();
+            entry_hour.getValueFactory().setValue(0);
+            entry_min.getValueFactory().setValue(0);
+            end_hour.getValueFactory().setValue(0);
+            end_min.getValueFactory().setValue(0);
+            id_field.clear();
+            user_field.clear();
+            curp_field.clear();
+            address_area.clear();
+            active_check.setSelected(false);
+            module_list.getItems().clear();
+            invmodule_list.getItems().clear();     
         }
         clearStyle();
-    }
-    
-    public void clearFieldValues(){
-        fname_field.clear();
-        pass_field.clear();
-        lname_field.clear();
-        dob_picker.setValue(null);
-        hire_picker.setValue(null);
-        emp_listview.getSelectionModel().clearSelection();
-        entry_hour.getValueFactory().setValue(0);
-        entry_min.getValueFactory().setValue(0);
-        end_hour.getValueFactory().setValue(0);
-        end_min.getValueFactory().setValue(0);
-        id_field.clear();
-        user_field.clear();
-        curp_field.clear();
-        address_area.clear();
-        active_check.setSelected(false);
-        module_list.getItems().clear();
-        invmodule_list.getItems().clear();        
     }
     
     public void clearStyle(){

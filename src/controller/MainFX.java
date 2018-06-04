@@ -15,8 +15,12 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Module;
 import msa_ms.MainApp;
 
@@ -31,7 +35,10 @@ public class MainFX implements Initializable {
     private BorderPane root_pane;
     @FXML
     private Tab hr_tab;
-
+    @FXML
+    private MenuItem logout;
+    
+    
     private List<Module> modules;
     
     /**
@@ -55,6 +62,28 @@ public class MainFX implements Initializable {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
             }
+        }
+        
+        logout.setOnAction((ActionEvent) ->{
+            MainApp.employee = null;
+            showLogin();
+        });
+    }
+    
+    public void showLogin(){
+        try {
+            Stage stage = (Stage) root_pane.getScene().getWindow();
+            stage.close();
+            stage = new Stage();
+            BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));
+            Scene scene = new Scene(root);
+            stage.setTitle("MSA Manager");
+            stage.setResizable(false);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
