@@ -157,7 +157,6 @@ public class HrFX implements Initializable {
             } else{
                     msabase.getEmployeeDAO().create(mapEmployee(new Employee()));
             }
-            
             setFieldValues(emp_listview.getSelectionModel().getSelectedItem());
             updateList();
             disableFields(true);
@@ -196,6 +195,7 @@ public class HrFX implements Initializable {
     }
     
     public void updateList(){
+        emp_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){
             case "Empleados Activos":
                 emp_listview.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().listActive(true)));
@@ -214,6 +214,7 @@ public class HrFX implements Initializable {
             module_list.getSelectionModel().clearSelection();
         }
     }
+    
     public void disableFields(boolean value){
         fname_field.setDisable(value);
         lname_field.setDisable(value);
