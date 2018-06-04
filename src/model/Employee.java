@@ -155,8 +155,8 @@ public class Employee implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Employee[id=%d,user=%s,first_name=%s,last_name=%s,hire_date=%s,entry_time=%s,end_time=%s,birth_date=%s,curp=%s,address=%s,active=%b]",
-                id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active);
+        return String.format("%d, %s, %s",
+                id, last_name, first_name);
     }
     
 }

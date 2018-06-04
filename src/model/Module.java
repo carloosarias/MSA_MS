@@ -62,6 +62,6 @@ public class Module implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("Module[id=%d,name=%s]", id, name);
+        return String.format("%s", name);
     }
 }
