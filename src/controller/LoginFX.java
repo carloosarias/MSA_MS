@@ -24,6 +24,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -58,6 +60,7 @@ public class LoginFX implements Initializable {
     private Button options_button;
     @FXML
     private Button enter_button;
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
     /**
      * Initializes the controller class.
@@ -66,19 +69,11 @@ public class LoginFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
         
         enter_button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                Employee employee = msabase.getEmployeeDAO().find(user_field.getText(), pass_field.getText());
-                if(employee != null && employee.isActive()){
-                    MainApp.employee_id = employee.getId();
-                    showMain();
-                }else{
-                    user_field.setStyle("-fx-border-color: red ;");
-                    pass_field.setStyle("-fx-border-color: red ;");
-                }
+                login();
             }
         });
         
@@ -87,6 +82,40 @@ public class LoginFX implements Initializable {
             showConfig();
         });
         
+        pass_field.setOnKeyPressed(new EventHandler<KeyEvent>()
+        {
+            @Override
+            public void handle(KeyEvent ke)
+            {
+                if (ke.getCode().equals(KeyCode.ENTER))
+                {
+                    login();
+                }
+            }
+        });
+        enter_button.setOnKeyPressed(new EventHandler<KeyEvent>()
+        {
+            @Override
+            public void handle(KeyEvent ke)
+            {
+                if (ke.getCode().equals(KeyCode.ENTER))
+                {
+                    login();
+                }
+            }
+        });
+        
+    }
+    
+    public void login(){
+        Employee employee = msabase.getEmployeeDAO().find(user_field.getText(), pass_field.getText());
+        if(employee != null && employee.isActive()){
+            MainApp.employee_id = employee.getId();
+            showMain();
+        }else{
+            user_field.setStyle("-fx-border-color: red ;");
+            pass_field.setStyle("-fx-border-color: red ;");
+        }        
     }
     
     public void showConfig(){

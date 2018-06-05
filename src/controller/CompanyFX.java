@@ -7,6 +7,8 @@ package controller;
 
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -90,7 +92,52 @@ public class CompanyFX implements Initializable {
             setFieldValues(null);
             disableFields(false);
         });
+        
+        cancel_button.setOnAction((ActionEvent) -> {
+            filter_combo.getOnAction();
+            setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
+            disableFields(true);
+        });
+        
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
+            if(comp_listview.getSelectionModel().getSelectedItem() != null){
+                msabase.getCompanyDAO().update(mapCompany(comp_listview.getSelectionModel().getSelectedItem()));
+            } else{
+                msabase.getCompanyDAO().create(mapCompany(new Company()));
+            }
+            setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
+            updateList();
+            disableFields(true);
+        });
+        
+        edit_button.setOnAction((ActionEvent) -> {
+            if(comp_listview.getSelectionModel().getSelectedItem() != null){
+                disableFields(false);
+            }
+        });
+        
     }
+    
+    public Company mapCompany(Company company){
+        
+        company.setName(name_field.getText());
+        company.setRfc(rfc_field.getText());
+        company.setTax_id(tax_field.getText());
+        company.setPayment_terms(payterm_field.getText());
+        company.setSupplier(supplier_check.isSelected());
+        company.setClient(client_check.isSelected());
+        company.setActive(!active_check.isSelected());
+        
+        return company;
+    }
+    
+    public boolean testFields(){
+        return true;
+    }
+    
     public void disableFields(boolean value){
         name_field.setDisable(value);
         rfc_field.setDisable(value);
@@ -99,6 +146,12 @@ public class CompanyFX implements Initializable {
         supplier_check.setDisable(value);
         client_check.setDisable(value);
         active_check.setDisable(value);
+        save_button.setDisable(value);
+        cancel_button.setDisable(value);
+        add_button.setDisable(!value);
+        edit_button.setDisable(!value);
+        filter_combo.setDisable(!value);
+        comp_listview.setDisable(!value);
     }
     
     public void setFieldValues(Company company){
@@ -110,7 +163,7 @@ public class CompanyFX implements Initializable {
             payterm_field.setText(company.getPayment_terms());
             supplier_check.setSelected(company.isSupplier());
             client_check.setSelected(company.isClient());
-            active_check.setSelected(company.isActive());
+            active_check.setSelected(!company.isActive());
         } else{
             id_field.clear();
             name_field.clear();
@@ -132,10 +185,10 @@ public class CompanyFX implements Initializable {
             case "Compañías Inactivas":
                 comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listActive(false)));
                 break;
-            case "Clientes":
+            case "Compañías Clientes":
                 comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
                 break;
-            case "Proveedores":
+            case "Compañías Proveedoras":
                 comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listSupplier(true)));
                 break;
         }

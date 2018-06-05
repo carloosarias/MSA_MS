@@ -73,7 +73,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField fx:id="fname_field" disable="true" promptText="Nombre">
+                              <TextField fx:id="fname_field" disable="true" prefWidth="150.0" promptText="Nombre">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -83,7 +83,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <DatePicker fx:id="dob_picker" disable="true">
+                              <DatePicker fx:id="dob_picker" disable="true" prefWidth="150.0">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -95,12 +95,12 @@
                               </Label>
                               <HBox>
                                  <children>
-                                    <Spinner fx:id="entry_hour" disable="true" prefHeight="25.0" prefWidth="75.0">
+                                    <Spinner fx:id="entry_hour" disable="true" prefWidth="71.0">
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
                                     </Spinner>
-                                    <Spinner fx:id="entry_min" disable="true" prefWidth="75.0">
+                                    <Spinner fx:id="entry_min" disable="true" prefWidth="71.0">
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
@@ -129,7 +129,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField fx:id="lname_field" disable="true" promptText="Apellido">
+                              <TextField fx:id="lname_field" disable="true" prefWidth="150.0" promptText="Apellido">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -139,7 +139,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <DatePicker fx:id="hire_picker" disable="true">
+                              <DatePicker fx:id="hire_picker" disable="true" prefWidth="150.0">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -151,12 +151,12 @@
                               </Label>
                               <HBox>
                                  <children>
-                                    <Spinner fx:id="end_hour" disable="true" prefWidth="75.0">
+                                    <Spinner fx:id="end_hour" disable="true" prefWidth="71.0">
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
                                     </Spinner>
-                                    <Spinner fx:id="end_min" disable="true" prefWidth="75.0">
+                                    <Spinner fx:id="end_min" disable="true" prefWidth="71.0">
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
@@ -175,7 +175,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <TextArea fx:id="address_area" disable="true" maxHeight="50.0" maxWidth="400.0" promptText="Dirección">
+                  <TextArea fx:id="address_area" disable="true" prefHeight="50.0" prefWidth="308.0" promptText="Dirección">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
