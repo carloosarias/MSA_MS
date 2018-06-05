@@ -72,7 +72,7 @@ public class LoginFX implements Initializable {
             @Override
             public void handle(ActionEvent e) {
                 Employee employee = msabase.getEmployeeDAO().find(user_field.getText(), pass_field.getText());
-                if(employee != null){
+                if(employee != null && employee.isActive()){
                     MainApp.employee_id = employee.getId();
                     showMain();
                 }else{

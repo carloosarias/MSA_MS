@@ -167,7 +167,6 @@ public class HrFX implements Initializable {
                 if(msabase.getEmployeeDAO().find(MainApp.employee_id).equals(emp_listview.getSelectionModel().getSelectedItem()) && module_list.getSelectionModel().getSelectedItem().getName().equals("Recursos Humanos")){
                     return;
                 }
-                
                 msabase.getModuleEmployeeDAO().delete(module_list.getSelectionModel().getSelectedItem(), emp_listview.getSelectionModel().getSelectedItem());
             }
             if(invmodule_list.getSelectionModel().getSelectedItem() != null){
