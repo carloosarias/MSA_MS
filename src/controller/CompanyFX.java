@@ -116,6 +116,8 @@ public class CompanyFX implements Initializable {
         edit_button.setOnAction((ActionEvent) -> {
             if(comp_listview.getSelectionModel().getSelectedItem() != null){
                 disableFields(false);
+                contact_button.setDisable(false);
+                address_button.setDisable(false);
             }
         });
         
@@ -177,6 +179,10 @@ public class CompanyFX implements Initializable {
         edit_button.setDisable(!value);
         filter_combo.setDisable(!value);
         comp_listview.setDisable(!value);
+        if(!value){
+            contact_button.setDisable(value);
+            contact_button.setDisable(value);
+        }
     }
     
     public void setFieldValues(Company company){

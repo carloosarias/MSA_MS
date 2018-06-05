@@ -18,9 +18,9 @@
 
 <BorderPane fx:id="root_pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HrFX">
    <center>
-      <HBox BorderPane.alignment="CENTER">
+      <HBox fillHeight="false" BorderPane.alignment="CENTER">
          <children>
-            <VBox>
+            <VBox fillWidth="false">
                <children>
                   <Label text="Filtro de Busqueda:">
                      <VBox.margin>
@@ -37,12 +37,12 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <ListView fx:id="emp_listview" prefHeight="274.0">
+                  <ListView fx:id="emp_listview" prefHeight="274.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </ListView>
-                  <Button fx:id="add_button" mnemonicParsing="false" prefWidth="248.0" text="Agregar Empleado">
+                  <Button fx:id="add_button" mnemonicParsing="false" prefWidth="150.0" text="Agregar Empleado">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
@@ -52,7 +52,7 @@
                   <Insets />
                </HBox.margin>
             </VBox>
-            <Separator orientation="VERTICAL">
+            <Separator orientation="VERTICAL" prefHeight="390.0" prefWidth="0.0">
                <HBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
@@ -212,7 +212,7 @@
                   <Insets />
                </HBox.margin>
             </VBox>
-            <Separator orientation="VERTICAL">
+            <Separator orientation="VERTICAL" prefHeight="390.0" prefWidth="0.0">
                <HBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
