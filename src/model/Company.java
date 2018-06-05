@@ -117,8 +117,8 @@ public class Company implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("Company[id=%d,name=%s,rfc=%s,tax_id=%s,payment_terms=%s,supplier=%b,client=%b,active=%b]",
-                id, name, rfc, tax_id,payment_terms, supplier, client, active);
+        return String.format("%s",
+                name);
     }
     
 }
