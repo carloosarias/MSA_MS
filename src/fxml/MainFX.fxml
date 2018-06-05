@@ -12,8 +12,8 @@
    <center>
       <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab fx:id="hr_tab" closable="false" disable="true" text="Recursos Humanos" />
-          <Tab fx:id="other" closable="false" disable="true" text="Compras" />
+          <Tab fx:id="employee_tab" closable="false" disable="true" text="Empleados" />
+          <Tab fx:id="company_tab" closable="false" disable="true" text="Compañías" />
         </tabs>
          <BorderPane.margin>
             <Insets />

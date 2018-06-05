@@ -34,7 +34,9 @@ public class MainFX implements Initializable {
     @FXML
     private BorderPane root_pane;
     @FXML
-    private Tab hr_tab;
+    private Tab employee_tab;
+    @FXML
+    private Tab company_tab;
     @FXML
     private MenuItem logout;
     
@@ -48,24 +50,35 @@ public class MainFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
         
-        modules = msabase.getModuleEmployeeDAO().list(MainApp.employee);
+        modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
         
         for(Module module : modules){
             switch(module.getName()){
                 default:
-                    hr_tab.setDisable(true);
+                    employee_tab.setDisable(true);
+                    company_tab.setDisable(true);
+                    break;
                 case "Recursos Humanos":
-                    hr_tab.setDisable(false);
+                    employee_tab.setDisable(false);
                     try {
-                        hr_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
+                        employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    break;
+                case "Compras":
+                    company_tab.setDisable(false);
+                    try {
+                        company_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
             }
         }
         
         logout.setOnAction((ActionEvent) ->{
-            MainApp.employee = null;
+            MainApp.employee_id = null;
             showLogin();
         });
     }

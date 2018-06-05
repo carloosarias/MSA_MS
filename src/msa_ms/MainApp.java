@@ -6,14 +6,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Employee;
 
 /**
  *
  * @author Pavilion Mini
  */
 public class MainApp extends Application{
-    public static Employee employee;
+    public static Integer employee_id;
     
     @Override
     public void start(Stage primaryStage) throws Exception {

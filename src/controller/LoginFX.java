@@ -73,7 +73,7 @@ public class LoginFX implements Initializable {
             public void handle(ActionEvent e) {
                 Employee employee = msabase.getEmployeeDAO().find(user_field.getText(), pass_field.getText());
                 if(employee != null){
-                    MainApp.employee = employee;
+                    MainApp.employee_id = employee.getId();
                     showMain();
                 }else{
                     user_field.setStyle("-fx-border-color: red ;");

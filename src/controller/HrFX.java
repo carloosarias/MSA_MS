@@ -164,7 +164,7 @@ public class HrFX implements Initializable {
         
         move_button.setOnAction((ActionEvent) -> {
             if(module_list.getSelectionModel().getSelectedItem() != null){
-                if(MainApp.employee.equals(emp_listview.getSelectionModel().getSelectedItem()) && module_list.getSelectionModel().getSelectedItem().getName().equals("Recursos Humanos")){
+                if(msabase.getEmployeeDAO().find(MainApp.employee_id).equals(emp_listview.getSelectionModel().getSelectedItem()) && module_list.getSelectionModel().getSelectedItem().getName().equals("Recursos Humanos")){
                     return;
                 }
                 
@@ -203,7 +203,7 @@ public class HrFX implements Initializable {
             case "Empleados Inactivos":
                 emp_listview.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().listActive(false)));
                 break;
-        }        
+        }
     }
 
     public void switchModuleList(){

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CompanyFX">
    <top>
       <HBox BorderPane.alignment="CENTER">
          <children>
@@ -24,7 +24,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <ComboBox prefWidth="150.0">
+                  <ComboBox fx:id="filter_combo" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
@@ -34,19 +34,23 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <ListView prefHeight="278.0" prefWidth="248.0">
+                  <ListView fx:id="comp_listview" prefHeight="216.0" prefWidth="248.0">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </ListView>
-                  <Button mnemonicParsing="false" text="Button">
-                     <VBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </VBox.margin>
-                  </Button>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Button fx:id="add_button" mnemonicParsing="false" text="Añadir Compañía">
+                           <HBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
             </VBox>
-            <Separator orientation="VERTICAL" prefHeight="200.0">
+            <Separator orientation="VERTICAL">
                <HBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
@@ -55,7 +59,7 @@
                <children>
                   <HBox>
                      <children>
-                        <VBox alignment="CENTER_LEFT">
+                        <VBox>
                            <children>
                               <Label text="Detalles de Compañía">
                                  <VBox.margin>
@@ -67,7 +71,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField>
+                              <TextField fx:id="id_field" prefWidth="150.0">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -77,7 +81,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField>
+                              <TextField fx:id="rfc_field" prefWidth="150.0">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -87,14 +91,14 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextArea prefHeight="70.0" prefWidth="150.0">
+                              <TextArea fx:id="payterm_field" prefHeight="133.0" prefWidth="150.0">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </TextArea>
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER_LEFT">
+                        <VBox>
                            <children>
                               <Label>
                                  <VBox.margin>
@@ -106,7 +110,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField>
+                              <TextField fx:id="name_field">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -116,7 +120,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TextField>
+                              <TextField fx:id="tax_field">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -126,127 +130,48 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <CheckBox mnemonicParsing="false" text="Proveedor">
+                              <CheckBox fx:id="supplier_check" mnemonicParsing="false" text="Proveedor">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </CheckBox>
-                              <CheckBox mnemonicParsing="false" text="Cliente">
+                              <CheckBox fx:id="client_check" mnemonicParsing="false" text="Cliente">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </CheckBox>
-                              <CheckBox mnemonicParsing="false" text="Inactivo">
+                              <CheckBox fx:id="active_check" mnemonicParsing="false" text="Inactivo">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </CheckBox>
+                              <Button fx:id="contact_button" mnemonicParsing="false" text=" Administrar Contactos ">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button fx:id="address_button" mnemonicParsing="false" text="Administrar Direcciones">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Button>
                            </children>
                         </VBox>
-                        <Separator orientation="VERTICAL">
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT">
+                     <children>
+                        <Button fx:id="edit_button" mnemonicParsing="false" text=" Editar Compañía " />
+                        <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
                            <HBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </HBox.margin>
-                        </Separator>
-                        <VBox>
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Filtro de Direcciones:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <ComboBox prefWidth="150.0">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </ComboBox>
-                                          <Label text="Lista de Direcciones:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <ListView prefHeight="100.0" prefWidth="150.0">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </ListView>
-                                          <Button mnemonicParsing="false" text="Button">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Button>
-                                       </children>
-                                    </VBox>
-                                    <VBox focusTraversable="true">
-                                       <children>
-                                          <Label focusTraversable="false" text="Detalles de Dirección:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <Label text="ID:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <TextField>
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </TextField>
-                                          <Label text="Dirección:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <TextArea prefHeight="75.0" prefWidth="150.0">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </TextArea>
-                                          <CheckBox mnemonicParsing="false" text="Inactivo">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </CheckBox>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
-                              <Separator prefWidth="200.0">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </Separator>
-                              <HBox>
-                                 <children>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Lista de Contactos:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <ListView prefHeight="100.0" prefWidth="150.0">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </ListView>
-                                          <Button mnemonicParsing="false" text="Button">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Button>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
+                        </Button>
+                        <Button fx:id="cancel_button" mnemonicParsing="false" text="Cancelar">
+                           <HBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </HBox.margin>
+                        </Button>
                      </children>
                   </HBox>
                </children>
