@@ -63,7 +63,6 @@ public class AddressFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println(CompanyFX.getCompanyId());
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
         updateList();

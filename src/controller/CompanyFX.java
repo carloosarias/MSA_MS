@@ -70,7 +70,8 @@ public class CompanyFX implements Initializable {
     @FXML
     private Button cancel_button;
     
-    private Stage addressStage;
+    private Stage addressStage = new Stage();
+    private Stage contactStage = new Stage();
     
     private static Integer company_id;
     
@@ -92,6 +93,8 @@ public class CompanyFX implements Initializable {
         filter_combo.getSelectionModel().selectFirst();
         updateList();
         
+        
+        
         filter_combo.setOnAction((ActionEvent) -> {
             updateList();
         });    
@@ -108,8 +111,8 @@ public class CompanyFX implements Initializable {
         cancel_button.setOnAction((ActionEvent) -> {
             filter_combo.getOnAction();
             setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
-            disableFields(true);
             closeOther();
+            disableFields(true);
         });
         
         save_button.setOnAction((ActionEvent) -> {
@@ -123,8 +126,8 @@ public class CompanyFX implements Initializable {
             }
             setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
             updateList();
-            disableFields(true);
             closeOther();
+            disableFields(true);
         });
         
         edit_button.setOnAction((ActionEvent) -> {
@@ -140,11 +143,18 @@ public class CompanyFX implements Initializable {
             showAddress();
         });
         
+        contact_button.setOnAction((ActionEvent) -> {
+            contact_button.setDisable(true);
+            showContact();
+        });
     }
     
     public void closeOther(){
         if(addressStage != null){
             addressStage.close();
+        }
+        if(contactStage != null){
+            contactStage.close();
         }
     }
     
@@ -160,11 +170,30 @@ public class CompanyFX implements Initializable {
             addressStage.initStyle(StageStyle.UTILITY);
             addressStage.setScene(scene);
             addressStage.showAndWait();
-            address_button.setDisable(false);
+            address_button.setDisable(!edit_button.isDisabled());
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void showContact(){
+        try {
+            contactStage = new Stage();
+            contactStage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/ContactFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            contactStage.setTitle("Opciones");
+            contactStage.setResizable(false);
+            contactStage.initStyle(StageStyle.UTILITY);
+            contactStage.setScene(scene);
+            contactStage.showAndWait();
+            contact_button.setDisable(!edit_button.isDisabled());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public Company mapCompany(Company company){
         
         company.setName(name_field.getText());
@@ -221,10 +250,8 @@ public class CompanyFX implements Initializable {
         edit_button.setDisable(!value);
         filter_combo.setDisable(!value);
         comp_listview.setDisable(!value);
-        if(value){
-            contact_button.setDisable(value);
-            address_button.setDisable(value);
-        }
+        address_button.setDisable(!edit_button.isDisabled());
+        contact_button.setDisable(!edit_button.isDisabled());
     }
     
     public void setFieldValues(Company company){
