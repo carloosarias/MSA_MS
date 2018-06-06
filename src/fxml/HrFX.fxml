@@ -215,7 +215,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <TextArea fx:id="address_area" disable="true" prefHeight="50.0" prefWidth="308.0" promptText="Dirección">
+                  <TextArea fx:id="address_area" disable="true" prefHeight="50.0" prefWidth="308.0" promptText="Dirección" wrapText="true">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>

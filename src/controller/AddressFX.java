@@ -87,7 +87,7 @@ public class AddressFX implements Initializable {
         });
         
         cancel_button.setOnAction((ActionEvent) -> {
-            filter_combo.getOnAction();
+            updateList();
             setFieldValues(address_listview.getSelectionModel().getSelectedItem());
             disableFields(true);
         });
@@ -101,7 +101,6 @@ public class AddressFX implements Initializable {
             } else{
                 msabase.getCompanyAddressDAO().create(msabase.getCompanyDAO().find(CompanyFX.getCompanyId()),mapAddress(new CompanyAddress()));
             }
-            setFieldValues(address_listview.getSelectionModel().getSelectedItem());
             updateList();
             disableFields(true);
         });
@@ -128,7 +127,7 @@ public class AddressFX implements Initializable {
     public void setFieldValues(CompanyAddress address){
         if(address != null){
             id_field.setText(""+address.getId());
-            address_field.setText(""+address.getAddress());
+            address_field.setText(address.getAddress());
             active_check.setSelected(!address.isActive());
         } else{
             id_field.clear();

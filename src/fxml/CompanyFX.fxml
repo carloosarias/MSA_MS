@@ -12,16 +12,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" fillHeight="true" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CompanyFX">
+<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CompanyFX">
    <children>
-      <VBox alignment="CENTER_LEFT">
+      <VBox alignment="CENTER_LEFT" fillWidth="false">
          <children>
             <Label text="Filtro de Compañías:">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <ComboBox fx:id="filter_combo" prefWidth="200.0">
+            <ComboBox fx:id="filter_combo" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
@@ -31,14 +31,14 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <ListView fx:id="comp_listview" prefHeight="216.0" prefWidth="200.0">
+            <ListView fx:id="comp_listview" prefHeight="183.0" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </ListView>
             <HBox alignment="CENTER">
                <children>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Añadir Compañía">
+                  <Button fx:id="add_button" mnemonicParsing="false" prefWidth="150.0" text="Añadir Compañía">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
@@ -47,7 +47,7 @@
             </HBox>
          </children>
       </VBox>
-      <Separator orientation="VERTICAL" prefHeight="330.0" prefWidth="0.0">
+      <Separator orientation="VERTICAL">
          <HBox.margin>
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
          </HBox.margin>
@@ -88,11 +88,16 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea fx:id="payterm_field" disable="true" prefHeight="133.0" prefWidth="150.0">
+                        <TextArea fx:id="payterm_field" disable="true" prefHeight="67.0" prefWidth="150.0" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextArea>
+                        <Button fx:id="contact_button" disable="true" mnemonicParsing="false" prefWidth="150.0" text="Ver Contactos">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                   </VBox>
                   <VBox>
@@ -142,12 +147,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </CheckBox>
-                        <Button fx:id="contact_button" disable="true" mnemonicParsing="false" prefWidth="142.0" text="Administrar Contactos">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                        <Button fx:id="address_button" disable="true" mnemonicParsing="false" text="Administrar Direcciones">
+                        <Button fx:id="address_button" disable="true" mnemonicParsing="false" prefWidth="150.0" text="Ver Direcciones">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
