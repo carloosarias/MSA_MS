@@ -90,7 +90,7 @@ public class CompanyContact implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("CompanyAddress[id=%d,name=%s,position=%s,email=%s,phone_number=%s]",
-                id, name, position, email, phone_number);
+        return String.format("%s",
+                email);
     }
 }

@@ -32,7 +32,7 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
             "INSERT INTO COMPANY_CONTACT (COMPANY_ID, name, position, email, phone_number) "
             +"VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE COMPANY_CONTACT name = ?, position = ?, email = ?, phone_number = ? WHERE id = ?";
+            "UPDATE COMPANY_CONTACT SET name = ?, position = ?, email = ?, phone_number = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM COMPANY_CONTACT WHERE id = ?";
     

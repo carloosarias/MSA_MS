@@ -70,7 +70,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <TextArea fx:id="address_field" prefHeight="75.0" prefWidth="237.0" wrapText="true">
+            <TextArea fx:id="address_field" disable="true" prefHeight="75.0" prefWidth="237.0" wrapText="true">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>

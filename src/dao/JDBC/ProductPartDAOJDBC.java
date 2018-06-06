@@ -163,7 +163,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PRODUCT_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_SPECIFICATION_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
