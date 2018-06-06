@@ -18,9 +18,9 @@
 
 <BorderPane fx:id="root_pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HrFX">
    <center>
-      <HBox fillHeight="false" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
-            <VBox fillWidth="false">
+            <VBox alignment="CENTER_LEFT" fillWidth="false">
                <children>
                   <Label text="Filtro de Busqueda:">
                      <VBox.margin>
@@ -37,7 +37,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <ListView fx:id="emp_listview" prefHeight="274.0" prefWidth="150.0">
+                  <ListView fx:id="emp_listview" prefHeight="390.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
@@ -57,7 +57,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
             </Separator>
-            <VBox>
+            <VBox alignment="CENTER_LEFT">
                <children>
                   <Label text="Detalles De Empleado:">
                      <VBox.margin>
@@ -68,6 +68,26 @@
                      <children>
                         <VBox fillWidth="false">
                            <children>
+                              <Label text="ID:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField fx:id="id_field" disable="true" promptText="ID">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <Label text="Usuario:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField fx:id="user_field" disable="true" promptText="Usuario">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
                               <Label text="Nombre:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -124,6 +144,26 @@
                         </VBox>
                         <VBox fillWidth="false">
                            <children>
+                              <Label disable="true" focusTraversable="false" text="Label" visible="false">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField disable="true" focusTraversable="false" visible="false">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <Label text="Contraseña:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <PasswordField fx:id="pass_field" disable="true" promptText="*********">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </PasswordField>
                               <Label text="Apellido:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -217,66 +257,34 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
             </Separator>
-            <VBox fillWidth="false">
+            <VBox alignment="CENTER_LEFT" fillWidth="false">
                <children>
-                  <Label text="Detalles De Usuario:">
+                  <Label text="Módulos:">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <Label text="ID:">
+                  <Label text="Permitido:">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="id_field" disable="true" promptText="ID">
+                  <ListView fx:id="module_list" disable="true" prefHeight="125.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
-                  </TextField>
-                  <Label text="Usuario:">
-                     <VBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </VBox.margin>
-                  </Label>
-                  <TextField fx:id="user_field" disable="true" promptText="Usuario">
-                     <VBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </VBox.margin>
-                  </TextField>
-                  <Label text="Contraseña:">
+                  </ListView>
+                  <Label text="Restringido:">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <PasswordField fx:id="pass_field" disable="true" promptText="*********">
+                  <ListView fx:id="invmodule_list" disable="true" prefHeight="125.0" prefWidth="150.0">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
-                  </PasswordField>
-                  <Label text="Acceso a Modulos:">
-                     <VBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </VBox.margin>
-                  </Label>
-                  <HBox>
-                     <children>
-                        <ListView fx:id="module_list" disable="true" prefHeight="133.0" prefWidth="150.0">
-                           <HBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </HBox.margin>
-                        </ListView>
-                        <ListView fx:id="invmodule_list" disable="true" prefHeight="125.0" prefWidth="150.0">
-                           <HBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </HBox.margin>
-                        </ListView>
-                     </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox>
+                  </ListView>
+                  <HBox alignment="CENTER">
                      <children>
                       <Button fx:id="move_button" disable="true" mnemonicParsing="false" text="Mover Selección">
                            <HBox.margin>

@@ -120,7 +120,9 @@ public class LoginFX implements Initializable {
     
     public void showConfig(){
         try {
+            
             Stage configStage = new Stage();
+            configStage.initOwner((Stage) root_pane.getScene().getWindow());
             BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/ConfigFX.fxml"));
             Scene scene = new Scene(root);
             

@@ -293,13 +293,13 @@ public class HrFX implements Initializable {
     }
     public boolean testFields(){
         boolean b = true;
-        if(fname_field.getText().equals("")){
+        if(fname_field.getText().replace(" ", "").equals("")){
             fname_field.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
             fname_field.setStyle(null);
         }
-        if(lname_field.getText().equals("")){
+        if(lname_field.getText().replace(" ", "").equals("")){
             lname_field.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
@@ -317,25 +317,25 @@ public class HrFX implements Initializable {
         } else{
             hire_picker.setStyle(null);
         }
-        if(user_field.getText().equals("")){
+        if(user_field.getText().replace(" ", "").equals("")){
             user_field.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
             user_field.setStyle(null);
         }
-        if(curp_field.getText().equals("")){
+        if(curp_field.getText().replace(" ", "").equals("")){
             curp_field.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
             curp_field.setStyle(null);
         }
-        if(address_area.getText().equals("")){
+        if(address_area.getText().replace(" ", "").equals("")){
             address_area.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
             address_area.setStyle(null);
         }
-        if(id_field.getText().equals("") && pass_field.getText().equals("")){
+        if(id_field.getText().replace(" ", "").equals("") && pass_field.getText().replace(" ", "").equals("")){
             pass_field.setStyle("-fx-border-color: red ;");
         } else{
             pass_field.setStyle(null);

@@ -66,7 +66,7 @@ public class CompanyAddress implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("CompanyAddress[id=%d,address=%s,active=%b]",
-                id, address, active);
+        return String.format("%s",
+                address);
     }
 }

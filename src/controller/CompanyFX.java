@@ -6,23 +6,28 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
-import java.time.LocalTime;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Company;
-import model.Employee;
 
 /**
  * FXML Controller class
@@ -30,7 +35,8 @@ import model.Employee;
  * @author Pavilion Mini
  */
 public class CompanyFX implements Initializable {
-
+    @FXML
+    private HBox root_hbox;
     @FXML
     private ComboBox<String> filter_combo;
     @FXML
@@ -64,14 +70,18 @@ public class CompanyFX implements Initializable {
     @FXML
     private Button cancel_button;
     
-    ObservableList<String> filter_list = FXCollections.observableArrayList(
+    private Stage addressStage;
+    
+    private static Integer company_id;
+    
+    private ObservableList<String> filter_list = FXCollections.observableArrayList(
         "Compañías Activas",
         "Compañías Inactivas",
         "Compañías Clientes",
         "Compañías Proveedoras"
     );
     
-    DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
      * Initializes the controller class.
@@ -81,9 +91,11 @@ public class CompanyFX implements Initializable {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
         updateList();
+        
         filter_combo.setOnAction((ActionEvent) -> {
             updateList();
         });    
+        
         comp_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Company> observable, Company oldValue, Company newValue) -> {
             setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
         });
@@ -97,6 +109,7 @@ public class CompanyFX implements Initializable {
             filter_combo.getOnAction();
             setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
             disableFields(true);
+            closeOther();
         });
         
         save_button.setOnAction((ActionEvent) -> {
@@ -111,6 +124,7 @@ public class CompanyFX implements Initializable {
             setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
             updateList();
             disableFields(true);
+            closeOther();
         });
         
         edit_button.setOnAction((ActionEvent) -> {
@@ -121,8 +135,36 @@ public class CompanyFX implements Initializable {
             }
         });
         
+        address_button.setOnAction((ActionEvent) -> {
+            address_button.setDisable(true);
+            showAddress();
+        });
+        
     }
     
+    public void closeOther(){
+        if(addressStage != null){
+            addressStage.close();
+        }
+    }
+    
+    public void showAddress(){
+        try {
+            addressStage = new Stage();
+            addressStage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddressFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            addressStage.setTitle("Opciones");
+            addressStage.setResizable(false);
+            addressStage.initStyle(StageStyle.UTILITY);
+            addressStage.setScene(scene);
+            addressStage.showAndWait();
+            address_button.setDisable(false);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public Company mapCompany(Company company){
         
         company.setName(name_field.getText());
@@ -138,25 +180,25 @@ public class CompanyFX implements Initializable {
     
     public boolean testFields(){
         boolean b = true;
-        if(name_field.getText().equals("")){
+        if(name_field.getText().replace(" ", "").equals("")){
             name_field.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
             name_field.setStyle(null);
         }
-        if(rfc_field.getText().equals("")){
+        if(rfc_field.getText().replace(" ", "").equals("")){
             rfc_field.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
             rfc_field.setStyle(null);
         }
-        if(tax_field.getText().equals("")){
+        if(tax_field.getText().replace(" ", "").equals("")){
             tax_field.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
             tax_field.setStyle(null);
         }
-        if(payterm_field.getText().equals("")){
+        if(payterm_field.getText().replace(" ", "").equals("")){
             payterm_field.setStyle("-fx-border-color: red ;");
             b = false;
         } else{
@@ -179,14 +221,15 @@ public class CompanyFX implements Initializable {
         edit_button.setDisable(!value);
         filter_combo.setDisable(!value);
         comp_listview.setDisable(!value);
-        if(!value){
+        if(value){
             contact_button.setDisable(value);
-            contact_button.setDisable(value);
+            address_button.setDisable(value);
         }
     }
     
     public void setFieldValues(Company company){
         if(company != null){
+            company_id = company.getId();
             id_field.setText(""+company.getId());
             name_field.setText(company.getName());
             rfc_field.setText(company.getRfc());
@@ -196,6 +239,7 @@ public class CompanyFX implements Initializable {
             client_check.setSelected(company.isClient());
             active_check.setSelected(!company.isActive());
         } else{
+            company_id = null;
             id_field.clear();
             name_field.clear();
             rfc_field.clear();
@@ -224,6 +268,10 @@ public class CompanyFX implements Initializable {
                 break;
         }
        
+    }
+    
+    public static Integer getCompanyId(){
+        return company_id;
     }
     
 }

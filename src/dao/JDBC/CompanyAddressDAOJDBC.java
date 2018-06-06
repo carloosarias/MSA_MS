@@ -31,7 +31,7 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
             "INSERT INTO COMPANY_ADDRESS (COMPANY_ID, address, active) "
             +"VALUES (?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE COMPANY_ADDRESS address = ?, active = ? WHERE id = ?";
+            "UPDATE COMPANY_ADDRESS SET address = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM COMPANY_ADDRESS WHERE id = ?";
 

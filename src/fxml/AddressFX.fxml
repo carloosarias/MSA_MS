@@ -6,12 +6,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root_hbox" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddressFX">
    <children>
       <VBox>
          <children>
@@ -20,7 +21,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <ComboBox prefWidth="150.0">
+            <ComboBox fx:id="filter_combo" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
@@ -30,18 +31,23 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <ListView prefHeight="100.0" prefWidth="150.0">
+            <ListView fx:id="address_listview" prefHeight="125.0" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </ListView>
-            <Button mnemonicParsing="false" text="Añadir Dirección">
+            <Button fx:id="add_button" mnemonicParsing="false" prefWidth="150.0" text="Añadir Dirección">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Button>
          </children>
       </VBox>
+      <Separator orientation="VERTICAL" prefHeight="200.0">
+         <HBox.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </HBox.margin>
+      </Separator>
       <VBox focusTraversable="true">
          <children>
             <Label focusTraversable="false" text="Detalles de Dirección:">
@@ -54,7 +60,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <TextField>
+            <TextField fx:id="id_field" disable="true">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
@@ -64,16 +70,35 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <TextArea prefHeight="75.0" prefWidth="150.0">
+            <TextArea fx:id="address_field" disable="true" prefHeight="75.0" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </TextArea>
-            <CheckBox mnemonicParsing="false" text="Inactivo">
+            <CheckBox fx:id="active_check" disable="true" mnemonicParsing="false" text="Inactivo">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </CheckBox>
+            <HBox>
+               <children>
+                  <Button fx:id="edit_button" mnemonicParsing="false" text="Editar Selección">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Guardar">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="cancel_button" disable="true" mnemonicParsing="false" text="Cancelar">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </children>
