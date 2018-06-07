@@ -7,49 +7,44 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PartRevisionFX">
+
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PartRevisionFX">
    <children>
       <VBox alignment="CENTER_LEFT">
          <children>
-            <Label text="Filtro de Parte:">
+            <Label text="Filtro de Revisiones:">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <ComboBox prefWidth="150.0">
+            <ComboBox disable="true" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </ComboBox>
-            <ListView prefHeight="360.0" prefWidth="150.0">
+            <ListView disable="true" prefHeight="216.0" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </ListView>
-            <Button mnemonicParsing="false" prefWidth="150.0" text="Añadir Número de Parte">
+            <Button mnemonicParsing="false" prefWidth="150.0" text="Añadir Revisión">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Button>
          </children>
       </VBox>
-      <Separator orientation="VERTICAL">
-         <HBox.margin>
-            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-         </HBox.margin>
-      </Separator>
-      <VBox alignment="CENTER_LEFT">
+      <VBox>
          <children>
-            <HBox alignment="CENTER_LEFT">
+            <HBox>
                <children>
-                  <VBox>
+                  <VBox alignment="CENTER_LEFT" fillWidth="false">
                      <children>
-                        <Label text="Detalles de Parte:">
+                        <Label text="Detalles de Revisión:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -59,31 +54,95 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField>
+                        <TextField disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
-                        <CheckBox mnemonicParsing="false" text="Inactivo" />
+                        <Label text="Fecha de Revisión:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <DatePicker disable="true" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </DatePicker>
+                        <Label text="Area:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField disable="true" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Peso c/Proceso:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField disable="true" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <CheckBox disable="true" mnemonicParsing="false" text="Inactivo">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </CheckBox>
                      </children>
                   </VBox>
-                  <VBox>
+                  <VBox fillWidth="false">
                      <children>
                         <Label>
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <Label text="Número de Parte:">
+                        <Label text="Revisión:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField>
+                        <TextField disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
+                        <Label text="Metal Base:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField disable="true">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Peso s/Proceso:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField disable="true">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Número de Especificación:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox disable="true" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
                      </children>
                   </VBox>
                </children>
@@ -95,185 +154,19 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Guardar">
+                  <Button disable="true" mnemonicParsing="false" text="Guardar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Button">
+                  <Button disable="true" mnemonicParsing="false" text="Cancelar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-               </children>
-            </HBox>
-            <Separator valignment="TOP">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Separator>
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <VBox alignment="CENTER_LEFT">
-                     <children>
-                        <Label text="Filtro de Revisiones:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                        <ListView prefHeight="216.0" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ListView>
-                        <Button mnemonicParsing="false" prefWidth="150.0" text="Añadir Revisión">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <HBox>
-                           <children>
-                              <VBox alignment="CENTER_LEFT" fillWidth="false">
-                                 <children>
-                                    <Label text="Detalles de Revisión:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <Label text="ID:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField prefWidth="150.0">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                    <Label text="Fecha de Revisión:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <DatePicker prefWidth="150.0">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </DatePicker>
-                                    <Label text="Area:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField prefWidth="150.0">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                    <Label text="Peso c/Proceso:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField prefWidth="150.0">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                    <CheckBox mnemonicParsing="false" text="Inactivo">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </CheckBox>
-                                 </children>
-                              </VBox>
-                              <VBox fillWidth="false">
-                                 <children>
-                                    <Label>
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <Label text="Revisión:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField prefWidth="150.0">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                    <Label text="Metal Base:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField>
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                    <Label text="Peso s/Proceso:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField>
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                    <Label text="Número de Especificación:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <ComboBox prefWidth="150.0">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </ComboBox>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT">
-                           <children>
-                              <Button mnemonicParsing="false" text="Editar Selección">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button mnemonicParsing="false" text="Guardar">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button mnemonicParsing="false" text="Cancelar">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
                </children>
             </HBox>
          </children>
       </VBox>
    </children>
-   <padding>
-      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-   </padding>
 </HBox>

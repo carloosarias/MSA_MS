@@ -54,7 +54,7 @@ public class ProductFX implements Initializable {
                 case "Parte":
                     part_tab.setDisable(false);
                     try {
-                        part_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
+                        part_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }

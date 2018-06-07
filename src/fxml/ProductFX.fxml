@@ -8,7 +8,7 @@
    <children>
       <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab fx:id="part_tab" closable="false" text="Partes" />
+            <Tab fx:id="part_tab" closable="false" disable="true" text="Partes" />
          </tabs>
       </TabPane>
    </children>
