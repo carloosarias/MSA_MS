@@ -2,9 +2,14 @@
 
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.HBox?>
 
-<TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductFX">
-   <tabs>
-      <Tab fx:id="part_tab" text="Partes" />
-   </tabs>
-</TabPane>
+<HBox fx:id="root_hbox" alignment="CENTER" fillHeight="false" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductFX">
+   <children>
+      <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE">
+         <tabs>
+            <Tab fx:id="part_tab" closable="false" text="Partes" />
+         </tabs>
+      </TabPane>
+   </children>
+</HBox>

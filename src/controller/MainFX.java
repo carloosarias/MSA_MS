@@ -18,7 +18,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -73,19 +72,16 @@ public class MainFX implements Initializable {
                     break;
                 case "Compras":
                     company_tab.setDisable(false);
+                    product_tab.setDisable(false);
+                    
                     try {
                         company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
+                        product_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
+
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
-                case "Productos":
-                    product_tab.setDisable(false);
-                    try{
-                        product_tab.setContent((TabPane) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
-                    } catch(IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
             }
         }
         

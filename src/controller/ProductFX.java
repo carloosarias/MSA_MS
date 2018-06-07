@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import model.ProductType;
 
 /**
@@ -27,6 +28,8 @@ import model.ProductType;
  */
 public class ProductFX implements Initializable {
 
+    @FXML
+    private HBox root_hbox;
     @FXML
     private TabPane root_tabpane;
     @FXML
@@ -42,16 +45,16 @@ public class ProductFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         product_types = msabase.getProductTypeDAO().listActive(true);
-        
+        root_tabpane.setStyle("-fx-border-color: silver ;");
         for(ProductType product_type : product_types){
             switch(product_type.getName()){
                 default:
                     part_tab.setDisable(true);
                     break;
-                case "Partes":
+                case "Parte":
                     part_tab.setDisable(false);
                     try {
-                        part_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
+                        part_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
