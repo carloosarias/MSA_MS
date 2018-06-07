@@ -15,11 +15,7 @@ public class ProductPart implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String part_number;
-    private String rev;
-    private String base_metal;
-    private double area;
-    private double base_weight;
-    private double final_weight;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -37,46 +33,15 @@ public class ProductPart implements Serializable{
     public void setPart_number(String part_number) {
         this.part_number = part_number;
     }
-
-    public String getRev() {
-        return rev;
+    
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active){
+        this.active = active;
     }
 
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
-
-    public String getBase_metal() {
-        return base_metal;
-    }
-
-    public void setBase_metal(String base_metal) {
-        this.base_metal = base_metal;
-    }
-
-    public double getArea() {
-        return area;
-    }
-
-    public void setArea(double area) {
-        this.area = area;
-    }
-
-    public double getBase_weight() {
-        return base_weight;
-    }
-
-    public void setBase_weight(double base_weight) {
-        this.base_weight = base_weight;
-    }
-
-    public double getFinal_weight() {
-        return final_weight;
-    }
-
-    public void setFinal_weight(double final_weight) {
-        this.final_weight = final_weight;
-    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -107,7 +72,7 @@ public class ProductPart implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("ProductPart[id=%d,part_number=%s,rev=%s,base_metal=%s,area=%f,base_weight=%f,final_weight=%f]",
-                id, part_number,rev,base_metal,area,base_weight,final_weight);
+        return String.format("ProductPart[id=%d,part_number=%s,active=%b]",
+                id, part_number, active);
     }
 }
