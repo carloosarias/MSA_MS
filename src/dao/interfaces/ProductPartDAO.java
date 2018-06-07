@@ -57,16 +57,16 @@ public interface ProductPartDAO {
      * Returns a list of all active ProductParts from the database ordered by ProductPart ID. The list is never null and
      * is empty when the database does not contain any ProductPart.
      * @param active The active to be searched for
-     * @return A list of all ProductParts from the database ordered by ProductPart ID.
+     * @return A list of all active ProductParts from the database ordered by ProductPart ID.
      * @throws DAOException If something fails at database level.
      */
     public List<ProductPart> list(boolean active) throws DAOException;
     
     /**
-     * Returns a list of all ProductParts matching Product from the database ordered by Product ID. The Product ID must not be null, otherwise it will throw
+     * Returns a list of all ProductParts matching Product from the database ordered by ProductPart ID. The Product ID must not be null, otherwise it will throw
      * IllegalArgumentException. The list is never null and
      * is empty when the database does not contain any ProductPart matching Product.
-     * @param product The ProductType to be searched for.
+     * @param product The Product to be searched for.
      * @return A list of all ProductParts matching Product from the database ordered by ProductPart ID.
      * @throws IllegalArgumentException If the Product ID is null.
      * @throws DAOException If something fails at database level.
@@ -86,13 +86,12 @@ public interface ProductPartDAO {
     public List<ProductPart> list(Product product, boolean active) throws IllegalArgumentException, DAOException;   
     
     /**
-     * Create the given ProductPart in the database. The Product ID must not be null, the Specification ID must not be null and
+     * Create the given ProductPart in the database. The Product ID must not be null and
      * the ProductPart ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given ProductPart.
      * @param product The Product to be assigned to this ProductPart.
      * @param part The ProductPart to be created.
      * @throws IllegalArgumentException if the Product ID is null.
-     * @throws IllegalArgumentException if the Specification ID is null.
      * @throws IllegalArgumentException If the ProductPart ID is not null.
      * @throws DAOException If something fails at database level.
      */
