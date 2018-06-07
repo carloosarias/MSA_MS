@@ -9,7 +9,6 @@ import dao.DAOException;
 import java.util.List;
 import model.Product;
 import model.ProductPart;
-import model.Specification;
 
 /**
  *

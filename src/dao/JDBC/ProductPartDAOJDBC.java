@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Product;
 import model.ProductPart;
-import model.Specification;
 
 /**
  *
@@ -45,6 +44,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             "UPDATE PRODUCT_PART SET part_number = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM PRODUCT_PART WHERE id = ?";
+    
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;

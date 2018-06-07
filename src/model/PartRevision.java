@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -15,6 +16,7 @@ public class PartRevision implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String rev;
+    private Date rev_date;
     private String base_metal;
     private double area;
     private double base_weight;
@@ -39,6 +41,14 @@ public class PartRevision implements Serializable{
         this.rev = rev;
     }
 
+    public Date getRev_date(){
+        return rev_date;
+    }
+    
+    public void setRev_date(Date rev_date){
+        this.rev_date = rev_date;
+    }
+    
     public String getBase_metal() {
         return base_metal;
     }
@@ -109,8 +119,8 @@ public class PartRevision implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("PartRevision[id=%d,rev=%s,base_metal=%s,area=%f,base_weight=%f,final_weight=%f,active=%b]",
-                id, rev, base_metal, area, base_weight, final_weight, active);
+        return String.format("PartRevision[id=%d,rev=%s,rev_date=%s,base_metal=%s,area=%f,base_weight=%f,final_weight=%f,active=%b]",
+                id, rev, rev_date,base_metal, area, base_weight, final_weight, active);
     }
     
 }
