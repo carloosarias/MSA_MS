@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -39,17 +40,19 @@ public class MainFX implements Initializable {
     @FXML
     private Tab company_tab;
     @FXML
+    private Tab product_tab;
+    @FXML
     private MenuItem logout;
     
-    
     private List<Module> modules;
+    
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
         
         modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
         
@@ -58,6 +61,7 @@ public class MainFX implements Initializable {
                 default:
                     employee_tab.setDisable(true);
                     company_tab.setDisable(true);
+                    product_tab.setDisable(true);
                     break;
                 case "Recursos Humanos":
                     employee_tab.setDisable(false);
@@ -75,6 +79,13 @@ public class MainFX implements Initializable {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
+                case "Productos":
+                    product_tab.setDisable(false);
+                    try{
+                        product_tab.setContent((TabPane) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
+                    } catch(IOException ex) {
+                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+                    }
             }
         }
         
