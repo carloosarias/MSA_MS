@@ -9,6 +9,7 @@ import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
 import dao.interfaces.ProductDAO;
+import dao.interfaces.ProductPartDAO;
 import dao.interfaces.ProductTypeDAO;
 import dao.interfaces.SpecificationDAO;
 import java.sql.Connection;
@@ -199,6 +200,10 @@ public abstract class DAOFactory {
      */
     public ProductDAO getProductDAO() {
         return new ProductDAOJDBC(this);
+    }
+    
+    public ProductPartDAO getProductPartDAO(){
+        return new ProductPartDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.

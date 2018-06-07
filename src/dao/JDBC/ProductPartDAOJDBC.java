@@ -69,25 +69,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
 
     @Override
     public ProductPart find(String part_number) throws DAOException {
-        ProductPart part = null;
-        
-        Object[] values = {
-            part_number
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_BY_PART_NUMBER, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                part = map(resultSet);
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-        
-        return part;
+        return find(SQL_FIND_BY_PART_NUMBER, part_number);
     }
     
     /**
@@ -117,7 +99,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
     
     @Override
     public Product findProduct(ProductPart part) throws IllegalArgumentException, DAOException {
-        if (part.getId() == null) {
+        if(part.getId() == null) {
             throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
         }
         
@@ -164,9 +146,11 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
     @Override
     public List<ProductPart> list(boolean active) throws DAOException {
         List<ProductPart> part = new ArrayList<>();
+        
         Object[] values = {
             active
-        };    
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
             PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
@@ -248,7 +232,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         Object[] values = {
             product.getId(),
             part.getPart_number(),
-            part.isActive(),
+            part.isActive()
         };
         
         try(
@@ -316,7 +300,8 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             }
         } catch(SQLException e){
             throw new DAOException(e);
-        }    }
+        }
+    }
     
     // Helpers ------------------------------------------------------------------------------------
 
