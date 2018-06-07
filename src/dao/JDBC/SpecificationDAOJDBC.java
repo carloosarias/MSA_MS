@@ -23,16 +23,18 @@ import model.Specification;
 public class SpecificationDAOJDBC implements SpecificationDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, specification_number, details FROM SPECIFICATION WHERE id = ?";
+            "SELECT id, specification_number, details, active FROM SPECIFICATION WHERE id = ?";
     private static final String SQL_FIND_BY_SPECIFICATION_NUMBER = 
-            "SELECT id, specification_number, details FROM SPECIFICATION WHERE specification_number = ?";
+            "SELECT id, specification_number, details, active FROM SPECIFICATION WHERE specification_number = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, specification_number, details FROM SPECIFICATION ORDER BY id";
+            "SELECT id, specification_number, details, active FROM SPECIFICATION ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT id, specification_number, details, active FROM SPECIFICATION WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO SPECIFICATION (specification_number, details) "
-            + "VALUES (?,?)";
+            "INSERT INTO SPECIFICATION (specification_number, details, active) "
+            + "VALUES (?,?,?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SPECIFICATION SET specification_number = ?, details = ? WHERE id = ?";
+            "UPDATE SPECIFICATION SET specification_number = ?, details = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM SPECIFICATION WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -94,6 +96,29 @@ public class SpecificationDAOJDBC implements SpecificationDAO{
         try(
             Connection connection = daoFactory.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                specification.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return specification;
+    }
+    
+    @Override
+    public List<Specification> list(boolean active) throws DAOException {
+        List<Specification> specification = new ArrayList<>();
+        
+        Object[] values = {
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -198,6 +223,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO{
         specification.setId(resultSet.getInt("id"));
         specification.setSpecification_number(resultSet.getString("specification_number"));
         specification.setDetails(resultSet.getString("details"));
+        specification.setActive(resultSet.getBoolean("active"));
         return specification;
     }
     

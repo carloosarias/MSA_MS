@@ -14,6 +14,7 @@ public class Specification {
     private Integer id;
     private String specification_number;
     private String details;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -38,6 +39,14 @@ public class Specification {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+    
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active){
+        this.active = active;
     }
     
     // Object overrides ---------------------------------------------------------------------------
@@ -70,7 +79,7 @@ public class Specification {
      */
     @Override
     public String toString() {
-        return String.format("Specification[id=%d,specification_number=%s,details=%b]",
-                id, specification_number, details);
+        return String.format("Specification[id=%d,specification_number=%s,details=%s,active=%b]",
+                id, specification_number, details, active);
     }
 }

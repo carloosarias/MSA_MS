@@ -41,6 +41,15 @@ public interface SpecificationDAO {
     public List<Specification> list() throws DAOException;
     
     /**
+     * Returns a list of all Specifications from the database ordered by Specification ID. The list is never null and
+     * is empty when the database does not contain any Specification.
+     * @param active the active to be searched for
+     * @return A list of all Specifications from the database ordered by Specification ID.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<Specification> list(boolean active) throws DAOException;
+    
+    /**
      * Create the given Specification in the database. The Specification ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given Specification.
      * @param specification The Specification to be created.
