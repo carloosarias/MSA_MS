@@ -6,19 +6,26 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Product;
 import model.ProductType;
 
@@ -51,6 +58,10 @@ public class ProductFX implements Initializable {
     private Button save_button;
     @FXML
     private Button cancel_button;
+    @FXML
+    private Button details_button;
+    
+    private Stage detailsStage = new Stage();
     
     DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
@@ -73,6 +84,10 @@ public class ProductFX implements Initializable {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst(); 
         updateList();
+        
+        details_button.setOnAction((ActionEvent) -> {
+            showDetails();
+        });
         
         typefilter_combo.setOnAction((ActionEvent) -> {
             updateList();
@@ -115,10 +130,40 @@ public class ProductFX implements Initializable {
         edit_button.setOnAction((ActionEvent) -> {
             if(product_listview.getSelectionModel().getSelectedItem() != null){
                 disableFields(false);
+                details_button.setDisable(false);
             }
         });
         
     }
+    
+    public void showDetails(){
+        try {
+            String path;
+            switch(typefilter_combo.getSelectionModel().getSelectedItem().getName()){
+                case "Parte":
+                   path =  "/fxml/ProductPartFX.fxml";
+                   break;
+                default:
+                    return;
+            }
+            
+            detailsStage = new Stage();
+            detailsStage.initOwner((Stage) root_hbox.getScene().getWindow());
+            
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource(path));
+            Scene scene = new Scene(root);
+            
+            detailsStage.setTitle("Detalles de "+typefilter_combo.getSelectionModel().getSelectedItem().getName());
+            detailsStage.setResizable(false);
+            detailsStage.initStyle(StageStyle.UTILITY);
+            detailsStage.setScene(scene);
+            detailsStage.showAndWait();
+            details_button.setDisable(!edit_button.isDisabled());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void disableFields(boolean value){
         name_field.setDisable(value);
         active_check.setDisable(value);
@@ -129,6 +174,9 @@ public class ProductFX implements Initializable {
         filter_combo.setDisable(!value);
         typefilter_combo.setDisable(!value);
         product_listview.setDisable(!value);
+        if(value){
+            details_button.setDisable(value);
+        }
     }
     public Product mapProduct(Product product){
         product.setName(name_field.getText());

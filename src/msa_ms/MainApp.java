@@ -13,7 +13,6 @@ import javafx.stage.StageStyle;
  */
 public class MainApp extends Application{
     public static Integer employee_id;
-    
     @Override
     public void start(Stage primaryStage) throws Exception {
         

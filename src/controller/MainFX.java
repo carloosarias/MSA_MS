@@ -73,11 +73,9 @@ public class MainFX implements Initializable {
                 case "Compras":
                     company_tab.setDisable(false);
                     product_tab.setDisable(false);
-                    
                     try {
                         company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
                         product_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
-
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -97,6 +95,7 @@ public class MainFX implements Initializable {
             stage.close();
             stage = new Stage();
             BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));
+
             Scene scene = new Scene(root);
             stage.setTitle("MSA Manager");
             stage.setResizable(false);

@@ -33,6 +33,7 @@ import javafx.stage.StageStyle;
 import model.Employee;
 import msa_ms.MainApp;
 
+
 /**
  * FXML Controller class
  *
@@ -60,6 +61,7 @@ public class LoginFX implements Initializable {
     private Button options_button;
     @FXML
     private Button enter_button;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
     /**
@@ -69,7 +71,7 @@ public class LoginFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         enter_button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -125,7 +127,7 @@ public class LoginFX implements Initializable {
             configStage.initOwner((Stage) root_pane.getScene().getWindow());
             BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/ConfigFX.fxml"));
             Scene scene = new Scene(root);
-            
+
             configStage.setTitle("Opciones");
             configStage.setResizable(false);
             configStage.initStyle(StageStyle.UTILITY);

@@ -73,7 +73,7 @@ public class Product implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("Product[id=%d,name=%s,active=%b]",
-                id, name, active);
+        return String.format("%s",
+                name);
     }
 }

@@ -35,7 +35,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </ComboBox>
-            <ListView fx:id="product_listview" prefHeight="200.0" prefWidth="150.0">
+            <ListView fx:id="product_listview" prefWidth="200.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
@@ -73,11 +73,11 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
-                        <CheckBox fx:id="active_check" disable="true" mnemonicParsing="false" text="Inactivo">
+                        <Button fx:id="details_button" disable="true" mnemonicParsing="false" prefWidth="150.0" text="Ver Detalles de Producto">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </CheckBox>
+                        </Button>
                      </children>
                   </VBox>
                   <VBox>
@@ -97,6 +97,11 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
+                        <CheckBox fx:id="active_check" disable="true" mnemonicParsing="false" text="Inactivo">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </CheckBox>
                      </children>
                   </VBox>
                </children>
