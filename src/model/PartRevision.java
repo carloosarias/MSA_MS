@@ -18,6 +18,7 @@ public class PartRevision implements Serializable{
     private String rev;
     private Date rev_date;
     private String base_metal;
+    private String final_process;
     private double area;
     private double base_weight;
     private double final_weight;
@@ -56,7 +57,15 @@ public class PartRevision implements Serializable{
     public void setBase_metal(String base_metal) {
         this.base_metal = base_metal;
     }
+    
+    public String getFinal_process() {
+        return final_process;
+    }
 
+    public void setFinal_process(String final_process) {
+        this.final_process = final_process;
+    }
+    
     public double getArea() {
         return area;
     }
@@ -119,8 +128,8 @@ public class PartRevision implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("PartRevision[id=%d,rev=%s,rev_date=%s,base_metal=%s,area=%f,base_weight=%f,final_weight=%f,active=%b]",
-                id, rev, rev_date,base_metal, area, base_weight, final_weight, active);
+        return String.format("PartRevision[id=%d,rev=%s,rev_date=%s,base_metal=%s,final_process=%s,area=%f,base_weight=%f,final_weight=%f,active=%b]",
+                id, rev, rev_date,base_metal, final_process, area, base_weight, final_weight, active);
     }
     
 }

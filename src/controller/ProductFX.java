@@ -5,21 +5,15 @@
  */
 package controller;
 
-import dao.JDBC.DAOFactory;
-import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import model.ProductType;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -29,38 +23,34 @@ import model.ProductType;
 public class ProductFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private ComboBox<?> typefilter_combo;
     @FXML
-    private TabPane root_tabpane;
+    private ComboBox<?> filter_combo;
     @FXML
-    private Tab part_tab;
-
-    private List<ProductType> product_types;
-
-    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    private ListView<?> product_listview;
+    @FXML
+    private Button add_button;
+    @FXML
+    private TextField id_button;
+    @FXML
+    private TextField name_field;
+    @FXML
+    private ComboBox<?> type_combo;
+    @FXML
+    private CheckBox active_check;
+    @FXML
+    private Button edit_button;
+    @FXML
+    private Button save_button;
+    @FXML
+    private Button cancel_button;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        product_types = msabase.getProductTypeDAO().listActive(true);
-        root_tabpane.setStyle("-fx-border-color: silver ;");
-        for(ProductType product_type : product_types){
-            switch(product_type.getName()){
-                default:
-                    part_tab.setDisable(true);
-                    break;
-                case "Parte":
-                    part_tab.setDisable(false);
-                    try {
-                        part_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
-                    } catch (IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-            }
-        }
+        // TODO
     }    
     
 }
