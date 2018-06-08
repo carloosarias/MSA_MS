@@ -293,6 +293,7 @@ public class HrFX implements Initializable {
         address_area.setStyle(null);
         pass_field.setStyle(null);
     }
+    
     public boolean testFields(){
         boolean b = true;
         if(fname_field.getText().replace(" ", "").equals("")){

@@ -93,9 +93,9 @@ public class AddressFX implements Initializable {
         });
         
         save_button.setOnAction((ActionEvent) -> {
-            /*if(!testFields()){
+            if(!testFields()){
                 return;
-            }*/
+            }
             if(address_listview.getSelectionModel().getSelectedItem() != null){
                 msabase.getCompanyAddressDAO().update(mapAddress(address_listview.getSelectionModel().getSelectedItem()));
             } else{
@@ -134,6 +134,22 @@ public class AddressFX implements Initializable {
             address_field.clear();
             active_check.setSelected(false);   
         }
+        clearStyle();
+    }
+    
+    public void clearStyle(){
+        address_field.setStyle(null);
+    }
+    
+    public boolean testFields(){
+        boolean b = true;
+        if(address_field.getText().replace(" ", "").equals("")){
+            address_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            address_field.setStyle(null);
+        }
+        return b;
     }
     
     public void updateList(){

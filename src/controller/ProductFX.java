@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -69,12 +70,68 @@ public class ProductFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         typefilter_combo.setItems(type_list);
         typefilter_combo.getSelectionModel().selectFirst();
-        
         filter_combo.setItems(filter_list);
-        filter_combo.getSelectionModel().selectFirst();
-        
+        filter_combo.getSelectionModel().selectFirst(); 
         updateList();
-    }    
+        
+        typefilter_combo.setOnAction((ActionEvent) -> {
+            updateList();
+        });
+        
+        filter_combo.setOnAction((ActionEvent) -> {
+            updateList();
+        });
+        
+        product_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
+            setFieldValues(product_listview.getSelectionModel().getSelectedItem());
+        });
+        
+        add_button.setOnAction((ActionEvent) -> {
+            setFieldValues(null);
+            //disableFields(false);
+        });
+        
+        cancel_button.setOnAction((ActionEvent) -> {
+            filter_combo.getOnAction();
+            setFieldValues(product_listview.getSelectionModel().getSelectedItem());
+            //disableFields(true);
+        });
+        
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
+            if(product_listview.getSelectionModel().getSelectedItem() != null){
+                msabase.getProductDAO().update(mapProduct(product_listview.getSelectionModel().getSelectedItem()));
+            } else{
+                msabase.getProductDAO().create(typefilter_combo.getSelectionModel().getSelectedItem(), mapProduct(new Product()));
+            }
+            
+            setFieldValues(product_listview.getSelectionModel().getSelectedItem());
+            updateList();
+            //closeOther();
+            //disableFields(true);
+        });
+        
+        edit_button.setOnAction((ActionEvent) -> {
+            if(product_listview.getSelectionModel().getSelectedItem() != null){
+                //disableFields(false);
+            }
+        });
+        
+    }
+    
+    public Product mapProduct(Product product){
+        return product;
+    }
+    
+    public boolean testFields(){
+        return true;
+    }
+    
+    public void setFieldValues(Product product){
+        
+    }
     
     public void updateList(){
         boolean active = true;

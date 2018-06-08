@@ -78,9 +78,9 @@ public class ContactFX implements Initializable {
         });
         
         save_button.setOnAction((ActionEvent) -> {
-            /*if(!testFields()){
+            if(!testFields()){
                 return;
-            }*/
+            }
             if(contact_listview.getSelectionModel().getSelectedItem() != null){
                 msabase.getCompanyContactDAO().update(mapContact(contact_listview.getSelectionModel().getSelectedItem()));
             } else{
@@ -119,6 +119,43 @@ public class ContactFX implements Initializable {
             phone_field.clear();
             position_field.clear();
         }
+        clearStyle();
+    }
+    
+    public void clearStyle(){
+        name_field.setStyle(null);
+        mail_field.setStyle(null);
+        phone_field.setStyle(null);
+        position_field.setStyle(null);
+    }
+    
+    public boolean testFields(){
+        boolean b = true;
+        if(name_field.getText().replace(" ", "").equals("")){
+            name_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            name_field.setStyle(null);
+        }
+        if(mail_field.getText().replace(" ", "").equals("")){
+            mail_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            mail_field.setStyle(null);
+        }
+        if(phone_field.getText().replace(" ", "").equals("")){
+            phone_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            phone_field.setStyle(null);
+        }
+        if(position_field.getText().replace(" ", "").equals("")){
+            position_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            position_field.setStyle(null);
+        }
+        return b;
     }
     
     public void disableFields(boolean value){

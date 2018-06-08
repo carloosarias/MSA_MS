@@ -254,6 +254,7 @@ public class CompanyFX implements Initializable {
         contact_button.setDisable(!edit_button.isDisabled());
     }
     
+    
     public void setFieldValues(Company company){
         if(company != null){
             company_id = company.getId();
@@ -276,6 +277,14 @@ public class CompanyFX implements Initializable {
             client_check.setSelected(false);   
             active_check.setSelected(false);   
         }
+        clearStyle();
+    }
+    
+    public void clearStyle(){
+        name_field.setStyle(null);
+        rfc_field.setStyle(null);
+        tax_field.setStyle(null);
+        payterm_field.setStyle(null);
     }
     
     public void updateList(){
