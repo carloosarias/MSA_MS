@@ -144,7 +144,7 @@ public class ProductDAOJDBC implements ProductDAO{
         List<Product> product = new ArrayList<>();
         
         Object[] values = {
-            type
+            type.getId()
         };
         
         try(
@@ -190,10 +190,11 @@ public class ProductDAOJDBC implements ProductDAO{
         if(type.getId() == null){
             throw new IllegalArgumentException("ProductType is not created yet, the ProductType ID is null.");
         }
-        List<Product> product = new ArrayList<>();
         
+        List<Product> product = new ArrayList<>();
+
         Object[] values = {
-            type,
+            type.getId(),
             active
         };
         

@@ -40,7 +40,7 @@ public class ProductFX implements Initializable {
     @FXML
     private Button add_button;
     @FXML
-    private TextField id_button;
+    private TextField id_field;
     @FXML
     private TextField name_field;
     @FXML
@@ -88,13 +88,13 @@ public class ProductFX implements Initializable {
         
         add_button.setOnAction((ActionEvent) -> {
             setFieldValues(null);
-            //disableFields(false);
+            disableFields(false);
         });
         
         cancel_button.setOnAction((ActionEvent) -> {
             filter_combo.getOnAction();
             setFieldValues(product_listview.getSelectionModel().getSelectedItem());
-            //disableFields(true);
+            disableFields(true);
         });
         
         save_button.setOnAction((ActionEvent) -> {
@@ -109,19 +109,30 @@ public class ProductFX implements Initializable {
             
             setFieldValues(product_listview.getSelectionModel().getSelectedItem());
             updateList();
-            //closeOther();
-            //disableFields(true);
+            disableFields(true);
         });
         
         edit_button.setOnAction((ActionEvent) -> {
             if(product_listview.getSelectionModel().getSelectedItem() != null){
-                //disableFields(false);
+                disableFields(false);
             }
         });
         
     }
-    
+    public void disableFields(boolean value){
+        name_field.setDisable(value);
+        active_check.setDisable(value);
+        save_button.setDisable(value);
+        cancel_button.setDisable(value);
+        edit_button.setDisable(!value);
+        add_button.setDisable(!value);
+        filter_combo.setDisable(!value);
+        typefilter_combo.setDisable(!value);
+        product_listview.setDisable(!value);
+    }
     public Product mapProduct(Product product){
+        product.setName(name_field.getText());
+        product.setActive(!active_check.isSelected());
         return product;
     }
     
@@ -130,7 +141,15 @@ public class ProductFX implements Initializable {
     }
     
     public void setFieldValues(Product product){
-        
+        if(product != null){
+            id_field.setText(""+product.getId());
+            name_field.setText(product.getName());
+            active_check.setSelected(!product.isActive());
+        }else{
+            id_field.clear();
+            name_field.clear();
+            active_check.setSelected(false);
+        }
     }
     
     public void updateList(){
@@ -144,7 +163,6 @@ public class ProductFX implements Initializable {
                 active = false;
                 break;
         }
-        
         product_listview.setItems(FXCollections.observableArrayList(msabase.getProductDAO().listActive(typefilter_combo.getSelectionModel().getSelectedItem(), active)));
     }
 }
