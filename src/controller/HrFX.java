@@ -89,8 +89,8 @@ public class HrFX implements Initializable {
     private Button move_button;
     
     ObservableList<String> filter_list = FXCollections.observableArrayList(
-        "Empleados Activos",
-        "Empleados Inactivos"
+        "Activos",
+        "Inactivos"
     );
     
     DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -194,15 +194,17 @@ public class HrFX implements Initializable {
     }
     
     public void updateList(){
+        boolean active = true;
         emp_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){
-            case "Empleados Activos":
-                emp_listview.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().listActive(true)));
+            case "Activos":
+                active = true;
                 break;
-            case "Empleados Inactivos":
-                emp_listview.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().listActive(false)));
+            case "Inactivos":
+                active = false;
                 break;
         }
+        emp_listview.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().listActive(active)));
     }
 
     public void switchModuleList(){
