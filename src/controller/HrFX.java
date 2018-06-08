@@ -93,7 +93,7 @@ public class HrFX implements Initializable {
         "Inactivos"
     );
     
-    DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
     /**
      * Initializes the controller class.

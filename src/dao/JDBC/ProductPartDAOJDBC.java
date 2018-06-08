@@ -24,22 +24,18 @@ import model.ProductPart;
 public class ProductPartDAOJDBC implements ProductPartDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, part_number, active FROM PRODUCT_PART WHERE id = ?";
+            "SELECT id, part_number FROM PRODUCT_PART WHERE id = ?";
     private static final String SQL_FIND_BY_PART_NUMBER = 
-            "SELECT id, part_number, active FROM PRODUCT_PART WHERE part_number = ?";
+            "SELECT id, part_number FROM PRODUCT_PART WHERE part_number = ?";
+    private static final String SQL_FIND_BY_PRODUCT_ID = 
+            "SELECT id, part_number FROM PRODUCT_PART WHERE PRODUCT_ID = ?";
     private static final String SQL_FIND_PRODUCT_BY_ID =
             "SELECT PRODUCT_ID FROM PRODUCT_PART WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, part_number, active FROM PRODUCT_PART ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, part_number, active FROM PRODUCT_PART WHERE active = ? ORDER BY id";
-    private static final String SQL_LIST_OF_PRODUCT_ORDER_BY_ID = 
-            "SELECT id, part_number, active FROM PRODUCT_PART WHERE PRODUCT_ID = ? ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_OF_PRODUCT_ORDER_BY_ID = 
-            "SELECT id, part_number, active FROM PRODUCT_PART WHERE PRODUCT_ID = ? AND active = ? ORDER BY id";
+            "SELECT id, part_number FROM PRODUCT_PART ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO PRODUCT (PRODUCT_ID, part_number, active) "
-            + "VALUES (?, ?, ?)";
+            "INSERT INTO PRODUCT (PRODUCT_ID, part_number) "
+            + "VALUES (?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE PRODUCT_PART SET part_number = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
@@ -70,6 +66,14 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
     @Override
     public ProductPart find(String part_number) throws DAOException {
         return find(SQL_FIND_BY_PART_NUMBER, part_number);
+    }
+    
+    @Override
+    public ProductPart find(Product product) throws IllegalArgumentException, DAOException {
+        if(product.getId() == null){
+            throw new IllegalArgumentException("Product is not created yet, Product ID is null");
+        }
+        return find(SQL_FIND_BY_PRODUCT_ID, product.getId());
     }
     
     /**
@@ -141,83 +145,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         }
         
         return part;
-    }
-    
-    @Override
-    public List<ProductPart> list(boolean active) throws DAOException {
-        List<ProductPart> part = new ArrayList<>();
-        
-        Object[] values = {
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                part.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return part;
-    }
-    
-    @Override
-    public List<ProductPart> list(Product product) throws IllegalArgumentException, DAOException {
-        if(product.getId() == null){
-            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
-        }
-        List<ProductPart> part = new ArrayList<>();
-        
-        Object[] values = {
-            product
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PRODUCT_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                part.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return part;
-    }
-
-    @Override
-    public List<ProductPart> list(Product product, boolean active) throws IllegalArgumentException, DAOException {
-        if(product.getId() == null){
-            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
-        }
-        List<ProductPart> part = new ArrayList<>();
-        
-        Object[] values = {
-            product,
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_PRODUCT_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                part.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return part;
-    }
+    }    
 
     @Override
     public void create(Product product, ProductPart part) throws IllegalArgumentException, DAOException {
@@ -231,8 +159,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         
         Object[] values = {
             product.getId(),
-            part.getPart_number(),
-            part.isActive()
+            part.getPart_number()
         };
         
         try(
@@ -265,7 +192,6 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         
         Object[] values = {
             part.getPart_number(),
-            part.isActive(),
             part.getId()
         };
         
@@ -315,7 +241,6 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         ProductPart part = new ProductPart();
         part.setId(resultSet.getInt("id"));
         part.setPart_number(resultSet.getString("part_number"));
-        part.setActive(resultSet.getBoolean("active"));
         return part;
     }
     

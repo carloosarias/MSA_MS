@@ -63,7 +63,9 @@ public class ProductFX implements Initializable {
     
     private Stage detailsStage = new Stage();
     
-    DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    private static Product product;
+    
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
     ObservableList<ProductType> type_list = FXCollections.observableArrayList(
         msabase.getProductTypeDAO().listActive(true)
@@ -99,6 +101,7 @@ public class ProductFX implements Initializable {
         
         product_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
             setFieldValues(product_listview.getSelectionModel().getSelectedItem());
+            product = msabase.getProductDAO().find(product_listview.getSelectionModel().getSelectedItem().getId());
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -212,5 +215,9 @@ public class ProductFX implements Initializable {
                 break;
         }
         product_listview.setItems(FXCollections.observableArrayList(msabase.getProductDAO().listActive(typefilter_combo.getSelectionModel().getSelectedItem(), active)));
+    }
+    
+    public static Product getProduct(){
+        return product;
     }
 }

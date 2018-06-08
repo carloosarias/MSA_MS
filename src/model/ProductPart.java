@@ -15,7 +15,6 @@ public class ProductPart implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String part_number;
-    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -32,14 +31,6 @@ public class ProductPart implements Serializable{
 
     public void setPart_number(String part_number) {
         this.part_number = part_number;
-    }
-    
-    public boolean isActive(){
-        return active;
-    }
-    
-    public void setActive(boolean active){
-        this.active = active;
     }
 
     // Object overrides ---------------------------------------------------------------------------
@@ -73,6 +64,6 @@ public class ProductPart implements Serializable{
     @Override
     public String toString() {
         return String.format("ProductPart[id=%d,part_number=%s,active=%b]",
-                id, part_number, active);
+                id, part_number);
     }
 }

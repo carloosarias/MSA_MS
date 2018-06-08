@@ -34,6 +34,8 @@ public interface ProductPartDAO {
      */
     public ProductPart find(String part_number) throws DAOException;
     
+    public ProductPart find(Product product) throws IllegalArgumentException, DAOException;
+    
     /**
      * Returns the Product from the database matching the given ProductPart, otherwise null.
      * The ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
@@ -51,38 +53,6 @@ public interface ProductPartDAO {
      * @throws DAOException If something fails at database level.
      */
     public List<ProductPart> list() throws DAOException;
-    
-    /**
-     * Returns a list of all active ProductParts from the database ordered by ProductPart ID. The list is never null and
-     * is empty when the database does not contain any ProductPart.
-     * @param active The active to be searched for
-     * @return A list of all active ProductParts from the database ordered by ProductPart ID.
-     * @throws DAOException If something fails at database level.
-     */
-    public List<ProductPart> list(boolean active) throws DAOException;
-    
-    /**
-     * Returns a list of all ProductParts matching Product from the database ordered by ProductPart ID. The Product ID must not be null, otherwise it will throw
-     * IllegalArgumentException. The list is never null and
-     * is empty when the database does not contain any ProductPart matching Product.
-     * @param product The Product to be searched for.
-     * @return A list of all ProductParts matching Product from the database ordered by ProductPart ID.
-     * @throws IllegalArgumentException If the Product ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public List<ProductPart> list(Product product) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns a list of all ProductParts matching Product from the database ordered by Product ID. The Product ID must not be null, otherwise it will throw
-     * IllegalArgumentException. The list is never null and
-     * is empty when the database does not contain any ProductPart matching Product.
-     * @param product The ProductType to be searched for.
-     * @param active The active to be searched for
-     * @return A list of all ProductParts matching Product from the database ordered by ProductPart ID.
-     * @throws IllegalArgumentException If the Product ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public List<ProductPart> list(Product product, boolean active) throws IllegalArgumentException, DAOException;   
     
     /**
      * Create the given ProductPart in the database. The Product ID must not be null and
