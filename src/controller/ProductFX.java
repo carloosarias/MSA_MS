@@ -141,7 +141,7 @@ public class ProductFX implements Initializable {
     
     public void showDetails(){
         try {
-            String path;
+            String path = "";
             switch(typefilter_combo.getSelectionModel().getSelectedItem().getName()){
                 case "Parte":
                    path =  "/fxml/ProductPartFX.fxml";
@@ -149,19 +149,20 @@ public class ProductFX implements Initializable {
                 default:
                     return;
             }
+            if(path != ""){
+                detailsStage = new Stage();
+                detailsStage.initOwner((Stage) root_hbox.getScene().getWindow());
             
-            detailsStage = new Stage();
-            detailsStage.initOwner((Stage) root_hbox.getScene().getWindow());
+                HBox root = (HBox) FXMLLoader.load(getClass().getResource(path));
+                Scene scene = new Scene(root);
             
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource(path));
-            Scene scene = new Scene(root);
-            
-            detailsStage.setTitle("Detalles de "+typefilter_combo.getSelectionModel().getSelectedItem().getName());
-            detailsStage.setResizable(false);
-            detailsStage.initStyle(StageStyle.UTILITY);
-            detailsStage.setScene(scene);
-            detailsStage.showAndWait();
-            details_button.setDisable(!edit_button.isDisabled());
+                detailsStage.setTitle("Detalles de "+typefilter_combo.getSelectionModel().getSelectedItem().getName());
+                detailsStage.setResizable(false);
+                detailsStage.initStyle(StageStyle.UTILITY);
+                detailsStage.setScene(scene);
+                detailsStage.showAndWait();
+                details_button.setDisable(!edit_button.isDisabled());
+            }
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
         }

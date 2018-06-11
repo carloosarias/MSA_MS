@@ -37,7 +37,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             "INSERT INTO PRODUCT (PRODUCT_ID, part_number) "
             + "VALUES (?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PRODUCT_PART SET part_number = ?, active = ? WHERE id = ?";
+            "UPDATE PRODUCT_PART SET part_number = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM PRODUCT_PART WHERE id = ?";
     
