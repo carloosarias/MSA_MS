@@ -6,14 +6,20 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import model.Product;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.ProductPart;
 
 /**
@@ -37,8 +43,11 @@ public class ProductPartFX implements Initializable {
     @FXML
     private Button cancel_button;
     
-    private ProductPart part;
-
+    
+    private Stage detailsStage;
+    
+    private static ProductPart part;
+    
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -72,7 +81,6 @@ public class ProductPartFX implements Initializable {
         edit_button.setOnAction((ActionEvent) -> {
                 disableFields(false);
         });
-        
     }
     
     public void disableFields(boolean value){
@@ -81,7 +89,7 @@ public class ProductPartFX implements Initializable {
         partnumber_field.setDisable(value);
         edit_button.setDisable(!value);
     }
-    
+
     public boolean testFields(){
         boolean b = true;
         if(partnumber_field.getText().replace(" ", "").equals("")){
@@ -115,6 +123,25 @@ public class ProductPartFX implements Initializable {
     }
     
     public void showRevision(){
-        
+        try {
+            detailsStage = new Stage();
+            detailsStage.initOwner((Stage) root_hbox.getScene().getWindow());
+            
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            detailsStage.setTitle("Detalles de Revisión");
+            detailsStage.setResizable(false);
+            detailsStage.initStyle(StageStyle.UTILITY);
+            detailsStage.setScene(scene);
+            detailsStage.showAndWait();
+            revision_button.setDisable(!edit_button.isDisabled());        
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static ProductPart getPart(){
+        return part;
     }
 }

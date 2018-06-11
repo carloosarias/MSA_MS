@@ -101,7 +101,9 @@ public class ProductFX implements Initializable {
         
         product_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
             setFieldValues(product_listview.getSelectionModel().getSelectedItem());
+            if(product_listview.getSelectionModel().getSelectedItem() != null){
             product = msabase.getProductDAO().find(product_listview.getSelectionModel().getSelectedItem().getId());
+            }
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -113,6 +115,7 @@ public class ProductFX implements Initializable {
             filter_combo.getOnAction();
             setFieldValues(product_listview.getSelectionModel().getSelectedItem());
             disableFields(true);
+            closeOther();
         });
         
         save_button.setOnAction((ActionEvent) -> {
@@ -128,6 +131,7 @@ public class ProductFX implements Initializable {
             setFieldValues(product_listview.getSelectionModel().getSelectedItem());
             updateList();
             disableFields(true);
+            closeOther();
         });
         
         edit_button.setOnAction((ActionEvent) -> {
@@ -168,6 +172,11 @@ public class ProductFX implements Initializable {
         }
     }
     
+    public void closeOther(){
+        if(detailsStage != null){
+            detailsStage.close();
+        }
+    }    
     public void disableFields(boolean value){
         name_field.setDisable(value);
         active_check.setDisable(value);

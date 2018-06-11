@@ -8,6 +8,7 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
+import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.ProductPartDAO;
 import dao.interfaces.ProductTypeDAO;
@@ -204,6 +205,10 @@ public abstract class DAOFactory {
     
     public ProductPartDAO getProductPartDAO(){
         return new ProductPartDAOJDBC(this);
+    }
+
+    public PartRevisionDAO getPartRevisionDAO(){
+        return new PartRevisionDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.
