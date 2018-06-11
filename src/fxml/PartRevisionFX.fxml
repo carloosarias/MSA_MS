@@ -25,7 +25,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </ComboBox>
-            <ListView fx:id="revision_listview" prefHeight="224.0" prefWidth="150.0">
+            <ListView fx:id="revision_listview" prefHeight="249.0" prefWidth="150.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
@@ -72,12 +72,12 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </DatePicker>
-                        <Label text="Proceso Final:">
+                        <Label text="Metal Base:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="finalprocess_field" disable="true">
+                        <TextField fx:id="basemetal_field" disable="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -92,11 +92,16 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
-                        <Button fx:id="specification_button" disable="true" mnemonicParsing="false" text="Ver Especificación">
+                        <Label text="Especificación:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </Button>
+                        </Label>
+                        <ComboBox fx:id="specification_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
                      </children>
                   </VBox>
                   <VBox>
@@ -116,12 +121,12 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
-                        <Label text="Metal Base:">
+                        <Label text="Proceso Final:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="basemetal_field" disable="true">
+                        <TextField fx:id="finalprocess_field" disable="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -151,6 +156,11 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </CheckBox>
+                        <Button fx:id="specification_button" mnemonicParsing="false" text="Ver Especificaciones">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                      <HBox.margin>
                         <Insets />

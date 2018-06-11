@@ -24,6 +24,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import model.PartRevision;
+import model.Specification;
 
 /**
  * FXML Controller class
@@ -73,6 +74,8 @@ public class PartRevisionFX implements Initializable {
     );
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    @FXML
+    private ComboBox<Specification> specification_combo;
 
     /**
      * Initializes the controller class.
@@ -89,9 +92,58 @@ public class PartRevisionFX implements Initializable {
         
         revision_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
             setFieldValues(revision_listview.getSelectionModel().getSelectedItem());
+        });
+        
+        add_button.setOnAction((ActionEvent) -> {
+            setFieldValues(null);
+            disableFields(false);
+        });
+        
+        cancel_button.setOnAction((ActionEvent) -> {
+            filter_combo.getOnAction();
+            setFieldValues(revision_listview.getSelectionModel().getSelectedItem());
+            disableFields(true);
+        });
+        
+        save_button.setOnAction((ActionEvent) -> {
+           /* if(!testFields()){
+                return;
+            }*/
+            if(revision_listview.getSelectionModel().getSelectedItem() != null){
+                msabase.getPartRevisionDAO().update(revision_listview.getSelectionModel().getSelectedItem());
+            } else{
+                msabase.getPartRevisionDAO().create(ProductPartFX.getPart(), specification_combo.getSelectionModel().getSelectedItem(), new PartRevision());
+            }
+            setFieldValues(revision_listview.getSelectionModel().getSelectedItem());
+            updateList();
+            disableFields(true);
+        });
+        
+        edit_button.setOnAction((ActionEvent) -> {
+            if(revision_listview.getSelectionModel().getSelectedItem() != null){
+                disableFields(false);
+            }
         });        
+    }
+    
+    public void disableFields (boolean value){
+        rev_field.setDisable(value);
+        revdate_picker.setDisable(value);
+        basemetal_field.setDisable(value);
+        finalprocess_field.setDisable(value);
+        area_field.setDisable(value);
+        initialweight_field.setDisable(value);
+        finalweight_field.setDisable(value);
+        active_check.setDisable(value);
+        save_button.setDisable(value);
+        cancel_button.setDisable(value);
+        edit_button.setDisable(!value);
+        add_button.setDisable(!value);
+        filter_combo.setDisable(!value);
+        revision_listview.setDisable(!value);
         
     }
+    
     public void setFieldValues(PartRevision revision){
         if(revision != null){
             id_field.setText(""+revision.getId());
