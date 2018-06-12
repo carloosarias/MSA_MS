@@ -109,9 +109,9 @@ public class PartRevisionFX implements Initializable {
         });
         
         save_button.setOnAction((ActionEvent) -> {
-           /*if(!testFields()){
+           if(!testFields()){
                 return;
-            }*/
+            }
             if(revision_listview.getSelectionModel().getSelectedItem() != null){
                 msabase.getPartRevisionDAO().update(revision_listview.getSelectionModel().getSelectedItem());
             } else{
@@ -194,7 +194,61 @@ public class PartRevisionFX implements Initializable {
         finalweight_field.setStyle(null);
         specification_combo.setStyle(null);
     }
-    
+    public boolean testFields(){
+        boolean b = true;
+        if(rev_field.getText().replace(" ", "").equals("")){
+            rev_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            rev_field.setStyle(null);
+        }
+        if(revdate_picker.getValue() == null){
+            revdate_picker.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            revdate_picker.setStyle(null);
+        }
+        if(basemetal_field.getText().replace(" ", "").equals("")){
+            basemetal_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            basemetal_field.setStyle(null);
+        }
+        if(finalprocess_field.getText().replace(" ", "").equals("")){
+            finalprocess_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            finalprocess_field.setStyle(null);
+        }
+        try{
+            Double.parseDouble(area_field.getText());
+            area_field.setStyle(null);
+        }catch(Exception e){
+            area_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        try{
+            Double.parseDouble(initialweight_field.getText());
+            initialweight_field.setStyle(null);
+        }catch(Exception e){
+            initialweight_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        try{
+            Double.parseDouble(finalweight_field.getText());
+            finalweight_field.setStyle(null);
+        }catch(Exception e){
+            finalweight_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        if(specification_combo.getSelectionModel().getSelectedItem() == null){
+            specification_combo.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            specification_combo.setStyle(null);
+        }
+        return b;
+    }
     public void updateList(){
         revision_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){

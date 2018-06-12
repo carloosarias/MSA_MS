@@ -340,6 +340,7 @@ public class HrFX implements Initializable {
         }
         if(id_field.getText().replace(" ", "").equals("") && pass_field.getText().replace(" ", "").equals("")){
             pass_field.setStyle("-fx-border-color: red ;");
+            b = false;
         } else{
             pass_field.setStyle(null);
         }
