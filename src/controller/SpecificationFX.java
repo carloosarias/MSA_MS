@@ -124,7 +124,18 @@ public class SpecificationFX implements Initializable {
     }
     public boolean testFields(){
         boolean b = true;
-        
+        if(specificationnumber_field.getText().replace(" ", "").equals("")){
+            specificationnumber_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            specificationnumber_field.setStyle(null);
+        }
+        if(details_field.getText().replace(" ", "").equals("")){
+            details_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        } else{
+            details_field.setStyle(null);
+        }     
         return b;
     }
     public void updateList(){

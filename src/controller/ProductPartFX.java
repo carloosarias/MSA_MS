@@ -20,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Product;
 import model.ProductPart;
 
 /**
@@ -46,6 +47,8 @@ public class ProductPartFX implements Initializable {
     
     private Stage detailsStage;
     
+    private final Product product = ProductFX.getProduct();
+    
     private static ProductPart part;
     
     
@@ -71,10 +74,10 @@ public class ProductPartFX implements Initializable {
             if(!testFields()){
                 return;
             }
-            if(msabase.getProductPartDAO().find(ProductFX.getProduct()) != null){
-                msabase.getProductPartDAO().update(mapProductPart(msabase.getProductPartDAO().find(ProductFX.getProduct())));
+            if(msabase.getProductPartDAO().find(product) != null){
+                msabase.getProductPartDAO().update(mapProductPart(msabase.getProductPartDAO().find(product)));
             } else{
-                msabase.getProductPartDAO().create(ProductFX.getProduct(),mapProductPart(new ProductPart()));
+                msabase.getProductPartDAO().create(product,mapProductPart(new ProductPart()));
             }
             
             setFieldValues();
@@ -114,7 +117,7 @@ public class ProductPartFX implements Initializable {
     }
     
     public void setFieldValues(){
-    part = msabase.getProductPartDAO().find(ProductFX.getProduct());
+    part = msabase.getProductPartDAO().find(product);
         if(part != null){
             id_field.setText(""+part.getId());
             partnumber_field.setText(part.getPart_number());

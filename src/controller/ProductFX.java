@@ -102,7 +102,10 @@ public class ProductFX implements Initializable {
         product_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
             setFieldValues(product_listview.getSelectionModel().getSelectedItem());
             if(product_listview.getSelectionModel().getSelectedItem() != null){
-            product = msabase.getProductDAO().find(product_listview.getSelectionModel().getSelectedItem().getId());
+                details_button.setDisable(false);
+                product = msabase.getProductDAO().find(product_listview.getSelectionModel().getSelectedItem().getId());
+            }else{
+                details_button.setDisable(true);
             }
         });
         
@@ -137,7 +140,6 @@ public class ProductFX implements Initializable {
         edit_button.setOnAction((ActionEvent) -> {
             if(product_listview.getSelectionModel().getSelectedItem() != null){
                 disableFields(false);
-                details_button.setDisable(false);
             }
         });
         
@@ -165,7 +167,7 @@ public class ProductFX implements Initializable {
                 detailsStage.initStyle(StageStyle.UTILITY);
                 detailsStage.setScene(scene);
                 detailsStage.showAndWait();
-                details_button.setDisable(!edit_button.isDisabled());
+                details_button.setDisable(!product_listview.getSelectionModel().isEmpty());
             }
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
@@ -187,9 +189,7 @@ public class ProductFX implements Initializable {
         filter_combo.setDisable(!value);
         typefilter_combo.setDisable(!value);
         product_listview.setDisable(!value);
-        if(value){
-            details_button.setDisable(value);
-        }
+
     }
     public Product mapProduct(Product product){
         product.setName(name_field.getText());
@@ -210,6 +210,7 @@ public class ProductFX implements Initializable {
             id_field.clear();
             name_field.clear();
             active_check.setSelected(false);
+            product_listview.getSelectionModel().clearSelection();
         }
     }
     
