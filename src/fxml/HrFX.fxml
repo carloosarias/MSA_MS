@@ -66,7 +66,7 @@
                   </Label>
                   <HBox>
                      <children>
-                        <VBox fillWidth="false">
+                        <VBox>
                            <children>
                               <Label text="ID:">
                                  <VBox.margin>
@@ -78,6 +78,14 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </TextField>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <VBox>
+                           <children>
                               <Label text="Usuario:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -88,6 +96,28 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </TextField>
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Contraseña:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <PasswordField fx:id="pass_field" disable="true" promptText="*********">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </PasswordField>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <VBox>
+                           <children>
                               <Label text="Nombre:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -98,6 +128,29 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </TextField>
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Apellido:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField fx:id="lname_field" disable="true" prefWidth="150.0" promptText="Apellido">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox />
+                  <HBox>
+                     <children>
+                        <VBox>
+                           <children>
                               <Label text="Fecha de Nacimiento:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -108,6 +161,28 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </DatePicker>
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <Label text="Fecha de Contratación:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <DatePicker fx:id="hire_picker" disable="true" prefWidth="150.0">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </DatePicker>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <VBox>
+                           <children>
                               <Label text="Horario de Entrada:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -127,63 +202,10 @@
                                     </Spinner>
                                  </children>
                               </HBox>
-                              <Label text="Curp:">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <TextField fx:id="curp_field" disable="true" promptText="Curp">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TextField>
                            </children>
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
                         </VBox>
-                        <VBox fillWidth="false">
+                        <VBox>
                            <children>
-                              <Label disable="true" focusTraversable="false" text="Label" visible="false">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <TextField disable="true" focusTraversable="false" visible="false">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TextField>
-                              <Label text="Contraseña:">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <PasswordField fx:id="pass_field" disable="true" promptText="*********">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </PasswordField>
-                              <Label text="Apellido:">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <TextField fx:id="lname_field" disable="true" prefWidth="150.0" promptText="Apellido">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TextField>
-                              <Label text="Fecha de Contratación:">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <DatePicker fx:id="hire_picker" disable="true" prefWidth="150.0">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </DatePicker>
                               <Label text="Horario de Salida:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -203,6 +225,24 @@
                                     </Spinner>
                                  </children>
                               </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <VBox fillWidth="false">
+                           <children>
+                              <Label text="Curp:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField fx:id="curp_field" disable="true" promptText="Curp">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
                            </children>
                            <HBox.margin>
                               <Insets />
