@@ -61,10 +61,12 @@ public class ProductPartFX implements Initializable {
             setFieldValues();
             disableFields(true);
         });
+        
         revision_button.setOnAction((ActionEvent) -> {
             revision_button.setDisable(true);
             showRevision();
         });
+        
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){
                 return;
@@ -80,7 +82,7 @@ public class ProductPartFX implements Initializable {
         });
         
         edit_button.setOnAction((ActionEvent) -> {
-                disableFields(false);
+            disableFields(false);
         });
     }
     
@@ -136,7 +138,7 @@ public class ProductPartFX implements Initializable {
             detailsStage.initStyle(StageStyle.UTILITY);
             detailsStage.setScene(scene);
             detailsStage.showAndWait();
-            revision_button.setDisable(!edit_button.isDisabled());        
+            revision_button.setDisable(false);        
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }

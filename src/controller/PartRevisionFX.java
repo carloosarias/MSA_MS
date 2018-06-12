@@ -95,6 +95,7 @@ public class PartRevisionFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
+        specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
         updateList();
         
         specification_button.setOnAction((ActionEvent) -> {
@@ -127,9 +128,9 @@ public class PartRevisionFX implements Initializable {
                 return;
             }
             if(revision_listview.getSelectionModel().getSelectedItem() != null){
-                msabase.getPartRevisionDAO().update(revision_listview.getSelectionModel().getSelectedItem());
+                msabase.getPartRevisionDAO().update(mapPartRevision(revision_listview.getSelectionModel().getSelectedItem()));
             } else{
-                msabase.getPartRevisionDAO().create(ProductPartFX.getPart(), specification_combo.getSelectionModel().getSelectedItem(), new PartRevision());
+                msabase.getPartRevisionDAO().create(ProductPartFX.getPart(), specification_combo.getSelectionModel().getSelectedItem(),mapPartRevision(new PartRevision()));
             }
             setFieldValues(revision_listview.getSelectionModel().getSelectedItem());
             updateList();
@@ -202,7 +203,7 @@ public class PartRevisionFX implements Initializable {
             initialweight_field.setText(""+revision.getBase_weight());
             finalweight_field.setText(""+revision.getFinal_weight());
             active_check.setSelected(!revision.isActive());
-            specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
+            specification_combo.getSelectionModel().select(msabase.getPartRevisionDAO().findSpecification(revision));
         } else{
             id_field.clear();
             rev_field.clear();
@@ -213,7 +214,7 @@ public class PartRevisionFX implements Initializable {
             initialweight_field.clear();
             finalweight_field.clear();
             active_check.setSelected(false);
-            specification_combo.getItems().clear();
+            specification_combo.getSelectionModel().clearSelection();
         }
         clearStyle();
     }
@@ -285,6 +286,8 @@ public class PartRevisionFX implements Initializable {
     }
     
     public void updateList(){
+        specification_combo.getItems().clear();
+        specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
         revision_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){
             case "Revisiones Activas":

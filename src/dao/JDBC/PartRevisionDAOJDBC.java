@@ -46,8 +46,8 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     private static final String SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID = 
             "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE SPECIFICATION_ID = ? AND active = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO PART_REVISION (rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO PART_REVISION (PRODUCT_PART_ID, SPECIFICATION_ID, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE PART_REVISION SET rev = ?, rev_date = ?, base_metal = ?, final_process = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
@@ -315,7 +315,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public void create(ProductPart part, Specification specification, PartRevision part_revision) throws IllegalArgumentException, DAOException {
+    public void create(ProductPart part, Specification specification, PartRevision revision) throws IllegalArgumentException, DAOException {
         if (part.getId() == null) {
             throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
         }
@@ -324,21 +324,21 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
         }
         
-        if(specification.getId() != null){
+        if(revision.getId() != null){
             throw new IllegalArgumentException("PartRevision is already created, the PartRevision ID is null.");
         }
         
         Object[] values = {
             part.getId(),
             specification.getId(),
-            part_revision.getRev(),
-            DAOUtil.toSqlDate(part_revision.getRev_date()),
-            part_revision.getBase_metal(),
-            part_revision.getFinal_process(),
-            part_revision.getArea(),
-            part_revision.getBase_weight(),
-            part_revision.getFinal_weight(),
-            part_revision.isActive()
+            revision.getRev(),
+            DAOUtil.toSqlDate(revision.getRev_date()),
+            revision.getBase_metal(),
+            revision.getFinal_process(),
+            revision.getArea(),
+            revision.getBase_weight(),
+            revision.getFinal_weight(),
+            revision.isActive()
         };
         
         try(
@@ -364,20 +364,21 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public void update(PartRevision part_revision) throws IllegalArgumentException, DAOException {
-        if (part_revision.getId() == null) {
+    public void update(PartRevision revision) throws IllegalArgumentException, DAOException {
+        if (revision.getId() == null) {
             throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
         Object[] values = {
-            part_revision.getRev(),
-            DAOUtil.toSqlDate(part_revision.getRev_date()),
-            part_revision.getBase_metal(),
-            part_revision.getFinal_process(),
-            part_revision.getArea(),
-            part_revision.getBase_weight(),
-            part_revision.getFinal_weight(),
-            part_revision.isActive()
+            revision.getRev(),
+            DAOUtil.toSqlDate(revision.getRev_date()),
+            revision.getBase_metal(),
+            revision.getFinal_process(),
+            revision.getArea(),
+            revision.getBase_weight(),
+            revision.getFinal_weight(),
+            revision.isActive(),
+            revision.getId()
         };
         
         try(
@@ -394,9 +395,9 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public void delete(PartRevision part_revision) throws DAOException {
+    public void delete(PartRevision revision) throws DAOException {
         Object[] values = {
-            part_revision.getId()
+            revision.getId()
         };
         
         try(
@@ -407,7 +408,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             if(affectedRows == 0){
                 throw new DAOException("Deleting PartRevision failed, no rows affected.");
             } else{
-                part_revision.setId(null);
+                revision.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -423,16 +424,16 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
      * @throws SQLException If something fails at database level.
      */
     public static PartRevision map(ResultSet resultSet) throws SQLException{
-        PartRevision part_revision = new PartRevision();
-        part_revision.setId(resultSet.getInt("id"));
-        part_revision.setRev(resultSet.getString("rev"));
-        part_revision.setRev_date(resultSet.getDate("rev_date"));
-        part_revision.setBase_metal(resultSet.getString("base_metal"));
-        part_revision.setFinal_process(resultSet.getString("final_process"));
-        part_revision.setArea(resultSet.getDouble("area"));
-        part_revision.setBase_weight(resultSet.getDouble("base_weight"));
-        part_revision.setFinal_weight(resultSet.getDouble("final_weight"));
-        part_revision.setActive(resultSet.getBoolean("active"));
-        return part_revision;
+        PartRevision revision = new PartRevision();
+        revision.setId(resultSet.getInt("id"));
+        revision.setRev(resultSet.getString("rev"));
+        revision.setRev_date(resultSet.getDate("rev_date"));
+        revision.setBase_metal(resultSet.getString("base_metal"));
+        revision.setFinal_process(resultSet.getString("final_process"));
+        revision.setArea(resultSet.getDouble("area"));
+        revision.setBase_weight(resultSet.getDouble("base_weight"));
+        revision.setFinal_weight(resultSet.getDouble("final_weight"));
+        revision.setActive(resultSet.getBoolean("active"));
+        return revision;
     }    
 }
