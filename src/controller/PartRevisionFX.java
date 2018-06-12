@@ -113,8 +113,8 @@ public class PartRevisionFX implements Initializable {
         
         add_button.setOnAction((ActionEvent) -> {
             setFieldValues(null);
-            specification_combo.setDisable(false);
             disableFields(false);
+            specification_combo.setDisable(false);
         });
         
         cancel_button.setOnAction((ActionEvent) -> {
@@ -175,6 +175,7 @@ public class PartRevisionFX implements Initializable {
         return revision;
     }
     public void disableFields (boolean value){
+        specification_combo.setDisable(true);
         rev_field.setDisable(value);
         revdate_picker.setDisable(value);
         basemetal_field.setDisable(value);

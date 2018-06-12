@@ -57,7 +57,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="id_field">
+                        <TextField fx:id="id_field" disable="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -71,7 +71,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="specificationnumber_field">
+                        <TextField fx:id="specificationnumber_field" disable="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -85,12 +85,12 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <TextArea fx:id="details_field" prefHeight="100.0" prefWidth="150.0" wrapText="true">
+            <TextArea fx:id="details_field" disable="true" prefHeight="100.0" prefWidth="150.0" wrapText="true">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </TextArea>
-            <CheckBox fx:id="active_check" mnemonicParsing="false" text="Inactivo">
+            <CheckBox fx:id="active_check" disable="true" mnemonicParsing="false" text="Inactivo">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
@@ -102,12 +102,12 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
+                  <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Guardar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="cancel_button" mnemonicParsing="false" text="Cancelar">
+                  <Button fx:id="cancel_button" disable="true" mnemonicParsing="false" text="Cancelar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
