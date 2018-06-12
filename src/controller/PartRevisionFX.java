@@ -5,9 +5,11 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -50,6 +52,8 @@ public class PartRevisionFX implements Initializable {
     @FXML
     private TextField initialweight_field;
     @FXML
+    private ComboBox<Specification> specification_combo;
+    @FXML
     private Button specification_button;
     @FXML
     private TextField rev_field;
@@ -74,8 +78,6 @@ public class PartRevisionFX implements Initializable {
     );
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    @FXML
-    private ComboBox<Specification> specification_combo;
 
     /**
      * Initializes the controller class.
@@ -96,6 +98,7 @@ public class PartRevisionFX implements Initializable {
         
         add_button.setOnAction((ActionEvent) -> {
             setFieldValues(null);
+            specification_combo.setDisable(false);
             disableFields(false);
         });
         
@@ -106,7 +109,7 @@ public class PartRevisionFX implements Initializable {
         });
         
         save_button.setOnAction((ActionEvent) -> {
-           /* if(!testFields()){
+           /*if(!testFields()){
                 return;
             }*/
             if(revision_listview.getSelectionModel().getSelectedItem() != null){
@@ -123,9 +126,19 @@ public class PartRevisionFX implements Initializable {
             if(revision_listview.getSelectionModel().getSelectedItem() != null){
                 disableFields(false);
             }
-        });        
+        });
     }
-    
+    public PartRevision mapPartRevision(PartRevision revision){
+        revision.setRev(rev_field.getText());
+        revision.setRev_date(java.sql.Date.valueOf(revdate_picker.getValue()));
+        revision.setBase_metal(basemetal_field.getText());
+        revision.setFinal_process(finalprocess_field.getText());
+        revision.setArea(Double.parseDouble(area_field.getText()));
+        revision.setBase_weight(Double.parseDouble(initialweight_field.getText()));
+        revision.setFinal_weight(Double.parseDouble(finalweight_field.getText()));
+        revision.setActive(!active_check.isSelected());
+        return revision;
+    }
     public void disableFields (boolean value){
         rev_field.setDisable(value);
         revdate_picker.setDisable(value);
@@ -155,6 +168,7 @@ public class PartRevisionFX implements Initializable {
             initialweight_field.setText(""+revision.getBase_weight());
             finalweight_field.setText(""+revision.getFinal_weight());
             active_check.setSelected(!revision.isActive());
+            specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
         } else{
             id_field.clear();
             rev_field.clear();
@@ -165,6 +179,7 @@ public class PartRevisionFX implements Initializable {
             initialweight_field.clear();
             finalweight_field.clear();
             active_check.setSelected(false);
+            specification_combo.getItems().clear();
         }
         clearStyle();
     }
@@ -177,6 +192,7 @@ public class PartRevisionFX implements Initializable {
         area_field.setStyle(null);
         initialweight_field.setStyle(null);
         finalweight_field.setStyle(null);
+        specification_combo.setStyle(null);
     }
     
     public void updateList(){
