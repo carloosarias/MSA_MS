@@ -7,17 +7,22 @@ package controller;
 
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -25,6 +30,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.PartRevision;
 import model.Specification;
 
@@ -72,6 +79,8 @@ public class PartRevisionFX implements Initializable {
     @FXML
     private Button cancel_button;
     
+    private Stage specificationStage;
+    
     private ObservableList<String> filter_list = FXCollections.observableArrayList(
         "Revisiones Activas",
         "Revisiones Inactivas"
@@ -87,6 +96,11 @@ public class PartRevisionFX implements Initializable {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
         updateList();
+        
+        specification_button.setOnAction((ActionEvent) -> {
+           specification_button.setDisable(true);
+           showSpecification(); 
+        });
         
         filter_combo.setOnAction((ActionEvent) -> {
             updateList();
@@ -128,6 +142,26 @@ public class PartRevisionFX implements Initializable {
             }
         });
     }
+    
+    public void showSpecification(){
+        try {
+            specificationStage = new Stage();
+            specificationStage.initOwner((Stage) root_hbox.getScene().getWindow());
+            
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/SpecificationFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            specificationStage.setTitle("Detalles de Especificación");
+            specificationStage.setResizable(false);
+            specificationStage.initStyle(StageStyle.UTILITY);
+            specificationStage.setScene(scene);
+            specificationStage.showAndWait();
+            specification_button.setDisable(!edit_button.isDisabled());        
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public PartRevision mapPartRevision(PartRevision revision){
         revision.setRev(rev_field.getText());
         revision.setRev_date(java.sql.Date.valueOf(revdate_picker.getValue()));
@@ -249,6 +283,7 @@ public class PartRevisionFX implements Initializable {
         }
         return b;
     }
+    
     public void updateList(){
         revision_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){

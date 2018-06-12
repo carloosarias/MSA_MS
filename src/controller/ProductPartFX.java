@@ -62,6 +62,7 @@ public class ProductPartFX implements Initializable {
             disableFields(true);
         });
         revision_button.setOnAction((ActionEvent) -> {
+            revision_button.setDisable(true);
             showRevision();
         });
         save_button.setOnAction((ActionEvent) -> {
