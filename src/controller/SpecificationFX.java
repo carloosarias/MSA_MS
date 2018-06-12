@@ -71,9 +71,62 @@ public class SpecificationFX implements Initializable {
         specification_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Specification> observable, Specification oldValue, Specification newValue) -> {
             setFieldValues(specification_listview.getSelectionModel().getSelectedItem());
         });
-                
-    }    
+        
+        add_button.setOnAction((ActionEvent) -> {
+            setFieldValues(null);
+            disableFields(false);
+        });
+        
+        cancel_button.setOnAction((ActionEvent) -> {
+            filter_combo.getOnAction();
+            setFieldValues(specification_listview.getSelectionModel().getSelectedItem());
+            disableFields(true);
+        });
+        
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
+            if(specification_listview.getSelectionModel().getSelectedItem() != null){
+                msabase.getSpecificationDAO().update(mapSpecification(specification_listview.getSelectionModel().getSelectedItem()));
+            } else{
+                msabase.getSpecificationDAO().create(mapSpecification(new Specification()));
+            }
+            setFieldValues(specification_listview.getSelectionModel().getSelectedItem());
+            updateList();
+            disableFields(true);
+        });
+        
+        edit_button.setOnAction((ActionEvent) -> {
+            if(specification_listview.getSelectionModel().getSelectedItem() != null){
+                disableFields(false);
+            }
+        });        
+    }
     
+    public Specification mapSpecification(Specification specification){
+        specification.setSpecification_number(specificationnumber_field.getText());
+        specification.setDetails(details_field.getText());
+        specification.setActive(!active_check.isSelected());
+        return specification;
+    }
+    
+    public void disableFields(boolean value){
+        specificationnumber_field.setDisable(value);
+        details_field.setDisable(value);
+        active_check.setDisable(value);
+        save_button.setDisable(value);
+        cancel_button.setDisable(value);
+        add_button.setDisable(!value);
+        edit_button.setDisable(!value);
+        specification_listview.setDisable(!value);
+        filter_combo.setDisable(!value);
+    }
+    public boolean testFields(){
+        boolean b = true;
+        
+        return b;
+    }
     public void updateList(){
         specification_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){
@@ -98,7 +151,7 @@ public class SpecificationFX implements Initializable {
             details_field.clear();
             active_check.setSelected(false);
         }
-        clearStyle();        
+        clearStyle();
     }
     
     public void clearStyle(){
