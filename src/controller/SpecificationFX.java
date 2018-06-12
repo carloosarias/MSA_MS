@@ -150,6 +150,7 @@ public class SpecificationFX implements Initializable {
             specificationnumber_field.clear();
             details_field.clear();
             active_check.setSelected(false);
+            specification_listview.getSelectionModel().clearSelection();
         }
         clearStyle();
     }

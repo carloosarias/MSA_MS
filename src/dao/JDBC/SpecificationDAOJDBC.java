@@ -139,7 +139,8 @@ public class SpecificationDAOJDBC implements SpecificationDAO{
 
         Object[] values = {
             specification.getSpecification_number(),
-            specification.getDetails()
+            specification.getDetails(),
+            specification.isActive()
         };
         
         try(
@@ -173,6 +174,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO{
         Object[] values = {
             specification.getSpecification_number(),
             specification.getDetails(),
+            specification.isActive(),
             specification.getId()
         };
         

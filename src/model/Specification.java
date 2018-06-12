@@ -79,7 +79,7 @@ public class Specification {
      */
     @Override
     public String toString() {
-        return String.format("Specification[id=%d,specification_number=%s,details=%s,active=%b]",
-                id, specification_number, details, active);
+        return String.format("%s",
+                specification_number);
     }
 }
