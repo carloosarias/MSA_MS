@@ -45,7 +45,7 @@ public class ProductTypeDAOJDBC implements ProductTypeDAO{
     /**
      * Construct a ProductType DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
-     * @param daoFactory The DAOFactory to construct this Employee DAO for.
+     * @param daoFactory The DAOFactory to construct this ProductType DAO for.
      */
     ProductTypeDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;

@@ -8,6 +8,7 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
+import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.ProductPartDAO;
@@ -203,12 +204,28 @@ public abstract class DAOFactory {
         return new ProductDAOJDBC(this);
     }
     
+    /**
+     * Returns the ProductPart DAO associated with the current DAOFactory.
+     * @return The ProductPart DAO associated with the current DAOFactory.
+     */    
     public ProductPartDAO getProductPartDAO(){
         return new ProductPartDAOJDBC(this);
     }
-
+    
+    /**
+     * Returns the PartRevision DAO associated with the current DAOFactory.
+     * @return The PartRevision DAO associated with the current DAOFactory.
+     */   
     public PartRevisionDAO getPartRevisionDAO(){
         return new PartRevisionDAOJDBC(this);
+    }
+
+    /**
+     * Returns the OrderPurchase DAO associated with the current DAOFactory.
+     * @return The OrderPurchase DAO associated with the current DAOFactory.
+     */   
+    public OrderPurchaseDAO getOrderPurchaseDAO(){
+        return new OrderPurchaseDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.
