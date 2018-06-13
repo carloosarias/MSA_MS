@@ -30,7 +30,9 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.PartRevision;
+import model.ProductPart;
 import model.Specification;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -78,14 +80,11 @@ public class PartRevisionFX implements Initializable {
     
     private Stage specificationStage;
     
+    private ProductPart part;
+    
     private ObservableList<String> filter_list = FXCollections.observableArrayList(
         "Revisiones Activas",
         "Revisiones Inactivas"
-    );
-    
-    private ObservableList<String> process_list = FXCollections.observableArrayList(
-        "Plata",
-        "Zinc"
     );
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -95,11 +94,13 @@ public class PartRevisionFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        part  = ProductPartFX.getPart();
+        System.out.println(ProductPartFX.getPart());
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
-        process_combo.setItems(process_list);
-        
+        process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
+        
         updateList();
         
         specification_button.setOnAction((ActionEvent) -> {
@@ -122,20 +123,23 @@ public class PartRevisionFX implements Initializable {
         });
         
         cancel_button.setOnAction((ActionEvent) -> {
-            filter_combo.getOnAction();
             setFieldValues(revision_listview.getSelectionModel().getSelectedItem());
             disableFields(true);
         });
         
         save_button.setOnAction((ActionEvent) -> {
+            System.out.println(part.getPart_number());
+            System.out.println(part.getId());
            if(!testFields()){
                 return;
             }
             if(revision_listview.getSelectionModel().getSelectedItem() != null){
                 msabase.getPartRevisionDAO().update(mapPartRevision(revision_listview.getSelectionModel().getSelectedItem()));
             } else{
-                msabase.getPartRevisionDAO().create(ProductPartFX.getPart(), specification_combo.getSelectionModel().getSelectedItem(),mapPartRevision(new PartRevision()));
+                msabase.getPartRevisionDAO().create(part, specification_combo.getSelectionModel().getSelectedItem(),mapPartRevision(new PartRevision()));
             }
+                            System.out.println(part.getPart_number());
+                System.out.println(part.getId());
             setFieldValues(revision_listview.getSelectionModel().getSelectedItem());
             updateList();
             disableFields(true);
@@ -285,15 +289,17 @@ public class PartRevisionFX implements Initializable {
     }
     
     public void updateList(){
-        specification_combo.getItems().clear();
         specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
         revision_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){
             case "Revisiones Activas":
-                revision_listview.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(ProductPartFX.getPart(), true)));
+                System.out.println(msabase.getPartRevisionDAO().list(part, true).isEmpty());
+                System.out.println(part.getPart_number());
+                System.out.println(part.getId());
+                revision_listview.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(part, true)));
                 break;
             case "Revisiones Inactivas":
-                revision_listview.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(ProductPartFX.getPart(), false)));
+                revision_listview.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(part, false)));
                 break;
         }
        

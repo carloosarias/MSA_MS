@@ -63,7 +63,7 @@ public class ProductPart implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("ProductPart[id=%d,part_number=%s,active=%b]",
-                id, part_number);
+        return String.format("%s",
+                part_number);
     }
 }

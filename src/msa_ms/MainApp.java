@@ -1,5 +1,7 @@
 package msa_ms;
 
+import java.util.Arrays;
+import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +15,11 @@ import javafx.stage.StageStyle;
  */
 public class MainApp extends Application{
     public static Integer employee_id;
+    public static List<String> process_list = Arrays.asList(
+            "Plata",
+            "Zinc",
+            "Estaño");
+    
     @Override
     public void start(Stage primaryStage) throws Exception {
         

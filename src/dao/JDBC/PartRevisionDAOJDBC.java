@@ -49,7 +49,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             "INSERT INTO PART_REVISION (PRODUCT_PART_ID, SPECIFICATION_ID, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, final_process = ? base_metal = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
+            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, final_process = ?, base_metal = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM PART_REVISION WHERE id = ?";
     
@@ -351,7 +351,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    part.setId(generatedKeys.getInt(1));
+                    revision.setId(generatedKeys.getInt(1));
                 } else {
                     throw new DAOException("Creating PartRevision failed, no generated key obtained.");
                 }

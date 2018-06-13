@@ -20,6 +20,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Specification;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -56,11 +57,6 @@ public class SpecificationFX implements Initializable {
         "Especificaciones Inactivas"
     );
     
-    private ObservableList<String> process_list = FXCollections.observableArrayList(
-        "Plata",
-        "Zinc"
-    );
-    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");    
     /**
      * Initializes the controller class.
@@ -69,7 +65,7 @@ public class SpecificationFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
-        process_combo.setItems(process_list);
+        process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         
         updateList();
         
