@@ -17,7 +17,6 @@ import java.util.List;
 import model.Company;
 import model.CompanyAddress;
 import model.OrderPurchase;
-import model.ProductType;
 
 /**
  *
@@ -89,6 +88,16 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
         }
 
         return order_purchase;
+    }
+    
+    @Override
+    public Company findCompany(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public CompanyAddress findAddress(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     @Override
