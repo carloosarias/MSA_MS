@@ -34,6 +34,14 @@ public interface ProductPartDAO {
      */
     public ProductPart find(String part_number) throws DAOException;
     
+    /**
+     * Returns the ProductPart from the database matching the given product, otherwise null. 
+     * The Product ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param product The product of the ProductPart.
+     * @return The ProductPart from the database matching the given product, otherwise null.
+     * @throws IllegalArgumentException If product ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
     public ProductPart find(Product product) throws IllegalArgumentException, DAOException;
     
     /**

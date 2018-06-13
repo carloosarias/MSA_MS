@@ -5,14 +5,11 @@
  */
 package controller;
 
-import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +31,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.PartRevision;
 import model.Specification;
+import model.Process;
 
 /**
  * FXML Controller class
@@ -49,13 +47,13 @@ public class PartRevisionFX implements Initializable {
     @FXML
     private ListView<PartRevision> revision_listview;
     @FXML
+    private ComboBox<Process> process_combo;
+    @FXML
     private Button add_button;
     @FXML
     private TextField id_field;
     @FXML
     private DatePicker revdate_picker;
-    @FXML
-    private TextField finalprocess_field;
     @FXML
     private TextField initialweight_field;
     @FXML
@@ -130,7 +128,7 @@ public class PartRevisionFX implements Initializable {
             if(revision_listview.getSelectionModel().getSelectedItem() != null){
                 msabase.getPartRevisionDAO().update(mapPartRevision(revision_listview.getSelectionModel().getSelectedItem()));
             } else{
-                msabase.getPartRevisionDAO().create(ProductPartFX.getPart(), specification_combo.getSelectionModel().getSelectedItem(),mapPartRevision(new PartRevision()));
+                msabase.getPartRevisionDAO().create(ProductPartFX.getPart(), process_combo.getSelectionModel().getSelectedItem(), specification_combo.getSelectionModel().getSelectedItem(),mapPartRevision(new PartRevision()));
             }
             setFieldValues(revision_listview.getSelectionModel().getSelectedItem());
             updateList();
@@ -167,7 +165,6 @@ public class PartRevisionFX implements Initializable {
         revision.setRev(rev_field.getText());
         revision.setRev_date(java.sql.Date.valueOf(revdate_picker.getValue()));
         revision.setBase_metal(basemetal_field.getText());
-        revision.setFinal_process(finalprocess_field.getText());
         revision.setArea(Double.parseDouble(area_field.getText()));
         revision.setBase_weight(Double.parseDouble(initialweight_field.getText()));
         revision.setFinal_weight(Double.parseDouble(finalweight_field.getText()));
@@ -179,7 +176,6 @@ public class PartRevisionFX implements Initializable {
         rev_field.setDisable(value);
         revdate_picker.setDisable(value);
         basemetal_field.setDisable(value);
-        finalprocess_field.setDisable(value);
         area_field.setDisable(value);
         initialweight_field.setDisable(value);
         finalweight_field.setDisable(value);
@@ -199,7 +195,6 @@ public class PartRevisionFX implements Initializable {
             rev_field.setText(revision.getRev());
             revdate_picker.setValue(LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(revision.getRev_date())));
             basemetal_field.setText(revision.getBase_metal());
-            finalprocess_field.setText(revision.getFinal_process());
             area_field.setText(""+revision.getArea());
             initialweight_field.setText(""+revision.getBase_weight());
             finalweight_field.setText(""+revision.getFinal_weight());
@@ -210,7 +205,6 @@ public class PartRevisionFX implements Initializable {
             rev_field.clear();
             revdate_picker.setValue(null);
             basemetal_field.clear();
-            finalprocess_field.clear();
             area_field.clear();
             initialweight_field.clear();
             finalweight_field.clear();
@@ -224,7 +218,6 @@ public class PartRevisionFX implements Initializable {
         rev_field.setStyle(null);
         revdate_picker.setStyle(null);
         basemetal_field.setStyle(null);
-        finalprocess_field.setStyle(null);
         area_field.setStyle(null);
         initialweight_field.setStyle(null);
         finalweight_field.setStyle(null);
@@ -249,12 +242,6 @@ public class PartRevisionFX implements Initializable {
             b = false;
         } else{
             basemetal_field.setStyle(null);
-        }
-        if(finalprocess_field.getText().replace(" ", "").equals("")){
-            finalprocess_field.setStyle("-fx-border-color: red ;");
-            b = false;
-        } else{
-            finalprocess_field.setStyle(null);
         }
         try{
             Double.parseDouble(area_field.getText());

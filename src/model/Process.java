@@ -6,25 +6,19 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class PartRevision implements Serializable{
+public class Process implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private String rev;
-    private Date rev_date;
-    private String base_metal;
-    private double area;
-    private double base_weight;
-    private double final_weight;
+    private String name;
     private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
-
+    
     public Integer getId() {
         return id;
     }
@@ -33,59 +27,19 @@ public class PartRevision implements Serializable{
         this.id = id;
     }
 
-    public String getRev() {
-        return rev;
+    public String getName() {
+        return name;
     }
 
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
-
-    public Date getRev_date(){
-        return rev_date;
+    public void setName(String name) {
+        this.name = name;
     }
     
-    public void setRev_date(Date rev_date){
-        this.rev_date = rev_date;
-    }
-    
-    public String getBase_metal() {
-        return base_metal;
-    }
-
-    public void setBase_metal(String base_metal) {
-        this.base_metal = base_metal;
-    }
-    
-    public double getArea() {
-        return area;
-    }
-
-    public void setArea(double area) {
-        this.area = area;
-    }
-
-    public double getBase_weight() {
-        return base_weight;
-    }
-
-    public void setBase_weight(double base_weight) {
-        this.base_weight = base_weight;
-    }
-
-    public double getFinal_weight() {
-        return final_weight;
-    }
-
-    public void setFinal_weight(double final_weight) {
-        this.final_weight = final_weight;
-    }
-
-    public boolean isActive() {
+    public boolean isActive(){
         return active;
     }
-
-    public void setActive(boolean active) {
+    
+    public void setActive(boolean active){
         this.active = active;
     }
     
@@ -97,8 +51,8 @@ public class PartRevision implements Serializable{
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof PartRevision) && (id != null)
-            ? id.equals(((PartRevision) other).id)
+        return (other instanceof Process) && (id != null)
+            ? id.equals(((Process) other).id)
             : (other == this);
     }
 
@@ -120,7 +74,6 @@ public class PartRevision implements Serializable{
     @Override
     public String toString() {
         return String.format("%s",
-                rev);
+                name);
     }
-    
 }

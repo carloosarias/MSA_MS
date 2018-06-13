@@ -18,6 +18,7 @@ import java.util.List;
 import model.PartRevision;
 import model.ProductPart;
 import model.Specification;
+import model.Process;
 
 /**
  *
@@ -26,30 +27,36 @@ import model.Specification;
 public class PartRevisionDAOJDBC implements PartRevisionDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE id = ?";
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE id = ?";
     private static final String SQL_FIND_BY_PART_REV = 
-            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND rev = ?";
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND rev = ?";
     private static final String SQL_FIND_PRODUCT_PART_BY_ID = 
             "SELECT PRODUCT_PART_ID FROM PART_REVISION WHERE id = ?";
+    private static final String SQL_FIND_PROCESS_BY_ID = 
+            "SELECT PROCESS_ID FROM PART_REVISION WHERE id = ?";
     private static final String SQL_FIND_SPECIFICATION_BY_ID = 
             "SELECT SPECIFICATION_ID FROM PART_REVISION WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE active = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE active = ? ORDER BY id";
     private static final String SQL_LIST_OF_PART_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? ORDER BY id";
     private static final String SQL_LIST_ACTIVE_OF_PART_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND active = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND active = ? ORDER BY id";
+    private static final String SQL_LIST_OF_PROCESS_ORDER_BY_ID = 
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE PROCESS_ID = ? ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_OF_PROCESS_ORDER_BY_ID = 
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE PROCESS_ID = ? AND active = ? ORDER BY id";
     private static final String SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE SPECIFICATION_ID = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE SPECIFICATION_ID = ? ORDER BY id";
     private static final String SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE SPECIFICATION_ID = ? AND active = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE SPECIFICATION_ID = ? AND active = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO PART_REVISION (PRODUCT_PART_ID, SPECIFICATION_ID, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active) "
+            "INSERT INTO PART_REVISION (PRODUCT_PART_ID, PROCESS_ID, SPECIFICATION_ID, rev, rev_date, base_metal, area, base_weight, final_weight, active) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, base_metal = ?, final_process = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
+            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, base_metal = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM PART_REVISION WHERE id = ?";
     
@@ -67,7 +74,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     PartRevisionDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
-    
+
     // Actions ------------------------------------------------------------------------------------
     @Override
     public PartRevision find(Integer id) throws DAOException {
@@ -134,7 +141,34 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         
         return part;
     }
-
+    
+    @Override
+    public Process findProcess(PartRevision part_revision) throws IllegalArgumentException, DAOException {
+        if(part_revision.getId() == null) {
+            throw new IllegalArgumentException("ProductRevision is not created yet, the ProductRevision ID is null.");
+        }
+        
+        Process process = null;
+        
+        Object[] values = {
+            part_revision.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PROCESS_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                process = daoFactory.getProcessDAO().find(resultSet.getInt("PROCESS_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return process;
+    }
+    
     @Override
     public Specification findSpecification(PartRevision part_revision) throws IllegalArgumentException, DAOException {
         if(part_revision.getId() == null) {
@@ -203,7 +237,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         
         return part_revision;
     }
-
     @Override
     public List<PartRevision> list(ProductPart part) throws IllegalArgumentException, DAOException {
         if(part.getId() == null) {
@@ -257,6 +290,61 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         }
         
         return part_revision;        
+    }
+
+    @Override
+    public List<PartRevision> list(Process process) throws IllegalArgumentException, DAOException {
+        if(process.getId() == null) {
+            throw new IllegalArgumentException("Process is not created yet, the Process ID is null.");
+        }    
+        
+        List<PartRevision> part_revision = new ArrayList<>();
+        
+        Object[] values = {
+            process.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PROCESS_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                part_revision.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part_revision;
+    }
+
+    @Override
+    public List<PartRevision> list(Process process, boolean active) throws IllegalArgumentException, DAOException {
+        if(process.getId() == null) {
+            throw new IllegalArgumentException("Process is not created yet, the Process ID is null.");
+        }    
+        
+        List<PartRevision> part_revision = new ArrayList<>();
+        
+        Object[] values = {
+            process.getId(),
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_PROCESS_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                part_revision.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part_revision;
     }
 
     @Override
@@ -315,10 +403,14 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public void create(ProductPart part, Specification specification, PartRevision revision) throws IllegalArgumentException, DAOException {
+    public void create(ProductPart part, Process process, Specification specification, PartRevision revision) throws IllegalArgumentException, DAOException {
         if (part.getId() == null) {
             throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
         }
+        
+        if(process.getId() == null){
+            throw new IllegalArgumentException("Process is not created yet, the Process ID is null.");
+        }   
         
         if(specification.getId() == null){
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
@@ -330,11 +422,11 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         
         Object[] values = {
             part.getId(),
+            process.getId(),
             specification.getId(),
             revision.getRev(),
             DAOUtil.toSqlDate(revision.getRev_date()),
             revision.getBase_metal(),
-            revision.getFinal_process(),
             revision.getArea(),
             revision.getBase_weight(),
             revision.getFinal_weight(),
@@ -373,7 +465,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             revision.getRev(),
             DAOUtil.toSqlDate(revision.getRev_date()),
             revision.getBase_metal(),
-            revision.getFinal_process(),
             revision.getArea(),
             revision.getBase_weight(),
             revision.getFinal_weight(),
@@ -429,7 +520,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         revision.setRev(resultSet.getString("rev"));
         revision.setRev_date(resultSet.getDate("rev_date"));
         revision.setBase_metal(resultSet.getString("base_metal"));
-        revision.setFinal_process(resultSet.getString("final_process"));
         revision.setArea(resultSet.getDouble("area"));
         revision.setBase_weight(resultSet.getDouble("base_weight"));
         revision.setFinal_weight(resultSet.getDouble("final_weight"));

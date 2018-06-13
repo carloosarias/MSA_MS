@@ -34,7 +34,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, part_number FROM PRODUCT_PART ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO PRODUCT (PRODUCT_ID, part_number) "
+            "INSERT INTO PRODUCT_PART (PRODUCT_ID, part_number) "
             + "VALUES (?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE PRODUCT_PART SET part_number = ? WHERE id = ?";

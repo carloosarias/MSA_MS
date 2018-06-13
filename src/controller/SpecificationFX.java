@@ -20,6 +20,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Specification;
+import model.Process;
 
 /**
  * FXML Controller class
@@ -30,6 +31,8 @@ public class SpecificationFX implements Initializable {
 
     @FXML
     private ComboBox<String> filter_combo;
+    @FXML
+    private ComboBox<Process> process_combo;
     @FXML
     private ListView<Specification> specification_listview;
     @FXML
@@ -62,9 +65,15 @@ public class SpecificationFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
+        process_combo.setItems((ObservableList<Process>) msabase.getProcessDAO().listActive(true));
+        process_combo.getSelectionModel().selectFirst();
         updateList();
         
         filter_combo.setOnAction((ActionEvent) -> {
+            updateList();
+        });
+        
+        process_combo.setOnAction((ActionEvent) -> {
             updateList();
         });
         
@@ -90,7 +99,7 @@ public class SpecificationFX implements Initializable {
             if(specification_listview.getSelectionModel().getSelectedItem() != null){
                 msabase.getSpecificationDAO().update(mapSpecification(specification_listview.getSelectionModel().getSelectedItem()));
             } else{
-                msabase.getSpecificationDAO().create(mapSpecification(new Specification()));
+                msabase.getSpecificationDAO().create(process_combo.getSelectionModel().getSelectedItem(), mapSpecification(new Specification()));
             }
             setFieldValues(specification_listview.getSelectionModel().getSelectedItem());
             updateList();
@@ -140,14 +149,16 @@ public class SpecificationFX implements Initializable {
     }
     public void updateList(){
         specification_listview.getItems().clear();
-        switch (filter_combo.getSelectionModel().getSelectedItem()){
-            case "Especificaciones Activas":
-                specification_listview.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
-                break;
-            case "Especificaciones Inactivas":
-                specification_listview.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(false)));
-                break;
-        }        
+        if(!process_combo.getSelectionModel().isEmpty()){
+            switch(filter_combo.getSelectionModel().getSelectedItem()){
+                case "Especificaciones Activas":
+                    specification_listview.setItems((ObservableList<Specification>) msabase.getSpecificationDAO().list(process_combo.getSelectionModel().getSelectedItem(), true));
+                    break;
+                case "Especificaciones Inactivas":
+                    specification_listview.setItems((ObservableList<Specification>) msabase.getSpecificationDAO().list(process_combo.getSelectionModel().getSelectedItem(), false));
+                    break;
+            }
+        }
     }
     
     public void setFieldValues(Specification specification){

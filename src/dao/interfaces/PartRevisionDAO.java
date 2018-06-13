@@ -10,6 +10,7 @@ import java.util.List;
 import model.PartRevision;
 import model.ProductPart;
 import model.Specification;
+import model.Process;
 
 /**
  *
@@ -46,6 +47,16 @@ public interface PartRevisionDAO {
      * @throws DAOException If something fails at database level.
      */    
     public ProductPart findProductPart(PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns the Process from the database matching the given PartRevision, otherwise null.
+     * The PartRevision ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param part_revision The PartRevision to be searched for.
+     * @return The Process from the database matching the given PartRevision, otherwise null
+     * @throws IllegalArgumentException If the PartRevision ID is null.
+     * @throws DAOException If something fails at database level.
+     */        
+    public Process findProcess(PartRevision part_revision) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns the Specification from the database matching the given PartRevision, otherwise null.
@@ -98,6 +109,29 @@ public interface PartRevisionDAO {
     public List<PartRevision> list(ProductPart part, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
+     * Returns a list of all PartRevisions matching Process ID from the database ordered by PartRevision ID. The Process ID must not be null, otherwise it will throw
+     * IllegalArgumentException. The list is never null and
+     * is empty when the database does not contain any PartRevision matching Process.
+     * @param process The Process to be searched for.
+     * @return A list of all PartRevisions matching Process from the database ordered by PartRevision ID.
+     * @throws IllegalArgumentException If the Process ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<PartRevision> list(Process process) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns a list of all PartRevisions matching Process ID and active from the database ordered by PartRevision ID. The Process ID must not be null, otherwise it will throw
+     * IllegalArgumentException. The list is never null and
+     * is empty when the database does not contain any PartRevision matching Process and active.
+     * @param process The Process to be searched for.
+     * @param active The active to be searched for.
+     * @return A list of all PartRevisions matching Process and active from the database ordered by PartRevision ID.
+     * @throws IllegalArgumentException If the Process ID is null.
+     * @throws DAOException If something fails at database level.
+     */        
+    public List<PartRevision> list(Process process, boolean active) throws IllegalArgumentException, DAOException;
+    
+    /**
      * Returns a list of all PartRevisions matching Specification ID from the database ordered by PartRevision ID. The Specification ID must not be null, otherwise it will throw
      * IllegalArgumentException. The list is never null and
      * is empty when the database does not contain any PartRevision matching Specification.
@@ -121,18 +155,21 @@ public interface PartRevisionDAO {
     public List<PartRevision> list(Specification specification, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
-     * Create the given PartRevision in the database. The ProductPart ID must not be null, the Specification ID must not be null and
+     * Create the given PartRevision in the database. The ProductPart ID must not be null,
+     * the Specification ID must not be null, the Process ID must not be null and
      * the PartRevision ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given PartRevision.
      * @param part The ProductPart to be assigned to this PartRevision.
+     * @param process The Process to be assigned to this PartRevision.
      * @param specification The Product to be assigned to this PartRevision.
      * @param part_revision The PartRevision to be created.
      * @throws IllegalArgumentException if the ProductPart ID is null.
+     * @throws IllegalArgumentException if the Process ID is null.
      * @throws IllegalArgumentException if the Specification ID is null.
      * @throws IllegalArgumentException If the PartRevision ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(ProductPart part, Specification specification, PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    public void create(ProductPart part, Process process, Specification specification, PartRevision part_revision) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given PartRevision in the database. The PartRevision ID must not be null, 

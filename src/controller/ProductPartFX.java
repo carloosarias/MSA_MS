@@ -47,7 +47,7 @@ public class ProductPartFX implements Initializable {
     
     private Stage detailsStage;
     
-    private final Product product = ProductFX.getProduct();
+    private Product product;
     
     private static ProductPart part;
     
@@ -59,6 +59,8 @@ public class ProductPartFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        product = ProductFX.getProduct();
+        System.out.println(product);
         setFieldValues();
         cancel_button.setOnAction((ActionEvent) -> {
             setFieldValues();
@@ -74,10 +76,11 @@ public class ProductPartFX implements Initializable {
             if(!testFields()){
                 return;
             }
+            System.out.println(msabase.getProductPartDAO().find(product));
             if(msabase.getProductPartDAO().find(product) != null){
                 msabase.getProductPartDAO().update(mapProductPart(msabase.getProductPartDAO().find(product)));
             } else{
-                msabase.getProductPartDAO().create(product,mapProductPart(new ProductPart()));
+                msabase.getProductPartDAO().create(product ,mapProductPart(new ProductPart()));
             }
             
             setFieldValues();
@@ -117,7 +120,7 @@ public class ProductPartFX implements Initializable {
     }
     
     public void setFieldValues(){
-    part = msabase.getProductPartDAO().find(product);
+        part = msabase.getProductPartDAO().find(product);
         if(part != null){
             id_field.setText(""+part.getId());
             partnumber_field.setText(part.getPart_number());
