@@ -20,6 +20,25 @@ import model.OrderPurchase;
  */
 public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
     // Constants ----------------------------------------------------------------------------------
+    private static final String SQL_FIND_BY_ID =
+            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE id = ?";
+    private static final String SQL_FIND_COMPANY_BY_ID = 
+            "SELECT COMPANY_ID FROM ORDER_PURCHASE WHERE id = ?";
+    private static final String SQL_FIND_ADDRESS_BY_ID = 
+            "SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE WHERE id = ?";
+    private static final String SQL_LIST_ORDER_BY_ID = 
+            "SELECT id, order_date, description, active FROM ORDER_PURCHASE ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE active = ? ORDER BY id";
+    private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
+            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE COMPANY_ID = ?";
+    private static final String SQL_INSERT =
+            "INSERT INTO ORDER_PURCHASE (COMPANY_ID, COMPANY_ADDRESS_ID, order_date, description, active) "
+            + "VALUES (?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE = 
+            "UPDATE ORDER_PURCHASE SET order_date = ?, description = ?, active = ? WHERE id = ?";
+    private static final String SQL_DELETE =
+            "DELETE FROM ORDER_PURCHASE WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
