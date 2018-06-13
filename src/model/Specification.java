@@ -13,6 +13,7 @@ public class Specification {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String specification_number;
+    private String process;
     private String details;
     private boolean active;
     
@@ -32,7 +33,15 @@ public class Specification {
     public void setSpecification_number(String specification_number) {
         this.specification_number = specification_number;
     }
-
+    
+    public String getProcess(){
+        return process;
+    }
+    
+    public void setProcess(String process){
+        this.process = process;
+    }
+    
     public String getDetails() {
         return details;
     }

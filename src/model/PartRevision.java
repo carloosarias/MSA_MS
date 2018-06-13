@@ -17,6 +17,7 @@ public class PartRevision implements Serializable{
     private Integer id;
     private String rev;
     private Date rev_date;
+    private String final_process;
     private String base_metal;
     private double area;
     private double base_weight;
@@ -47,6 +48,13 @@ public class PartRevision implements Serializable{
     
     public void setRev_date(Date rev_date){
         this.rev_date = rev_date;
+    }
+    public String getFinal_process(){
+        return final_process;
+    }
+    
+    public void setFinal_process(String final_process){
+        this.final_process = final_process;
     }
     
     public String getBase_metal() {

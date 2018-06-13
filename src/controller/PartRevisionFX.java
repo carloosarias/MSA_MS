@@ -31,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.PartRevision;
 import model.Specification;
-import model.Process;
 
 /**
  * FXML Controller class
@@ -47,7 +46,7 @@ public class PartRevisionFX implements Initializable {
     @FXML
     private ListView<PartRevision> revision_listview;
     @FXML
-    private ComboBox<Process> process_combo;
+    private ComboBox<String> process_combo;
     @FXML
     private Button add_button;
     @FXML
@@ -84,6 +83,11 @@ public class PartRevisionFX implements Initializable {
         "Revisiones Inactivas"
     );
     
+    private ObservableList<String> process_list = FXCollections.observableArrayList(
+        "Plata",
+        "Zinc"
+    );
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
     /**
@@ -93,6 +97,8 @@ public class PartRevisionFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
+        process_combo.setItems(process_list);
+        
         specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
         updateList();
         
@@ -128,7 +134,7 @@ public class PartRevisionFX implements Initializable {
             if(revision_listview.getSelectionModel().getSelectedItem() != null){
                 msabase.getPartRevisionDAO().update(mapPartRevision(revision_listview.getSelectionModel().getSelectedItem()));
             } else{
-                msabase.getPartRevisionDAO().create(ProductPartFX.getPart(), process_combo.getSelectionModel().getSelectedItem(), specification_combo.getSelectionModel().getSelectedItem(),mapPartRevision(new PartRevision()));
+                msabase.getPartRevisionDAO().create(ProductPartFX.getPart(), specification_combo.getSelectionModel().getSelectedItem(),mapPartRevision(new PartRevision()));
             }
             setFieldValues(revision_listview.getSelectionModel().getSelectedItem());
             updateList();
@@ -164,6 +170,7 @@ public class PartRevisionFX implements Initializable {
     public PartRevision mapPartRevision(PartRevision revision){
         revision.setRev(rev_field.getText());
         revision.setRev_date(java.sql.Date.valueOf(revdate_picker.getValue()));
+        revision.setFinal_process(process_combo.getSelectionModel().getSelectedItem());
         revision.setBase_metal(basemetal_field.getText());
         revision.setArea(Double.parseDouble(area_field.getText()));
         revision.setBase_weight(Double.parseDouble(initialweight_field.getText()));
@@ -175,6 +182,7 @@ public class PartRevisionFX implements Initializable {
         specification_combo.setDisable(true);
         rev_field.setDisable(value);
         revdate_picker.setDisable(value);
+        process_combo.setDisable(value);
         basemetal_field.setDisable(value);
         area_field.setDisable(value);
         initialweight_field.setDisable(value);
@@ -200,6 +208,7 @@ public class PartRevisionFX implements Initializable {
             finalweight_field.setText(""+revision.getFinal_weight());
             active_check.setSelected(!revision.isActive());
             specification_combo.getSelectionModel().select(msabase.getPartRevisionDAO().findSpecification(revision));
+            process_combo.getSelectionModel().select(revision.getFinal_process());
         } else{
             id_field.clear();
             rev_field.clear();
@@ -210,6 +219,7 @@ public class PartRevisionFX implements Initializable {
             finalweight_field.clear();
             active_check.setSelected(false);
             specification_combo.getSelectionModel().clearSelection();
+            process_combo.getSelectionModel().clearSelection();
         }
         clearStyle();
     }
@@ -223,6 +233,7 @@ public class PartRevisionFX implements Initializable {
         finalweight_field.setStyle(null);
         specification_combo.setStyle(null);
     }
+    
     public boolean testFields(){
         boolean b = true;
         if(rev_field.getText().replace(" ", "").equals("")){

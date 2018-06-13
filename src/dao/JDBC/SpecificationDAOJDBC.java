@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Process;
 import model.Specification;
 
 /**
@@ -24,24 +23,18 @@ import model.Specification;
 public class SpecificationDAOJDBC implements SpecificationDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, specification_number, details, active FROM SPECIFICATION WHERE id = ?";
+            "SELECT id, specification_number, process, details, active FROM SPECIFICATION WHERE id = ?";
     private static final String SQL_FIND_BY_SPECIFICATION_NUMBER = 
-            "SELECT id, specification_number, details, active FROM SPECIFICATION WHERE specification_number = ?";
-    private static final String SQL_FIND_PROCESS_BY_ID = 
-            "SELECT PROCESS_ID FROM SPECIFICATION WHERE id = ?";
+            "SELECT id, specification_number, process, details, active FROM SPECIFICATION WHERE specification_number = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, specification_number, details, active FROM SPECIFICATION ORDER BY id";
+            "SELECT id, specification_number, process, details, active FROM SPECIFICATION ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, specification_number, details, active FROM SPECIFICATION WHERE active = ? ORDER BY id";
-    private static final String SQL_LIST_OF_PROCESS_ORDER_BY_ID = 
-            "SELECT id, specification_number, details, active FROM SPECIFICATION WHERE PROCESS_ID = ? ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_OF_PROCESS_ORDER_BY_ID = 
-            "SELECT id, specification_number, details, active FROM SPECIFICATION WHERE PROCESS_ID = ? AND active = ? ORDER BY id";
+            "SELECT id, specification_number, process, details, active FROM SPECIFICATION WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO SPECIFICATION (PROCESS_ID, specification_number, details, active) "
+            "INSERT INTO SPECIFICATION (specification_number, process, details, active) "
             + "VALUES (?,?,?,?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SPECIFICATION SET specification_number = ?, details = ?, active = ? WHERE id = ?";
+            "UPDATE SPECIFICATION SET specification_number = ?, process = ?, details = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM SPECIFICATION WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -97,33 +90,6 @@ public class SpecificationDAOJDBC implements SpecificationDAO{
     }
     
     @Override
-    public Process findProcess(Specification specification) throws IllegalArgumentException, DAOException {
-        if(specification.getId() == null) {
-            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
-        }
-        
-        Process process = null;
-        
-        Object[] values = {
-            specification.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PROCESS_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                process = daoFactory.getProcessDAO().find(resultSet.getInt("PROCESS_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return process;
-    }
-    
-    @Override
     public List<Specification> list() throws DAOException {
         List<Specification> specification = new ArrayList<>();
         
@@ -166,73 +132,15 @@ public class SpecificationDAOJDBC implements SpecificationDAO{
     }
     
     @Override
-    public List<Specification> list(Process process) throws IllegalArgumentException, DAOException {
-        if(process.getId() == null) {
-            throw new IllegalArgumentException("Process is not created yet, the Process ID is null.");
-        }    
-        
-        List<Specification> specification = new ArrayList<>();
-        
-        Object[] values = {
-            process.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PROCESS_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                specification.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return specification;
-    }
+    public void create(Specification specification) throws IllegalArgumentException, DAOException {
 
-    @Override
-    public List<Specification> list(Process process, boolean active) throws IllegalArgumentException, DAOException {
-        if(process.getId() == null) {
-            throw new IllegalArgumentException("Process is not created yet, the Process ID is null.");
-        }    
-        
-        List<Specification> specification = new ArrayList<>();
-        
-        Object[] values = {
-            process.getId(),
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_PROCESS_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                specification.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return specification;
-    }  
-    
-    @Override
-    public void create(Process process, Specification specification) throws IllegalArgumentException, DAOException {
-        if(process.getId() == null){
-            throw new IllegalArgumentException("Process is not created yet, the Process ID is null.");
-        }
-        
         if(specification.getId() != null){
             throw new IllegalArgumentException("Specification is already created, the Specification ID is not null.");
         }
 
         Object[] values = {
-            process.getId(),
             specification.getSpecification_number(),
+            specification.getProcess(),
             specification.getDetails(),
             specification.isActive()
         };
@@ -267,6 +175,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO{
         
         Object[] values = {
             specification.getSpecification_number(),
+            specification.getProcess(),
             specification.getDetails(),
             specification.isActive(),
             specification.getId()
@@ -318,6 +227,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO{
         Specification specification = new Specification();
         specification.setId(resultSet.getInt("id"));
         specification.setSpecification_number(resultSet.getString("specification_number"));
+        specification.setProcess(resultSet.getString("process"));
         specification.setDetails(resultSet.getString("details"));
         specification.setActive(resultSet.getBoolean("active"));
         return specification;

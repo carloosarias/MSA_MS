@@ -8,7 +8,6 @@ package dao.interfaces;
 import dao.DAOException;
 import java.util.List;
 import model.Specification;
-import model.Process;
 
 /**
  *
@@ -34,16 +33,6 @@ public interface SpecificationDAO {
     public Specification find(String specification_number) throws DAOException;
     
     /**
-     * Returns the Process from the database matching the given Specification, otherwise null.
-     * The Specification ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param specification The Specification to be searched for.
-     * @return The Process from the database matching the given Specification, otherwise null
-     * @throws IllegalArgumentException If the Specification ID is null.
-     * @throws DAOException If something fails at database level.
-     */            
-    public Process findProcess(Specification specification) throws IllegalArgumentException, DAOException;
-    
-    /**
      * Returns a list of all Specifications from the database ordered by Specification ID. The list is never null and
      * is empty when the database does not contain any Specification.
      * @return A list of all Specifications from the database ordered by Specification ID.
@@ -61,39 +50,14 @@ public interface SpecificationDAO {
     public List<Specification> list(boolean active) throws DAOException;
     
     /**
-     * Returns a list of all Specification matching Process ID from the database ordered by Specification ID. The Process ID must not be null, otherwise it will throw
-     * IllegalArgumentException. The list is never null and
-     * is empty when the database does not contain any Specification matching Process.
-     * @param process The Process to be searched for.
-     * @return A list of all Specification matching Process from the database ordered by Specification ID.
-     * @throws IllegalArgumentException If the Process ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<Specification> list(Process process) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns a list of all Specification matching Process ID and active from the database ordered by Specification ID. The Process ID must not be null, otherwise it will throw
-     * IllegalArgumentException. The list is never null and
-     * is empty when the database does not contain any Specification matching Process and active.
-     * @param process The Process to be searched for.
-     * @param active The active to be searched for.
-     * @return A list of all Specification matching Process and active from the database ordered by Specification ID.
-     * @throws IllegalArgumentException If the Process ID is null.
-     * @throws DAOException If something fails at database level.
-     */        
-    public List<Specification> list(Process process, boolean active) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Create the given Specification in the database. The Process ID must not be null and
+     * Create the given Specification in the database.
      * The Specification ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given Specification.
-     * @param process The process to be assigned to the specification.
      * @param specification The Specification to be created.
-     * @throws IllegalArgumentException If the Process ID is null.
      * @throws IllegalArgumentException If the Specification ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Process process, Specification specification) throws IllegalArgumentException, DAOException;
+    public void create(Specification specification) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given Specification in the database. The Specification ID must not be null, 

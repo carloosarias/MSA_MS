@@ -60,7 +60,6 @@ public class ProductPartFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         product = ProductFX.getProduct();
-        System.out.println(product);
         setFieldValues();
         cancel_button.setOnAction((ActionEvent) -> {
             setFieldValues();
@@ -128,6 +127,7 @@ public class ProductPartFX implements Initializable {
             id_field.clear();
             partnumber_field.clear();
         }
+        revision_button.setDisable(id_field.getText().isEmpty());
         clearStyle();
     }
     
