@@ -26,6 +26,10 @@ public interface OrderPurchaseDAO {
      */
     public OrderPurchase find(Integer id) throws DAOException;
     
+    public Company findCompany(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
+    
+    public CompanyAddress findAddress(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
+    
     /**
      * Returns a list of all OrderPurchase from the database ordered by OrderPurchase ID. The list is never null and
      * is empty when the database does not contain any OrderPurchase.

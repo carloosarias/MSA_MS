@@ -6,13 +6,18 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import static dao.DAOUtil.prepareStatement;
+import static dao.JDBC.ProductTypeDAOJDBC.map;
 import dao.interfaces.OrderPurchaseDAO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import model.Company;
 import model.CompanyAddress;
 import model.OrderPurchase;
+import model.ProductType;
 
 /**
  *
@@ -58,9 +63,34 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
     // Actions ------------------------------------------------------------------------------------
     @Override
     public OrderPurchase find(Integer id) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return find(SQL_FIND_BY_ID, id);
     }
+    
+    /**
+     * Returns the OrderPurchase from the database matching the given SQL query with the given values.
+     * @param sql The SQL query to be executed in the database.
+     * @param values The PreparedStatement values to be set.
+     * @return The OrderPurchase from the database matching the given SQL query with the given values.
+     * @throws DAOException If something fails at database level.
+     */
+    private OrderPurchase find(String sql, Object... values) throws DAOException {
+        OrderPurchase order_purchase = null;
 
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, sql, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                order_purchase = map(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+
+        return order_purchase;
+    }
+    
     @Override
     public List<OrderPurchase> list() throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
