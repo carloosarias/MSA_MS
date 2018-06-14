@@ -109,15 +109,15 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
     
     @Override
-    public ProductPart findProductPart(PartRevision part_revision) throws IllegalArgumentException, DAOException {
-        if(part_revision.getId() == null) {
+    public ProductPart findProductPart(PartRevision revision) throws IllegalArgumentException, DAOException {
+        if(revision.getId() == null) {
             throw new IllegalArgumentException("ProductRevision is not created yet, the ProductRevision ID is null.");
         }
         
         ProductPart part = null;
         
         Object[] values = {
-            part_revision.getId()
+            revision.getId()
         };
         
         try (
@@ -136,15 +136,15 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
     
     @Override
-    public Specification findSpecification(PartRevision part_revision) throws IllegalArgumentException, DAOException {
-        if(part_revision.getId() == null) {
+    public Specification findSpecification(PartRevision revision) throws IllegalArgumentException, DAOException {
+        if(revision.getId() == null) {
             throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
         Specification specification = null;
         
         Object[] values = {
-            part_revision.getId()
+            revision.getId()
         };
         
         try (
@@ -164,7 +164,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
 
     @Override
     public List<PartRevision> list() throws DAOException {
-        List<PartRevision> part_revision = new ArrayList<>();
+        List<PartRevision> revisions = new ArrayList<>();
 
         try(
             Connection connection = daoFactory.getConnection();
@@ -172,18 +172,18 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                part_revision.add(map(resultSet));
+                revisions.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return part_revision;
+        return revisions;
     }
 
     @Override
     public List<PartRevision> list(boolean active) throws DAOException {
-        List<PartRevision> part_revision = new ArrayList<>();
+        List<PartRevision> revisions = new ArrayList<>();
         
         Object[] values = {
             active
@@ -195,13 +195,13 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                part_revision.add(map(resultSet));
+                revisions.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return part_revision;
+        return revisions;
     }
     @Override
     public List<PartRevision> list(ProductPart part) throws IllegalArgumentException, DAOException {
@@ -209,7 +209,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
         }    
         
-        List<PartRevision> part_revision = new ArrayList<>();
+        List<PartRevision> revisions = new ArrayList<>();
         
         Object[] values = {
             part.getId()
@@ -221,13 +221,13 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                part_revision.add(map(resultSet));
+                revisions.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return part_revision;
+        return revisions;
     }
 
     @Override
@@ -236,7 +236,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
         }    
         
-        List<PartRevision> part_revision = new ArrayList<>();
+        List<PartRevision> revisions = new ArrayList<>();
         
         Object[] values = {
             part.getId(),
@@ -249,13 +249,13 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                part_revision.add(map(resultSet));
+                revisions.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return part_revision;        
+        return revisions;        
     }
 
     @Override
@@ -264,7 +264,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
         }    
         
-        List<PartRevision> part_revision = new ArrayList<>();
+        List<PartRevision> revisions = new ArrayList<>();
         
         Object[] values = {
             specification.getId()
@@ -276,13 +276,13 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                part_revision.add(map(resultSet));
+                revisions.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return part_revision;
+        return revisions;
     }
 
     @Override
@@ -291,7 +291,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
         }    
         
-        List<PartRevision> part_revision = new ArrayList<>();
+        List<PartRevision> revisions = new ArrayList<>();
         
         Object[] values = {
             specification.getId(),
@@ -304,13 +304,13 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                part_revision.add(map(resultSet));
+                revisions.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return part_revision;
+        return revisions;
     }
 
     @Override

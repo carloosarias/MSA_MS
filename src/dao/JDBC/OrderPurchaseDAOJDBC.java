@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Company;
 import model.CompanyAddress;
@@ -28,14 +29,16 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
             "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM ORDER_PURCHASE WHERE id = ?";
-    private static final String SQL_FIND_ADDRESS_BY_ID = 
+    private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
             "SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, order_date, description, active FROM ORDER_PURCHASE ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
             "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE active = ? ORDER BY id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE COMPANY_ID = ?";
+            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE COMPANY_ID = ? ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_OF_COMPANY_ORDER_BY_ID = 
+            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE COMPANY_ID = ? and active = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO ORDER_PURCHASE (COMPANY_ID, COMPANY_ADDRESS_ID, order_date, description, active) "
             + "VALUES (?, ?, ?, ?, ?)";
@@ -92,29 +95,155 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
     
     @Override
     public Company findCompany(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(order_purchase.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
+        }
+        
+        Company company = null;
+        
+        Object[] values = {
+            order_purchase.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                company = daoFactory.getCompanyDAO().find(resultSet.getInt("COMPANY_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return company;
     }
 
     @Override
     public CompanyAddress findAddress(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(order_purchase.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
+        }
+        
+        CompanyAddress address = null;
+        
+        Object[] values = {
+            order_purchase.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_ADDRESS_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                address = daoFactory.getCompanyAddressDAO().find(resultSet.getInt("COMPANY_ADDRESS_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return address;
     }
     
     @Override
     public List<OrderPurchase> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<OrderPurchase> order_purchases = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                order_purchases.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return order_purchases;
     }
 
     @Override
-    public List<OrderPurchase> listActive(boolean active) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<OrderPurchase> list(boolean active) throws DAOException {
+        List<OrderPurchase> order_purchases = new ArrayList<>();
+        
+        Object[] values = {
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                order_purchases.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return order_purchases;
     }
 
     @Override
     public List<OrderPurchase> listCompany(Company company) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(company.getId() == null) {
+            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
+        }    
+        
+        List<OrderPurchase> order_purchases = new ArrayList<>();
+        
+        Object[] values = {
+            company.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_COMPANY_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                order_purchases.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return order_purchases;
     }
-
+    
+    @Override
+    public List<OrderPurchase> listCompany(Company company, boolean active){
+        if(company.getId() == null) {
+            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
+        }    
+        
+        List<OrderPurchase> order_purchases = new ArrayList<>();
+        
+        Object[] values = {
+            company.getId(),
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_COMPANY_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                order_purchases.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return order_purchases;        
+    }
+    
     @Override
     public void create(Company company, CompanyAddress address, OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

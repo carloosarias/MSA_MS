@@ -45,7 +45,7 @@ public interface OrderPurchaseDAO {
      * @return A list of all active OrderPurchase from the database ordered by OrderPurchase ID.
      * @throws DAOException If something fails at database level.
      */
-    public List<OrderPurchase> listActive(boolean active) throws DAOException;
+    public List<OrderPurchase> list(boolean active) throws DAOException;
     
     /**
      * Returns a list of all OrderPurchase matching Company ID from the database ordered by OrderPurchase ID. 
@@ -57,6 +57,18 @@ public interface OrderPurchaseDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<OrderPurchase> listCompany(Company company) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns a list of all active OrderPurchase matching Company ID from the database ordered by OrderPurchase ID. 
+     * The Company ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not contain any active OrderPurchase.
+     * @param company The Company ID to be searched for.
+     * @param active the active to be searched for
+     * @return A list of all OrderPurchase matching Company ID from the database ordered by OrderPurchase ID.
+     * @throws IllegalArgumentException If Company ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<OrderPurchase> listCompany(Company company, boolean active) throws IllegalArgumentException, DAOException;    
     
     /**
      * Create the given OrderPurchase in the database.
