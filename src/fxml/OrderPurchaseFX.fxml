@@ -1,27 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OrderPurchaseFX">
    <children>
-      <VBox>
+      <VBox alignment="CENTER" fillWidth="false">
          <children>
-            <TableView>
-               <columns>
-                  <TableColumn prefWidth="-1.0" text="Resumen de Ordenes">
+            <VBox alignment="CENTER_LEFT">
+               <children>
+                  <Label text="Ordenes De Compra:">
+                     <VBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </VBox.margin>
+                  </Label>
+                  <TableView fx:id="orderpurchase_table">
                      <columns>
-                        <TableColumn minWidth="50.0" prefWidth="50.0" text="ID" />
-                        <TableColumn minWidth="100.0" prefWidth="200.0" text="Descripción" />
-                        <TableColumn minWidth="100.0" prefWidth="100.0" text="Fecha" />
-                        <TableColumn minWidth="75.0" prefWidth="100.0" text="Estado" />
+                        <TableColumn fx:id="id_column" editable="false" minWidth="50.0" prefWidth="50.0" resizable="false" text="ID" />
+                        <TableColumn fx:id="description_column" editable="false" minWidth="150.0" prefWidth="200.0" resizable="false" text="Descripción" />
+                        <TableColumn fx:id="orderdate_column" editable="false" minWidth="100.0" prefWidth="100.0" resizable="false" text="Fecha" />
                      </columns>
-                  </TableColumn>
-               </columns>
+                     <VBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </VBox.margin>
+                  </TableView>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT">
+         <children>
+            <Label text="Detalles De Orden:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
+                        <Label text="ID:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField>
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Proveedor:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <Label text="Dirección:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <CheckBox mnemonicParsing="false" text="Inactivo">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="10.0">
+                     <children>
+                        <Label text="Fecha:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <DatePicker prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </DatePicker>
+                        <Label text="Descripción:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextArea prefHeight="108.0" prefWidth="150.0" wrapText="true">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextArea>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <TableView prefHeight="201.0" prefWidth="308.0">
+              <columns>
+                  <TableColumn minWidth="50.0" prefWidth="50.0" text="ID" />
+                <TableColumn prefWidth="150.0" resizable="false" text="Número de Parte" />
+                  <TableColumn prefWidth="115.0" resizable="false" text="Cantidad" />
+              </columns>
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>

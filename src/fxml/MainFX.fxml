@@ -15,6 +15,7 @@
           <Tab fx:id="employee_tab" closable="false" disable="true" text="Empleados" />
           <Tab fx:id="company_tab" closable="false" disable="true" text="Compañías" />
           <Tab fx:id="product_tab" closable="false" disable="true" text="Productos" />
+          <Tab fx:id="orderpurchase_tab" closable="false" disable="true" text="Orden De Compra" />
         </tabs>
          <BorderPane.margin>
             <Insets />
