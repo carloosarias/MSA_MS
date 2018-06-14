@@ -17,9 +17,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import model.Company;
 import model.OrderPurchase;
-
+        //WITH THIS CODE YOU CAN RETRIEVE THE VALUE OF ANOTHER OBJECT BY USING THE ID OF THIS OBJECT
+        //description_column.setCellValueFactory(c-> new SimpleStringProperty(msabase.getCompanyDAO().find(c.getValue().getId()).getName()));
+        //Useful to populate the PartNumber stuff
 /**
  * FXML Controller class
  *
