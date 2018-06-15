@@ -36,15 +36,14 @@ public class OrderPurchaseFX implements Initializable {
     
     @FXML
     private HBox root_hbox;
-    private TableView<OrderPurchase> orderpurchase_table;
+    @FXML
+    private TableView<OrderPurchase> orderpurchase_tableview;
     @FXML
     private TableColumn<OrderPurchase, Integer> id_column;
     @FXML
     private TableColumn<OrderPurchase, String> description_column;
     @FXML
     private TableColumn<OrderPurchase, Date> orderdate_column;
-    @FXML
-    private TableView<?> orderpurchase_tableview;
     @FXML
     private Button add_button;
     @FXML
@@ -75,6 +74,7 @@ public class OrderPurchaseFX implements Initializable {
     private ObservableList<OrderPurchase> orderpurchase_list = FXCollections.observableArrayList(
         msabase.getOrderPurchaseDAO().list()
     );
+    
     /**
      * Initializes the controller class.
      */
@@ -83,7 +83,7 @@ public class OrderPurchaseFX implements Initializable {
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
         orderdate_column.setCellValueFactory(new PropertyValueFactory<>("order_date"));
-        orderpurchase_table.setItems(orderpurchase_list);
+        orderpurchase_tableview.setItems(orderpurchase_list);
     }
     
 }
