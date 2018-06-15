@@ -70,7 +70,20 @@ public interface PurchaseItemDAO {
      */    
     public void create(OrderPurchase order_purchase, Product product, PurchaseItem purchase_item) throws IllegalArgumentException, DAOException;
     
+    /**
+     * Update the given PurchaseItem in the database. The PurchaseItem ID must not be null,
+     * otherwise it will throw IllegalArgumentException.
+     * @param purchase_item The PurchaseItem to be updated in the database.
+     * @throws IllegalArgumentException If the CompanyAddress ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
     public void update(PurchaseItem purchase_item) throws IllegalArgumentException, DAOException;
     
+    /**
+     * Delete the given PurchaseItem from the database. After deleting,
+     * the DAO will set the ID of the given PurchaseItem to null.
+     * @param purchase_item The PurchaseItem to be deleted from the database.
+     * @throws DAOException If something fails at database level.
+     */    
     public void delete(PurchaseItem purchase_item) throws DAOException;
 }
