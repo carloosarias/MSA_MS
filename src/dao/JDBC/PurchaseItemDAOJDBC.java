@@ -6,6 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.PurchaseItemDAO;
 import java.sql.Connection;
@@ -170,17 +171,91 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
 
     @Override
     public void create(OrderPurchase order_purchase, Product product, PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (order_purchase.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
+        }
+        
+        if(product.getId() == null){
+            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
+        }
+        
+        if(purchase_item.getId() != null){
+            throw new IllegalArgumentException("PurchaseItem is already created, the PurchaseItem ID is null.");
+        }
+        
+        Object[] values = {
+            order_purchase.getId(),
+            product.getId(),
+            purchase_item.getDescription(),
+            purchase_item.getQuantity()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating PurchaseItem failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    purchase_item.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating PurchaseItem failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (purchase_item.getId() == null) {
+            throw new IllegalArgumentException("PurchaseItem is not created yet, the PurchaseItem ID is null.");
+        }
+        
+        Object[] values = {
+            purchase_item.getDescription(),
+            purchase_item.getQuantity(),
+            purchase_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating PurchaseItem failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(PurchaseItem purchase_item) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            purchase_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting PurchaseItem failed, no rows affected.");
+            } else{
+                purchase_item.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
