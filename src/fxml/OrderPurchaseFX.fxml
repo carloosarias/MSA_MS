@@ -25,21 +25,25 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </Label>
-                  <TableView fx:id="orderpurchase_table">
+                  <TableView fx:id="orderpurchase_tableview" prefHeight="433.0">
                      <columns>
                         <TableColumn fx:id="id_column" editable="false" minWidth="50.0" prefWidth="50.0" resizable="false" text="ID" />
                         <TableColumn fx:id="description_column" editable="false" minWidth="150.0" prefWidth="200.0" resizable="false" text="Descripción" />
-                        <TableColumn fx:id="orderdate_column" editable="false" minWidth="100.0" prefWidth="100.0" resizable="false" text="Fecha" />
+                        <TableColumn fx:id="orderdate_column" editable="false" minWidth="86.0" prefWidth="99.0" resizable="false" text="Fecha" />
                      </columns>
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
                   </TableView>
-                  <Button mnemonicParsing="false" text="Nueva Orden de Compra">
-                     <VBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </VBox.margin>
-                  </Button>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Button fx:id="add_button" mnemonicParsing="false" text="Nueva Orden de Compra">
+                           <HBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </children>
@@ -65,7 +69,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField>
+                        <TextField fx:id="id_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -75,7 +79,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <ComboBox fx:id="supplier_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -85,12 +89,12 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <ComboBox fx:id="address_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <CheckBox mnemonicParsing="false" text="Inactivo">
+                        <CheckBox fx:id="active_check" mnemonicParsing="false" text="Inactivo">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -104,7 +108,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <DatePicker prefWidth="150.0">
+                        <DatePicker fx:id="orderdate_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -114,7 +118,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea prefHeight="108.0" prefWidth="150.0" wrapText="true">
+                        <TextArea fx:id="description_field" prefHeight="108.0" prefWidth="150.0" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -123,21 +127,44 @@
                   </VBox>
                </children>
             </HBox>
-            <TableView prefHeight="201.0" prefWidth="308.0">
+            <TableView fx:id="purchaseitem_tableview" prefHeight="201.0">
               <columns>
-                  <TableColumn minWidth="50.0" prefWidth="50.0" text="ID" />
-                <TableColumn prefWidth="150.0" resizable="false" text="Número de Parte" />
-                  <TableColumn prefWidth="115.0" resizable="false" text="Cantidad" />
+                  <TableColumn minWidth="50.0" prefWidth="62.0" text="Tipo" />
+                <TableColumn minWidth="144.0" prefWidth="157.0" resizable="false" text="Descripción" />
+                  <TableColumn minWidth="87.0" prefWidth="87.0" resizable="false" text="Cantidad" />
               </columns>
                <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                  <Insets left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </TableView>
-            <Button mnemonicParsing="false" text="Editar">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Button>
+            <HBox>
+               <children>
+                  <Button fx:id="additem_button" mnemonicParsing="false" text="Agregar Producto">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="itemdetails_button" mnemonicParsing="false" text="Ver Detalles">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="cancel_button" mnemonicParsing="false" text="Cancelar">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </children>
