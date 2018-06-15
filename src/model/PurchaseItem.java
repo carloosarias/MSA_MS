@@ -15,7 +15,7 @@ public class PurchaseItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String description;
-    private String quantity;
+    private Integer quantity;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -34,11 +34,11 @@ public class PurchaseItem implements Serializable{
         this.description = description;
     }
 
-    public String getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
     

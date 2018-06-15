@@ -6,7 +6,12 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.PurchaseItemDAO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import model.OrderPurchase;
 import model.Product;
@@ -53,9 +58,34 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     
     @Override
     public PurchaseItem find(Integer id) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return find(SQL_FIND_BY_ID, id);
     }
+    
+    /**
+     * Returns the PurchaseItem from the database matching the given SQL query with the given values.
+     * @param sql The SQL query to be executed in the database.
+     * @param values The PreparedStatement values to be set.
+     * @return The PurchaseItem from the database matching the given SQL query with the given values.
+     * @throws DAOException If something fails at database level.
+     */
+    private PurchaseItem find(String sql, Object... values) throws DAOException {
+        PurchaseItem purchase_item = null;
 
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, sql, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                purchase_item = map(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+
+        return purchase_item;
+    }
+    
     @Override
     public OrderPurchase findOrderPurchase(PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -85,5 +115,21 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     public void delete(PurchaseItem purchase_item) throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    // Helpers ------------------------------------------------------------------------------------
+
+    /**
+     * Map the current row of the given ResultSet to an PurchaseItem.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an PurchaseItem.
+     * @return The mapped PurchaseItem from the current row of the given ResultSet.
+     * @throws SQLException If something fails at database level.
+     */
+    public static PurchaseItem map(ResultSet resultSet) throws SQLException{
+        PurchaseItem purchase_item = new PurchaseItem();
+        purchase_item.setId(resultSet.getInt("id"));
+        purchase_item.setDescription(resultSet.getString("description"));
+        purchase_item.setQuantity(resultSet.getInt("quantity"));
+        return purchase_item;
+    }    
     
 }
