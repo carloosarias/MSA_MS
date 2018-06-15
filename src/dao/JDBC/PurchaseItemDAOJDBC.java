@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.OrderPurchase;
 import model.Product;
@@ -88,17 +89,83 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     
     @Override
     public OrderPurchase findOrderPurchase(PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(purchase_item.getId() == null) {
+            throw new IllegalArgumentException("PurchaseItem is not created yet, the PurchaseItem ID is null.");
+        }
+        
+        OrderPurchase order_purchase = null;
+        
+        Object[] values = {
+            purchase_item.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_ORDER_PURCHASE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                order_purchase = daoFactory.getOrderPurchaseDAO().find(resultSet.getInt("ORDER_PURCHASE_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return order_purchase;
     }
 
     @Override
     public Product findProduct(PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(purchase_item.getId() == null) {
+            throw new IllegalArgumentException("PurchaseItem is not created yet, the PurchaseItem ID is null.");
+        }
+        
+        Product product = null;
+        
+        Object[] values = {
+            purchase_item.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PRODUCT_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                product = daoFactory.getProductDAO().find(resultSet.getInt("PRODUCT_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return product;
     }
 
     @Override
     public List<PurchaseItem> list(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(order_purchase.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
+        }    
+        
+        List<PurchaseItem> purchase_item = new ArrayList<>();
+        
+        Object[] values = {
+            order_purchase.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_ORDER_PURCHASE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                purchase_item.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return purchase_item;
     }
 
     @Override
