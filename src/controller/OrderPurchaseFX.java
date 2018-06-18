@@ -66,6 +66,8 @@ public class OrderPurchaseFX implements Initializable {
     
     private Stage detailsStage;
     
+    private static OrderPurchase order_purchase;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     private ObservableList<OrderPurchase> orderpurchase_list = FXCollections.observableArrayList(
@@ -91,6 +93,12 @@ public class OrderPurchaseFX implements Initializable {
         });
         
         details_button.setOnAction((ActionEvent) -> {
+            order_purchase = orderpurchase_tableview.getSelectionModel().getSelectedItem();
+            showDetails();
+        });
+        
+        add_button.setOnAction((ActionEvent) -> {
+            order_purchase = new OrderPurchase();
             showDetails();
         });
     }
@@ -102,7 +110,7 @@ public class OrderPurchaseFX implements Initializable {
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseDetailsFX.fxml"));
             Scene scene = new Scene(root);
             
-            detailsStage.setTitle("Detalles de Especificación");
+            detailsStage.setTitle("Detalles de Órden de Compra");
             detailsStage.setResizable(false);
             detailsStage.initStyle(StageStyle.UTILITY);
             detailsStage.setScene(scene);
@@ -116,6 +124,10 @@ public class OrderPurchaseFX implements Initializable {
     public void updateOrderpurchase_tableview(){
         orderpurchase_list.setAll(msabase.getOrderPurchaseDAO().list());
         orderpurchase_tableview.setItems(orderpurchase_list);
+    }
+
+    public static OrderPurchase getOrder_purchase() {
+        return order_purchase;
     }
     
 }
