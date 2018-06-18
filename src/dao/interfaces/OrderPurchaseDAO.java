@@ -9,6 +9,8 @@ import dao.DAOException;
 import java.util.List;
 import model.Company;
 import model.CompanyAddress;
+import model.CompanyContact;
+import model.Employee;
 import model.OrderPurchase;
 
 /**
@@ -30,6 +32,7 @@ public interface OrderPurchaseDAO {
     
     public CompanyAddress findAddress(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
     
+    public Employee findEmployee(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
     /**
      * Returns a list of all OrderPurchase from the database ordered by OrderPurchase ID. The list is never null and
      * is empty when the database does not contain any OrderPurchase.
@@ -72,9 +75,11 @@ public interface OrderPurchaseDAO {
     
     /**
      * Create the given OrderPurchase in the database.
-     * The Company ID must not be null, the CompanyAddress must not be null
-     * and The Specification ID must be null, otherwise it will throw IllegalArgumentException.
+     * The Employee ID must not be null, The Company ID must not be null,
+     * the CompanyAddress must not be null and The Specification ID must be null,
+     * otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given Specification.
+     * @param employee The Employee to be assigned to this OrderPurchase.
      * @param company The Company to be assigned to this OrderPurchase.
      * @param address The CompanyAddress to be assigned to this OrderPurchase.
      * @param order_purchase The Specification to be created.
@@ -83,7 +88,7 @@ public interface OrderPurchaseDAO {
      * @throws IllegalArgumentException If the Specification ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Company company, CompanyAddress address, OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
+    public void create(Employee employee, Company company, CompanyAddress address, OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given OrderPurchase in the database. The OrderPurchase ID must not be null, 

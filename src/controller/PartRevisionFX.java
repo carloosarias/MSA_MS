@@ -95,7 +95,6 @@ public class PartRevisionFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         part  = ProductPartFX.getPart();
-        System.out.println(ProductPartFX.getPart());
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));

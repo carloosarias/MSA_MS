@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Company;
 import model.CompanyAddress;
+import model.Employee;
 import model.OrderPurchase;
 
 /**
@@ -27,24 +28,26 @@ import model.OrderPurchase;
 public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE id = ?";
+            "SELECT id, order_date, delivery_date, description, active, sub_total, iva, total FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
             "SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE WHERE id = ?";
+    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
+            "SELECT EMPLOYEE_ID FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, order_date, description, active FROM ORDER_PURCHASE ORDER BY id";
+            "SELECT id, order_date, delivery_date, description, active, sub_total, iva, total FROM ORDER_PURCHASE ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE active = ? ORDER BY id";
+            "SELECT id, order_date, delivery_date, description, active, sub_total, iva, total FROM ORDER_PURCHASE WHERE active = ? ORDER BY id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT id, order_date, delivery_date, description, active, sub_total, iva, total FROM ORDER_PURCHASE WHERE COMPANY_ID = ? ORDER BY id";
     private static final String SQL_LIST_ACTIVE_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, order_date, description, active FROM ORDER_PURCHASE WHERE COMPANY_ID = ? and active = ? ORDER BY id";
+            "SELECT id, order_date, delivery_date, description, active, sub_total, iva, total FROM ORDER_PURCHASE WHERE COMPANY_ID = ? and active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO ORDER_PURCHASE (COMPANY_ID, COMPANY_ADDRESS_ID, order_date, description, active) "
-            + "VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO ORDER_PURCHASE (EMPLOYEE_ID, COMPANY_ID, COMPANY_ADDRESS_ID, order_date, delivery_date, description, active, sub_total, iva, total) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ORDER_PURCHASE SET order_date = ?, description = ?, active = ? WHERE id = ?";
+            "UPDATE ORDER_PURCHASE SET order_date = ?, delivery_date = ?, description = ?, active = ?, sub_total = ?, iva = ?, total = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM ORDER_PURCHASE WHERE id = ?";
     
@@ -246,9 +249,13 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
     }
     
     @Override
-    public void create(Company company, CompanyAddress address, OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
+    public void create(Employee employee, Company company, CompanyAddress address, OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
         if (company.getId() == null) {
             throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        }
+        
+        if(employee.getId() == null){
+            throw new IllegalArgumentException("Employee is not created yet, the Company ID is null.");
         }
         
         if(address.getId() == null){
@@ -260,6 +267,7 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
         }
         
         Object[] values = {
+            employee.getId(),
             company.getId(),
             address.getId(),
             DAOUtil.toSqlDate(order_purchase.getOrder_date()),
@@ -348,9 +356,18 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
         OrderPurchase order_purchase = new OrderPurchase();
         order_purchase.setId(resultSet.getInt("id"));
         order_purchase.setOrder_date(resultSet.getDate("order_date"));
+        order_purchase.setDelivery_date(resultSet.getDate("delivery_date"));
         order_purchase.setDescription(resultSet.getString("description"));
         order_purchase.setActive(resultSet.getBoolean("active"));
+        order_purchase.setSub_total(resultSet.getDouble("sub_total"));
+        order_purchase.setIva(resultSet.getDouble("iva"));
+        order_purchase.setTotal(resultSet.getDouble("total"));
         return order_purchase;
+    }
+
+    @Override
+    public Employee findEmployee(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

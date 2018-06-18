@@ -6,13 +6,20 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -23,6 +30,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import model.Company;
+import model.CompanyAddress;
 import model.OrderPurchase;
         //WITH THIS CODE YOU CAN RETRIEVE THE VALUE OF ANOTHER OBJECT BY USING THE ID OF THIS OBJECT
         //description_column.setCellValueFactory(c-> new SimpleStringProperty(msabase.getCompanyDAO().find(c.getValue().getId()).getName()));
@@ -41,33 +52,19 @@ public class OrderPurchaseFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchase, Integer> id_column;
     @FXML
+    private TableColumn<OrderPurchase, String> supplier_column;
+    @FXML
     private TableColumn<OrderPurchase, String> description_column;
     @FXML
     private TableColumn<OrderPurchase, Date> orderdate_column;
     @FXML
+    private TableColumn<OrderPurchase, String> employee_column;
+    @FXML
     private Button add_button;
     @FXML
-    private TextField id_field;
-    @FXML
-    private ComboBox<?> supplier_field;
-    @FXML
-    private ComboBox<?> address_field;
-    @FXML
-    private CheckBox active_check;
-    @FXML
-    private DatePicker orderdate_field;
-    @FXML
-    private TextArea description_field;
-    @FXML
-    private TableView<?> purchaseitem_tableview;
-    @FXML
-    private Button additem_button;
-    @FXML
-    private Button itemdetails_button;
-    @FXML
-    private Button save_button;
-    @FXML
-    private Button cancel_button;
+    private Button details_button;
+    
+    private Stage detailsStage;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -80,9 +77,44 @@ public class OrderPurchaseFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        detailsStage = new Stage();
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        supplier_column.setCellValueFactory(c-> new SimpleStringProperty(msabase.getOrderPurchaseDAO().findCompany(c.getValue()).toString()));
         description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
         orderdate_column.setCellValueFactory(new PropertyValueFactory<>("order_date"));
+        employee_column.setCellValueFactory(c-> new SimpleStringProperty(msabase.getOrderPurchaseDAO().findEmployee(c.getValue()).toString()));
+        details_button.setDisable(orderpurchase_tableview.getSelectionModel().isEmpty() || detailsStage.isShowing());
+        updateOrderpurchase_tableview();
+        
+        orderpurchase_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends OrderPurchase> observable, OrderPurchase oldValue, OrderPurchase newValue) -> {
+            details_button.setDisable(orderpurchase_tableview.getSelectionModel().isEmpty() || detailsStage.isShowing());
+        });
+        
+        details_button.setOnAction((ActionEvent) -> {
+            showDetails();
+        });
+    }
+    
+    public void showDetails(){
+        try {
+            detailsStage = new Stage();
+            detailsStage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseDetailsFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            detailsStage.setTitle("Detalles de Especificación");
+            detailsStage.setResizable(false);
+            detailsStage.initStyle(StageStyle.UTILITY);
+            detailsStage.setScene(scene);
+            detailsStage.showAndWait();   
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void updateOrderpurchase_tableview(){
+        orderpurchase_list.setAll(msabase.getOrderPurchaseDAO().list());
         orderpurchase_tableview.setItems(orderpurchase_list);
     }
     
