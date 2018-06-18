@@ -93,17 +93,16 @@ public class OrderPurchaseFX implements Initializable {
         });
         
         details_button.setOnAction((ActionEvent) -> {
-            order_purchase = orderpurchase_tableview.getSelectionModel().getSelectedItem();
-            showDetails();
+            showDetails(orderpurchase_tableview.getSelectionModel().getSelectedItem());
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            order_purchase = new OrderPurchase();
-            showDetails();
+            showDetails(new OrderPurchase());
         });
     }
     
-    public void showDetails(){
+    public void showDetails(OrderPurchase order_purchase){
+        this.order_purchase = order_purchase;
         try {
             detailsStage = new Stage();
             detailsStage.initOwner((Stage) root_hbox.getScene().getWindow());

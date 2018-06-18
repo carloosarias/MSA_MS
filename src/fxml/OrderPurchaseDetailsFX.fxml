@@ -13,8 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER_LEFT">
          <children>
@@ -39,10 +38,20 @@
                         </TextField>
                      </children>
                   </VBox>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
+                  <VBox>
+                     <children>
+                        <Label text="Empleado:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="employee_id" disable="true" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
                   <VBox>
                      <children>
                         <Label text="Fecha de Expedición:">
@@ -50,21 +59,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <DatePicker fx:id="orderdate_field" disable="true" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-                  <VBox layoutX="10.0" layoutY="10.0">
-                     <children>
-                        <Label text="Fecha de Entrega:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker disable="true" prefWidth="150.0">
+                        <DatePicker fx:id="orderdate_picker" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -82,7 +77,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="supplier_field" disable="true" prefWidth="150.0">
+                        <ComboBox fx:id="supplier_combo" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -96,11 +91,25 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="address_field" disable="true" prefWidth="150.0">
+                        <ComboBox fx:id="address_combo" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </ComboBox>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Fecha de Entrega:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <DatePicker fx:id="deliverydate_picker" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </DatePicker>
                      </children>
                   </VBox>
                </children>
@@ -109,17 +118,17 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="Contacto:">
+                        <Label text="Descripción:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox disable="true" prefWidth="150.0">
+                        <TextArea fx:id="description_area" prefHeight="83.0" prefWidth="308.0" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </ComboBox>
-                        <CheckBox fx:id="active_check" disable="true" mnemonicParsing="false" text="Inactivo">
+                        </TextArea>
+                        <CheckBox fx:id="active_check" mnemonicParsing="false" text="Inactivo">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -128,27 +137,41 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Label text="Descripción:">
+                        <Label text="Tipo de Cambio:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea fx:id="description_field" disable="true" prefHeight="75.0" prefWidth="200.0" wrapText="true">
+                        <TextField fx:id="exchangerate_field" prefWidth="100.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </TextArea>
+                        </TextField>
+                        <VBox>
+                           <children>
+                              <Label text="IVA %:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <TextField fx:id="ivarate_field" prefWidth="100.0">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                        </VBox>
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <TableView fx:id="purchaseitem_tableview" disable="true" prefHeight="250.0" prefWidth="508.0">
+            <TableView fx:id="purchaseitem_tableview" prefHeight="200.0">
                <columns>
-                  <TableColumn fx:id="quantity_column" minWidth="9.0" prefWidth="84.0" resizable="false" text="Cantidad" />
-                  <TableColumn fx:id="product_column" minWidth="50.0" prefWidth="112.0" text="Producto" />
-                  <TableColumn fx:id="itemdesc_column" minWidth="75.0" prefWidth="160.0" resizable="false" text="Descripción" />
-                  <TableColumn prefWidth="75.0" text="Precio" />
-                  <TableColumn prefWidth="75.0" text="Importe" />
+                  <TableColumn fx:id="quantity_column" minWidth="9.0" prefWidth="62.0" resizable="false" text="Cantidad" />
+                  <TableColumn fx:id="product_column" minWidth="50.0" prefWidth="88.0" text="Producto" />
+                  <TableColumn fx:id="itemdesc_column" minWidth="75.0" prefWidth="153.0" resizable="false" text="Descripción" />
+                  <TableColumn prefWidth="94.0" text="Precio" />
+                  <TableColumn prefWidth="67.0" text="Importe" />
                </columns>
                <VBox.margin>
                   <Insets left="4.0" right="4.0" top="4.0" />
@@ -156,32 +179,31 @@
             </TableView>
             <HBox>
                <children>
-                  <Button fx:id="additem_button" disable="true" mnemonicParsing="false" text="Agregar Producto">
+                  <Button fx:id="additem_button" mnemonicParsing="false" text="Agregar Producto">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="deleteitem_button" disable="true" mnemonicParsing="false" text="Eliminar Producto">
+                  <Button fx:id="deleteitem_button" mnemonicParsing="false" text="Eliminar Producto">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="itemdetails_button" disable="true" mnemonicParsing="false" text="Ver Detalles">
+                  <Button fx:id="itemdetails_button" mnemonicParsing="false" text="Ver Detalles">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" />
             <HBox>
                <children>
-                  <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Guardar">
+                  <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="cancel_button" disable="true" mnemonicParsing="false" text="Cancelar">
+                  <Button fx:id="cancel_button" mnemonicParsing="false" text="Cancelar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
