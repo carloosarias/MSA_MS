@@ -64,7 +64,7 @@ public class PurchaseItem implements Serializable{
     // Object overrides ---------------------------------------------------------------------------
     
     /**
-     * This should compare Product by ID only.
+     * This should compare PurchaseItem by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -75,7 +75,7 @@ public class PurchaseItem implements Serializable{
     }
 
     /**
-     * Product with same ID should return same hashcode.
+     * PurchaseItem with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -86,7 +86,7 @@ public class PurchaseItem implements Serializable{
     }
 
     /**
-     * Returns the String representation of this Product. Not required, it just pleases reading logs.
+     * Returns the String representation of this PurchaseItem. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override

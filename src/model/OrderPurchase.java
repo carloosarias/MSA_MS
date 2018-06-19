@@ -100,7 +100,7 @@ public class OrderPurchase implements Serializable {
     // Object overrides ---------------------------------------------------------------------------
 
     /**
-     * This should compare Modules by ID only.
+     * This should compare OrderPurchase by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -111,7 +111,7 @@ public class OrderPurchase implements Serializable {
     }
 
     /**
-     * Modules with same ID should return same hashcode.
+     * OrderPurchase with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -122,7 +122,7 @@ public class OrderPurchase implements Serializable {
     }
 
     /**
-     * Returns the String representation of this Module. Not required, it just pleases reading logs.
+     * Returns the String representation of this OrderPurchase. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
