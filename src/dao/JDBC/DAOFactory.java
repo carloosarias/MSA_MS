@@ -13,6 +13,7 @@ import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.ProductPartDAO;
 import dao.interfaces.ProductTypeDAO;
+import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.SpecificationDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -228,6 +229,13 @@ public abstract class DAOFactory {
         return new OrderPurchaseDAOJDBC(this);
     }
     
+    /**
+     * Returns the OrderPurchase DAO associated with the current DAOFactory.
+     * @return The OrderPurchase DAO associated with the current DAOFactory.
+     */   
+    public PurchaseItemDAO getPurchaseItemDAO(){
+        return new PurchaseItemDAOJDBC(this);
+    }    
     // You can add more DAO implementation getters here.
 }
 

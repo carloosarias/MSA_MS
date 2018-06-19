@@ -15,6 +15,7 @@ import java.util.Date;
 public class PurchaseItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
+    private Integer product_id;
     private Date delivery_date;
     private Double unit_price;
     private String description;
@@ -27,6 +28,14 @@ public class PurchaseItem implements Serializable{
 
     public void setId(Integer id) {
         this.id = id;
+    }
+    
+    public Integer getProduct_id(){
+        return product_id;
+    }
+    
+    public void setProduct_id(Integer product_id){
+        this.product_id = product_id;
     }
     
     public Date getDelivery_date(){

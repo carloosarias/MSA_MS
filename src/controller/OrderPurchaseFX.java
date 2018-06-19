@@ -21,19 +21,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.Company;
-import model.CompanyAddress;
 import model.OrderPurchase;
         //WITH THIS CODE YOU CAN RETRIEVE THE VALUE OF ANOTHER OBJECT BY USING THE ID OF THIS OBJECT
         //description_column.setCellValueFactory(c-> new SimpleStringProperty(msabase.getCompanyDAO().find(c.getValue().getId()).getName()));
@@ -111,12 +104,13 @@ public class OrderPurchaseFX implements Initializable {
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseDetailsFX.fxml"));
             Scene scene = new Scene(root);
             
-            detailsStage.setTitle("Detalles de Órden de Compra");
+            detailsStage.setTitle("Detalles de Orden de Compra");
             detailsStage.setResizable(false);
             detailsStage.initStyle(StageStyle.UTILITY);
             detailsStage.setScene(scene);
             detailsStage.showAndWait();
             add_button.setDisable(false);
+            updateOrderpurchase_tableview();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -124,6 +118,7 @@ public class OrderPurchaseFX implements Initializable {
     }
     
     public void updateOrderpurchase_tableview(){
+        orderpurchase_tableview.getSelectionModel().clearSelection();
         orderpurchase_list.setAll(msabase.getOrderPurchaseDAO().list());
         orderpurchase_tableview.setItems(orderpurchase_list);
     }

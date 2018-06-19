@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OrderPurchaseDetailsFX">
+<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OrderPurchaseDetailsFX">
    <children>
       <VBox alignment="CENTER_LEFT">
          <children>
@@ -144,24 +144,19 @@
                         </TextArea>
                      </children>
                   </VBox>
-                  <VBox>
+                  <VBox alignment="BOTTOM_LEFT">
                      <children>
                         <CheckBox fx:id="active_check" disable="true" mnemonicParsing="false" text="Inactivo">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </CheckBox>
-                        <Button fx:id="additem_button" disable="true" mnemonicParsing="false" text="Agregar Producto">
+                        <Button fx:id="add_button" disable="true" mnemonicParsing="false" text="Agregar Producto">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Button>
-                        <Button fx:id="deleteitem_button" disable="true" mnemonicParsing="false" text="Eliminar Producto">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                        <Button fx:id="details_button" disable="true" mnemonicParsing="false" text="Ver Detalles">
+                        <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -175,9 +170,9 @@
                   <TableColumn fx:id="quantity_column" minWidth="9.0" prefWidth="67.0" resizable="false" text="Cantidad" />
                   <TableColumn fx:id="product_column" minWidth="50.0" prefWidth="83.0" text="Producto" />
                   <TableColumn fx:id="itemdesc_column" minWidth="75.0" prefWidth="153.0" resizable="false" text="Descripción" />
-                  <TableColumn minWidth="116.0" prefWidth="116.0" text="Fecha de Entrega" />
-                  <TableColumn prefWidth="91.0" text="Precio" />
-                  <TableColumn prefWidth="79.0" text="Importe" />
+                  <TableColumn fx:id="deliverydate_column" minWidth="116.0" prefWidth="116.0" text="Fecha de Entrega" />
+                  <TableColumn fx:id="unitprice_column" prefWidth="91.0" text="Precio" />
+                  <TableColumn fx:id="import_column" prefWidth="79.0" text="Importe" />
                </columns>
                <VBox.margin>
                   <Insets left="4.0" right="4.0" top="4.0" />

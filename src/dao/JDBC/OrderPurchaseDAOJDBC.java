@@ -8,7 +8,6 @@ package dao.JDBC;
 import dao.DAOException;
 import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.ProductTypeDAOJDBC.map;
 import dao.interfaces.OrderPurchaseDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
