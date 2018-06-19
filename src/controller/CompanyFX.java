@@ -106,6 +106,8 @@ public class CompanyFX implements Initializable {
         add_button.setOnAction((ActionEvent) -> {
             setFieldValues(null);
             disableFields(false);
+            contact_button.setDisable(true);
+            address_button.setDisable(true);
         });
         
         cancel_button.setOnAction((ActionEvent) -> {
@@ -170,7 +172,7 @@ public class CompanyFX implements Initializable {
             addressStage.initStyle(StageStyle.UTILITY);
             addressStage.setScene(scene);
             addressStage.showAndWait();
-            address_button.setDisable(!edit_button.isDisabled());
+            address_button.setDisable(id_field.getText().equals(""));
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -188,7 +190,7 @@ public class CompanyFX implements Initializable {
             contactStage.initStyle(StageStyle.UTILITY);
             contactStage.setScene(scene);
             contactStage.showAndWait();
-            contact_button.setDisable(!edit_button.isDisabled());
+            contact_button.setDisable(id_field.getText().equals(""));
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -250,8 +252,8 @@ public class CompanyFX implements Initializable {
         edit_button.setDisable(!value);
         filter_combo.setDisable(!value);
         comp_listview.setDisable(!value);
-        address_button.setDisable(!edit_button.isDisabled());
-        contact_button.setDisable(!edit_button.isDisabled());
+        address_button.setDisable(id_field.getText().equals(""));
+        contact_button.setDisable(id_field.getText().equals(""));
     }
     
     
@@ -277,6 +279,8 @@ public class CompanyFX implements Initializable {
             client_check.setSelected(false);   
             active_check.setSelected(false);   
         }
+        address_button.setDisable(id_field.getText().equals(""));
+        contact_button.setDisable(id_field.getText().equals(""));
         clearStyle();
     }
     

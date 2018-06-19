@@ -97,8 +97,10 @@ public class OrderPurchaseFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
+            add_button.setDisable(true);
             showDetails(new OrderPurchase());
         });
+        
     }
     
     public void showDetails(OrderPurchase order_purchase){
@@ -113,7 +115,8 @@ public class OrderPurchaseFX implements Initializable {
             detailsStage.setResizable(false);
             detailsStage.initStyle(StageStyle.UTILITY);
             detailsStage.setScene(scene);
-            detailsStage.showAndWait();   
+            detailsStage.showAndWait();
+            add_button.setDisable(false);
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }

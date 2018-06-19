@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -14,6 +15,8 @@ import java.io.Serializable;
 public class PurchaseItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
+    private Date delivery_date;
+    private Double unit_price;
     private String description;
     private Integer quantity;
     
@@ -25,7 +28,23 @@ public class PurchaseItem implements Serializable{
     public void setId(Integer id) {
         this.id = id;
     }
-
+    
+    public Date getDelivery_date(){
+        return delivery_date;
+    }
+    
+    public void setDelivery_date(Date delivery_date){
+        this.delivery_date = delivery_date;
+    }
+    
+    public Double getUnit_price(){
+        return unit_price;
+    }
+    
+    public void setUnit_price(Double unit_price){
+        this.unit_price = unit_price;
+    }
+    
     public String getDescription() {
         return description;
     }

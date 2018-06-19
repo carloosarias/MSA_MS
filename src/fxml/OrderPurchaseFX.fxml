@@ -14,7 +14,7 @@
          <children>
             <VBox>
                <children>
-                  <Label text="Historial de órdenes:">
+                  <Label text="Historial de Órdenes:">
                      <VBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </VBox.margin>
@@ -33,7 +33,7 @@
                   </TableView>
                   <HBox alignment="CENTER_LEFT">
                      <children>
-                        <Button fx:id="add_button" mnemonicParsing="false" text="Nueva Órden de Compra">
+                        <Button fx:id="add_button" mnemonicParsing="false" text="Nueva Orden de Compra">
                            <HBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </HBox.margin>

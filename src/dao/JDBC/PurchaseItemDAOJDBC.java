@@ -26,18 +26,18 @@ import model.PurchaseItem;
 public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, description, quantity FROM PURCHASE_ITEM WHERE id = ?";
+            "SELECT id, delivery_date, unit_price, description, quantity FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_FIND_ORDER_PURCHASE_BY_ID =
             "SELECT ORDER_PURCHASE_ID FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_FIND_PRODUCT_BY_ID =
             "SELECT PRODUCT_ID FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_LIST_OF_ORDER_PURCHASE_ORDER_BY_ID = 
-            "SELECT id, description, quantity FROM PURCHASE_ITEM WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
+            "SELECT id, delivery_date, unit_price, description, quantity FROM PURCHASE_ITEM WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO PURCHASE_ITEM (ORDER_PURCHASE_ID, PRODUCT_ID, description, quantity) "
-            + "VALUES (?, ?, ?, ?)";
+            "INSERT INTO PURCHASE_ITEM (ORDER_PURCHASE_ID, PRODUCT_ID, delivery_date, unit_price, description, quantity) "
+            + "VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PURCHASE_ITEM SET description = ?, quantity = ? WHERE id = ?";
+            "UPDATE PURCHASE_ITEM SET delivery_date = ?, unit_price = ?, description = ?, quantity = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM PURCHASE_ITEM WHERE id = ?";
     
@@ -269,6 +269,8 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     public static PurchaseItem map(ResultSet resultSet) throws SQLException{
         PurchaseItem purchase_item = new PurchaseItem();
         purchase_item.setId(resultSet.getInt("id"));
+        purchase_item.setDelivery_date(resultSet.getDate("delivery_date"));
+        purchase_item.setUnit_price(resultSet.getDouble("unit_price"));
         purchase_item.setDescription(resultSet.getString("description"));
         purchase_item.setQuantity(resultSet.getInt("quantity"));
         return purchase_item;

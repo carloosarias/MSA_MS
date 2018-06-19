@@ -16,9 +16,10 @@ public class OrderPurchase implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date order_date;
-    private Date delivery_date;
     private String description;
     private boolean active;
+    private Double exchange_rate;
+    private Double iva_rate;
     private Double sub_total;
     private Double iva;
     private Double total;
@@ -30,14 +31,6 @@ public class OrderPurchase implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Date getDelivery_date(){
-        return delivery_date;
-    }
-    
-    public void setDelivery_date(Date delivery_date){
-        this.delivery_date = delivery_date;
     }
     
     public Date getOrder_date() {
@@ -62,6 +55,22 @@ public class OrderPurchase implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+    
+    public Double getExchange_rate(){
+        return exchange_rate;
+    }
+    
+    public void setExchange_rate(Double exchange_rate){
+        this.exchange_rate = exchange_rate;
+    }
+    
+    public Double getIva_rate(){
+        return iva_rate;
+    }
+    
+    public void setIva_rate(Double iva_rate){
+        this.iva_rate = iva_rate;
     }
     
     public Double getSub_total() {
