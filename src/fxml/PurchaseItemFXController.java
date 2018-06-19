@@ -65,6 +65,10 @@ public class PurchaseItemFXController implements Initializable {
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
         });
+        cancel_button.setOnAction((ActionEvent) -> {
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close(); 
+        });
     }
     
     public PurchaseItem mapPurchaseItem(PurchaseItem purchase_item){

@@ -114,6 +114,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        purchase_items.clear();
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         product_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductDAO().find(c.getValue().getProduct_id()).toString()));
         itemdesc_column.setCellValueFactory(new PropertyValueFactory<>("description"));
