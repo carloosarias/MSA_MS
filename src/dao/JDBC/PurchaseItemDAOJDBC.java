@@ -186,6 +186,8 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
         Object[] values = {
             order_purchase.getId(),
             product.getId(),
+            purchase_item.getDelivery_date(),
+            purchase_item.getUnit_price(),
             purchase_item.getDescription(),
             purchase_item.getQuantity()
         };
@@ -219,6 +221,8 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
         }
         
         Object[] values = {
+            purchase_item.getDelivery_date(),
+            purchase_item.getUnit_price(),
             purchase_item.getDescription(),
             purchase_item.getQuantity(),
             purchase_item.getId()

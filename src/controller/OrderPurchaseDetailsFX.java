@@ -121,11 +121,10 @@ public class OrderPurchaseDetailsFX implements Initializable {
         
         if(OrderPurchaseFX.getOrder_purchase().getId() == null){
             newOrder();
-            
             ivarate_field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-                ivarate_field.setText(newValue.replaceAll("[^\\d.]", ""));
+                ivarate_field.setText(newValue.replaceAll("[^.\\d]", ""));
                 try{
-                    if(!ivarate_field.getText().equals("")){
+                    if(!ivarate_field.getText().isEmpty()){
                         Double.parseDouble(ivarate_field.getText());
                         if(Double.parseDouble(ivarate_field.getText()) > 999) ivarate_field.setText(oldValue);
                         ivarate_field.setStyle(null);
@@ -135,6 +134,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
                     ivarate_field.setStyle("-fx-border-color: red ;");
                 }
             });
+            
             purchaseitem_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PurchaseItem> observable, PurchaseItem oldValue, PurchaseItem newValue) -> {
                 delete_button.setDisable(purchaseitem_tableview.getSelectionModel().isEmpty());
             });
@@ -155,16 +155,87 @@ public class OrderPurchaseDetailsFX implements Initializable {
                 computeTotal();
             });
             
+            save_button.setOnAction((ActionEvent) -> {
+                if(!testFields()) return;
+                msabase.getOrderPurchaseDAO().create(employee_combo.getSelectionModel().getSelectedItem(), supplier_combo.getSelectionModel().getSelectedItem()
+                        , address_combo.getSelectionModel().getSelectedItem(), mapOrderPurchase(OrderPurchaseFX.getOrder_purchase()));
+                for(PurchaseItem p : purchase_items){
+                    msabase.getPurchaseItemDAO().create(OrderPurchaseFX.getOrder_purchase(), msabase.getProductDAO().find(p.getProduct_id()), p);
+                }
+            });
+            
         }else{
             loadOrder(OrderPurchaseFX.getOrder_purchase());
         }
         
     }
 
+    public OrderPurchase mapOrderPurchase(OrderPurchase order_purchase){
+        order_purchase.setOrder_date(java.sql.Date.valueOf(orderdate_picker.getValue()));
+        order_purchase.setExchange_rate(Double.parseDouble(exchangerate_field.getText()));
+        order_purchase.setIva_rate(Double.parseDouble(ivarate_field.getText()));
+        order_purchase.setDescription(description_area.getText());
+        order_purchase.setActive(!active_check.isSelected());
+        order_purchase.setSub_total(Double.parseDouble(subtotal_field.getText()));
+        order_purchase.setIva(Double.parseDouble(iva_field.getText()));
+        order_purchase.setTotal(Double.parseDouble(total_field.getText()));
+        return order_purchase;
+    }
+    public boolean testFields(){
+        boolean b = true;
+        clearStyle();
+        if(orderdate_picker.getValue() == null){
+            orderdate_picker.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        if(supplier_combo.getSelectionModel().isEmpty()){
+            supplier_combo.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        if(address_combo.getSelectionModel().isEmpty()){
+            address_combo.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        if(description_area.getText().replace(" ", "").equals("")){
+            description_area.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        try{
+            Double.parseDouble(exchangerate_field.getText());
+        }catch(Exception e){
+            exchangerate_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        }        
+        try{
+            Double.parseDouble(ivarate_field.getText());
+        }catch(Exception e){
+            ivarate_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        if(purchase_items.isEmpty()){
+            purchaseitem_tableview.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        return b;
+    }
+    public void clearStyle(){
+        orderdate_picker.setStyle(null);
+        supplier_combo.setStyle(null);
+        address_combo.setStyle(null);
+        description_area.setStyle(null);
+        exchangerate_field.setStyle(null);
+        ivarate_field.setStyle(null);
+        purchaseitem_tableview.setStyle(null);
+    }
     public void computeTotal(){
+        if(ivarate_field.getText().isEmpty()){
+            ivarate_field.setStyle("-fx-border-color: red ;");
+            return;
+        }
         double subtotal_count = 0;
         double iva_count = 0;
         double total_count = 0;
+        
         for(PurchaseItem p : purchase_items){
             subtotal_count += (p.getQuantity()*p.getUnit_price());
         }
@@ -226,6 +297,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
         exchangerate_field.setDisable(value);
         ivarate_field.setDisable(value);
         add_button.setDisable(value);
+        save_button.setDisable(value);
         
     }
     

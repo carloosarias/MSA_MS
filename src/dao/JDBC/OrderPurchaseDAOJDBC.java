@@ -298,7 +298,12 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
             address.getId(),
             DAOUtil.toSqlDate(order_purchase.getOrder_date()),
             order_purchase.getDescription(),
-            order_purchase.isActive()
+            order_purchase.isActive(),
+            order_purchase.getExchange_rate(),
+            order_purchase.getIva_rate(),
+            order_purchase.getSub_total(),
+            order_purchase.getIva(),
+            order_purchase.getTotal()
         };
         
         try(
@@ -333,6 +338,11 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
             DAOUtil.toSqlDate(order_purchase.getOrder_date()),
             order_purchase.getDescription(),
             order_purchase.isActive(),
+            order_purchase.getExchange_rate(),
+            order_purchase.getIva_rate(),
+            order_purchase.getSub_total(),
+            order_purchase.getIva(),
+            order_purchase.getTotal(),
             order_purchase.getId()
         };
         
