@@ -113,7 +113,6 @@ public class OrderPurchaseDetailsFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         purchase_items.clear();
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        product_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductDAO().find(c.getValue().getProduct_id()).toString()));
         itemdesc_column.setCellValueFactory(new PropertyValueFactory<>("description"));
         deliverydate_column.setCellValueFactory(new PropertyValueFactory<>("delivery_date"));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
@@ -166,6 +165,11 @@ public class OrderPurchaseDetailsFX implements Initializable {
                 stage.close();
             });
             
+            cancel_button.setOnAction((ActionEvent) -> {
+                purchase_items.clear();
+                Stage stage = (Stage) root_hbox.getScene().getWindow();
+                stage.close();
+            });
         }else{
             loadOrder(OrderPurchaseFX.getOrder_purchase());
         }
@@ -270,14 +274,15 @@ public class OrderPurchaseDetailsFX implements Initializable {
     
     public void newOrder(){
         disableFields(false);
+        product_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductDAO().find(c.getValue().getProduct_id()).toString()));
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
         employee_combo.getSelectionModel().selectFirst();
         supplier_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listSupplier(true)));
-        
     }
     
     public void loadOrder(OrderPurchase order_purchase){
         disableFields(true);
+        product_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPurchaseItemDAO().findProduct(c.getValue()).toString()));
         id_field.setText(""+order_purchase.getId());
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findEmployee(order_purchase)));
         employee_combo.getSelectionModel().selectFirst();
@@ -286,8 +291,13 @@ public class OrderPurchaseDetailsFX implements Initializable {
         supplier_combo.getSelectionModel().selectFirst();        
         address_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findAddress(order_purchase)));
         address_combo.getSelectionModel().selectFirst();
-        purchase_items = msabase.getPurchaseItemDAO().list(order_purchase);
-        purchaseitem_tableview.setItems(FXCollections.observableArrayList(purchase_items));
+        ivarate_field.setText(""+order_purchase.getIva_rate());
+        exchangerate_field.setText(""+order_purchase.getExchange_rate());
+        subtotal_field.setText(""+order_purchase.getSub_total());
+        iva_field.setText(""+order_purchase.getIva());
+        total_field.setText(""+order_purchase.getTotal());
+        purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(order_purchase)));
+        
     }
     
     public void disableFields(boolean value){
@@ -299,6 +309,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
         exchangerate_field.setDisable(value);
         ivarate_field.setDisable(value);
         add_button.setDisable(value);
+        purchaseitem_tableview.setDisable(value);
         save_button.setDisable(value);
         
     }
