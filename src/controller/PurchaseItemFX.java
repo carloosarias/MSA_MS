@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fxml;
+package controller;
 
 import controller.OrderPurchaseDetailsFX;
 import dao.JDBC.DAOFactory;
@@ -29,7 +29,7 @@ import model.PurchaseItem;
  *
  * @author Pavilion Mini
  */
-public class PurchaseItemFXController implements Initializable {
+public class PurchaseItemFX implements Initializable {
 
     @FXML
     private HBox root_hbox;

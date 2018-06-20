@@ -162,6 +162,8 @@ public class OrderPurchaseDetailsFX implements Initializable {
                 for(PurchaseItem p : purchase_items){
                     msabase.getPurchaseItemDAO().create(OrderPurchaseFX.getOrder_purchase(), msabase.getProductDAO().find(p.getProduct_id()), p);
                 }
+                Stage stage = (Stage) root_hbox.getScene().getWindow();
+                stage.close();
             });
             
         }else{
