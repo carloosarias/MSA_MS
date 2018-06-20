@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -105,10 +106,6 @@ public class OrderPurchaseDetailsFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
-    private ObservableList<OrderPurchase> orderpurchase_list = FXCollections.observableArrayList(
-        msabase.getOrderPurchaseDAO().list()
-    );
-    
     /**
      * Initializes the controller class.
      */
@@ -121,20 +118,64 @@ public class OrderPurchaseDetailsFX implements Initializable {
         deliverydate_column.setCellValueFactory(new PropertyValueFactory<>("delivery_date"));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
         import_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity() * c.getValue().getUnit_price()));
+        
         if(OrderPurchaseFX.getOrder_purchase().getId() == null){
             newOrder();
+            
+            ivarate_field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+                ivarate_field.setText(newValue.replaceAll("[^\\d.]", ""));
+                try{
+                    if(!ivarate_field.getText().equals("")){
+                        Double.parseDouble(ivarate_field.getText());
+                        if(Double.parseDouble(ivarate_field.getText()) > 999) ivarate_field.setText(oldValue);
+                        ivarate_field.setStyle(null);
+                        computeTotal();
+                    }
+                }catch(Exception e){
+                    ivarate_field.setStyle("-fx-border-color: red ;");
+                }
+            });
+            purchaseitem_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PurchaseItem> observable, PurchaseItem oldValue, PurchaseItem newValue) -> {
+                delete_button.setDisable(purchaseitem_tableview.getSelectionModel().isEmpty());
+            });
+            
             supplier_combo.setOnAction((ActionEvent) -> {
                 address_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyAddressDAO().listActive(supplier_combo.getSelectionModel().getSelectedItem(), true)));
             });
+            
             add_button.setOnAction((ActionEvent) -> {
                 showAdd_stage();
                 purchaseitem_tableview.setItems(FXCollections.observableArrayList(purchase_items));
+                computeTotal();
             });
+            
+            delete_button.setOnAction((ActionEvent) -> {
+                purchase_items.remove(purchaseitem_tableview.getSelectionModel().getSelectedItem());
+                purchaseitem_tableview.setItems(FXCollections.observableArrayList(purchase_items));
+                computeTotal();
+            });
+            
         }else{
             loadOrder(OrderPurchaseFX.getOrder_purchase());
         }
+        
     }
 
+    public void computeTotal(){
+        double subtotal_count = 0;
+        double iva_count = 0;
+        double total_count = 0;
+        for(PurchaseItem p : purchase_items){
+            subtotal_count += (p.getQuantity()*p.getUnit_price());
+        }
+        iva_count = (Double.parseDouble(ivarate_field.getText()) * 0.01)*subtotal_count;
+        total_count = subtotal_count+iva_count;
+        
+        subtotal_field.setText(""+subtotal_count);
+        iva_field.setText(""+iva_count);
+        total_field.setText(""+total_count);
+    }
+    
     public void showAdd_stage(){
         try {
             add_stage = new Stage();

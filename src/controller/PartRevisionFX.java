@@ -238,42 +238,34 @@ public class PartRevisionFX implements Initializable {
     }
     
     public boolean testFields(){
+        clearStyle();
         boolean b = true;
         if(rev_field.getText().replace(" ", "").equals("")){
             rev_field.setStyle("-fx-border-color: red ;");
             b = false;
-        } else{
-            rev_field.setStyle(null);
         }
         if(revdate_picker.getValue() == null){
             revdate_picker.setStyle("-fx-border-color: red ;");
             b = false;
-        } else{
-            revdate_picker.setStyle(null);
         }
         if(basemetal_field.getText().replace(" ", "").equals("")){
             basemetal_field.setStyle("-fx-border-color: red ;");
             b = false;
-        } else{
-            basemetal_field.setStyle(null);
         }
         try{
             Double.parseDouble(area_field.getText());
-            area_field.setStyle(null);
         }catch(Exception e){
             area_field.setStyle("-fx-border-color: red ;");
             b = false;
         }
         try{
             Double.parseDouble(initialweight_field.getText());
-            initialweight_field.setStyle(null);
         }catch(Exception e){
             initialweight_field.setStyle("-fx-border-color: red ;");
             b = false;
         }
         try{
             Double.parseDouble(finalweight_field.getText());
-            finalweight_field.setStyle(null);
         }catch(Exception e){
             finalweight_field.setStyle("-fx-border-color: red ;");
             b = false;
@@ -281,8 +273,6 @@ public class PartRevisionFX implements Initializable {
         if(specification_combo.getSelectionModel().getSelectedItem() == null){
             specification_combo.setStyle("-fx-border-color: red ;");
             b = false;
-        } else{
-            specification_combo.setStyle(null);
         }
         return b;
     }

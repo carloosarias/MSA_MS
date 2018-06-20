@@ -61,14 +61,55 @@ public class PurchaseItemFXController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         product_combo.setItems(product_list);
         save_button.setOnAction((ActionEvent) -> {
-            OrderPurchaseDetailsFX.getPurchaseItems().add(mapPurchaseItem(new PurchaseItem()));
-            Stage stage = (Stage) root_hbox.getScene().getWindow();
-            stage.close();
+            if(testFields()){
+                OrderPurchaseDetailsFX.getPurchaseItems().add(mapPurchaseItem(new PurchaseItem()));
+                Stage stage = (Stage) root_hbox.getScene().getWindow();
+                stage.close();
+            }
         });
+        
         cancel_button.setOnAction((ActionEvent) -> {
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close(); 
         });
+    }
+    
+    public boolean testFields(){
+        clearStyle();
+        boolean b = true;
+        if(deliverydate_picker.getValue() == null){
+            deliverydate_picker.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        if(product_combo.getSelectionModel().isEmpty()){
+            product_combo.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        if(description_area.getText().replace(" ", "").equals("")){
+            description_area.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        try{
+            Double.parseDouble(unitprice_field.getText());
+        }catch(Exception e){
+            unitprice_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        try{
+            Integer.parseInt(quantity_field.getText());
+        }catch(Exception e){
+            quantity_field.setStyle("-fx-border-color: red ;");
+            b = false;
+        }
+        return b;
+    }
+    
+    public void clearStyle(){
+        deliverydate_picker.setStyle(null);
+        product_combo.setStyle(null);
+        description_area.setStyle(null);
+        unitprice_field.setStyle(null);
+        quantity_field.setStyle(null);
     }
     
     public PurchaseItem mapPurchaseItem(PurchaseItem purchase_item){
