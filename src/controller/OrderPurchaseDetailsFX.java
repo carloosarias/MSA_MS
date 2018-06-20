@@ -102,6 +102,8 @@ public class OrderPurchaseDetailsFX implements Initializable {
     
     private Stage add_stage;
     
+    private Integer changes_made;
+    
     private static List<PurchaseItem> purchase_items = new ArrayList<PurchaseItem>();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -172,6 +174,34 @@ public class OrderPurchaseDetailsFX implements Initializable {
             });
         }else{
             loadOrder(OrderPurchaseFX.getOrder_purchase());
+            description_area.setDisable(false);
+            active_check.setDisable(false);
+            cancel_button.setDisable(false);
+            changes_made = 0;
+            
+            description_area.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+                if(newValue.equals(OrderPurchaseFX.getOrder_purchase().getDescription())) changes_made--;
+                else changes_made++;
+                save_button.setDisable(!(changes_made > 0));
+            });
+            
+            active_check.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                if(!newValue == OrderPurchaseFX.getOrder_purchase().isActive()) changes_made--;
+                else changes_made++;
+                save_button.setDisable(!(changes_made > 0));
+            });
+            
+            save_button.setOnAction((ActionEvent) -> {
+                if(!testFields()) return;
+                msabase.getOrderPurchaseDAO().update(mapOrderPurchase(OrderPurchaseFX.getOrder_purchase()));
+                Stage stage = (Stage) root_hbox.getScene().getWindow();
+                stage.close();
+            });
+            
+            cancel_button.setOnAction((ActionEvent) -> {
+                Stage stage = (Stage) root_hbox.getScene().getWindow();
+                stage.close();
+            });
         }
         
     }
@@ -187,6 +217,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
         order_purchase.setTotal(Double.parseDouble(total_field.getText()));
         return order_purchase;
     }
+    
     public boolean testFields(){
         boolean b = true;
         clearStyle();
@@ -218,7 +249,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
             ivarate_field.setStyle("-fx-border-color: red ;");
             b = false;
         }
-        if(purchase_items.isEmpty()){
+        if(purchaseitem_tableview.getItems().isEmpty()){
             purchaseitem_tableview.setStyle("-fx-border-color: red ;");
             b = false;
         }
@@ -296,6 +327,8 @@ public class OrderPurchaseDetailsFX implements Initializable {
         subtotal_field.setText(""+order_purchase.getSub_total());
         iva_field.setText(""+order_purchase.getIva());
         total_field.setText(""+order_purchase.getTotal());
+        description_area.setText(order_purchase.getDescription());
+        active_check.setSelected(!order_purchase.isActive());
         purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(order_purchase)));
         
     }
@@ -311,7 +344,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
         add_button.setDisable(value);
         purchaseitem_tableview.setDisable(value);
         save_button.setDisable(value);
-        
+        cancel_button.setDisable(value);
     }
     
     public static List<PurchaseItem> getPurchaseItems(){
