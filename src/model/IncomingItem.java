@@ -6,22 +6,21 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class PurchaseItem implements Serializable{
+public class IncomingItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Integer product_id;
-    private Date delivery_date;
-    private Double unit_price;
-    private String description;
+    private Integer incoming_report_id;
+    private String lot_number;
     private Integer quantity;
-    
+    private Integer box_quantity;
+    private String details;
     // Getters/setters ----------------------------------------------------------------------------
+
     public Integer getId() {
         return id;
     }
@@ -29,37 +28,21 @@ public class PurchaseItem implements Serializable{
     public void setId(Integer id) {
         this.id = id;
     }
-    
-    public Integer getProduct_id(){
-        return product_id;
-    }
-    
-    public void setProduct_id(Integer product_id){
-        this.product_id = product_id;
-    }
-    
-    public Date getDelivery_date(){
-        return delivery_date;
-    }
-    
-    public void setDelivery_date(Date delivery_date){
-        this.delivery_date = delivery_date;
-    }
-    
-    public Double getUnit_price(){
-        return unit_price;
-    }
-    
-    public void setUnit_price(Double unit_price){
-        this.unit_price = unit_price;
-    }
-    
-    public String getDescription() {
-        return description;
+
+    public Integer getIncoming_report_id() {
+        return incoming_report_id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setIncoming_report_id(Integer incoming_report_id) {
+        this.incoming_report_id = incoming_report_id;
+    }
+
+    public String getLot_number() {
+        return lot_number;
+    }
+
+    public void setLot_number(String lot_number) {
+        this.lot_number = lot_number;
     }
 
     public Integer getQuantity() {
@@ -69,22 +52,38 @@ public class PurchaseItem implements Serializable{
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public Integer getBox_quantity() {
+        return box_quantity;
+    }
+
+    public void setBox_quantity(Integer box_quantity) {
+        this.box_quantity = box_quantity;
+    }
+    
+    public void setDetails(String details){
+        this.details = details;
+    }
+    
+    public String getDetails(){
+        return details;
+    }
     
     // Object overrides ---------------------------------------------------------------------------
     
     /**
-     * This should compare PurchaseItem by ID only.
+     * This should compare IncomingItem by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof PurchaseItem) && (id != null)
-            ? id.equals(((PurchaseItem) other).id)
+        return (other instanceof IncomingItem) && (id != null)
+            ? id.equals(((IncomingItem) other).id)
             : (other == this);
     }
 
     /**
-     * PurchaseItem with same ID should return same hashcode.
+     * IncomingItem with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -95,12 +94,12 @@ public class PurchaseItem implements Serializable{
     }
 
     /**
-     * Returns the String representation of this PurchaseItem. Not required, it just pleases reading logs.
+     * Returns the String representation of this IncomingItem. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return String.format("%s",
-                description);
-    }
+        return String.format("incoming_report_id: %d",
+                incoming_report_id);
+    }    
 }

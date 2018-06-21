@@ -9,7 +9,6 @@ import dao.DAOException;
 import java.util.List;
 import model.Company;
 import model.CompanyAddress;
-import model.CompanyContact;
 import model.Employee;
 import model.OrderPurchase;
 
@@ -28,11 +27,36 @@ public interface OrderPurchaseDAO {
      */
     public OrderPurchase find(Integer id) throws DAOException;
     
+    /**
+     * Returns the Company from the database matching the given OrderPurchase ID, otherwise null.
+     * OrderPurchase ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param order_purchase The OrderPurchase to get the Company from.
+     * @return The Company from the database matching the given OrderPurchase ID, otherwise null.
+     * @throws IllegalArgumentException If OrderPurchase ID is null.
+     * @throws DAOException If something fails at database level.
+     */
     public Company findCompany(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
     
+    /**
+     * Returns the CompanyAddress from the database matching the given OrderPurchase ID, otherwise null.
+     * OrderPurchase ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param order_purchase The OrderPurchase to get the CompanyAddress from.
+     * @return The CompanyAddress from the database matching the given OrderPurchase ID, otherwise null.
+     * @throws IllegalArgumentException If OrderPurchase ID is null.
+     * @throws DAOException If something fails at database level.
+     */
     public CompanyAddress findAddress(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
     
+    /**
+     * Returns the Employee from the database matching the given OrderPurchase ID, otherwise null.
+     * OrderPurchase ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param order_purchase The OrderPurchase to get the Employee from.
+     * @return The Employee from the database matching the given OrderPurchase ID, otherwise null.
+     * @throws IllegalArgumentException If OrderPurchase ID is null.
+     * @throws DAOException If something fails at database level.
+     */
     public Employee findEmployee(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;
+    
     /**
      * Returns a list of all OrderPurchase from the database ordered by OrderPurchase ID. The list is never null and
      * is empty when the database does not contain any OrderPurchase.
