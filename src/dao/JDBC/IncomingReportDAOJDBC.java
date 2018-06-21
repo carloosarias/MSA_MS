@@ -6,16 +6,20 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
+import static dao.JDBC.OrderPurchaseDAOJDBC.map;
 import dao.interfaces.IncomingReportDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Company;
 import model.Employee;
 import model.IncomingReport;
+import model.OrderPurchase;
 
 /**
  *
@@ -89,37 +93,193 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
     
     @Override
     public Company findCompany(IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(incoming_report.getId() == null) {
+            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
+        }
+        
+        Company company = null;
+        
+        Object[] values = {
+            incoming_report.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                company = daoFactory.getCompanyDAO().find(resultSet.getInt("COMPANY_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return company;
     }
 
     @Override
     public Employee findEmployee(IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(incoming_report.getId() == null) {
+            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
+        }
+        
+        Employee employee = null;
+        
+        Object[] values = {
+            incoming_report.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                employee = daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return employee;
     }
 
     @Override
     public List<IncomingReport> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<IncomingReport> incoming_report = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                incoming_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return incoming_report;
     }
 
     @Override
     public List<IncomingReport> listCompany(Company company) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(company.getId() == null) {
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        }    
+        
+        List<IncomingReport> incoming_report = new ArrayList<>();
+        
+        Object[] values = {
+            company.getId(),
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_COMPANY_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                incoming_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return incoming_report; 
     }
 
     @Override
     public void create(Employee employee, Company company, IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (company.getId() == null) {
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        }
+        
+        if(employee.getId() == null){
+            throw new IllegalArgumentException("Employee is not created yet, the Company ID is null.");
+        }
+        
+        if(incoming_report.getId() != null){
+            throw new IllegalArgumentException("IncomingReport is already created, the IncomingReport ID is not null.");
+        }
+        
+        Object[] values = {
+            company.getId(),
+            employee.getId(),
+            DAOUtil.toSqlDate(incoming_report.getReport_date()),
+            incoming_report.getPo_number(),
+            incoming_report.getPacking_list()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating IncomingReport failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    incoming_report.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating IncomingReport failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    if (incoming_report.getId() == null) {
+            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
+        }
+        
+        Object[] values = {
+            DAOUtil.toSqlDate(incoming_report.getReport_date()),
+            incoming_report.getPo_number(),
+            incoming_report.getPacking_list(),
+            incoming_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating IncomingReport failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(IncomingReport incoming_report) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            incoming_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting IncomingReport failed, no rows affected.");
+            } else{
+                incoming_report.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------

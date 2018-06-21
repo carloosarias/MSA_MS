@@ -153,7 +153,7 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
     @Override
     public Employee findEmployee(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
         if(order_purchase.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
         }
         
         Employee employee = null;
@@ -222,7 +222,7 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
     @Override
     public List<OrderPurchase> listCompany(Company company) throws IllegalArgumentException, DAOException {
         if(company.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
         }    
         
         List<OrderPurchase> order_purchases = new ArrayList<>();
@@ -249,7 +249,7 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO{
     @Override
     public List<OrderPurchase> listCompany(Company company, boolean active){
         if(company.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
         }    
         
         List<OrderPurchase> order_purchases = new ArrayList<>();
