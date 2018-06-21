@@ -18,6 +18,7 @@ public class IncomingItem implements Serializable{
     private String lot_number;
     private Integer quantity;
     private Integer box_quantity;
+    private boolean quality_pass;
     private String details;
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -59,6 +60,14 @@ public class IncomingItem implements Serializable{
 
     public void setBox_quantity(Integer box_quantity) {
         this.box_quantity = box_quantity;
+    }
+    
+    public void setQuality_pass(boolean quality_pass){
+        this.quality_pass = quality_pass;
+    }
+    
+    public boolean isQuality_pass(){
+        return quality_pass;
     }
     
     public void setDetails(String details){
