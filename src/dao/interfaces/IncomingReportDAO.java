@@ -8,7 +8,6 @@ package dao.interfaces;
 import dao.DAOException;
 import java.util.List;
 import model.Company;
-import model.CompanyAddress;
 import model.Employee;
 import model.IncomingReport;
 
@@ -38,16 +37,6 @@ public interface IncomingReportDAO {
     public Company findCompany(IncomingReport incoming_report) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns the CompanyAddress from the database matching the given IncomingReport ID, otherwise null.
-     * IncomingReport ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param incoming_report The IncomingReport to get the CompanyAddress from.
-     * @return The CompanyAddress from the database matching the given IncomingReport ID, otherwise null.
-     * @throws IllegalArgumentException If IncomingReport ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public CompanyAddress findAddress(IncomingReport incoming_report) throws IllegalArgumentException, DAOException;
-    
-    /**
      * Returns the Employee from the database matching the given IncomingReport ID, otherwise null.
      * IncomingReport ID must not be null, otherwise it will throw IllegalArgumentException.
      * @param incoming_report The IncomingReport to get the Employee from.
@@ -66,15 +55,6 @@ public interface IncomingReportDAO {
     public List<IncomingReport> list() throws DAOException;
     
     /**
-     * Returns a list of all active IncomingReport from the database ordered by IncomingReport ID. The list is never null and
-     * is empty when the database does not contain any IncomingReport.
-     * @param active the active to be searched for
-     * @return A list of all active IncomingReport from the database ordered by IncomingReport ID.
-     * @throws DAOException If something fails at database level.
-     */
-    public List<IncomingReport> list(boolean active) throws DAOException;
-    
-    /**
      * Returns a list of all IncomingReport matching Company ID from the database ordered by IncomingReport ID. 
      * The Company ID must not be null, otherwise it will throw IllegalArgumentException.
      * The list is never null and is empty when the database does not contain any IncomingReport.
@@ -86,33 +66,18 @@ public interface IncomingReportDAO {
     public List<IncomingReport> listCompany(Company company) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all active IncomingReport matching Company ID from the database ordered by IncomingReport ID. 
-     * The Company ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any active IncomingReport.
-     * @param company The Company ID to be searched for.
-     * @param active the active to be searched for
-     * @return A list of all IncomingReport matching Company ID from the database ordered by IncomingReport ID.
-     * @throws IllegalArgumentException If Company ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<IncomingReport> listCompany(Company company, boolean active) throws IllegalArgumentException, DAOException;    
-    
-    /**
      * Create the given IncomingReport in the database.
-     * The Employee ID must not be null, The Company ID must not be null,
-     * the CompanyAddress must not be null and The Specification ID must be null,
-     * otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given Specification.
+     * The Employee ID must not be null, The Company ID must not be null, and
+     * The IncomingReport ID must be null, otherwise it will throw IllegalArgumentException.
+     * After creating, the DAO will set the obtained ID in the given IncomingReport.
      * @param employee The Employee to be assigned to this IncomingReport.
      * @param company The Company to be assigned to this IncomingReport.
-     * @param address The CompanyAddress to be assigned to this IncomingReport.
-     * @param incoming_report The Specification to be created.
+     * @param incoming_report The IncomingReport to be created.
      * @throws IllegalArgumentException If the Company ID is null.
-     * @throws IllegalArgumentException If the CompanyAddress ID is null.
-     * @throws IllegalArgumentException If the Specification ID is not null.
+     * @throws IllegalArgumentException If the IncomingReport ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Employee employee, Company company, CompanyAddress address, IncomingReport incoming_report) throws IllegalArgumentException, DAOException;
+    public void create(Employee employee, Company company, IncomingReport incoming_report) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given IncomingReport in the database. The IncomingReport ID must not be null, 

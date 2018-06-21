@@ -100,16 +100,16 @@ public interface OrderPurchaseDAO {
     /**
      * Create the given OrderPurchase in the database.
      * The Employee ID must not be null, The Company ID must not be null,
-     * the CompanyAddress must not be null and The Specification ID must be null,
+     * the CompanyAddress must not be null and The OrderPurchase ID must be null,
      * otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given Specification.
+     * After creating, the DAO will set the obtained ID in the given OrderPurchase.
      * @param employee The Employee to be assigned to this OrderPurchase.
      * @param company The Company to be assigned to this OrderPurchase.
      * @param address The CompanyAddress to be assigned to this OrderPurchase.
-     * @param order_purchase The Specification to be created.
+     * @param order_purchase The OrderPurchase to be created.
      * @throws IllegalArgumentException If the Company ID is null.
      * @throws IllegalArgumentException If the CompanyAddress ID is null.
-     * @throws IllegalArgumentException If the Specification ID is not null.
+     * @throws IllegalArgumentException If the OrderPurchase ID is not null.
      * @throws DAOException If something fails at database level.
      */    
     public void create(Employee employee, Company company, CompanyAddress address, OrderPurchase order_purchase) throws IllegalArgumentException, DAOException;

@@ -17,7 +17,7 @@ public class IncomingReport implements Serializable{
     private Integer id;
     private Date report_date;
     private String po_number;
-    private int packing_list;
+    private String packing_list;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -44,11 +44,11 @@ public class IncomingReport implements Serializable{
         this.po_number = po_number;
     }
 
-    public int getPacking_list() {
+    public String getPacking_list() {
         return packing_list;
     }
 
-    public void setPacking_list(int packing_list) {
+    public void setPacking_list(String packing_list) {
         this.packing_list = packing_list;
     }
     // Object overrides ---------------------------------------------------------------------------
