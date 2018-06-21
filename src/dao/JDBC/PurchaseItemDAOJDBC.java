@@ -6,7 +6,6 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.PurchaseItemDAO;
 import java.sql.Connection;
