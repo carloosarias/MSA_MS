@@ -16,6 +16,8 @@ import model.PurchaseItem;
  * @author Pavilion Mini
  */
 public interface PurchaseItemDAO {
+    // Actions ------------------------------------------------------------------------------------
+
     /**
      * Returns the PurchaseItem from the database matching the given ID, otherwise null.
      * @param id The ID of the PurchaseItem to be returned.
