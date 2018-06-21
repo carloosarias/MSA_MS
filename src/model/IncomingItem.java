@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class IncomingItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Integer incoming_report_id;
+    private Integer part_revision_id;
     private String lot_number;
     private Integer quantity;
     private Integer box_quantity;
@@ -30,12 +30,12 @@ public class IncomingItem implements Serializable{
         this.id = id;
     }
 
-    public Integer getIncoming_report_id() {
-        return incoming_report_id;
+    public Integer getPart_revision_id() {
+        return part_revision_id;
     }
 
-    public void setIncoming_report_id(Integer incoming_report_id) {
-        this.incoming_report_id = incoming_report_id;
+    public void setPart_revision_id(Integer part_revision_id) {
+        this.part_revision_id = part_revision_id;
     }
 
     public String getLot_number() {
@@ -108,7 +108,7 @@ public class IncomingItem implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("incoming_report_id: %d",
-                incoming_report_id);
+        return String.format("%d",
+                id);
     }    
 }

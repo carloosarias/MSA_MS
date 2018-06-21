@@ -7,15 +7,18 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
+import static dao.JDBC.PurchaseItemDAOJDBC.map;
 import dao.interfaces.IncomingItemDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.IncomingItem;
 import model.IncomingReport;
 import model.PartRevision;
+import model.PurchaseItem;
 
 /**
  *
@@ -29,8 +32,8 @@ public class IncomingItemDAOJDBC implements IncomingItemDAO {
             "SELECT INCOMING_REPORT_ID FROM INCOMING_ITEM WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID =
             "SELECT PART_REVISION_ID FROM INCOMING_ITEM WHERE id = ?";
-    private static final String SQL_LIST_OF_ORDER_PURCHASE_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, quality_pass, details FROM INCOMING_ITEM WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
+    private static final String SQL_LIST_OF_INCOMING_REPORT_ORDER_BY_ID = 
+                "SELECT id, lot_number, quantity, box_quantity, quality_pass, details FROM INCOMING_ITEM WHERE INCOMING_REPORT_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO INCOMING_ITEM (INCOMING_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, quality_pass, details) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -88,32 +91,178 @@ public class IncomingItemDAOJDBC implements IncomingItemDAO {
     
     @Override
     public IncomingReport findIncomingReport(IncomingItem incoming_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(incoming_item.getId() == null) {
+            throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
+        }
+        
+        IncomingReport incoming_report = null;
+        
+        Object[] values = {
+            incoming_item.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_INCOMING_REPORT_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                incoming_report = daoFactory.getIncomingReportDAO().find(resultSet.getInt("INCOMING_REPORT_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return incoming_report;
     }
 
     @Override
     public PartRevision findPartRevision(IncomingItem incoming_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(incoming_item.getId() == null) {
+            throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
+        }
+        
+        PartRevision part_revision = null;
+        
+        Object[] values = {
+            incoming_item.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PART_REVISION_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                part_revision = daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return part_revision;
     }
 
     @Override
     public List<IncomingItem> list(IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(incoming_report.getId() == null) {
+            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
+        }    
+        
+        List<IncomingItem> incoming_item = new ArrayList<>();
+        
+        Object[] values = {
+            incoming_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_INCOMING_REPORT_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                incoming_item.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return incoming_item;
     }
 
     @Override
     public void create(IncomingReport incoming_report, PartRevision part_revision, IncomingItem incoming_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (incoming_report.getId() == null) {
+            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
+        }
+        
+        if(part_revision.getId() == null){
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }
+        
+        if(incoming_item.getId() != null){
+            throw new IllegalArgumentException("IncomingItem is already created, the IncomingItem ID is null.");
+        }
+        
+        Object[] values = {
+            incoming_report.getId(),
+            part_revision.getId(),
+            incoming_item.getLot_number(),
+            incoming_item.getQuantity(),
+            incoming_item.getBox_quantity(),
+            incoming_item.isQuality_pass(),
+            incoming_item.getDetails()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating IncomingItem failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    incoming_item.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating IncomingItem failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(IncomingItem incoming_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (incoming_item.getId() == null) {
+            throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
+        }
+        
+        Object[] values = {
+            incoming_item.getLot_number(),
+            incoming_item.getQuantity(),
+            incoming_item.getBox_quantity(),
+            incoming_item.isQuality_pass(),
+            incoming_item.getDetails(),
+            incoming_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating IncomingItem failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(IncomingItem incoming_item) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            incoming_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting IncomingItem failed, no rows affected.");
+            } else{
+                incoming_item.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }   
     
     // Helpers ------------------------------------------------------------------------------------
