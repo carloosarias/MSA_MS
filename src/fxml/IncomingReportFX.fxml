@@ -13,9 +13,9 @@
    <children>
       <VBox alignment="CENTER">
          <children>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Untitled Tab 1">
+                <Tab text="Reporte de Incoming">
                      <content>
                         <HBox>
                            <children>
@@ -36,7 +36,7 @@
                         </HBox>
                      </content>
                 </Tab>
-                <Tab text="Untitled Tab 2">
+                <Tab text="Detalles de Selección">
                      <content>
                         <HBox>
                            <children>
