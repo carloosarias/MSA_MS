@@ -9,6 +9,7 @@ import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
 import dao.interfaces.IncomingItemDAO;
+import dao.interfaces.IncomingLotDAO;
 import dao.interfaces.IncomingReportDAO;
 import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.PartRevisionDAO;
@@ -253,6 +254,14 @@ public abstract class DAOFactory {
      */   
     public IncomingItemDAO getIncomingItemDAO(){
         return new IncomingItemDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the IncomingLot DAO associated with the current DAOFactory.
+     * @return The IncomingLot DAO associated with the current DAOFactory.
+     */   
+    public IncomingLotDAO getIncomingLotDAO(){
+        return new IncomingLotDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.
