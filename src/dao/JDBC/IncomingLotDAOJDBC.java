@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import model.IncomingItem;
 import model.IncomingLot;
-import model.IncomingReport;
-import model.PartRevision;
 
 /**
  *
@@ -234,9 +232,9 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an IncomingItem.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an IncomingItem.
-     * @return The mapped IncomingItem from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an IncomingLot.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an IncomingLot.
+     * @return The mapped IncomingLot from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     public static IncomingLot map(ResultSet resultSet) throws SQLException{

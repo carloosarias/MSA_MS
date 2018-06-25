@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.IncomingReportFX">
    <children>
       <VBox alignment="CENTER">
          <children>
@@ -19,14 +19,14 @@
                      <content>
                         <HBox>
                            <children>
-                              <TableView>
+                              <TableView fx:id="incoming_report_tableview">
                                 <columns>
-                                    <TableColumn prefWidth="99.0" text="# ID" />
-                                    <TableColumn prefWidth="166.0" text="Empleado" />
-                                  <TableColumn prefWidth="123.0" text="Fecha de Reporte" />
-                                  <TableColumn prefWidth="133.0" text="Cliente" />
-                                    <TableColumn prefWidth="169.0" text="# de Orden" />
-                                    <TableColumn prefWidth="170.0" text="# Packing List" />
+                                    <TableColumn fx:id="report_id_column" prefWidth="99.0" text="# ID" />
+                                    <TableColumn fx:id="report_employee_column" prefWidth="166.0" text="Empleado" />
+                                  <TableColumn fx:id="report_date_column" prefWidth="123.0" text="Fecha de Reporte" />
+                                  <TableColumn fx:id="report_client_column" prefWidth="133.0" text="Cliente" />
+                                    <TableColumn fx:id="report_orderpurchase_column" prefWidth="169.0" text="# de Orden" />
+                                    <TableColumn fx:id="report_packinglist_column" prefWidth="170.0" text="# Packing List" />
                                 </columns>
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -40,14 +40,14 @@
                      <content>
                         <HBox>
                            <children>
-                              <TableView prefHeight="300.0">
+                              <TableView fx:id="incomingitem_tableview" prefHeight="300.0">
                                  <columns>
-                                    <TableColumn prefWidth="100.0" resizable="false" text="# Parte" />
-                                    <TableColumn prefWidth="100.0" resizable="false" text="Revision" />
+                                    <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />
+                                    <TableColumn fx:id="revision_column" prefWidth="100.0" resizable="false" text="Revision" />
                                     <TableColumn prefWidth="75.0" resizable="false" text="Cantidad">
                                        <columns>
-                                          <TableColumn prefWidth="75.0" resizable="false" text="Piezas" />
-                                          <TableColumn prefWidth="75.0" resizable="false" text="Cajas" />
+                                          <TableColumn fx:id="item_qty_column" prefWidth="75.0" resizable="false" text="Piezas" />
+                                          <TableColumn fx:id="item_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
                                        </columns>
                                     </TableColumn>
                                  </columns>
@@ -55,17 +55,17 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TableView>
-                              <TableView prefHeight="300.0">
+                              <TableView fx:id="incominglot_tableview" prefHeight="300.0">
                                  <columns>
-                                    <TableColumn prefWidth="100.0" resizable="false" text="# Lote" />
+                                    <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="# Lote" />
                                     <TableColumn prefWidth="75.0" resizable="false" text="Cantidad">
                                        <columns>
-                                          <TableColumn prefWidth="75.0" resizable="false" text="Piezas" />
-                                          <TableColumn prefWidth="75.0" resizable="false" text="Cajas" />
+                                          <TableColumn fx:id="lot_qty" prefWidth="75.0" resizable="false" text="Piezas" />
+                                          <TableColumn fx:id="lot_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn prefWidth="100.0" resizable="false" text="Estado" />
-                                    <TableColumn prefWidth="150.0" resizable="false" text="Comentarios" />
+                                    <TableColumn fx:id="lot_status_column" prefWidth="100.0" resizable="false" text="Estado" />
+                                    <TableColumn fx:id="lot_comments_column" prefWidth="150.0" resizable="false" text="Comentarios" />
                                  </columns>
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -79,7 +79,7 @@
             </TabPane>
             <HBox>
                <children>
-                  <Button mnemonicParsing="false" text="Nuevo Reporte">
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
