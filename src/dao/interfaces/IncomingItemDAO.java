@@ -73,13 +73,15 @@ public interface IncomingItemDAO {
     public void create(IncomingReport incoming_report, PartRevision part_revision, IncomingItem incoming_item) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given IncomingItem in the database. The IncomingItem ID must not be null,
-     * otherwise it will throw IllegalArgumentException.
+     * Update the given IncomingItem in the database. The IncomingItem ID must not be null
+     * and the PartRevision ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param part_revision The PartRevision to be assigned to the IncomingItem.
      * @param incoming_item The IncomingItem to be updated in the database.
-     * @throws IllegalArgumentException If the CompanyAddress ID is null.
+     * @throws IllegalArgumentException If the PartRevision ID is null.
+     * @throws IllegalArgumentException If the IncomingItem ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public void update(IncomingItem incoming_item) throws IllegalArgumentException, DAOException;
+    public void update(PartRevision part_revision, IncomingItem incoming_item) throws IllegalArgumentException, DAOException;
     
     /**
      * Delete the given IncomingItem from the database. After deleting,

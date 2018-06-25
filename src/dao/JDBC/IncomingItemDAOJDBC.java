@@ -7,7 +7,6 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.PurchaseItemDAOJDBC.map;
 import dao.interfaces.IncomingItemDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +17,6 @@ import java.util.List;
 import model.IncomingItem;
 import model.IncomingReport;
 import model.PartRevision;
-import model.PurchaseItem;
 
 /**
  *
@@ -27,18 +25,18 @@ import model.PurchaseItem;
 public class IncomingItemDAOJDBC implements IncomingItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, lot_number, quantity, box_quantity, quality_pass, details FROM INCOMING_ITEM WHERE id = ?";
+            "SELECT id FROM INCOMING_ITEM WHERE id = ?";
     private static final String SQL_FIND_INCOMING_REPORT_BY_ID =
             "SELECT INCOMING_REPORT_ID FROM INCOMING_ITEM WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID =
             "SELECT PART_REVISION_ID FROM INCOMING_ITEM WHERE id = ?";
     private static final String SQL_LIST_OF_INCOMING_REPORT_ORDER_BY_ID = 
-                "SELECT id, lot_number, quantity, box_quantity, quality_pass, details FROM INCOMING_ITEM WHERE INCOMING_REPORT_ID = ? ORDER BY id";
+                "SELECT id FROM INCOMING_ITEM WHERE INCOMING_REPORT_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO INCOMING_ITEM (INCOMING_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, quality_pass, details) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO INCOMING_ITEM (INCOMING_REPORT_ID, PART_REVISION_ID) "
+            + "VALUES (?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE INCOMING_ITEM SET lot_number = ?, quantity = ?, box_quantity = ?, quality_pass = ?, details = ? WHERE id = ?";
+            "UPDATE INCOMING_ITEM SET PART_REVISION_ID = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM INCOMING_ITEM WHERE id = ?";
     
@@ -186,12 +184,7 @@ public class IncomingItemDAOJDBC implements IncomingItemDAO {
         
         Object[] values = {
             incoming_report.getId(),
-            part_revision.getId(),
-            incoming_item.getLot_number(),
-            incoming_item.getQuantity(),
-            incoming_item.getBox_quantity(),
-            incoming_item.isQuality_pass(),
-            incoming_item.getDetails()
+            part_revision.getId()
         };
         
         try(
@@ -217,17 +210,17 @@ public class IncomingItemDAOJDBC implements IncomingItemDAO {
     }
 
     @Override
-    public void update(IncomingItem incoming_item) throws IllegalArgumentException, DAOException {
+    public void update(PartRevision part_revision, IncomingItem incoming_item) throws IllegalArgumentException, DAOException {
+        if(part_revision.getId() == null){
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }
+        
         if (incoming_item.getId() == null) {
             throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
         }
         
         Object[] values = {
-            incoming_item.getLot_number(),
-            incoming_item.getQuantity(),
-            incoming_item.getBox_quantity(),
-            incoming_item.isQuality_pass(),
-            incoming_item.getDetails(),
+            part_revision.getId(),
             incoming_item.getId()
         };
         
@@ -276,11 +269,6 @@ public class IncomingItemDAOJDBC implements IncomingItemDAO {
     public static IncomingItem map(ResultSet resultSet) throws SQLException{
         IncomingItem incoming_item = new IncomingItem();
         incoming_item.setId(resultSet.getInt("id"));
-        incoming_item.setLot_number(resultSet.getString("lot_number"));
-        incoming_item.setQuantity(resultSet.getInt("quantity"));
-        incoming_item.setBox_quantity(resultSet.getInt("box_quantity"));
-        incoming_item.setQuality_pass(resultSet.getBoolean("quality_pass"));
-        incoming_item.setDetails(resultSet.getString("details"));
         return incoming_item;
-    }    
+    }
 }

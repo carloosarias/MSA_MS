@@ -15,11 +15,7 @@ public class IncomingItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Integer part_revision_id;
-    private String lot_number;
-    private Integer quantity;
-    private Integer box_quantity;
-    private boolean quality_pass;
-    private String details;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -36,46 +32,6 @@ public class IncomingItem implements Serializable{
 
     public void setPart_revision_id(Integer part_revision_id) {
         this.part_revision_id = part_revision_id;
-    }
-
-    public String getLot_number() {
-        return lot_number;
-    }
-
-    public void setLot_number(String lot_number) {
-        this.lot_number = lot_number;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getBox_quantity() {
-        return box_quantity;
-    }
-
-    public void setBox_quantity(Integer box_quantity) {
-        this.box_quantity = box_quantity;
-    }
-    
-    public void setQuality_pass(boolean quality_pass){
-        this.quality_pass = quality_pass;
-    }
-    
-    public boolean isQuality_pass(){
-        return quality_pass;
-    }
-    
-    public void setDetails(String details){
-        this.details = details;
-    }
-    
-    public String getDetails(){
-        return details;
     }
     
     // Object overrides ---------------------------------------------------------------------------
