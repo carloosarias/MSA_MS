@@ -19,7 +19,7 @@ public class IncomingLot implements Serializable {
     private Integer box_quantity;
     private String status;
     private String comments;
-    private Integer incoming_item_index;
+    private Integer partrevision_index;
 
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -70,8 +70,12 @@ public class IncomingLot implements Serializable {
         return comments;
     }
     
-    public void setIncoming_item_index(Integer incoming_item_index){
-        this.incoming_item_index = incoming_item_index;
+    public void setPartrevision_index(Integer partrevision_index){
+        this.partrevision_index = partrevision_index;
+    }
+    
+    public Integer getPartRevision_index(){
+        return partrevision_index;
     }
     
     // Object overrides ---------------------------------------------------------------------------
