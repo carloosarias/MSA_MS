@@ -108,8 +108,8 @@ public class IncomingLot implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%d",
-                id);
+        return String.format("%s",
+                lot_number);
     }    
     
 }

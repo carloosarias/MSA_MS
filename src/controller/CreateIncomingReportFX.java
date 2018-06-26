@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -125,21 +126,49 @@ public class CreateIncomingReportFX implements Initializable {
             partrevision_tableview.setItems(FXCollections.observableArrayList(part_revisions));
         });
         
+        item_delete_button.setOnAction((ActionEvent) -> {
+            part_revisions.remove(partrevision_tableview.getSelectionModel().getSelectedItem());
+            partrev_combo.getItems().add(partrevision_tableview.getSelectionModel().getSelectedItem());
+            partrevision_tableview.setItems(FXCollections.observableArrayList(part_revisions));
+            clearLots(partrevision_tableview.getSelectionModel().getSelectedItem());
+        });
+        
         partrevision_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
-            List<IncomingLot> incoming_lots_filtered = new ArrayList<IncomingLot>();
-            for(IncomingLot incoming_lot : incoming_lots){
-                if(incoming_lot.getPartRevision_index().equals(partrevision_tableview.getSelectionModel().getSelectedItem().getId())){
-                    incoming_lots_filtered.add(incoming_lot);
-                }
-            }
-            incominglot_listview.setItems(FXCollections.observableArrayList(incoming_lots_filtered));
+            updateLotListview();
         });
         
         
         lot_add_button.setOnAction((ActionEvent) -> {
-            
+            IncomingLot incoming_lot = new IncomingLot();
+            incoming_lot.setLot_number(lotnumber_field.getText());
+            incoming_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
+            incoming_lot.setBox_quantity(Integer.parseInt(boxquantity_field.getText()));
+            incoming_lot.setStatus(status_combo.getSelectionModel().getSelectedItem());
+            incoming_lot.setComments(comments_area.getText());
+            incoming_lot.setPartrevision_index(partrevision_tableview.getSelectionModel().getSelectedItem().getId());
+            incoming_lots.add(incoming_lot);
+            updateLotListview();
         });
         
-    }    
+        
+    }   
+    
+    public void clearLots(PartRevision part_revision){
+        for(IncomingLot incoming_lot : incoming_lots){
+            if(incoming_lot.getPartRevision_index().equals(part_revision.getId())){
+                incoming_lots.remove(incoming_lot);
+            }
+        }
+    }
+    
+    public void updateLotListview(){
+        List<IncomingLot> incoming_lots_filtered = new ArrayList<IncomingLot>();
+        for(IncomingLot incoming_lot : incoming_lots){
+            if(incoming_lot.getPartRevision_index().equals(partrevision_tableview.getSelectionModel().getSelectedItem().getId())){
+                incoming_lots_filtered.add(incoming_lot);
+            }
+        }
+        incominglot_listview.setItems(FXCollections.observableArrayList(incoming_lots_filtered));
+    }
     
 }
