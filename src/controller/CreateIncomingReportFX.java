@@ -136,7 +136,9 @@ public class CreateIncomingReportFX implements Initializable {
         });
         
         
-        lot_add_button.setOnAction();
+        lot_add_button.setOnAction((ActionEvent) -> {
+            
+        });
         
     }    
     
