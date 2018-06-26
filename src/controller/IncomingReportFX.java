@@ -18,6 +18,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import model.IncomingItem;
 import model.IncomingLot;
 import model.IncomingReport;
@@ -52,9 +53,9 @@ public class IncomingReportFX implements Initializable {
     @FXML
     private TableColumn<IncomingItem, String> revision_column;
     @FXML
-    private TableColumn<IncomingItem, Integer> item_qty_column;
+    private TableColumn<IncomingItem, String> item_qty_column;
     @FXML
-    private TableColumn<IncomingItem, Integer> item_boxqty_column;
+    private TableColumn<IncomingItem, String> item_boxqty_column;
     @FXML
     private TableView<IncomingLot> incominglot_tableview;
     @FXML
@@ -70,6 +71,8 @@ public class IncomingReportFX implements Initializable {
     @FXML
     private Button add_button;
     
+    private Stage add_stage = new Stage();
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     /**
      * Initializes the controller class.
@@ -77,6 +80,14 @@ public class IncomingReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setReportTable();
+        
+        add_button.setOnAction((ActionEvent) -> {
+            showAdd_stage();
+        });
+    }
+    
+    public void showAdd_stage(){
+        
     }
     
     public void setReportTable(){
@@ -95,8 +106,15 @@ public class IncomingReportFX implements Initializable {
                 ).toString()
         ));
         revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingItemDAO().findPartRevision(c.getValue()).getRev()));
-        //item_qty_column
-        //item_boxqty_column;
+        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().getTotalQuantity(c.getValue())));
+        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().getTotalBoxQuantity(c.getValue())));
     }
     
+    public void setLotTable(){
+        lot_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        lot_qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        lot_status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
+        lot_comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+    }
 }

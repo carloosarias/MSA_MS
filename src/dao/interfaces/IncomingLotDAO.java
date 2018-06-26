@@ -77,4 +77,8 @@ public interface IncomingLotDAO {
      * @throws DAOException If something fails at database level.
      */    
     public void delete(IncomingLot incoming_lot) throws DAOException;
+    
+    public Integer getTotalQuantity(IncomingItem incoming_item);
+    
+    public Integer getTotalBoxQuantity(IncomingItem incoming_item);
 }

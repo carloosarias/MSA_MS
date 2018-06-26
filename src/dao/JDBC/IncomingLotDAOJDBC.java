@@ -229,6 +229,24 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
         }
     }   
     
+    @Override
+    public Integer getTotalQuantity(IncomingItem incoming_item){
+        Integer total = 0;
+        for(IncomingLot incoming_lot : list(incoming_item)){
+            total += incoming_lot.getQuantity();
+        }
+        return total;
+    }
+    
+    @Override
+    public Integer getTotalBoxQuantity(IncomingItem incoming_item){
+        Integer total = 0;
+        for(IncomingLot incoming_lot : list(incoming_item)){
+            total += incoming_lot.getBox_quantity();
+        }
+        return total;
+    }
+    
     // Helpers ------------------------------------------------------------------------------------
 
     /**
