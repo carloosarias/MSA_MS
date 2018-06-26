@@ -104,6 +104,7 @@ public class CreateIncomingReportFX implements Initializable {
             list.removeAll(part_revisions);
             partrev_combo.setItems(FXCollections.observableArrayList(list));
         });
+        
     }    
     
 }
