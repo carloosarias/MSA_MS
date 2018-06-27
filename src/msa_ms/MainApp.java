@@ -19,7 +19,10 @@ public class MainApp extends Application{
             "Plata",
             "Zinc",
             "Estaño");
-    
+    public static List<String> status_list = Arrays.asList(
+            "Nuevo",
+            "Rechazo"
+            );
     @Override
     public void start(Stage primaryStage) throws Exception {
         

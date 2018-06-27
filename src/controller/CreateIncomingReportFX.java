@@ -14,7 +14,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -31,6 +30,7 @@ import model.Company;
 import model.Employee;
 import model.IncomingItem;
 import model.IncomingLot;
+import model.IncomingReport;
 import model.OrderPurchase;
 import model.PartRevision;
 import model.ProductPart;
@@ -104,6 +104,7 @@ public class CreateIncomingReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
         revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString()));
         employee_combo.setDisable(true);
@@ -150,8 +151,40 @@ public class CreateIncomingReportFX implements Initializable {
             updateLotListview();
         });
         
-        
+        lot_delete_button.setOnAction((ActionEvent) -> {
+            incoming_lots.remove(incominglot_listview.getSelectionModel().getSelectedItem());
+            updateLotListview();
+        });
+       
+        save_button.setOnAction((ActionEvent) -> {
+            saveIncomingReport();
+        });
     }   
+    
+    public void saveIncomingReport(){
+        IncomingReport incoming_report = new IncomingReport();
+        incoming_report.setReport_date(java.sql.Date.valueOf(reportdate_picker.getValue()));
+        incoming_report.setPo_number(ponumber_field.getText());
+        incoming_report.setPacking_list(packinglist_field.getText());
+        msabase.getIncomingReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), company_combo.getSelectionModel().getSelectedItem(), incoming_report);
+        saveIncomingItems(incoming_report);
+    }
+    
+    public void saveIncomingItems(IncomingReport incoming_report){
+        for(PartRevision part_revision : part_revisions){
+            IncomingItem incoming_item = new IncomingItem();
+            msabase.getIncomingItemDAO().create(incoming_report, part_revision, incoming_item);
+            saveIncomingLots(part_revision, incoming_item);
+        }
+    }
+    
+    public void saveIncomingLots(PartRevision part_revision, IncomingItem incoming_item){
+        for(IncomingLot incoming_lot : incoming_lots){
+            if(incoming_lot.getPartRevision_index().equals(part_revision.getId())){
+                msabase.getIncomingLotDAO().create(incoming_item, incoming_lot);
+            }
+        }
+    }
     
     public void clearLots(PartRevision part_revision){
         for(IncomingLot incoming_lot : incoming_lots){

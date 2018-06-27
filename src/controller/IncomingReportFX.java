@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -87,7 +87,21 @@ public class IncomingReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setReportTable();
+        setItemTable();
+        setLotTable();
         incoming_report_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingReportDAO().list()));
+        
+        incoming_report_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport> observable, IncomingReport oldValue, IncomingReport newValue) -> {
+            if(newValue != null){
+            incomingitem_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingItemDAO().list(newValue)));
+            }
+        });
+        
+        incomingitem_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingItem> observable, IncomingItem oldValue, IncomingItem newValue) -> {
+            if(newValue != null){
+            incominglot_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().list(newValue)));
+            }
+        });
         
         add_button.setOnAction((ActionEvent) -> {
             showAdd_stage();
