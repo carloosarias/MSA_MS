@@ -255,6 +255,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
         }
         return b;
     }
+    
     public void clearStyle(){
         orderdate_picker.setStyle(null);
         supplier_combo.setStyle(null);
@@ -264,6 +265,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
         ivarate_field.setStyle(null);
         purchaseitem_tableview.setStyle(null);
     }
+    
     public void computeTotal(){
         if(ivarate_field.getText().isEmpty()){
             ivarate_field.setStyle("-fx-border-color: red ;");

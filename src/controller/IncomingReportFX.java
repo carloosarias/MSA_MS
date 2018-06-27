@@ -94,17 +94,23 @@ public class IncomingReportFX implements Initializable {
         incoming_report_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport> observable, IncomingReport oldValue, IncomingReport newValue) -> {
             if(newValue != null){
             incomingitem_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingItemDAO().list(newValue)));
+            }else{
+                incomingitem_tableview.getItems().clear();
             }
         });
         
         incomingitem_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingItem> observable, IncomingItem oldValue, IncomingItem newValue) -> {
             if(newValue != null){
             incominglot_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().list(newValue)));
+            }else{
+                incominglot_tableview.getItems().clear();
             }
         });
         
         add_button.setOnAction((ActionEvent) -> {
+            add_button.setDisable(true);
             showAdd_stage();
+            incoming_report_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingReportDAO().list()));
         });
     }
     

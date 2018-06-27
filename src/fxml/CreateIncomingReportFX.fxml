@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -19,157 +18,145 @@
          <children>
             <HBox>
                <children>
+                  <ComboBox fx:id="employee_combo" disable="true" prefWidth="150.0" promptText="Empleado">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </ComboBox>
                   <DatePicker fx:id="reportdate_picker" prefWidth="150.0" promptText="MM/dd/AAAA">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </DatePicker>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <ComboBox fx:id="employee_combo" prefWidth="150.0" promptText="Empleado">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </ComboBox>
                   <ComboBox fx:id="company_combo" prefWidth="150.0" promptText="Cliente">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </ComboBox>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <TextField fx:id="ponumber_field" promptText="No. de Orden">
+                  <TextField fx:id="ponumber_field" prefWidth="150.0" promptText="No. de Orden">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </TextField>
-                  <TextField fx:id="packinglist_field" promptText="No. Packing List">
+                  <TextField fx:id="packinglist_field" prefWidth="150.0" promptText="No. Packing List">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </TextField>
-               </children>
-            </HBox>
-            <HBox />
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Separator>
-            <HBox>
-               <children>
-                  <TableView fx:id="partrevision_tableview" prefHeight="125.0" prefWidth="150.0">
-                    <columns>
-                      <TableColumn fx:id="partnumber_column" prefWidth="75.0" text="No. Parte" />
-                      <TableColumn fx:id="revision_column" prefWidth="75.0" text="Revisión" />
-                    </columns>
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </TableView>
-                  <VBox>
-                     <children>
-                        <ComboBox fx:id="part_combo" prefWidth="150.0" promptText="No. de Parte">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                        <ComboBox fx:id="partrev_combo" prefWidth="150.0" promptText="Revisión">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                        <HBox>
-                           <children>
-                              <Button fx:id="item_add_button" mnemonicParsing="false" text="Agregar">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button fx:id="item_delete_button" mnemonicParsing="false" text="Eliminar">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Separator>
-            <HBox>
-               <children>
-                  <ListView fx:id="incominglot_listview" prefHeight="200.0" prefWidth="150.0">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </ListView>
-                  <VBox>
-                     <children>
-                        <TextField fx:id="lotnumber_field" promptText="No. de Lote">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <TextField fx:id="quantity_field" promptText="Cantidad">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <TextField fx:id="boxquantity_field" promptText="Cantidad de Cajas">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                        <TextArea fx:id="comments_area" prefHeight="75.0" prefWidth="150.0" promptText="Comentarios">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextArea>
-                        <HBox>
-                           <children>
-                              <Button fx:id="lot_add_button" mnemonicParsing="false" text="Agregar">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Button fx:id="lot_delete_button" mnemonicParsing="false" text="Eliminar">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <Separator prefWidth="200.0">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Separator>
-            <HBox>
-               <children>
                   <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Separator>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
+                        <TableView fx:id="partrevision_tableview" disable="true" prefHeight="141.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="partnumber_column" prefWidth="100.0" text="No. Parte" />
+                            <TableColumn fx:id="revision_column" prefWidth="100.0" text="Revisión" />
+                          </columns>
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TableView>
+                        <ComboBox fx:id="part_combo" prefWidth="150.0" promptText="No. de Parte">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <ComboBox fx:id="partrev_combo" disable="true" prefWidth="150.0" promptText="Revisión">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <HBox>
+                           <children>
+                              <Button fx:id="item_add_button" disable="true" mnemonicParsing="false" text="Agregar">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="item_delete_button" disable="true" mnemonicParsing="false" text="Eliminar">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <HBox fx:id="lot_hbox" disable="true">
+                     <children>
+                        <TableView fx:id="incominglot_tableview" prefHeight="240.0" prefWidth="483.0">
+                          <columns>
+                            <TableColumn fx:id="lotnumber_column" prefWidth="100.0" text="No. de Lote" />
+                              <TableColumn prefWidth="75.0" text="Cantidad">
+                                 <columns>
+                                  <TableColumn fx:id="quantity_column" prefWidth="75.0" text="Piezas" />
+                                    <TableColumn fx:id="boxquantity_column" prefWidth="75.0" text="Cajas" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="status_column" prefWidth="81.0" text="Estado" />
+                              <TableColumn fx:id="comments_column" prefWidth="150.0" text="Comentarios" />
+                          </columns>
+                           <HBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </HBox.margin>
+                        </TableView>
+                        <VBox>
+                           <children>
+                              <TextField fx:id="lotnumber_field" promptText="No. de Lote">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="quantity_field" promptText="Cantidad">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="boxquantity_field" promptText="Cantidad de Cajas">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </ComboBox>
+                              <TextArea fx:id="comments_area" prefHeight="75.0" prefWidth="150.0" promptText="Comentarios">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TextArea>
+                              <HBox>
+                                 <children>
+                                    <Button fx:id="lot_add_button" mnemonicParsing="false" text="Agregar">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button fx:id="lot_delete_button" disable="true" mnemonicParsing="false" text="Eliminar">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                </children>
             </HBox>
          </children>

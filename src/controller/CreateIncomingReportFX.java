@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,6 +27,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import model.Company;
 import model.Employee;
 import model.IncomingItem;
@@ -69,7 +71,19 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private Button item_delete_button;
     @FXML
-    private ListView<IncomingLot> incominglot_listview;
+    private HBox lot_hbox;
+    @FXML
+    private TableView<IncomingLot> incominglot_tableview;
+    @FXML
+    private TableColumn<IncomingLot, String> lotnumber_column;
+    @FXML
+    private TableColumn<IncomingLot, Integer> quantity_column;
+    @FXML
+    private TableColumn<IncomingLot, Integer> boxquantity_column;
+    @FXML
+    private TableColumn<IncomingLot, String> status_column;
+    @FXML
+    private TableColumn<IncomingLot, String> comments_column;
     @FXML
     private TextField lotnumber_field;
     @FXML
@@ -102,27 +116,37 @@ public class CreateIncomingReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        employee_combo.setItems(employee);
+        employee_combo.getSelectionModel().selectFirst();
         status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
         revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString()));
-        employee_combo.setDisable(true);
-        employee_combo.setItems(employee);
-        employee_combo.getSelectionModel().selectFirst();
+        
+        lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        boxquantity_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         
         company_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
-        
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         
         part_combo.setOnAction((ActionEvent) -> {
             List<PartRevision> list = msabase.getPartRevisionDAO().list(part_combo.getSelectionModel().getSelectedItem(), true);
             partrev_combo.setItems(FXCollections.observableArrayList(list));
             partrev_combo.getItems().removeAll(part_revisions);
+            partrev_combo.disableProperty().bind(Bindings.isEmpty(partrev_combo.getItems()));
+        });
+        
+        partrev_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
+            item_add_button.setDisable((newValue == null));
         });
         
         item_add_button.setOnAction((ActionEvent) -> {
             part_revisions.add(partrev_combo.getSelectionModel().getSelectedItem());
             partrev_combo.getItems().remove(partrev_combo.getSelectionModel().getSelectedItem());
             partrevision_tableview.setItems(FXCollections.observableArrayList(part_revisions));
+            partrevision_tableview.disableProperty().bind(Bindings.isEmpty(partrevision_tableview.getItems()));
         });
         
         item_delete_button.setOnAction((ActionEvent) -> {
@@ -130,14 +154,20 @@ public class CreateIncomingReportFX implements Initializable {
             partrev_combo.getItems().add(partrevision_tableview.getSelectionModel().getSelectedItem());
             partrevision_tableview.setItems(FXCollections.observableArrayList(part_revisions));
             clearLots(partrevision_tableview.getSelectionModel().getSelectedItem());
+            partrevision_tableview.disableProperty().bind(Bindings.isEmpty(partrevision_tableview.getItems()));
         });
         
         partrevision_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
             updateLotListview();
+            item_delete_button.setDisable((newValue == null));
+            lot_hbox.setDisable((newValue == null));
         });
         
         
         lot_add_button.setOnAction((ActionEvent) -> {
+            if(!testLotFields()){
+                return;
+            }
             IncomingLot incoming_lot = new IncomingLot();
             incoming_lot.setLot_number(lotnumber_field.getText());
             incoming_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
@@ -146,18 +176,54 @@ public class CreateIncomingReportFX implements Initializable {
             incoming_lot.setComments(comments_area.getText());
             incoming_lot.setPartrevision_index(partrevision_tableview.getSelectionModel().getSelectedItem().getId());
             incoming_lots.add(incoming_lot);
+            clearLotFields();
             updateLotListview();
         });
         
         lot_delete_button.setOnAction((ActionEvent) -> {
-            incoming_lots.remove(incominglot_listview.getSelectionModel().getSelectedItem());
+            incoming_lots.remove(incominglot_tableview.getSelectionModel().getSelectedItem());
             updateLotListview();
         });
        
         save_button.setOnAction((ActionEvent) -> {
+            if(!testSaveFields()){
+                return;
+            }
             saveIncomingReport();
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close();
         });
     }   
+    
+    public boolean testSaveFields(){
+        boolean b = true;
+        clearStyle();
+        if(part_revisions.isEmpty()){
+            partrevision_tableview.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        if(incoming_lots.isEmpty()){
+            incominglot_tableview.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        if(packinglist_field.getText().replace(" ","").equals("")){
+            packinglist_field.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        
+        if(ponumber_field.getText().replace(" ", "").equals("")){
+            ponumber_field.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        if(company_combo.getSelectionModel().isEmpty()){
+            company_combo.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        if(reportdate_picker.getValue() == null){
+            reportdate_picker.setStyle("-fx-background-color: lightpink;");
+        }
+        return b;
+    }
     
     public void saveIncomingReport(){
         IncomingReport incoming_report = new IncomingReport();
@@ -199,7 +265,53 @@ public class CreateIncomingReportFX implements Initializable {
                 incoming_lots_filtered.add(incoming_lot);
             }
         }
-        incominglot_listview.setItems(FXCollections.observableArrayList(incoming_lots_filtered));
+        incominglot_tableview.setItems(FXCollections.observableArrayList(incoming_lots_filtered));
+        incominglot_tableview.disableProperty().bind(Bindings.isEmpty(incominglot_tableview.getItems()));
     }
     
+    public void clearLotFields(){
+        lotnumber_field.setText(null);
+        status_combo.getSelectionModel().clearSelection();
+        comments_area.setText(null);
+        quantity_field.setText(null);
+        boxquantity_field.setText(null);
+    }
+    
+    public boolean testLotFields(){
+        boolean b = true;
+        clearStyle();
+        if(lotnumber_field.getText().replace(" ", "").equals("")){
+            lotnumber_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(status_combo.getSelectionModel().isEmpty()){
+            status_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(comments_area.getText().replace(" ", "").equals("")){
+            comments_area.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        try{
+            Double.parseDouble(quantity_field.getText());
+        }catch(Exception e){
+            quantity_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }        
+        try{
+            Double.parseDouble(boxquantity_field.getText());
+        }catch(Exception e){
+            boxquantity_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        return b;
+    }
+    
+    public void clearStyle(){
+        lotnumber_field.setStyle(null);
+        status_combo.setStyle(null);
+        comments_area.setStyle(null);
+        quantity_field.setStyle(null);
+        boxquantity_field.setStyle(null);
+    }
 }
