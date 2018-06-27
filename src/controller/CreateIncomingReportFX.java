@@ -31,10 +31,8 @@ import model.Employee;
 import model.IncomingItem;
 import model.IncomingLot;
 import model.IncomingReport;
-import model.OrderPurchase;
 import model.PartRevision;
 import model.ProductPart;
-import model.PurchaseItem;
 import msa_ms.MainApp;
 
 /**
