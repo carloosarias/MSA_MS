@@ -20,7 +20,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -28,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import model.Company;
 import model.Employee;
 import model.IncomingItem;
@@ -101,6 +101,9 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private Button save_button;
     
+    private ProductPart partcombo_selection;
+    private String partcombo_text;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     private List<PartRevision> part_revisions = new ArrayList<PartRevision>();
@@ -116,51 +119,30 @@ public class CreateIncomingReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        employee_combo.setItems(employee);
-        employee_combo.getSelectionModel().selectFirst();
-        status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
         revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString()));
-        
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         boxquantity_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         
+        employee_combo.setItems(employee);
+        employee_combo.getSelectionModel().selectFirst();
         company_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
+        status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
         
         part_combo.setOnAction((ActionEvent) -> {
-            List<PartRevision> list = msabase.getPartRevisionDAO().list(part_combo.getSelectionModel().getSelectedItem(), true);
-            partrev_combo.setItems(FXCollections.observableArrayList(list));
-            partrev_combo.getItems().removeAll(part_revisions);
+            partcombo_text = part_combo.getEditor().textProperty().getValue();
+            partcombo_selection = msabase.getProductPartDAO().find(partcombo_text);
+            partrev_combo.getItems().clear();
+            if(partcombo_selection != null){
+                partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));
+            }
             partrev_combo.disableProperty().bind(Bindings.isEmpty(partrev_combo.getItems()));
-        });
-        
-        partrev_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
-            item_add_button.setDisable((newValue == null));
-        });
-        
-        item_add_button.setOnAction((ActionEvent) -> {
-            part_revisions.add(partrev_combo.getSelectionModel().getSelectedItem());
-            partrev_combo.getItems().remove(partrev_combo.getSelectionModel().getSelectedItem());
-            partrevision_tableview.setItems(FXCollections.observableArrayList(part_revisions));
-            partrevision_tableview.disableProperty().bind(Bindings.isEmpty(partrevision_tableview.getItems()));
-        });
-        
-        item_delete_button.setOnAction((ActionEvent) -> {
-            part_revisions.remove(partrevision_tableview.getSelectionModel().getSelectedItem());
-            partrev_combo.getItems().add(partrevision_tableview.getSelectionModel().getSelectedItem());
-            partrevision_tableview.setItems(FXCollections.observableArrayList(part_revisions));
-            clearLots(partrevision_tableview.getSelectionModel().getSelectedItem());
-            partrevision_tableview.disableProperty().bind(Bindings.isEmpty(partrevision_tableview.getItems()));
-        });
-        
-        partrevision_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
-            updateLotListview();
-            item_delete_button.setDisable((newValue == null));
-            lot_hbox.setDisable((newValue == null));
+            
+            System.out.println(partcombo_selection);
         });
         
         
@@ -314,4 +296,5 @@ public class CreateIncomingReportFX implements Initializable {
         quantity_field.setStyle(null);
         boxquantity_field.setStyle(null);
     }
+
 }
