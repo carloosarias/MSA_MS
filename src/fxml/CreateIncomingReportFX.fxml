@@ -57,7 +57,7 @@
             </Separator>
             <HBox>
                <children>
-                  <VBox>
+                  <VBox fillWidth="false">
                      <children>
                         <TableView fx:id="partrevision_tableview" disable="true" prefHeight="141.0" prefWidth="200.0">
                           <columns>
@@ -68,12 +68,12 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TableView>
-                        <ComboBox fx:id="part_combo" prefWidth="150.0" promptText="No. de Parte">
+                        <ComboBox fx:id="part_combo" editable="true" prefWidth="150.0" promptText="No. de Parte">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <ComboBox fx:id="partrev_combo" disable="true" prefWidth="150.0" promptText="Revisión">
+                        <ComboBox fx:id="partrev_combo" disable="true" editable="true" prefWidth="150.0" promptText="Revisión">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
