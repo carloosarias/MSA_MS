@@ -84,26 +84,16 @@ public class LoginFX implements Initializable {
             showConfig();
         });
         
-        pass_field.setOnKeyPressed(new EventHandler<KeyEvent>()
-        {
-            @Override
-            public void handle(KeyEvent ke)
+        pass_field.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
             {
-                if (ke.getCode().equals(KeyCode.ENTER))
-                {
-                    login();
-                }
+                login();
             }
         });
-        enter_button.setOnKeyPressed(new EventHandler<KeyEvent>()
-        {
-            @Override
-            public void handle(KeyEvent ke)
+        enter_button.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
             {
-                if (ke.getCode().equals(KeyCode.ENTER))
-                {
-                    login();
-                }
+                login();
             }
         });
         

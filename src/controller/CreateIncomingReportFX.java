@@ -5,15 +5,18 @@
  */
 package controller;
 
+import com.sun.glass.ui.Robot;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,6 +28,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -140,8 +145,13 @@ public class CreateIncomingReportFX implements Initializable {
             if(partcombo_selection != null){
                 partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));
             }
-            partrev_combo.disableProperty().bind(Bindings.isEmpty(partrev_combo.getItems()));
-            
+            partrev_combo.setDisable(partrev_combo.getItems().isEmpty());
+            Platform.runLater(new Runnable() {
+            @Override public void run() {
+                partrev_combo.requestFocus();
+            }});
+            System.out.println(ActionEvent.toString());
+            System.out.println(ActionEvent.getEventType());
             System.out.println(partcombo_selection);
         });
         
