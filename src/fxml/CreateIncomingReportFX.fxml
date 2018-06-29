@@ -103,7 +103,7 @@
                <children>
                   <VBox>
                      <children>
-                        <HBox fx:id="lot_hbox" disable="true">
+                        <HBox>
                            <children>
                               <VBox fx:id="lot_vbox">
                                  <children>
@@ -112,6 +112,16 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
+                                    <Label text="Estado de Material:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </ComboBox>
                                     <Label text="No. De Lote:">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -152,16 +162,6 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </TextField>
-                                    <Label text="Estado de Material:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </ComboBox>
                                  </children>
                               </VBox>
                               <VBox>

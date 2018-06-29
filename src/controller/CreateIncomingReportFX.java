@@ -71,21 +71,9 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private TextField packinglist_field;
     @FXML
-    private TableView<PartRevision> partrevision_tableview;
-    @FXML
-    private TableColumn<PartRevision, String> partnumber_column;
-    @FXML
-    private TableColumn<PartRevision, String> revision_column;
-    @FXML
     private ComboBox<ProductPart> part_combo;
     @FXML
     private ComboBox<PartRevision> partrev_combo;
-    @FXML
-    private Button item_add_button;
-    @FXML
-    private Button item_delete_button;
-    @FXML
-    private HBox lot_hbox;
     @FXML
     private VBox lot_vbox;
     @FXML
@@ -95,7 +83,9 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private TableColumn<IncomingLot, Integer> quantity_column;
     @FXML
-    private TableColumn<IncomingLot, Integer> boxquantity_column;
+    private TableColumn<PartRevision, String> partnumber_column;
+    @FXML
+    private TableColumn<PartRevision, String> revision_column;
     @FXML
     private TableColumn<IncomingLot, String> status_column;
     @FXML
@@ -105,11 +95,7 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private TextField quantity_field;
     @FXML
-    private TextField boxquantity_field;
-    @FXML
     private ComboBox<String> status_combo;
-    @FXML
-    private TextArea comments_area;
     @FXML
     private Button lot_add_button;
     @FXML
@@ -118,8 +104,11 @@ public class CreateIncomingReportFX implements Initializable {
     private Button save_button;
     
     private ProductPart partcombo_selection;
+    
     private String partcombo_text;
+    
     private PartRevision partrevcombo_selection;
+    
     private String partrevcombo_text;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -141,7 +130,6 @@ public class CreateIncomingReportFX implements Initializable {
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString()));
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        boxquantity_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         
@@ -151,65 +139,35 @@ public class CreateIncomingReportFX implements Initializable {
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
         reportdate_picker.setValue(LocalDate.now());
-        
-        report_hbox.setOnKeyPressed((KeyEvent ke) -> {
-            if (ke.getCode().equals(KeyCode.ENTER))
-            {
-                Robot robot = com.sun.glass.ui.Application.GetApplication().createRobot();
-                robot.keyPress(java.awt.event.KeyEvent.VK_TAB);
-            }
-        });
 
+        lotnumber_field.setOnAction((ActionEvent) -> {
+            part_combo.requestFocus();
+            ActionEvent.consume();
+        });
         
         part_combo.setOnAction((ActionEvent) -> {
             partcombo_text = part_combo.getEditor().textProperty().getValue();
             partcombo_selection = msabase.getProductPartDAO().find(partcombo_text);
             updatePartrev_combo();
-            Platform.runLater(() -> {
-                partrev_combo.requestFocus();
-            });
+            partrev_combo.requestFocus();
+            ActionEvent.consume();
         });
         
         partrev_combo.setOnAction((ActionEvent) -> {
             partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
             partrevcombo_selection = msabase.getPartRevisionDAO().find(partcombo_selection, partrevcombo_text);
-            Platform.runLater(() -> {
-                item_add_button.setDisable(partrevcombo_selection == null);
-                item_add_button.requestFocus();
-            });
-        });
-        
-        item_add_button.setOnKeyPressed((KeyEvent ke) -> {
-            if (ke.getCode().equals(KeyCode.ENTER))
-            {
-                item_add_button.fireEvent(new ActionEvent());
+            if(!partrev_queue.contains(partrevcombo_selection)){
+                partrev_queue.add(partrevcombo_selection);
             }
-        });
-        
-        item_add_button.setOnAction((ActionEvent) -> {
-            partrev_queue.add(partrevcombo_selection);
             updatePartrev_combo();
-            partrevision_tableview.setItems(FXCollections.observableArrayList(partrev_queue));
-            partrevision_tableview.setDisable(partrev_queue.isEmpty());
-            partrevision_tableview.getSelectionModel().selectLast();
+            quantity_field.requestFocus();
+            ActionEvent.consume();
         });
         
-        partrevision_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue <? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
-            Platform.runLater(() -> {
-                lot_hbox.setDisable(newValue == null);
-                lotnumber_field.requestFocus();
-            });
+        quantity_field.setOnAction((ActionEvent) -> {
+            lotnumber_field.requestFocus();
+            ActionEvent.consume();
         });
-        
-        lot_vbox.setOnKeyPressed((KeyEvent ke) -> {
-            if (ke.getCode().equals(KeyCode.ENTER))
-            {
-                Robot robot = com.sun.glass.ui.Application.GetApplication().createRobot();
-                robot.keyPress(java.awt.event.KeyEvent.VK_TAB);
-            }
-        });
-        
-        comments_area.addEventFilter(KeyEvent.KEY_PRESSED, new TabTraversalEventHandler());
         
         lot_add_button.setOnKeyPressed((KeyEvent ke) -> {
             if (ke.getCode().equals(KeyCode.ENTER))
@@ -225,10 +183,10 @@ public class CreateIncomingReportFX implements Initializable {
             IncomingLot incoming_lot = new IncomingLot();
             incoming_lot.setLot_number(lotnumber_field.getText());
             incoming_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
-            incoming_lot.setBox_quantity(Integer.parseInt(boxquantity_field.getText()));
+            incoming_lot.setBox_quantity(1);
             incoming_lot.setStatus(status_combo.getSelectionModel().getSelectedItem());
-            incoming_lot.setComments(comments_area.getText());
-            incoming_lot.setPartrevision_index(partrevision_tableview.getSelectionModel().getSelectedItem().getId());
+            incoming_lot.setComments("n/a");
+            incoming_lot.setPartrevision_index(partrevcombo_selection.getId());
             incoming_lots.add(incoming_lot);
             clearLotFields();
             updateLotListview();
@@ -253,10 +211,6 @@ public class CreateIncomingReportFX implements Initializable {
     public boolean testSaveFields(){
         boolean b = true;
         clearStyle();
-        if(partrev_queue.isEmpty()){
-            partrevision_tableview.setStyle("-fx-background-color: lightpink ;");
-            b = false;
-        }
         if(incoming_lots.isEmpty()){
             incominglot_tableview.setStyle("-fx-background-color: lightpink ;");
             b = false;
@@ -279,13 +233,11 @@ public class CreateIncomingReportFX implements Initializable {
         }
         return b;
     }
-    public void updatePartrev_combo(){   
-        partrev_combo.getItems().clear();
+    public void updatePartrev_combo(){  
         if(partcombo_selection != null){
             partrevcombo_text = null;
             partrevcombo_selection = null;
             partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));
-            partrev_combo.getItems().removeAll(partrev_queue);
         }
         partrev_combo.setDisable(partrev_combo.getItems().isEmpty());
     }
@@ -324,22 +276,14 @@ public class CreateIncomingReportFX implements Initializable {
     }
     
     public void updateLotListview(){
-        List<IncomingLot> incoming_lots_filtered = new ArrayList<IncomingLot>();
-        for(IncomingLot incoming_lot : incoming_lots){
-            if(incoming_lot.getPartRevision_index().equals(partrevision_tableview.getSelectionModel().getSelectedItem().getId())){
-                incoming_lots_filtered.add(incoming_lot);
-            }
-        }
-        incominglot_tableview.setItems(FXCollections.observableArrayList(incoming_lots_filtered));
+        incominglot_tableview.setItems(FXCollections.observableArrayList(incoming_lots));
         incominglot_tableview.disableProperty().bind(Bindings.isEmpty(incominglot_tableview.getItems()));
     }
     
     public void clearLotFields(){
         lotnumber_field.setText(null);
         status_combo.getSelectionModel().clearSelection();
-        comments_area.setText(null);
         quantity_field.setText(null);
-        boxquantity_field.setText(null);
     }
     
     public boolean testLotFields(){
@@ -353,20 +297,10 @@ public class CreateIncomingReportFX implements Initializable {
             status_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
-        if(comments_area.getText().replace(" ", "").equals("")){
-            comments_area.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
         try{
             Double.parseDouble(quantity_field.getText());
         }catch(Exception e){
             quantity_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }        
-        try{
-            Double.parseDouble(boxquantity_field.getText());
-        }catch(Exception e){
-            boxquantity_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         return b;
@@ -375,9 +309,7 @@ public class CreateIncomingReportFX implements Initializable {
     public void clearStyle(){
         lotnumber_field.setStyle(null);
         status_combo.setStyle(null);
-        comments_area.setStyle(null);
         quantity_field.setStyle(null);
-        boxquantity_field.setStyle(null);
     }
 /**
  * Handles tab/shift-tab keystrokes to navigate to other fields,

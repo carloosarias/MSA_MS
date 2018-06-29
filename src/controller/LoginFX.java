@@ -63,7 +63,7 @@ public class LoginFX implements Initializable {
     private Button enter_button;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-
+    
     /**
      * Initializes the controller class.
      * @param url
