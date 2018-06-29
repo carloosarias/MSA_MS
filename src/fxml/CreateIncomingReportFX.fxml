@@ -114,7 +114,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TableView fx:id="partrevision_tableview" disable="true" prefHeight="216.0" prefWidth="200.0">
+                        <TableView fx:id="partrevision_tableview" disable="true" focusTraversable="false" prefHeight="216.0" prefWidth="200.0">
                           <columns>
                             <TableColumn fx:id="partnumber_column" prefWidth="100.0" text="No. Parte" />
                             <TableColumn fx:id="revision_column" prefWidth="100.0" text="Revisión" />
@@ -168,7 +168,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <TableView fx:id="incominglot_tableview" prefHeight="365.0">
+                              <TableView fx:id="incominglot_tableview" focusTraversable="false" prefHeight="365.0">
                                 <columns>
                                   <TableColumn fx:id="lotnumber_column" prefWidth="100.0" text="No. de Lote" />
                                     <TableColumn prefWidth="75.0" text="Cantidad">
