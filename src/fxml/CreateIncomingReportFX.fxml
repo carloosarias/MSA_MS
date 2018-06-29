@@ -109,7 +109,12 @@
                <children>
                   <VBox fillWidth="false">
                      <children>
-                        <TableView fx:id="partrevision_tableview" disable="true" prefHeight="241.0" prefWidth="200.0">
+                        <Label text="Lista de Partes:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TableView fx:id="partrevision_tableview" disable="true" prefHeight="216.0" prefWidth="200.0">
                           <columns>
                             <TableColumn fx:id="partnumber_column" prefWidth="100.0" text="No. Parte" />
                             <TableColumn fx:id="revision_column" prefWidth="100.0" text="Revisión" />
@@ -156,22 +161,31 @@
                   </VBox>
                   <HBox fx:id="lot_hbox" disable="true">
                      <children>
-                        <TableView fx:id="incominglot_tableview" prefHeight="240.0" prefWidth="483.0">
-                          <columns>
-                            <TableColumn fx:id="lotnumber_column" prefWidth="100.0" text="No. de Lote" />
-                              <TableColumn prefWidth="75.0" text="Cantidad">
-                                 <columns>
-                                  <TableColumn fx:id="quantity_column" prefWidth="75.0" text="Piezas" />
-                                    <TableColumn fx:id="boxquantity_column" prefWidth="75.0" text="Cajas" />
-                                 </columns>
-                              </TableColumn>
-                              <TableColumn fx:id="status_column" prefWidth="81.0" text="Estado" />
-                              <TableColumn fx:id="comments_column" prefWidth="150.0" text="Comentarios" />
-                          </columns>
-                           <HBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </HBox.margin>
-                        </TableView>
+                        <VBox>
+                           <children>
+                              <Label text="Lista de Lotes:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <TableView fx:id="incominglot_tableview" prefHeight="365.0">
+                                <columns>
+                                  <TableColumn fx:id="lotnumber_column" prefWidth="100.0" text="No. de Lote" />
+                                    <TableColumn prefWidth="75.0" text="Cantidad">
+                                       <columns>
+                                        <TableColumn fx:id="quantity_column" prefWidth="75.0" text="Piezas" />
+                                          <TableColumn fx:id="boxquantity_column" prefWidth="75.0" text="Cajas" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn fx:id="status_column" prefWidth="81.0" text="Estado" />
+                                    <TableColumn fx:id="comments_column" prefWidth="150.0" text="Comentarios" />
+                                </columns>
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TableView>
+                           </children>
+                        </VBox>
                         <VBox>
                            <children>
                               <VBox fx:id="lot_vbox">
