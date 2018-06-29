@@ -144,7 +144,7 @@ public class AddressFX implements Initializable {
     public boolean testFields(){
         boolean b = true;
         if(address_field.getText().replace(" ", "").equals("")){
-            address_field.setStyle("-fx-border-color: red ;");
+            address_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             address_field.setStyle(null);

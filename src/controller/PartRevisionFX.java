@@ -241,37 +241,37 @@ public class PartRevisionFX implements Initializable {
         clearStyle();
         boolean b = true;
         if(rev_field.getText().replace(" ", "").equals("")){
-            rev_field.setStyle("-fx-border-color: red ;");
+            rev_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(revdate_picker.getValue() == null){
-            revdate_picker.setStyle("-fx-border-color: red ;");
+            revdate_picker.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(basemetal_field.getText().replace(" ", "").equals("")){
-            basemetal_field.setStyle("-fx-border-color: red ;");
+            basemetal_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         try{
             Double.parseDouble(area_field.getText());
         }catch(Exception e){
-            area_field.setStyle("-fx-border-color: red ;");
+            area_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         try{
             Double.parseDouble(initialweight_field.getText());
         }catch(Exception e){
-            initialweight_field.setStyle("-fx-border-color: red ;");
+            initialweight_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         try{
             Double.parseDouble(finalweight_field.getText());
         }catch(Exception e){
-            finalweight_field.setStyle("-fx-border-color: red ;");
+            finalweight_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(specification_combo.getSelectionModel().getSelectedItem() == null){
-            specification_combo.setStyle("-fx-border-color: red ;");
+            specification_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         return b;

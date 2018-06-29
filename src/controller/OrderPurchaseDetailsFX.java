@@ -132,7 +132,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
                         computeTotal();
                     }
                 }catch(Exception e){
-                    ivarate_field.setStyle("-fx-border-color: red ;");
+                    ivarate_field.setStyle("-fx-background-color: lightpink;");
                 }
             });
             
@@ -222,35 +222,35 @@ public class OrderPurchaseDetailsFX implements Initializable {
         boolean b = true;
         clearStyle();
         if(orderdate_picker.getValue() == null){
-            orderdate_picker.setStyle("-fx-border-color: red ;");
+            orderdate_picker.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(supplier_combo.getSelectionModel().isEmpty()){
-            supplier_combo.setStyle("-fx-border-color: red ;");
+            supplier_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(address_combo.getSelectionModel().isEmpty()){
-            address_combo.setStyle("-fx-border-color: red ;");
+            address_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(description_area.getText().replace(" ", "").equals("")){
-            description_area.setStyle("-fx-border-color: red ;");
+            description_area.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         try{
             Double.parseDouble(exchangerate_field.getText());
         }catch(Exception e){
-            exchangerate_field.setStyle("-fx-border-color: red ;");
+            exchangerate_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }        
         try{
             Double.parseDouble(ivarate_field.getText());
         }catch(Exception e){
-            ivarate_field.setStyle("-fx-border-color: red ;");
+            ivarate_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(purchaseitem_tableview.getItems().isEmpty()){
-            purchaseitem_tableview.setStyle("-fx-border-color: red ;");
+            purchaseitem_tableview.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         return b;
@@ -268,7 +268,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
     
     public void computeTotal(){
         if(ivarate_field.getText().isEmpty()){
-            ivarate_field.setStyle("-fx-border-color: red ;");
+            ivarate_field.setStyle("-fx-background-color: lightpink;");
             return;
         }
         double subtotal_count = 0;

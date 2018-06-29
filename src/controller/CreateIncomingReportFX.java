@@ -6,10 +6,13 @@
 package controller;
 
 import com.sun.glass.ui.Robot;
+import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -18,8 +21,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -31,8 +38,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import model.Company;
 import model.Employee;
 import model.IncomingItem;
@@ -51,6 +58,8 @@ public class CreateIncomingReportFX implements Initializable {
 
     @FXML
     private HBox root_hbox;
+    @FXML
+    private HBox report_hbox;
     @FXML
     private DatePicker reportdate_picker;
     @FXML
@@ -77,6 +86,8 @@ public class CreateIncomingReportFX implements Initializable {
     private Button item_delete_button;
     @FXML
     private HBox lot_hbox;
+    @FXML
+    private VBox lot_vbox;
     @FXML
     private TableView<IncomingLot> incominglot_tableview;
     @FXML
@@ -108,10 +119,12 @@ public class CreateIncomingReportFX implements Initializable {
     
     private ProductPart partcombo_selection;
     private String partcombo_text;
+    private PartRevision partrevcombo_selection;
+    private String partrevcombo_text;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
-    private List<PartRevision> part_revisions = new ArrayList<PartRevision>();
+    private List<PartRevision> partrev_queue = new ArrayList<PartRevision>();
 
     private List<IncomingLot> incoming_lots = new ArrayList<IncomingLot>();
     
@@ -137,24 +150,73 @@ public class CreateIncomingReportFX implements Initializable {
         company_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
+        reportdate_picker.setValue(LocalDate.now());
+        
+        report_hbox.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                Robot robot = com.sun.glass.ui.Application.GetApplication().createRobot();
+                robot.keyPress(java.awt.event.KeyEvent.VK_TAB);
+            }
+        });
+
         
         part_combo.setOnAction((ActionEvent) -> {
             partcombo_text = part_combo.getEditor().textProperty().getValue();
             partcombo_selection = msabase.getProductPartDAO().find(partcombo_text);
-            partrev_combo.getItems().clear();
-            if(partcombo_selection != null){
-                partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));
-            }
-            partrev_combo.setDisable(partrev_combo.getItems().isEmpty());
-            Platform.runLater(new Runnable() {
-            @Override public void run() {
+            updatePartrev_combo();
+            Platform.runLater(() -> {
                 partrev_combo.requestFocus();
-            }});
-            System.out.println(ActionEvent.toString());
-            System.out.println(ActionEvent.getEventType());
-            System.out.println(partcombo_selection);
+            });
         });
         
+        partrev_combo.setOnAction((ActionEvent) -> {
+            partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
+            partrevcombo_selection = msabase.getPartRevisionDAO().find(partcombo_selection, partrevcombo_text);
+            Platform.runLater(() -> {
+                item_add_button.setDisable(partrevcombo_selection == null);
+                item_add_button.requestFocus();
+            });
+        });
+        
+        item_add_button.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                item_add_button.fireEvent(new ActionEvent());
+            }
+        });
+        
+        item_add_button.setOnAction((ActionEvent) -> {
+            partrev_queue.add(partrevcombo_selection);
+            updatePartrev_combo();
+            partrevision_tableview.setItems(FXCollections.observableArrayList(partrev_queue));
+            partrevision_tableview.setDisable(partrev_queue.isEmpty());
+            partrevision_tableview.getSelectionModel().selectLast();
+        });
+        
+        partrevision_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue <? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
+            Platform.runLater(() -> {
+                lot_hbox.setDisable(newValue == null);
+                lotnumber_field.requestFocus();
+            });
+        });
+        
+        lot_vbox.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                Robot robot = com.sun.glass.ui.Application.GetApplication().createRobot();
+                robot.keyPress(java.awt.event.KeyEvent.VK_TAB);
+            }
+        });
+        
+        comments_area.addEventFilter(KeyEvent.KEY_PRESSED, new TabTraversalEventHandler());
+        
+        lot_add_button.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                lot_add_button.fireEvent(new ActionEvent());
+            }
+        });
         
         lot_add_button.setOnAction((ActionEvent) -> {
             if(!testLotFields()){
@@ -170,6 +232,7 @@ public class CreateIncomingReportFX implements Initializable {
             incoming_lots.add(incoming_lot);
             clearLotFields();
             updateLotListview();
+            lotnumber_field.requestFocus();
         });
         
         lot_delete_button.setOnAction((ActionEvent) -> {
@@ -190,7 +253,7 @@ public class CreateIncomingReportFX implements Initializable {
     public boolean testSaveFields(){
         boolean b = true;
         clearStyle();
-        if(part_revisions.isEmpty()){
+        if(partrev_queue.isEmpty()){
             partrevision_tableview.setStyle("-fx-background-color: lightpink ;");
             b = false;
         }
@@ -216,6 +279,16 @@ public class CreateIncomingReportFX implements Initializable {
         }
         return b;
     }
+    public void updatePartrev_combo(){   
+        partrev_combo.getItems().clear();
+        if(partcombo_selection != null){
+            partrevcombo_text = null;
+            partrevcombo_selection = null;
+            partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));
+            partrev_combo.getItems().removeAll(partrev_queue);
+        }
+        partrev_combo.setDisable(partrev_combo.getItems().isEmpty());
+    }
     
     public void saveIncomingReport(){
         IncomingReport incoming_report = new IncomingReport();
@@ -227,7 +300,7 @@ public class CreateIncomingReportFX implements Initializable {
     }
     
     public void saveIncomingItems(IncomingReport incoming_report){
-        for(PartRevision part_revision : part_revisions){
+        for(PartRevision part_revision : partrev_queue){
             IncomingItem incoming_item = new IncomingItem();
             msabase.getIncomingItemDAO().create(incoming_report, part_revision, incoming_item);
             saveIncomingLots(part_revision, incoming_item);
@@ -306,5 +379,33 @@ public class CreateIncomingReportFX implements Initializable {
         quantity_field.setStyle(null);
         boxquantity_field.setStyle(null);
     }
-
+/**
+ * Handles tab/shift-tab keystrokes to navigate to other fields,
+ * ctrl-tab to insert a tab character in the text area.
+ */
+public class TabTraversalEventHandler implements EventHandler<KeyEvent> {
+    @Override
+    public void handle(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            Node node = (Node) event.getSource();
+            if (node instanceof TextArea) {
+                TextAreaSkin skin = (TextAreaSkin) ((TextArea)node).getSkin();
+                if (!event.isControlDown()) {
+                    // Tab or shift-tab => navigational action
+                    if (event.isShiftDown()) {
+                        skin.getBehavior().traversePrevious();
+                    } else {
+                        skin.getBehavior().traverseNext();
+                    }
+                } else {
+                    // Ctrl-Tab => insert a tab character in the text area
+                    TextArea textArea = (TextArea) node;
+                    textArea.replaceSelection("\t");
+                }
+                event.consume();
+            }
+        }
+    }
 }
+}
+

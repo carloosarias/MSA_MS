@@ -101,7 +101,7 @@ public class ProductPartFX implements Initializable {
     public boolean testFields(){
         boolean b = true;
         if(partnumber_field.getText().replace(" ", "").equals("")){
-            partnumber_field.setStyle("-fx-border-color: red ;");
+            partnumber_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             partnumber_field.setStyle(null);

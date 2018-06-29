@@ -78,27 +78,27 @@ public class PurchaseItemFX implements Initializable {
         clearStyle();
         boolean b = true;
         if(deliverydate_picker.getValue() == null){
-            deliverydate_picker.setStyle("-fx-border-color: red ;");
+            deliverydate_picker.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(product_combo.getSelectionModel().isEmpty()){
-            product_combo.setStyle("-fx-border-color: red ;");
+            product_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(description_area.getText().replace(" ", "").equals("")){
-            description_area.setStyle("-fx-border-color: red ;");
+            description_area.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         try{
             Double.parseDouble(unitprice_field.getText());
         }catch(Exception e){
-            unitprice_field.setStyle("-fx-border-color: red ;");
+            unitprice_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         try{
             Integer.parseInt(quantity_field.getText());
         }catch(Exception e){
-            quantity_field.setStyle("-fx-border-color: red ;");
+            quantity_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         return b;

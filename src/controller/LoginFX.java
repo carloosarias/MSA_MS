@@ -105,8 +105,8 @@ public class LoginFX implements Initializable {
             MainApp.employee_id = employee.getId();
             showMain();
         }else{
-            user_field.setStyle("-fx-border-color: red ;");
-            pass_field.setStyle("-fx-border-color: red ;");
+            user_field.setStyle("-fx-background-color: lightpink;");
+            pass_field.setStyle("-fx-background-color: lightpink;");
         }        
     }
     

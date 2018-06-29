@@ -100,7 +100,7 @@ public class ConfigFX implements Initializable {
                 Stage stage = (Stage) root_pane.getScene().getWindow();
                 stage.close();
             }else{
-                current_field.setStyle("-fx-border-color: red ;");
+                current_field.setStyle("-fx-background-color: lightpink;");
             }
         });
     }    

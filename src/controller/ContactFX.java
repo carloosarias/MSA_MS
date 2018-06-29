@@ -132,25 +132,25 @@ public class ContactFX implements Initializable {
     public boolean testFields(){
         boolean b = true;
         if(name_field.getText().replace(" ", "").equals("")){
-            name_field.setStyle("-fx-border-color: red ;");
+            name_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             name_field.setStyle(null);
         }
         if(mail_field.getText().replace(" ", "").equals("")){
-            mail_field.setStyle("-fx-border-color: red ;");
+            mail_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             mail_field.setStyle(null);
         }
         if(phone_field.getText().replace(" ", "").equals("")){
-            phone_field.setStyle("-fx-border-color: red ;");
+            phone_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             phone_field.setStyle(null);
         }
         if(position_field.getText().replace(" ", "").equals("")){
-            position_field.setStyle("-fx-border-color: red ;");
+            position_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             position_field.setStyle(null);

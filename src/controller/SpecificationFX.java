@@ -133,13 +133,13 @@ public class SpecificationFX implements Initializable {
     public boolean testFields(){
         boolean b = true;
         if(specificationnumber_field.getText().replace(" ", "").equals("")){
-            specificationnumber_field.setStyle("-fx-border-color: red ;");
+            specificationnumber_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             specificationnumber_field.setStyle(null);
         }
         if(details_field.getText().replace(" ", "").equals("")){
-            details_field.setStyle("-fx-border-color: red ;");
+            details_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             details_field.setStyle(null);

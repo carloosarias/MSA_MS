@@ -297,49 +297,49 @@ public class HrFX implements Initializable {
     public boolean testFields(){
         boolean b = true;
         if(fname_field.getText().replace(" ", "").equals("")){
-            fname_field.setStyle("-fx-border-color: red ;");
+            fname_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             fname_field.setStyle(null);
         }
         if(lname_field.getText().replace(" ", "").equals("")){
-            lname_field.setStyle("-fx-border-color: red ;");
+            lname_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             lname_field.setStyle(null);
         }
         if(dob_picker.getValue() == null){
-            dob_picker.setStyle("-fx-border-color: red ;");
+            dob_picker.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             dob_picker.setStyle(null);
         }
         if(hire_picker.getValue() == null){
-            hire_picker.setStyle("-fx-border-color: red ;");
+            hire_picker.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             hire_picker.setStyle(null);
         }
         if(user_field.getText().replace(" ", "").equals("")){
-            user_field.setStyle("-fx-border-color: red ;");
+            user_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             user_field.setStyle(null);
         }
         if(curp_field.getText().replace(" ", "").equals("")){
-            curp_field.setStyle("-fx-border-color: red ;");
+            curp_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             curp_field.setStyle(null);
         }
         if(address_area.getText().replace(" ", "").equals("")){
-            address_area.setStyle("-fx-border-color: red ;");
+            address_area.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             address_area.setStyle(null);
         }
         if(id_field.getText().replace(" ", "").equals("") && pass_field.getText().replace(" ", "").equals("")){
-            pass_field.setStyle("-fx-border-color: red ;");
+            pass_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             pass_field.setStyle(null);

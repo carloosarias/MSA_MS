@@ -212,25 +212,25 @@ public class CompanyFX implements Initializable {
     public boolean testFields(){
         boolean b = true;
         if(name_field.getText().replace(" ", "").equals("")){
-            name_field.setStyle("-fx-border-color: red ;");
+            name_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             name_field.setStyle(null);
         }
         if(rfc_field.getText().replace(" ", "").equals("")){
-            rfc_field.setStyle("-fx-border-color: red ;");
+            rfc_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             rfc_field.setStyle(null);
         }
         if(tax_field.getText().replace(" ", "").equals("")){
-            tax_field.setStyle("-fx-border-color: red ;");
+            tax_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             tax_field.setStyle(null);
         }
         if(payterm_field.getText().replace(" ", "").equals("")){
-            payterm_field.setStyle("-fx-border-color: red ;");
+            payterm_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         } else{
             payterm_field.setStyle(null);
