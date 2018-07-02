@@ -35,6 +35,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -83,9 +84,9 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private TableColumn<IncomingLot, Integer> quantity_column;
     @FXML
-    private TableColumn<PartRevision, String> partnumber_column;
+    private TableColumn<IncomingLot, String> partnumber_column;
     @FXML
-    private TableColumn<PartRevision, String> revision_column;
+    private TableColumn<IncomingLot, String> revision_column;
     @FXML
     private TableColumn<IncomingLot, String> status_column;
     @FXML
@@ -126,18 +127,26 @@ public class CreateIncomingReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString()));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index()).getRev()));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO()
+                .findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index())).toString()));
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
-        
+        comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        comments_column.setOnEditCommit(
+                (TableColumn.CellEditEvent<IncomingLot, String> t) ->
+                    ( t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                    ).setComments(t.getNewValue())
+                );
         employee_combo.setItems(employee);
         employee_combo.getSelectionModel().selectFirst();
         company_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
+        status_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
 
         lotnumber_field.setOnAction((ActionEvent) -> {
@@ -149,22 +158,33 @@ public class CreateIncomingReportFX implements Initializable {
             partcombo_text = part_combo.getEditor().textProperty().getValue();
             partcombo_selection = msabase.getProductPartDAO().find(partcombo_text);
             updatePartrev_combo();
-            partrev_combo.requestFocus();
+            if(partcombo_selection == null){
+                part_combo.getEditor().selectAll();
+            }else{
+                partrev_combo.requestFocus();
+            }
             ActionEvent.consume();
         });
         
         partrev_combo.setOnAction((ActionEvent) -> {
-            partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
-            partrevcombo_selection = msabase.getPartRevisionDAO().find(partcombo_selection, partrevcombo_text);
-            if(!partrev_queue.contains(partrevcombo_selection)){
-                partrev_queue.add(partrevcombo_selection);
+            if(partcombo_selection == null){
+                ActionEvent.consume();
+                return;
             }
-            updatePartrev_combo();
-            quantity_field.requestFocus();
-            ActionEvent.consume();
+                partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
+                System.out.println("test"+partcombo_selection);
+                partrevcombo_selection = msabase.getPartRevisionDAO().find(partcombo_selection, partrevcombo_text);
+                if(partrevcombo_selection == null){
+                    partrev_combo.getEditor().selectAll();
+                }
+                else{
+                    quantity_field.requestFocus();
+                    ActionEvent.consume();
+                }
         });
         
         quantity_field.setOnAction((ActionEvent) -> {
+            lot_add_button.fireEvent(new ActionEvent());
             lotnumber_field.requestFocus();
             ActionEvent.consume();
         });
@@ -178,6 +198,7 @@ public class CreateIncomingReportFX implements Initializable {
         
         lot_add_button.setOnAction((ActionEvent) -> {
             if(!testLotFields()){
+                clearFields();
                 return;
             }
             IncomingLot incoming_lot = new IncomingLot();
@@ -188,13 +209,22 @@ public class CreateIncomingReportFX implements Initializable {
             incoming_lot.setComments("n/a");
             incoming_lot.setPartrevision_index(partrevcombo_selection.getId());
             incoming_lots.add(incoming_lot);
-            clearLotFields();
+            clearFields();
             updateLotListview();
             lotnumber_field.requestFocus();
         });
         
+        incominglot_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingLot> observable, IncomingLot oldValue, IncomingLot newValue) -> {
+            lot_delete_button.setDisable(incominglot_tableview.getSelectionModel().isEmpty());
+        });
+        
         lot_delete_button.setOnAction((ActionEvent) -> {
             incoming_lots.remove(incominglot_tableview.getSelectionModel().getSelectedItem());
+            for(int i = 0; i < incoming_lots.size(); i++){
+                if(!partrev_queue.contains(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()))){
+                    partrev_queue.add(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()));
+                }
+            }
             updateLotListview();
         });
        
@@ -206,6 +236,7 @@ public class CreateIncomingReportFX implements Initializable {
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
         });
+        
     }   
     
     public boolean testSaveFields(){
@@ -233,11 +264,11 @@ public class CreateIncomingReportFX implements Initializable {
         }
         return b;
     }
-    public void updatePartrev_combo(){  
-        if(partcombo_selection != null){
-            partrevcombo_text = null;
-            partrevcombo_selection = null;
+    public void updatePartrev_combo(){
+        try{
             partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));
+        } catch(Exception e){
+            partrev_combo.getItems().clear();
         }
         partrev_combo.setDisable(partrev_combo.getItems().isEmpty());
     }
@@ -280,9 +311,12 @@ public class CreateIncomingReportFX implements Initializable {
         incominglot_tableview.disableProperty().bind(Bindings.isEmpty(incominglot_tableview.getItems()));
     }
     
-    public void clearLotFields(){
+    public void clearFields(){
         lotnumber_field.setText(null);
-        status_combo.getSelectionModel().clearSelection();
+        part_combo.getSelectionModel().select(null);
+        part_combo.getEditor().setText(null);
+        partrev_combo.getSelectionModel().clearSelection();
+        partrev_combo.getEditor().setText(null);
         quantity_field.setText(null);
     }
     
@@ -303,6 +337,25 @@ public class CreateIncomingReportFX implements Initializable {
             quantity_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
+        try{
+            partcombo_selection.getId();
+        }
+        catch(Exception e){
+            part_combo.setStyle("-fx-background-color: lightpink;");
+            part_combo.getSelectionModel().select(null);
+            part_combo.getEditor().setText(null);
+            b = false;
+        }
+        try {
+            partrevcombo_selection.getId();
+        }
+        catch(Exception e){
+            partrev_combo.setStyle("-fx-background-color: lightpink;");
+            partrev_combo.getSelectionModel().select(null);
+            partrev_combo.getEditor().setText(null);
+            b = false;
+        }
+        
         return b;
     }
     
@@ -310,7 +363,10 @@ public class CreateIncomingReportFX implements Initializable {
         lotnumber_field.setStyle(null);
         status_combo.setStyle(null);
         quantity_field.setStyle(null);
+        part_combo.setStyle(null);
+        partrev_combo.setStyle(null);
     }
+    
 /**
  * Handles tab/shift-tab keystrokes to navigate to other fields,
  * ctrl-tab to insert a tab character in the text area.
