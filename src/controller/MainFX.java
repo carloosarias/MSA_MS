@@ -69,6 +69,7 @@ public class MainFX implements Initializable {
                     product_tab.setDisable(true);
                     orderpurchase_tab.setDisable(true);
                     incoming_tab.setDisable(true);
+                    depart_tab.setDisable(true);
                     break;
                 case "Recursos Humanos":
                     employee_tab.setDisable(false);
