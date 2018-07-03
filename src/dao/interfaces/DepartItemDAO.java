@@ -29,12 +29,12 @@ public interface DepartItemDAO {
     /**
      * Returns the IncomingReport from the database matching the given DepartItem ID, otherwise null.
      * DepartItem ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param depart_item The DepartItem ID to get the IncomingReport from.
+     * @param depart_item The DepartItem ID to get the DepartReport from.
      * @return The IncomingReport from the database matching the given DepartItem ID, otherwise null.
      * @throws IllegalArgumentException If DepartItem ID is null.
      * @throws DAOException If something fails at database level.
      */      
-    public DepartReport findIncomingReport(DepartItem depart_item) throws IllegalArgumentException, DAOException;
+    public DepartReport findDepartReport(DepartItem depart_item) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns the PartRevision from the database matching the given DepartItem ID, otherwise null.
@@ -47,25 +47,25 @@ public interface DepartItemDAO {
     public PartRevision findPartRevision(DepartItem depart_item) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all DepartItem from a given IncomingReport from the database ordered by DepartItem ID. The IncomingReport ID must not be null
+     * Returns a list of all DepartItem from a given DepartReport from the database ordered by DepartItem ID. The DepartReport ID must not be null
      * otherwise it will throw IllegalArgumentException. The list is never null and
-     * is empty when the database does not contain any DepartItem matching IncomingReport.
+     * is empty when the database does not contain any DepartItem matching DepartReport.
      * @param depart_report The DepartReport to be searched for.
-     * @return A list of all DepartItem matching IncomingReport from the database ordered by DepartItem ID.
-     * @throws IllegalArgumentException If the IncomingReport ID is null.
+     * @return A list of all DepartItem matching DepartReport from the database ordered by DepartItem ID.
+     * @throws IllegalArgumentException If the DepartReport ID is null.
      * @throws DAOException If something fails at database level.
      */
     public List<DepartItem> list(DepartReport depart_report) throws IllegalArgumentException, DAOException;
     
     /**
-     * Create the given DepartItem for a given IncomingReport in the database. The IncomingReport ID must not be null,
+     * Create the given DepartItem for a given DepartReport in the database. The DepartReport ID must not be null,
      * the PartRevision ID must not be null and the DepartItem ID must be null,
      * otherwise it will throw IllegalArgumentException. 
      * After creating, the DAO will set the obtained ID in the given CompanyAddress.
-     * @param depart_report The IncomingReport to be assigned to the DepartItem.
+     * @param depart_report The DepartReport to be assigned to the DepartItem.
      * @param part_revision The PartRevision to be assigned to the DepartItem.
      * @param depart_item The DepartItem to be created.
-     * @throws IllegalArgumentException If the IncomingReport ID is null.
+     * @throws IllegalArgumentException If the DepartReport ID is null.
      * @throws IllegalArgumentException If the PartRevision ID is null.
      * @throws IllegalArgumentException If the DepartItem ID is not null.
      * @throws DAOException If something fails at database level.

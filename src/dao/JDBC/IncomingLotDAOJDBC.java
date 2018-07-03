@@ -60,10 +60,10 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     }
     
     /**
-     * Returns the IncomingItem from the database matching the given SQL query with the given values.
+     * Returns the IncomingLot from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The IncomingItem from the database matching the given SQL query with the given values.
+     * @return The IncomingLot from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
     private IncomingLot find(String sql, Object... values) throws DAOException {
@@ -102,7 +102,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                incoming_item = daoFactory.getIncomingItemDAO().find(resultSet.getInt("INCOMING_LOT_ID"));
+                incoming_item = daoFactory.getIncomingItemDAO().find(resultSet.getInt("INCOMING_ITEM_ID"));
             }
         } catch (SQLException e) {
             throw new DAOException(e);

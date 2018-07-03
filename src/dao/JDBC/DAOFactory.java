@@ -8,6 +8,9 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
+import dao.interfaces.DepartItemDAO;
+import dao.interfaces.DepartLotDAO;
+import dao.interfaces.DepartReportDAO;
 import dao.interfaces.IncomingItemDAO;
 import dao.interfaces.IncomingLotDAO;
 import dao.interfaces.IncomingReportDAO;
@@ -264,6 +267,29 @@ public abstract class DAOFactory {
         return new IncomingLotDAOJDBC(this);
     }
     
+    /**
+     * Returns the DepartReport DAO associated with the current DAOFactory.
+     * @return The DepartReport DAO associated with the current DAOFactory.
+     */   
+    public DepartReportDAO getDepartReportDAO(){
+        return new DepartReportDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the DepartItem DAO associated with the current DAOFactory.
+     * @return The DepartItem DAO associated with the current DAOFactory.
+     */   
+    public DepartItemDAO getDepartItemDAO(){
+        return new DepartItemDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the DepartLot DAO associated with the current DAOFactory.
+     * @return The DepartLot DAO associated with the current DAOFactory.
+     */   
+    public DepartLotDAO getDepartLotDAO(){
+        return new DepartLotDAOJDBC(this);
+    }    
     // You can add more DAO implementation getters here.
 }
 
