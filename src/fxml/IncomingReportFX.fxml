@@ -19,7 +19,7 @@
                      <content>
                         <HBox>
                            <children>
-                              <TableView fx:id="incoming_report_tableview">
+                              <TableView fx:id="incoming_report_tableview" prefHeight="500.0" prefWidth="862.0">
                                 <columns>
                                     <TableColumn fx:id="report_id_column" prefWidth="99.0" text="# ID" />
                                     <TableColumn fx:id="report_employee_column" prefWidth="166.0" text="Empleado" />

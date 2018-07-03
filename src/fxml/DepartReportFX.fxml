@@ -17,9 +17,9 @@
                <tabs>
                   <Tab text="Historial Remisiones">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
+                        <VBox>
                            <children>
-                              <TableView fx:id="depart_report_tableview">
+                              <TableView fx:id="depart_report_tableview" prefHeight="500.0">
                                  <columns>
                                     <TableColumn fx:id="report_id_column" prefWidth="99.0" text="# ID" />
                                     <TableColumn fx:id="report_employee_column" prefWidth="166.0" text="Empleado" />
@@ -38,7 +38,7 @@
                      <content>
                         <HBox>
                            <children>
-                              <TableView fx:id="departitem_tableview" prefHeight="300.0">
+                              <TableView fx:id="departitem_tableview">
                                  <columns>
                                     <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />
                                     <TableColumn fx:id="revision_column" prefWidth="100.0" resizable="false" text="Revision" />
@@ -53,7 +53,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TableView>
-                              <TableView fx:id="departlot_tableview" prefHeight="300.0">
+                              <TableView fx:id="departlot_tableview">
                                  <columns>
                                     <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="# Lote" />
                                     <TableColumn prefWidth="75.0" resizable="false" text="Cantidad">
@@ -62,7 +62,7 @@
                                           <TableColumn fx:id="lot_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="lot_status_column" prefWidth="100.0" resizable="false" text="Estado" />
+                                    <TableColumn fx:id="lot_process_column" prefWidth="100.0" resizable="false" text="Proceso" />
                                     <TableColumn fx:id="lot_comments_column" prefWidth="150.0" resizable="false" text="Comentarios" />
                                  </columns>
                                  <HBox.margin>

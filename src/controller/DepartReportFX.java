@@ -6,6 +6,7 @@
 package controller;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,6 +14,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import model.DepartItem;
+import model.DepartLot;
+import model.DepartReport;
 
 /**
  * FXML Controller class
@@ -24,37 +28,37 @@ public class DepartReportFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private TableView<?> depart_report_tableview;
+    private TableView<DepartReport> depart_report_tableview;
     @FXML
-    private TableColumn<?, ?> report_id_column;
+    private TableColumn<DepartReport, Integer> report_id_column;
     @FXML
-    private TableColumn<?, ?> report_employee_column;
+    private TableColumn<DepartReport, String> report_employee_column;
     @FXML
-    private TableColumn<?, ?> report_date_column;
+    private TableColumn<DepartReport, Date> report_date_column;
     @FXML
-    private TableColumn<?, ?> report_client_column;
+    private TableColumn<DepartReport, String> report_client_column;
     @FXML
-    private TableView<?> departitem_tableview;
+    private TableView<DepartItem> departitem_tableview;
     @FXML
-    private TableColumn<?, ?> part_column;
+    private TableColumn<DepartItem, String> part_column;
     @FXML
-    private TableColumn<?, ?> revision_column;
+    private TableColumn<DepartItem, String> revision_column;
     @FXML
-    private TableColumn<?, ?> item_qty_column;
+    private TableColumn<DepartItem, String> item_qty_column;
     @FXML
-    private TableColumn<?, ?> item_boxqty_column;
+    private TableColumn<DepartItem, String> item_boxqty_column;
     @FXML
-    private TableView<?> departlot_tableview;
+    private TableView<DepartLot> departlot_tableview;
     @FXML
-    private TableColumn<?, ?> lot_column;
+    private TableColumn<DepartLot, String> lot_column;
     @FXML
-    private TableColumn<?, ?> lot_qty;
+    private TableColumn<DepartLot, Integer> lot_qty;
     @FXML
-    private TableColumn<?, ?> lot_boxqty_column;
+    private TableColumn<DepartLot, Integer> lot_boxqty_column;
     @FXML
-    private TableColumn<?, ?> lot_status_column;
+    private TableColumn<DepartLot, String> lot_process_column;
     @FXML
-    private TableColumn<?, ?> lot_comments_column;
+    private TableColumn<DepartLot, String> lot_comments_column;
     @FXML
     private Button add_button;
 

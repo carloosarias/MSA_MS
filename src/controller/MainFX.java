@@ -96,6 +96,7 @@ public class MainFX implements Initializable {
                     depart_tab.setDisable(false);
                     try {
                         incoming_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
+                        depart_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX.fxml")));
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
