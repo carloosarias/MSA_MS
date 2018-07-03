@@ -8,7 +8,6 @@ package dao.JDBC;
 import dao.DAOException;
 import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.OrderPurchaseDAOJDBC.map;
 import dao.interfaces.IncomingReportDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +18,6 @@ import java.util.List;
 import model.Company;
 import model.Employee;
 import model.IncomingReport;
-import model.OrderPurchase;
 
 /**
  *

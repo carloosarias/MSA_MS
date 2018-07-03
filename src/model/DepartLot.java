@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Pavilion Mini
  */
-public class DepartLot {
+public class DepartLot implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String lot_number;
