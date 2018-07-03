@@ -144,7 +144,7 @@ public class CreateIncomingReportFX implements Initializable {
         employee_combo.setItems(employee);
         employee_combo.getSelectionModel().selectFirst();
         company_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
-        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
+        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
         status_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());

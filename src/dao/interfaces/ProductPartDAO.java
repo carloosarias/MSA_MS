@@ -61,7 +61,7 @@ public interface ProductPartDAO {
      * @throws DAOException If something fails at database level.
      */
     public List<ProductPart> list() throws DAOException;
-    
+    public List<ProductPart> listActive (boolean active) throws DAOException;
     /**
      * Create the given ProductPart in the database. The Product ID must not be null and
      * the ProductPart ID must be null, otherwise it will throw IllegalArgumentException.

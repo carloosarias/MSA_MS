@@ -146,7 +146,27 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         
         return part;
     }    
+    
+    @Override
+    public List<ProductPart> listActive(boolean active) throws DAOException {
+        List<ProductPart> part = new ArrayList<>();
 
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                if(findProduct(map(resultSet)).isActive() == active){
+                    part.add(map(resultSet));
+                }
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part;
+    }    
     @Override
     public void create(Product product, ProductPart part) throws IllegalArgumentException, DAOException {
         if (product.getId() == null) {

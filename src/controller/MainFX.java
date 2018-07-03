@@ -45,6 +45,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab incoming_tab;
     @FXML
+    private Tab depart_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -90,6 +92,7 @@ public class MainFX implements Initializable {
                     break;
                 case "Reciba":
                     incoming_tab.setDisable(false);
+                    depart_tab.setDisable(false);
                     try {
                         incoming_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
                     } catch (IOException ex) {

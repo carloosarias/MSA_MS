@@ -17,6 +17,7 @@
           <Tab fx:id="product_tab" closable="false" disable="true" text="Productos" />
           <Tab fx:id="orderpurchase_tab" closable="false" disable="true" text="Orden De Compra" />
           <Tab fx:id="incoming_tab" closable="false" disable="true" text="Reciba" />
+          <Tab fx:id="depart_tab" closable="false" disable="true" text="Remisiones" />
         </tabs>
          <BorderPane.margin>
             <Insets />
