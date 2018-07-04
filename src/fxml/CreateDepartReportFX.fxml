@@ -163,8 +163,8 @@
                                           <TableColumn fx:id="partnumber_column" prefWidth="100.0" text="No. Parte" />
                                           <TableColumn fx:id="revision_column" prefWidth="100.0" text="Revisión" />
                                           <TableColumn fx:id="quantity_column" prefWidth="96.0" text="Cantidad" />
-                                          <TableColumn fx:id="status_column" prefWidth="60.0" text="Estado" />
-                                          <TableColumn fx:id="comments_column" prefWidth="166.0" text="Comentarios" />
+                                          <TableColumn fx:id="process_column" prefWidth="82.0" text="Proceso" />
+                                          <TableColumn fx:id="comments_column" prefWidth="144.0" text="Comentarios" />
                                        </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

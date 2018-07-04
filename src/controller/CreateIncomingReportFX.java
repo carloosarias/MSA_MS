@@ -34,7 +34,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Company;
 import model.Employee;
@@ -55,9 +54,9 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private DatePicker reportdate_picker;
-    @FXML
     private ComboBox<Employee> employee_combo;
+    @FXML
+    private DatePicker reportdate_picker;
     @FXML
     private ComboBox<Company> company_combo;
     @FXML
@@ -65,9 +64,15 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private TextField packinglist_field;
     @FXML
+    private ComboBox<String> status_combo;
+    @FXML
     private ComboBox<ProductPart> part_combo;
     @FXML
     private ComboBox<PartRevision> partrev_combo;
+    @FXML
+    private TextField lotnumber_field;
+    @FXML
+    private TextField quantity_field;
     @FXML
     private TableView<IncomingLot> incominglot_tableview;
     @FXML
@@ -82,12 +87,6 @@ public class CreateIncomingReportFX implements Initializable {
     private TableColumn<IncomingLot, String> status_column;
     @FXML
     private TableColumn<IncomingLot, String> comments_column;
-    @FXML
-    private TextField lotnumber_field;
-    @FXML
-    private TextField quantity_field;
-    @FXML
-    private ComboBox<String> status_combo;
     @FXML
     private Button lot_add_button;
     @FXML
@@ -115,20 +114,21 @@ public class CreateIncomingReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index()).getRev()));
-        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO()
-                .findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index())).toString()));
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index())).toString()));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index()).getRev()));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
         comments_column.setOnEditCommit(
-                (TableColumn.CellEditEvent<IncomingLot, String> t) ->
-                    ( t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                    ).setComments(t.getNewValue())
-                );
+            (TableColumn.CellEditEvent<IncomingLot, String> t) ->
+                ( t.getTableView().getItems().get(
+                    t.getTablePosition().getRow())
+                ).setComments(t.getNewValue())
+            );
+        
         employee_combo.setItems(employee);
         employee_combo.getSelectionModel().selectFirst();
         company_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
@@ -136,7 +136,7 @@ public class CreateIncomingReportFX implements Initializable {
         status_combo.setItems(FXCollections.observableArrayList(MainApp.status_list));
         status_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
-
+        
         lotnumber_field.setOnAction((ActionEvent) -> {
             part_combo.requestFocus();
             ActionEvent.consume();
@@ -145,10 +145,10 @@ public class CreateIncomingReportFX implements Initializable {
         part_combo.setOnAction((ActionEvent) -> {
             partcombo_text = part_combo.getEditor().textProperty().getValue();
             partcombo_selection = msabase.getProductPartDAO().find(partcombo_text);
-            updatePartrev_combo();
             if(partcombo_selection == null){
                 part_combo.getEditor().selectAll();
             }else{
+                updatePartrev_combo();
                 partrev_combo.requestFocus();
             }
             ActionEvent.consume();
@@ -160,7 +160,6 @@ public class CreateIncomingReportFX implements Initializable {
                 return;
             }
                 partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
-                System.out.println("test"+partcombo_selection);
                 partrevcombo_selection = msabase.getPartRevisionDAO().find(partcombo_selection, partrevcombo_text);
                 if(partrevcombo_selection == null){
                     partrev_combo.getEditor().selectAll();
