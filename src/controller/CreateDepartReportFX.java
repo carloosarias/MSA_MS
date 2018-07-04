@@ -11,9 +11,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -24,10 +27,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import model.Company;
 import model.CompanyAddress;
+import model.DepartItem;
 import model.DepartLot;
+import model.DepartReport;
 import model.Employee;
 import model.IncomingLot;
 import model.PartRevision;
@@ -91,7 +99,7 @@ public class CreateDepartReportFX implements Initializable {
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     private List<PartRevision> partrev_queue = new ArrayList<PartRevision>();
-    private List<IncomingLot> incoming_lots = new ArrayList<IncomingLot>();
+    private List<DepartLot> depart_lots = new ArrayList<DepartLot>();
     
     private ObservableList<Employee> employee = FXCollections.observableArrayList(
         msabase.getEmployeeDAO().find(MainApp.employee_id)
@@ -148,11 +156,109 @@ public class CreateDepartReportFX implements Initializable {
         });
         
         partrev_combo.setOnAction((ActionEvent) -> {
-            
+            if(partcombo_selection == null){
+                ActionEvent.consume();
+                return;
+            }
+            partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
+            partrevcombo_selection = msabase.getPartRevisionDAO().find(partcombo_selection, partrevcombo_text);
+            if(partrevcombo_selection == null){
+                partrev_combo.getEditor().selectAll();
+            }
+            else{
+                if(!partrev_queue.contains(partrevcombo_selection)){
+                    partrev_queue.add(partrevcombo_selection);
+                }
+                quantity_field.requestFocus();
+                ActionEvent.consume();
+            }            
         });
         
+        lot_add_button.setOnKeyPressed((KeyEvent ke) -> {
+           if(ke.getCode().equals(KeyCode.ENTER)){
+               lot_add_button.fireEvent(new ActionEvent());
+           }
+        });
+        
+        lot_add_button.setOnAction((ActionEvent) -> {
+            if(!testLotFields()){
+                clearFields();
+                return;
+            }
+            DepartLot depart_lot = new DepartLot();
+            depart_lot.setLot_number(lotnumber_field.getText());
+            depart_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
+            depart_lot.setBox_quantity(1);
+            depart_lot.setProcess(process_combo.getSelectionModel().getSelectedItem());
+            depart_lot.setComments("n/a");
+            depart_lot.setPartrevision_index(partrevcombo_selection.getId());
+            depart_lots.add(depart_lot);
+            clearFields();
+            updateLotListview();
+            lotnumber_field.requestFocus();
+        });
+        
+        departlot_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartLot> observable, DepartLot oldValue, DepartLot newValue) -> {
+            lot_delete_button.setDisable(departlot_tableview.getSelectionModel().isEmpty());
+        });
+        
+        lot_delete_button.setOnAction((ActionEvent) -> {
+            depart_lots.remove(departlot_tableview.getSelectionModel().getSelectedItem());
+            updateLotListview();
+        });
+       
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testSaveFields()){
+                return;
+            }
+            saveDepartReport();
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close();
+        });
     }
     
+    public boolean testSaveFields(){
+        boolean b = true;
+        clearStyle();
+        if(depart_lots.isEmpty()){
+            departlot_tableview.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        if(company_combo.getSelectionModel().isEmpty()){
+            company_combo.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        if(reportdate_picker.getValue() == null){
+            reportdate_picker.setStyle("-fx-background-color: lightpink;");
+        }
+        if(address_combo.getSelectionModel().isEmpty()){
+            address_combo.setStyle("-fx-background-color: lightpink ;");
+        }
+        return b;
+    }
+    
+    public void saveDepartReport(){
+        DepartReport depart_report = new DepartReport();
+        depart_report.setReport_date(java.sql.Date.valueOf(reportdate_picker.getValue()));
+        msabase.getDepartReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), company_combo.getSelectionModel().getSelectedItem(), address_combo.getSelectionModel().getSelectedItem(), depart_report);
+        saveDepartItems(depart_report);
+    }
+    
+    public void saveDepartItems(DepartReport depart_report){
+        for(PartRevision part_revision : partrev_queue){
+            DepartItem depart_item = new DepartItem();
+            msabase.getDepartItemDAO().create(depart_report, part_revision, depart_item);
+            saveDepartLots(part_revision, depart_item);
+        }
+    }
+    
+    public void saveDepartLots(PartRevision part_revision, DepartItem depart_item){
+        for(DepartLot depart_lot : depart_lots){
+            if(depart_lot.getPartRevision_index().equals(part_revision.getId())){
+                msabase.getDepartLotDAO().create(depart_item, depart_lot);
+            }
+        }
+    }    
     public void updatePartrev_combo(){
         try{
             partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));
@@ -162,4 +268,65 @@ public class CreateDepartReportFX implements Initializable {
         partrev_combo.setDisable(partrev_combo.getItems().isEmpty());
     }
     
+    public void updateLotListview(){
+        departlot_tableview.setItems(FXCollections.observableArrayList(depart_lots));
+        departlot_tableview.disableProperty().bind(Bindings.isEmpty(departlot_tableview.getItems()));
+    }
+    
+    public void clearFields(){
+        lotnumber_field.setText(null);
+        part_combo.getSelectionModel().select(null);
+        part_combo.getEditor().setText(null);
+        partrev_combo.getSelectionModel().clearSelection();
+        partrev_combo.getEditor().setText(null);
+        quantity_field.setText(null);
+    }
+    
+    public boolean testLotFields(){
+        boolean b = true;
+        clearStyle();
+        if(lotnumber_field.getText().replace(" ", "").equals("")){
+            lotnumber_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(process_combo.getSelectionModel().isEmpty()){
+            process_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        try{
+            Double.parseDouble(quantity_field.getText());
+        }catch(Exception e){
+            quantity_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        try{
+            partcombo_selection.getId();
+        }
+        catch(Exception e){
+            part_combo.setStyle("-fx-background-color: lightpink;");
+            part_combo.getSelectionModel().select(null);
+            part_combo.getEditor().setText(null);
+            b = false;
+        }
+        try {
+            partrevcombo_selection.getId();
+        }
+        catch(Exception e){
+            partrev_combo.setStyle("-fx-background-color: lightpink;");
+            partrev_combo.getSelectionModel().select(null);
+            partrev_combo.getEditor().setText(null);
+            b = false;
+        }
+        
+        return b;
+    }
+    
+    public void clearStyle(){
+        lotnumber_field.setStyle(null);
+        process_combo.setStyle(null);
+        quantity_field.setStyle(null);
+        part_combo.setStyle(null);
+        partrev_combo.setStyle(null);
+        address_combo.setStyle(null);
+    }
 }

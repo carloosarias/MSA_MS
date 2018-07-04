@@ -165,6 +165,9 @@ public class CreateIncomingReportFX implements Initializable {
                     partrev_combo.getEditor().selectAll();
                 }
                 else{
+                    if(!partrev_queue.contains(partrevcombo_selection)){
+                        partrev_queue.add(partrevcombo_selection);
+                    }
                     quantity_field.requestFocus();
                     ActionEvent.consume();
                 }
@@ -209,7 +212,7 @@ public class CreateIncomingReportFX implements Initializable {
             incoming_lots.remove(incominglot_tableview.getSelectionModel().getSelectedItem());
             for(int i = 0; i < incoming_lots.size(); i++){
                 if(!partrev_queue.contains(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()))){
-                    partrev_queue.add(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()));
+                    partrev_queue.remove(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()));
                 }
             }
             updateLotListview();
@@ -219,6 +222,11 @@ public class CreateIncomingReportFX implements Initializable {
             if(!testSaveFields()){
                 return;
             }
+            for(int i = 0; i < incoming_lots.size(); i++){
+                if(!partrev_queue.contains(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()))){
+                    partrev_queue.remove(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()));
+                }
+            }    
             saveIncomingReport();
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();

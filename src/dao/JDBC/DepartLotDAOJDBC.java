@@ -28,7 +28,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     private static final String SQL_FIND_DEPART_ITEM_BY_ID =
             "SELECT DEPART_ITEM_ID FROM DEPART_LOT WHERE id = ?";
     private static final String SQL_LIST_OF_DEPART_ITEM_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM DEPART_LOT WHERE DEPART_ITEM_ID = ? ORDER BY id";
+            "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE DEPART_ITEM_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO DEPART_LOT (DEPART_ITEM_ID, lot_number, quantity, box_quantity, process, comments) "
             + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -261,7 +261,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         depart_lot.setLot_number(resultSet.getString("lot_number"));
         depart_lot.setQuantity(resultSet.getInt("quantity"));
         depart_lot.setBox_quantity(resultSet.getInt("box_quantity"));
-        depart_lot.setProcess(resultSet.getString("status"));
+        depart_lot.setProcess(resultSet.getString("process"));
         depart_lot.setComments(resultSet.getString("comments"));
         return depart_lot;
     }    
