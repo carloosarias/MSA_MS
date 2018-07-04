@@ -25,6 +25,7 @@
                                     <TableColumn fx:id="report_employee_column" prefWidth="166.0" text="Empleado" />
                                     <TableColumn fx:id="report_date_column" prefWidth="123.0" text="Fecha de Reporte" />
                                     <TableColumn fx:id="report_client_column" prefWidth="133.0" text="Cliente" />
+                                    <TableColumn fx:id="address_column" prefWidth="340.0" text="Dirección (Cliente)" />
                                  </columns>
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

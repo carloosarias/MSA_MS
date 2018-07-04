@@ -50,6 +50,8 @@ public class DepartReportFX implements Initializable {
     @FXML
     private TableColumn<DepartReport, String> report_client_column;
     @FXML
+    private TableColumn<DepartReport, String> address_column;
+    @FXML
     private TableView<DepartItem> departitem_tableview;
     @FXML
     private TableColumn<DepartItem, String> part_column;
@@ -134,6 +136,7 @@ public class DepartReportFX implements Initializable {
         report_employee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartReportDAO().findEmployee(c.getValue()).toString()));
         report_date_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
         report_client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartReportDAO().findCompany(c.getValue()).toString()));
+        address_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartReportDAO().findCompanyAddress(c.getValue()).toString()));
     }
     
     public void setItemTable(){
