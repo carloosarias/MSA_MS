@@ -18,7 +18,7 @@
          <children>
             <HBox>
                <children>
-                  <HBox fx:id="report_hbox">
+                  <HBox>
                      <children>
                         <VBox>
                            <children>
@@ -105,7 +105,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <VBox fx:id="lot_vbox">
+                              <VBox>
                                  <children>
                                     <Label text="Información de Lote:">
                                        <VBox.margin>

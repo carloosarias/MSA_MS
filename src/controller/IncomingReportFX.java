@@ -81,6 +81,7 @@ public class IncomingReportFX implements Initializable {
     private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
     /**
      * Initializes the controller class.
      */
@@ -93,6 +94,7 @@ public class IncomingReportFX implements Initializable {
         
         incoming_report_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport> observable, IncomingReport oldValue, IncomingReport newValue) -> {
             if(newValue != null){
+                
                 incomingitem_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingItemDAO().list(newValue)));
             }else{
                 incomingitem_tableview.getItems().clear();

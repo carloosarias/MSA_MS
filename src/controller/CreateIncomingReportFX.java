@@ -5,25 +5,20 @@
  */
 package controller;
 
-import com.sun.glass.ui.Robot;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -60,8 +55,6 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private HBox report_hbox;
-    @FXML
     private DatePicker reportdate_picker;
     @FXML
     private ComboBox<Employee> employee_combo;
@@ -75,8 +68,6 @@ public class CreateIncomingReportFX implements Initializable {
     private ComboBox<ProductPart> part_combo;
     @FXML
     private ComboBox<PartRevision> partrev_combo;
-    @FXML
-    private VBox lot_vbox;
     @FXML
     private TableView<IncomingLot> incominglot_tableview;
     @FXML
@@ -105,17 +96,14 @@ public class CreateIncomingReportFX implements Initializable {
     private Button save_button;
     
     private ProductPart partcombo_selection;
-    
     private String partcombo_text;
     
     private PartRevision partrevcombo_selection;
-    
     private String partrevcombo_text;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     private List<PartRevision> partrev_queue = new ArrayList<PartRevision>();
-
     private List<IncomingLot> incoming_lots = new ArrayList<IncomingLot>();
     
     private ObservableList<Employee> employee = FXCollections.observableArrayList(
