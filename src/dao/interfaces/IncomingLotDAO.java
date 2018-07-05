@@ -49,6 +49,15 @@ public interface IncomingLotDAO {
     public List<IncomingLot> list(IncomingItem incoming_item) throws IllegalArgumentException, DAOException;
     
     /**
+     * Returns a list of all IncomingLot matching a given lot_number from the database ordered by IncomingLot ID.
+     * The list is never null and is empty when the database does not contain any IncomingLot matching lot_number.
+     * @param lot_number The lot_number to be searched for.
+     * @return A list of all IncomingLot matching lot_number from the database ordered by IncomingLot ID.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<IncomingLot> list(String lot_number) throws IllegalArgumentException;
+    
+    /**
      * Create the given IncomingLot for a given IncomingItem in the database. 
      * The IncomingItem ID must not be null and the IncomingItem ID must be null,
      * otherwise it will throw IllegalArgumentException. 

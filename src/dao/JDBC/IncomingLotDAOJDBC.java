@@ -29,6 +29,8 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             "SELECT INCOMING_ITEM_ID FROM INCOMING_LOT WHERE id = ?";
     private static final String SQL_LIST_OF_INCOMING_ITEM_ORDER_BY_ID = 
             "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE INCOMING_ITEM_ID = ? ORDER BY id";
+    private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID = 
+            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE INCOMING_ITEM_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO INCOMING_LOT (INCOMING_ITEM_ID, lot_number, quantity, box_quantity, status, comments) "
             + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -137,7 +139,31 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
         
         return incoming_lot;
     }
-
+    
+    @Override
+    public List<IncomingLot> list(String lot_number){
+        
+        List<IncomingLot> incoming_lot = new ArrayList<>();
+        
+        Object[] values = {
+            lot_number
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                incoming_lot.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return incoming_lot;
+    }
+    
     @Override
     public void create(IncomingItem incoming_item, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
         if (incoming_item.getId() == null) {

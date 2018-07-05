@@ -9,6 +9,7 @@ import dao.DAOException;
 import java.util.List;
 import model.DepartItem;
 import model.DepartLot;
+import model.IncomingLot;
 
 /**
  *
@@ -45,6 +46,15 @@ public interface DepartLotDAO {
      * @throws DAOException If something fails at database level.
      */
     public List<DepartLot> list(DepartItem depart_item) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns a list of all DepartLot matching a given lot_number from the database ordered by IncomingLot ID.
+     * The list is never null and is empty when the database does not contain any DepartLot matching lot_number.
+     * @param lot_number The lot_number to be searched for.
+     * @return A list of all DepartLot matching lot_number from the database ordered by DepartLot ID.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<DepartLot> list(String lot_number) throws IllegalArgumentException;
     
     /**
      * Create the given DepartLot for a given DepartItem in the database. 
