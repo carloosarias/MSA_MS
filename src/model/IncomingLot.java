@@ -20,6 +20,7 @@ public class IncomingLot implements Serializable {
     private String status;
     private String comments;
     private Integer partrevision_index;
+    private Integer departreport_index;
 
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -76,6 +77,14 @@ public class IncomingLot implements Serializable {
     
     public Integer getPartRevision_index(){
         return partrevision_index;
+    }
+    
+    public void setDepartreport_index(Integer departreport_index){
+        this.departreport_index = departreport_index;
+    }
+    
+    public Integer getDepartreport_index(){
+        return departreport_index;
     }
     
     // Object overrides ---------------------------------------------------------------------------

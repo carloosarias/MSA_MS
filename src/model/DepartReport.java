@@ -64,7 +64,7 @@ public class DepartReport implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("id: %d",
+        return String.format("%d",
                 id);
     }
 }

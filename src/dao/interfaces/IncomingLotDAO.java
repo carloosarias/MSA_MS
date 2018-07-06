@@ -8,6 +8,7 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
+import model.DepartReport;
 import model.IncomingItem;
 import model.IncomingLot;
 
@@ -69,6 +70,21 @@ public interface IncomingLotDAO {
      * @throws DAOException If something fails at database level.
      */    
     public void create(IncomingItem incoming_item, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Create the given IncomingLot for a given IncomingItem in the database. 
+     * The IncomingItem ID must not be null, the DepartReport ID must not be null
+     * and the IncomingItem ID must be null, otherwise it will throw IllegalArgumentException. 
+     * After creating, the DAO will set the obtained ID in the given CompanyAddress.
+     * @param incoming_item The IncomingItem to be assigned to the IncomingLot.
+     * @param depart_report The DepartReport to be assigned to the IncomingLot.
+     * @param incoming_lot The IncomingLot to be created.
+     * @throws IllegalArgumentException If the IncomingItem ID is null.
+     * @throws IllegalArgumentException If the DepartReport ID is null.
+     * @throws IllegalArgumentException If the IncomingLot ID is not null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public void create(IncomingItem incoming_item, DepartReport depart_report, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given IncomingLot in the database.

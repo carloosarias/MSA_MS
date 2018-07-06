@@ -182,7 +182,6 @@ public class CreateDepartReportFX implements Initializable {
         
         lot_add_button.setOnAction((ActionEvent) -> {
             if(!testLotFields()){
-                clearFields();
                 return;
             }
             DepartLot depart_lot = new DepartLot();

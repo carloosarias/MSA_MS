@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.DepartReport;
 import model.IncomingItem;
 import model.IncomingLot;
 
@@ -34,6 +35,9 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     private static final String SQL_INSERT =
             "INSERT INTO INCOMING_LOT (INCOMING_ITEM_ID, lot_number, quantity, box_quantity, status, comments) "
             + "VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String SQL_INSERT_DEPART_REPORT = 
+            "INSERT INTO INCOMING_LOT (INCOMING_ITEM_ID, DEPART_REPORT_ID, lot_number, quantity, box_quantity, status, comments) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE INCOMING_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, status = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE =
@@ -186,6 +190,52 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
         try(
             Connection connection = daoFactory.getConnection();
             PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating IncomingLot failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    incoming_lot.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating IncomingLot failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
+    }
+    
+    @Override
+    public void create(IncomingItem incoming_item, DepartReport depart_report, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
+        if (incoming_item.getId() == null) {
+            throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
+        }
+        
+        if (depart_report.getId() == null) {
+            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
+        }
+        
+        if(incoming_lot.getId() != null){
+            throw new IllegalArgumentException("IncomingLot is already created, the IncomingLot ID is null.");
+        }
+        
+        Object[] values = {
+            incoming_item.getId(),
+            depart_report.getId(),
+            incoming_lot.getLot_number(),
+            incoming_lot.getQuantity(),
+            incoming_lot.getBox_quantity(),
+            incoming_lot.getStatus(),
+            incoming_lot.getComments()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT_DEPART_REPORT, true, values);          
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){

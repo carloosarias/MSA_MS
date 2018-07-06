@@ -20,7 +20,7 @@ public class MainApp extends Application{
             "Zinc",
             "Estaño");
     public static List<String> status_list = Arrays.asList(
-            "Nuevo",
+            "Virgen",
             "Rechazo"
             );
     @Override

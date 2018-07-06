@@ -9,7 +9,6 @@ import dao.DAOException;
 import java.util.List;
 import model.DepartItem;
 import model.DepartLot;
-import model.IncomingLot;
 
 /**
  *

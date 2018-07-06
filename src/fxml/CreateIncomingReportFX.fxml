@@ -107,11 +107,6 @@
                            <children>
                               <VBox>
                                  <children>
-                                    <Label text="Información de Lote:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
                                     <Label text="Estado de Material:">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -122,6 +117,20 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </ComboBox>
+                                    <VBox fx:id="departreport_vbox">
+                                       <children>
+                                          <Label fx:id="departreport_label" text="No. de Remisión:">
+                                             <VBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ComboBox fx:id="departreport_combo" editable="true" prefWidth="150.0" promptText="No. de Remisión">
+                                             <VBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                       </children>
+                                    </VBox>
                                     <Label text="No. De Lote:">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -166,12 +175,7 @@
                               </VBox>
                               <VBox>
                                  <children>
-                                    <Label text="Lista de Lotes:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TableView fx:id="incominglot_tableview" editable="true" focusTraversable="false" prefHeight="282.0" prefWidth="624.0">
+                                    <TableView fx:id="incominglot_tableview" editable="true" focusTraversable="false" prefHeight="340.0" prefWidth="624.0">
                                       <columns>
                                         <TableColumn fx:id="lotnumber_column" prefWidth="100.0" text="No. de Lote" />
                                         <TableColumn fx:id="partnumber_column" prefWidth="100.0" text="No. Parte" />
