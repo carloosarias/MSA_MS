@@ -136,12 +136,9 @@ public class CreateIncomingReportFX implements Initializable {
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        comments_column.setOnEditCommit(
-            (TableColumn.CellEditEvent<IncomingLot, String> t) ->
-                ( t.getTableView().getItems().get(
-                    t.getTablePosition().getRow())
-                ).setComments(t.getNewValue())
-            );
+        comments_column.setOnEditCommit((TableColumn.CellEditEvent<IncomingLot, String> t) -> {
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setComments(t.getNewValue());
+        });
         
         employee_combo.setItems(employee);
         employee_combo.getSelectionModel().selectFirst();
