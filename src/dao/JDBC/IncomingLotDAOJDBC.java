@@ -35,10 +35,10 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             "SELECT DEPART_REPORT_ID FROM INCOMING_LOT WHERE id = ?";            
     private static final String SQL_LIST_OF_INCOMING_REPORT_ORDER_BY_ID = 
             "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE INCOMING_REPORT_ID = ? ORDER BY id";
-    private static final String SQL_LIST_PART_REVISIONS = 
-            "SELECT DISTINCT PART_REVISION_ID FROM INCOMING_LOT WHERE INCOMING_REPORT_ID = ?";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID = 
             "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE lot_number = ? ORDER BY id";
+    private static final String SQL_LIST_PART_REVISIONS = 
+            "SELECT DISTINCT PART_REVISION_ID FROM INCOMING_LOT WHERE INCOMING_REPORT_ID = ?";
     private static final String SQL_INSERT = 
             "INSERT INTO INCOMING_LOT (INCOMING_REPORT_ID, DEPART_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, status, comments) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -162,7 +162,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PART_REVISION_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_DEPART_REPORT_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {

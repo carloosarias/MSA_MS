@@ -139,7 +139,7 @@ public interface IncomingLotDAO {
      */    
     public void delete(IncomingLot incoming_lot) throws DAOException;
     
-    public Integer getPartRevisionQuantity(IncomingReport incoming_item, PartRevision part_revision);
+    public Integer getPartRevisionQuantity(IncomingReport incoming_report, PartRevision part_revision);
     
-    public Integer getPartRevisionBoxQuantity(IncomingReport incoming_item, PartRevision part_revision);
+    public Integer getPartRevisionBoxQuantity(IncomingReport incoming_report, PartRevision part_revision);
 }

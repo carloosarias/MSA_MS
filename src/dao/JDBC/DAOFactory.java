@@ -8,7 +8,6 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
-import dao.interfaces.DepartItemDAO;
 import dao.interfaces.DepartLotDAO;
 import dao.interfaces.DepartReportDAO;
 import dao.interfaces.IncomingLotDAO;
@@ -264,14 +263,6 @@ public abstract class DAOFactory {
      */   
     public DepartReportDAO getDepartReportDAO(){
         return new DepartReportDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the DepartItem DAO associated with the current DAOFactory.
-     * @return The DepartItem DAO associated with the current DAOFactory.
-     */   
-    public DepartItemDAO getDepartItemDAO(){
-        return new DepartItemDAOJDBC(this);
     }
     
     /**

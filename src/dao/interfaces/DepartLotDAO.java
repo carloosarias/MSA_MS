@@ -7,8 +7,10 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
-import model.DepartItem;
 import model.DepartLot;
+import model.DepartReport;
+import model.IncomingReport;
+import model.PartRevision;
 
 /**
  *
@@ -26,25 +28,35 @@ public interface DepartLotDAO {
     public DepartLot find(Integer id) throws DAOException;
     
     /**
-     * Returns the DepartItem from the database matching the given DepartLot ID, otherwise null.
+     * Returns the DepartReport from the database matching the given DepartLot ID, otherwise null.
      * DepartLot ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param depart_lot The DepartLot ID to get the DepartItem from.
-     * @return The DepartItem from the database matching the given DepartLot ID, otherwise null.
+     * @param depart_lot The DepartLot ID to get the DepartReport from.
+     * @return The IncomingReport from the database matching the given DepartLot ID, otherwise null.
      * @throws IllegalArgumentException If DepartLot ID is null.
      * @throws DAOException If something fails at database level.
      */      
-    public DepartItem findDepartItem(DepartLot depart_lot) throws IllegalArgumentException, DAOException;
+    public DepartReport findDepartReport(DepartLot depart_lot) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all DepartLot from a given DepartItem from the database ordered by DepartLot ID. The DepartItem ID must not be null
+     * Returns the PartRevision from the database matching the given DepartLot ID, otherwise null.
+     * DepartLot ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param depart_lot The DepartLot ID to get the PartRevision from.
+     * @return The PartRevision from the database matching the given DepartLot ID, otherwise null.
+     * @throws IllegalArgumentException If DepartLot ID is null.
+     * @throws DAOException If something fails at database level.
+     */          
+    public PartRevision findPartRevision(DepartLot depart_lot) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns a list of all DepartLot from a given DepartReport from the database ordered by DepartLot ID. The DepartReport ID must not be null
      * otherwise it will throw IllegalArgumentException. The list is never null and
-     * is empty when the database does not contain any DepartLot matching DepartItem.
-     * @param depart_item The DepartItem to be searched for.
-     * @return A list of all DepartLot matching DepartItem from the database ordered by DepartLot ID.
-     * @throws IllegalArgumentException If the DepartItem ID is null.
+     * is empty when the database does not contain any DepartLot matching DepartReport.
+     * @param depart_report The DepartReport to be searched for.
+     * @return A list of all DepartLot matching DepartReport from the database ordered by DepartLot ID.
+     * @throws IllegalArgumentException If the DepartReport ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public List<DepartLot> list(DepartItem depart_item) throws IllegalArgumentException, DAOException;
+    public List<DepartLot> list(DepartReport depart_report) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all DepartLot matching a given lot_number from the database ordered by IncomingLot ID.
@@ -56,17 +68,30 @@ public interface DepartLotDAO {
     public List<DepartLot> list(String lot_number) throws IllegalArgumentException;
     
     /**
-     * Create the given DepartLot for a given DepartItem in the database. 
-     * The DepartItem ID must not be null and the DepartItem ID must be null,
-     * otherwise it will throw IllegalArgumentException. 
-     * After creating, the DAO will set the obtained ID in the given CompanyAddress.
-     * @param depart_item The DepartItem to be assigned to the DepartLot.
+     * Returns a list of distinct PartRevision matching a given IncomingReport from the database ordered by PartRevision ID.
+     * The IncomingReport ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not contain any PartRevisions matching IncomingReport.
+     * @param incoming_report The incoming_report to be searched for.
+     * @return A list of distinct PartRevision matching IncomingReport from the database ordered by PartRevision ID.
+     * @throws IllegalArgumentException If the IncomingReport ID is null.
+     * @throws DAOException If something fails at database level.
+     */       
+    public List<PartRevision> listPartRevision(IncomingReport incoming_report) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Create the given DepartLot for a given DepartReport in the database. 
+     * The DepartReport ID must not be null, the PartRevision ID must not be null
+     * and the DepartReport ID must be null, otherwise it will throw IllegalArgumentException. 
+     * After creating, the DAO will set the obtained ID in the given DepartLot.
+     * @param depart_report The DepartReport to be assigned to the DepartLot.
+     * @param part_revision The PartRevision to be assigned to the DepartLot.
      * @param depart_lot The DepartLot to be created.
-     * @throws IllegalArgumentException If the DepartItem ID is null.
+     * @throws IllegalArgumentException If the DepartReport ID is null.
+     * @throws IllegalArgumentException If the PartRevision ID is null.
      * @throws IllegalArgumentException If the DepartLot ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(DepartItem depart_item, DepartLot depart_lot) throws IllegalArgumentException, DAOException;
+    public void create(DepartReport depart_report, PartRevision part_revision, DepartLot depart_lot) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given DepartLot in the database.
@@ -85,7 +110,7 @@ public interface DepartLotDAO {
      */    
     public void delete(DepartLot depart_lot) throws DAOException;
     
-    public Integer getTotalQuantity(DepartItem depart_item);
+    public Integer getPartRevisionQuantity(DepartReport depart_report, PartRevision part_revision);
     
-    public Integer getTotalBoxQuantity(DepartItem depart_item);    
+    public Integer getPartRevisionBoxQuantity(DepartReport depart_report, PartRevision part_revision);
 }

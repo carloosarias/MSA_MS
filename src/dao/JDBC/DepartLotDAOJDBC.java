@@ -14,8 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.DepartItem;
 import model.DepartLot;
+import model.DepartReport;
 
 /**
  *
@@ -25,15 +25,19 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE id = ?";
-    private static final String SQL_FIND_DEPART_ITEM_BY_ID =
+    private static final String SQL_FIND_DEPART_REPORT_BY_ID =
             "SELECT DEPART_ITEM_ID FROM DEPART_LOT WHERE id = ?";
-    private static final String SQL_LIST_OF_DEPART_ITEM_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE DEPART_ITEM_ID = ? ORDER BY id";
+    private static final String SQL_FIND_PART_REVISION_BY_ID = 
+            "SELECT PART_REVISION_ID FROM DEPART_LOT WHERE id = ?";
+    private static final String SQL_LIST_OF_DEPART_REPORT_ORDER_BY_ID = 
+            "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE DEPART_REPORT_ID = ? ORDER BY id";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID =
-            "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE DEPART_ITEM_ID = ? ORDER BY id";
+            "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE lot_number = ? ORDER BY id";
+    private static final String SQL_LIST_OF_PART_REVISIONS = 
+            "SELECT DISTINCT PART_REVISION_ID FROM DEPART_LOT WHERE DEPART_REPORT_ID = ?";
     private static final String SQL_INSERT =
-            "INSERT INTO DEPART_LOT (DEPART_ITEM_ID, lot_number, quantity, box_quantity, process, comments) "
-            + "VALUES (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO DEPART_LOT (DEPART_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, process, comments) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE DEPART_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, process = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE =
@@ -87,12 +91,12 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     }
     
     @Override
-    public DepartItem findDepartItem(DepartLot depart_lot) throws IllegalArgumentException, DAOException {
+    public DepartReport findDepartReport(DepartLot depart_lot) throws IllegalArgumentException, DAOException {
         if(depart_lot.getId() == null) {
             throw new IllegalArgumentException("DepartLot is not created yet, the DepartLot ID is null.");
         }
         
-        DepartItem depart_item = null;
+        DepartReport depart_report = null;
         
         Object[] values = {
             depart_lot.getId()
@@ -100,34 +104,34 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_DEPART_ITEM_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_DEPART_REPORT_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                depart_item = daoFactory.getDepartItemDAO().find(resultSet.getInt("DEPART_ITEMf_ID"));
+                depart_report = daoFactory.getDepartReportDAO().find(resultSet.getInt("DEPART_REPORT_ID"));
             }
         } catch (SQLException e) {
             throw new DAOException(e);
         }
         
-        return depart_item;
+        return depart_report;
     }
 
     @Override
-    public List<DepartLot> list(DepartItem depart_item) throws IllegalArgumentException, DAOException {
-        if(depart_item.getId() == null) {
-            throw new IllegalArgumentException("DepartItem is not created yet, the DepartItem ID is null.");
+    public List<DepartLot> list(DepartReport depart_report) throws IllegalArgumentException, DAOException {
+        if(depart_report.getId() == null) {
+            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
         }    
         
         List<DepartLot> depart_lot = new ArrayList<>();
         
         Object[] values = {
-            depart_item.getId()
+            depart_report.getId()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_DEPART_ITEM_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_DEPART_REPORT_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
