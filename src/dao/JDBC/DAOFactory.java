@@ -11,7 +11,6 @@ import dao.interfaces.CompanyContactDAO;
 import dao.interfaces.DepartItemDAO;
 import dao.interfaces.DepartLotDAO;
 import dao.interfaces.DepartReportDAO;
-import dao.interfaces.IncomingItemDAO;
 import dao.interfaces.IncomingLotDAO;
 import dao.interfaces.IncomingReportDAO;
 import dao.interfaces.OrderPurchaseDAO;
@@ -249,14 +248,6 @@ public abstract class DAOFactory {
      */   
     public IncomingReportDAO getIncomingReportDAO(){
         return new IncomingReportDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the IncomingItem DAO associated with the current DAOFactory.
-     * @return The IncomingItem DAO associated with the current DAOFactory.
-     */   
-    public IncomingItemDAO getIncomingItemDAO(){
-        return new IncomingItemDAOJDBC(this);
     }
     
     /**

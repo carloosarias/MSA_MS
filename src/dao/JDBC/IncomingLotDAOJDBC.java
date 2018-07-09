@@ -15,8 +15,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.DepartReport;
-import model.IncomingItem;
 import model.IncomingLot;
+import model.IncomingReport;
+import model.PartRevision;
 
 /**
  *
@@ -26,18 +27,21 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE id = ?";
-    private static final String SQL_FIND_INCOMING_ITEM_BY_ID =
-            "SELECT INCOMING_ITEM_ID FROM INCOMING_LOT WHERE id = ?";
-    private static final String SQL_LIST_OF_INCOMING_ITEM_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE INCOMING_ITEM_ID = ? ORDER BY id";
+    private static final String SQL_FIND_INCOMING_REPORT_BY_ID =
+            "SELECT INCOMING_REPORT_ID FROM INCOMING_LOT WHERE id = ?";
+    private static final String SQL_FIND_PART_REVISION_BY_ID = 
+            "SELECT PART_REVISION_ID FROM INCOMING_LOT WHERE id = ?";
+    private static final String SQL_FIND_DEPART_REPORT_BY_ID = 
+            "SELECT DEPART_REPORT_ID FROM INCOMING_LOT WHERE id = ?";            
+    private static final String SQL_LIST_OF_INCOMING_REPORT_ORDER_BY_ID = 
+            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE INCOMING_REPORT_ID = ? ORDER BY id";
+    private static final String SQL_LIST_PART_REVISIONS = 
+            "SELECT DISTINCT PART_REVISION_ID FROM INCOMING_LOT WHERE INCOMING_REPORT_ID = ?";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE INCOMING_ITEM_ID = ? ORDER BY id";
-    private static final String SQL_INSERT =
-            "INSERT INTO INCOMING_LOT (INCOMING_ITEM_ID, lot_number, quantity, box_quantity, status, comments) "
-            + "VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String SQL_INSERT_DEPART_REPORT = 
-            "INSERT INTO INCOMING_LOT (INCOMING_ITEM_ID, DEPART_REPORT_ID, lot_number, quantity, box_quantity, status, comments) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE lot_number = ? ORDER BY id";
+    private static final String SQL_INSERT = 
+            "INSERT INTO INCOMING_LOT (INCOMING_REPORT_ID, DEPART_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, status, comments) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE INCOMING_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, status = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE =
@@ -91,12 +95,12 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     }
     
     @Override
-    public IncomingItem findIncomingItem(IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
+    public IncomingReport findIncomingReport(IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
         if(incoming_lot.getId() == null) {
             throw new IllegalArgumentException("IncomingLot is not created yet, the IncomingLot ID is null.");
         }
         
-        IncomingItem incoming_item = null;
+        IncomingReport incoming_report = null;
         
         Object[] values = {
             incoming_lot.getId()
@@ -104,34 +108,88 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_INCOMING_ITEM_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_INCOMING_REPORT_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                incoming_item = daoFactory.getIncomingItemDAO().find(resultSet.getInt("INCOMING_ITEM_ID"));
+                incoming_report = daoFactory.getIncomingReportDAO().find(resultSet.getInt("INCOMING_REPORT_ID"));
             }
         } catch (SQLException e) {
             throw new DAOException(e);
         }
         
-        return incoming_item;
+        return incoming_report;
+    }
+    
+    @Override
+    public PartRevision findPartRevision(IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
+        if(incoming_lot.getId() == null) {
+            throw new IllegalArgumentException("IncomingLot is not created yet, the IncomingLot ID is null.");
+        }
+        
+        PartRevision part_revision = null;
+        
+        Object[] values = {
+            incoming_lot.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PART_REVISION_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                part_revision = daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return part_revision;
     }
 
     @Override
-    public List<IncomingLot> list(IncomingItem incoming_item) throws IllegalArgumentException, DAOException {
-        if(incoming_item.getId() == null) {
-            throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
+    public DepartReport findDepartReport(IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
+        if(incoming_lot.getId() == null) {
+            throw new IllegalArgumentException("IncomingLot is not created yet, the IncomingLot ID is null.");
+        }
+        
+        DepartReport depart_report = null;
+        
+        Object[] values = {
+            incoming_lot.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PART_REVISION_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                depart_report = daoFactory.getDepartReportDAO().find(resultSet.getInt("DEPART_REPORT_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return depart_report;        
+    }
+    
+    @Override
+    public List<IncomingLot> list(IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
+        if(incoming_report.getId() == null) {
+            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
         }    
         
         List<IncomingLot> incoming_lot = new ArrayList<>();
         
         Object[] values = {
-            incoming_item.getId()
+            incoming_report.getId()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_INCOMING_ITEM_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_INCOMING_REPORT_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -169,9 +227,39 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     }
     
     @Override
-    public void create(IncomingItem incoming_item, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
-        if (incoming_item.getId() == null) {
+    public List<PartRevision> listPartRevision(IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
+        if(incoming_report.getId() == null) {
+            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
+        }
+        List<PartRevision> part_revision = new ArrayList<>();
+        
+        Object[] values = {
+            incoming_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PART_REVISIONS, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                part_revision.add(daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID")));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part_revision;
+    }
+    
+    @Override
+    public void create(IncomingReport incoming_report, PartRevision part_revision, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
+        if (incoming_report.getId() == null) {
             throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
+        }
+        
+        if (incoming_report.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
         if(incoming_lot.getId() != null){
@@ -179,7 +267,9 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
         }
         
         Object[] values = {
-            incoming_item.getId(),
+            incoming_report.getId(),
+            null,
+            part_revision.getId(),
             incoming_lot.getLot_number(),
             incoming_lot.getQuantity(),
             incoming_lot.getBox_quantity(),
@@ -210,8 +300,8 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     }
     
     @Override
-    public void create(IncomingItem incoming_item, DepartReport depart_report, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
-        if (incoming_item.getId() == null) {
+    public void create(IncomingReport incoming_report, DepartReport depart_report, PartRevision part_revision, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
+        if (incoming_report.getId() == null) {
             throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
         }
         
@@ -219,13 +309,18 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
         }
         
+        if (incoming_report.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }
+        
         if(incoming_lot.getId() != null){
             throw new IllegalArgumentException("IncomingLot is already created, the IncomingLot ID is null.");
         }
         
         Object[] values = {
-            incoming_item.getId(),
+            incoming_report.getId(),
             depart_report.getId(),
+            part_revision.getId(),
             incoming_lot.getLot_number(),
             incoming_lot.getQuantity(),
             incoming_lot.getBox_quantity(),
@@ -235,7 +330,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_INSERT_DEPART_REPORT, true, values);          
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
@@ -306,19 +401,23 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     }   
     
     @Override
-    public Integer getTotalQuantity(IncomingItem incoming_item){
+    public Integer getPartRevisionQuantity(IncomingReport incoming_report, PartRevision part_revision){
         Integer total = 0;
-        for(IncomingLot incoming_lot : list(incoming_item)){
-            total += incoming_lot.getQuantity();
+        for(IncomingLot incoming_lot : list(incoming_report)){
+            if(daoFactory.getIncomingLotDAO().findPartRevision(incoming_lot).equals(part_revision)){
+                total += incoming_lot.getQuantity();
+            }
         }
         return total;
     }
     
     @Override
-    public Integer getTotalBoxQuantity(IncomingItem incoming_item){
+    public Integer getPartRevisionBoxQuantity(IncomingReport incoming_report, PartRevision part_revision){
         Integer total = 0;
-        for(IncomingLot incoming_lot : list(incoming_item)){
-            total += incoming_lot.getBox_quantity();
+        for(IncomingLot incoming_lot : list(incoming_report)){
+            if(daoFactory.getIncomingLotDAO().findPartRevision(incoming_lot).equals(part_revision)){
+                total += incoming_lot.getBox_quantity();
+            }
         }
         return total;
     }

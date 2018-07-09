@@ -40,7 +40,6 @@ import javafx.stage.Stage;
 import model.Company;
 import model.DepartReport;
 import model.Employee;
-import model.IncomingItem;
 import model.IncomingLot;
 import model.IncomingReport;
 import model.PartRevision;
@@ -108,7 +107,6 @@ public class CreateIncomingReportFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
-    private List<PartRevision> partrev_queue = new ArrayList<PartRevision>();
     private List<IncomingLot> incoming_lots = new ArrayList<IncomingLot>();
     
     private ObservableList<Employee> employee = FXCollections.observableArrayList(
@@ -129,8 +127,8 @@ public class CreateIncomingReportFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         departreport_vbox.getChildren().removeAll(departreport_label, departreport_combo);
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index())).toString()));
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index()).getRev()));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPart_revision_id())).toString()));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPart_revision_id()).getRev()));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
@@ -200,9 +198,6 @@ public class CreateIncomingReportFX implements Initializable {
                     partrev_combo.getEditor().selectAll();
                 }
                 else{
-                    if(!partrev_queue.contains(partrevcombo_selection)){
-                        partrev_queue.add(partrevcombo_selection);
-                    }
                     quantity_field.requestFocus();
                     ActionEvent.consume();
                 }
@@ -231,12 +226,13 @@ public class CreateIncomingReportFX implements Initializable {
             incoming_lot.setBox_quantity(1);
             incoming_lot.setStatus(status_combo.getSelectionModel().getSelectedItem());
             incoming_lot.setComments("");
-            incoming_lot.setPartrevision_index(partrevcombo_selection.getId());
+            incoming_lot.setPart_revision_id(partrevcombo_selection.getId());
             if(incoming_lot.getStatus().equals("Rechazo")){
                 incoming_lot.setDepartreport_index(departreportcombo_selection.getId());
                 incoming_lot.setComments(incoming_lot.getComments()+"Folio de Remisión #"+incoming_lot.getDepartreport_index());
             }
             incoming_lots.add(incoming_lot);
+            System.out.println(partrevcombo_selection.getId());
             clearFields();
             updateLotListview();
             lotnumber_field.requestFocus();
@@ -248,11 +244,6 @@ public class CreateIncomingReportFX implements Initializable {
         
         lot_delete_button.setOnAction((ActionEvent) -> {
             incoming_lots.remove(incominglot_tableview.getSelectionModel().getSelectedItem());
-            for(int i = 0; i < incoming_lots.size(); i++){
-                if(!partrev_queue.contains(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()))){
-                    partrev_queue.remove(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()));
-                }
-            }
             updateLotListview();
         });
        
@@ -260,11 +251,6 @@ public class CreateIncomingReportFX implements Initializable {
             if(!testSaveFields()){
                 return;
             }
-            for(int i = 0; i < incoming_lots.size(); i++){
-                if(!partrev_queue.contains(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()))){
-                    partrev_queue.remove(msabase.getPartRevisionDAO().find(incoming_lots.get(i).getPartRevision_index()));
-                }
-            }    
             saveIncomingReport();
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
@@ -312,33 +298,15 @@ public class CreateIncomingReportFX implements Initializable {
         incoming_report.setPo_number(ponumber_field.getText());
         incoming_report.setPacking_list(packinglist_field.getText());
         msabase.getIncomingReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), company_combo.getSelectionModel().getSelectedItem(), incoming_report);
-        saveIncomingItems(incoming_report);
+        saveIncomingLots(incoming_report);
     }
     
-    public void saveIncomingItems(IncomingReport incoming_report){
-        for(PartRevision part_revision : partrev_queue){
-            IncomingItem incoming_item = new IncomingItem();
-            msabase.getIncomingItemDAO().create(incoming_report, part_revision, incoming_item);
-            saveIncomingLots(part_revision, incoming_item);
-        }
-    }
-    
-    public void saveIncomingLots(PartRevision part_revision, IncomingItem incoming_item){
+    public void saveIncomingLots(IncomingReport incoming_report){
         for(IncomingLot incoming_lot : incoming_lots){
-            if(incoming_lot.getPartRevision_index().equals(part_revision.getId())){
-                if(incoming_lot.getDepartreport_index() != null){
-                    msabase.getIncomingLotDAO().create(incoming_item, msabase.getDepartReportDAO().find(incoming_lot.getDepartreport_index()), incoming_lot);
-                }else{
-                    msabase.getIncomingLotDAO().create(incoming_item, incoming_lot);
-                }
-            }
-        }
-    }
-    
-    public void clearLots(PartRevision part_revision){
-        for(IncomingLot incoming_lot : incoming_lots){
-            if(incoming_lot.getPartRevision_index().equals(part_revision.getId())){
-                incoming_lots.remove(incoming_lot);
+            if(incoming_lot.getDepartreport_index() != null){
+                msabase.getIncomingLotDAO().create(incoming_report, msabase.getDepartReportDAO().find(incoming_lot.getDepartreport_index()), msabase.getPartRevisionDAO().find(incoming_lot.getPart_revision_id()), incoming_lot);
+            }else{
+                msabase.getIncomingLotDAO().create(incoming_report, msabase.getPartRevisionDAO().find(incoming_lot.getPart_revision_id()), incoming_lot);
             }
         }
     }

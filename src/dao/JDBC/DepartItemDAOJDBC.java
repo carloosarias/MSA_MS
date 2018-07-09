@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import model.DepartItem;
 import model.DepartReport;
-import model.IncomingItem;
-import model.IncomingReport;
 import model.PartRevision;
 
 /**

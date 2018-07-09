@@ -26,9 +26,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.IncomingItem;
 import model.IncomingLot;
 import model.IncomingReport;
+import model.PartRevision;
 
 /**
  * FXML Controller class
@@ -54,15 +54,15 @@ public class IncomingReportFX implements Initializable {
     @FXML
     private TableColumn<IncomingReport, String> report_packinglist_column;
     @FXML
-    private TableView<IncomingItem> incomingitem_tableview;
+    private TableView<PartRevision> partrevision_tableview;
     @FXML
-    private TableColumn<IncomingItem, String> part_column;
+    private TableColumn<PartRevision, String> part_column;
     @FXML
-    private TableColumn<IncomingItem, String> revision_column;
+    private TableColumn<PartRevision, String> revision_column;
     @FXML
-    private TableColumn<IncomingItem, String> item_qty_column;
+    private TableColumn<PartRevision, String> item_qty_column;
     @FXML
-    private TableColumn<IncomingItem, String> item_boxqty_column;
+    private TableColumn<PartRevision, String> item_boxqty_column;
     @FXML
     private TableView<IncomingLot> incominglot_tableview;
     @FXML
@@ -94,16 +94,15 @@ public class IncomingReportFX implements Initializable {
         
         incoming_report_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport> observable, IncomingReport oldValue, IncomingReport newValue) -> {
             if(newValue != null){
-                
-                incomingitem_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingItemDAO().list(newValue)));
+                partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listPartRevision(newValue)));
             }else{
-                incomingitem_tableview.getItems().clear();
+                partrevision_tableview.getItems().clear();
             }
         });
         
-        incomingitem_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingItem> observable, IncomingItem oldValue, IncomingItem newValue) -> {
+        partrevision_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
             if(newValue != null){
-                incominglot_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().list(newValue)));
+                incominglot_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().list(incoming_report_tableview.getSelectionModel().getSelectedItem())));
             }else{
                 incominglot_tableview.getItems().clear();
             }
@@ -145,13 +144,11 @@ public class IncomingReportFX implements Initializable {
     
     public void setItemTable(){
         part_column.setCellValueFactory(c -> new SimpleStringProperty(
-                msabase.getPartRevisionDAO().findProductPart(
-                       msabase .getIncomingItemDAO().findPartRevision(c.getValue())
-                ).toString()
+                msabase.getPartRevisionDAO().findProductPart(c.getValue()).getPart_number()
         ));
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingItemDAO().findPartRevision(c.getValue()).getRev()));
-        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().getTotalQuantity(c.getValue())));
-        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().getTotalBoxQuantity(c.getValue())));
+        revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
+        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().getPartRevisionQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().getPartRevisionBoxQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
     }
     
     public void setLotTable(){
