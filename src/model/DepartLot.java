@@ -19,6 +19,7 @@ public class DepartLot implements Serializable {
     private Integer box_quantity;
     private String process;
     private String comments;
+    private boolean rejected;
     private Integer part_revision_id;
 
     // Getters/setters ----------------------------------------------------------------------------
@@ -70,6 +71,14 @@ public class DepartLot implements Serializable {
         return comments;
     }
     
+    public void setRejected(boolean rejected){
+        this.rejected = rejected;
+    }
+    
+    public boolean isRejected(){
+        return rejected;
+    }
+        
     public void setPart_revision_id(Integer part_revision_id){
         this.part_revision_id = part_revision_id;
     }

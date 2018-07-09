@@ -129,6 +129,16 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </ComboBox>
+                                          <Label text="Selección de Lote:">
+                                             <VBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <ComboBox fx:id="departlot_combo" prefWidth="150.0" promptText="Selección de Lote:">
+                                             <VBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
                                        </children>
                                     </VBox>
                                     <Label text="No. De Lote:">

@@ -38,6 +38,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Company;
+import model.DepartLot;
 import model.DepartReport;
 import model.Employee;
 import model.IncomingLot;
@@ -67,6 +68,14 @@ public class CreateIncomingReportFX implements Initializable {
     private TextField packinglist_field;
     @FXML
     private ComboBox<String> status_combo;
+    @FXML
+    private VBox departreport_vbox;
+    @FXML
+    private ComboBox<DepartReport> departreport_combo;
+    @FXML
+    private Label departreport_label;
+    @FXML
+    private ComboBox<DepartLot> departlot_combo;
     @FXML
     private ComboBox<ProductPart> part_combo;
     @FXML
@@ -105,6 +114,8 @@ public class CreateIncomingReportFX implements Initializable {
     private DepartReport departreportcombo_selection;
     private String departreportcombo_text;
     
+    private DepartLot departlotcombo_selection;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     private List<IncomingLot> incoming_lots = new ArrayList<IncomingLot>();
@@ -112,13 +123,6 @@ public class CreateIncomingReportFX implements Initializable {
     private ObservableList<Employee> employee = FXCollections.observableArrayList(
         msabase.getEmployeeDAO().find(MainApp.employee_id)
     );
-    
-    @FXML
-    private VBox departreport_vbox;
-    @FXML
-    private ComboBox<DepartReport> departreport_combo;
-    @FXML
-    private Label departreport_label;
     
     /**
      * Initializes the controller class.
@@ -159,6 +163,7 @@ public class CreateIncomingReportFX implements Initializable {
             departreportcombo_text = departreport_combo.getEditor().textProperty().getValue();
             try{
                 departreportcombo_selection = msabase.getDepartReportDAO().find(Integer.parseInt(departreportcombo_text));
+                departlot_combo.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreportcombo_selection)));
             } catch(Exception e){
                 departreport_combo.getEditor().selectAll();
             }
@@ -228,8 +233,8 @@ public class CreateIncomingReportFX implements Initializable {
             incoming_lot.setComments("");
             incoming_lot.setPart_revision_id(partrevcombo_selection.getId());
             if(incoming_lot.getStatus().equals("Rechazo")){
-                incoming_lot.setDepartreport_index(departreportcombo_selection.getId());
-                incoming_lot.setComments(incoming_lot.getComments()+"Folio de Remisión #"+incoming_lot.getDepartreport_index());
+                incoming_lot.setDepart_lot_id(departlotcombo_selection.getId());
+                incoming_lot.setComments(incoming_lot.getComments()+"Folio de Remisión #"+msabase.getDepartLotDAO().findDepartReport(departlotcombo_selection));
             }
             incoming_lots.add(incoming_lot);
             clearFields();
@@ -300,10 +305,12 @@ public class CreateIncomingReportFX implements Initializable {
         saveIncomingLots(incoming_report);
     }
     
+    //START HERE TOMORROW!!
+    //CHANGE DEPART REPORT TO DEPART LOT INSIDE THE INCOMING LOT DAO!!!
     public void saveIncomingLots(IncomingReport incoming_report){
         for(IncomingLot incoming_lot : incoming_lots){
-            if(incoming_lot.getDepartreport_index() != null){
-                msabase.getIncomingLotDAO().create(incoming_report, msabase.getDepartReportDAO().find(incoming_lot.getDepartreport_index()), msabase.getPartRevisionDAO().find(incoming_lot.getPart_revision_id()), incoming_lot);
+            if(incoming_lot.getDepart_lot_id() != null){
+                msabase.getIncomingLotDAO().create(incoming_report, msabase.getDepartReportDAO().find(incoming_lot.getDepart_lot_id()), msabase.getPartRevisionDAO().find(incoming_lot.getPart_revision_id()), incoming_lot);
             }else{
                 msabase.getIncomingLotDAO().create(incoming_report, msabase.getPartRevisionDAO().find(incoming_lot.getPart_revision_id()), incoming_lot);
             }
