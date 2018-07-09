@@ -404,7 +404,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     public Integer getPartRevisionQuantity(IncomingReport incoming_report, PartRevision part_revision){
         Integer total = 0;
         for(IncomingLot incoming_lot : list(incoming_report)){
-            if(daoFactory.getIncomingLotDAO().findPartRevision(incoming_lot).equals(part_revision)){
+            if(findPartRevision(incoming_lot).equals(part_revision)){
                 total += incoming_lot.getQuantity();
             }
         }
@@ -415,7 +415,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     public Integer getPartRevisionBoxQuantity(IncomingReport incoming_report, PartRevision part_revision){
         Integer total = 0;
         for(IncomingLot incoming_lot : list(incoming_report)){
-            if(daoFactory.getIncomingLotDAO().findPartRevision(incoming_lot).equals(part_revision)){
+            if(findPartRevision(incoming_lot).equals(part_revision)){
                 total += incoming_lot.getBox_quantity();
             }
         }

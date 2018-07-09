@@ -39,7 +39,7 @@
                      <content>
                         <HBox>
                            <children>
-                              <TableView fx:id="departitem_tableview">
+                              <TableView fx:id="partrevision_tableview">
                                  <columns>
                                     <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />
                                     <TableColumn fx:id="revision_column" prefWidth="100.0" resizable="false" text="Revision" />

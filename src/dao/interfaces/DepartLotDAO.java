@@ -68,15 +68,15 @@ public interface DepartLotDAO {
     public List<DepartLot> list(String lot_number) throws IllegalArgumentException;
     
     /**
-     * Returns a list of distinct PartRevision matching a given IncomingReport from the database ordered by PartRevision ID.
-     * The IncomingReport ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any PartRevisions matching IncomingReport.
-     * @param incoming_report The incoming_report to be searched for.
-     * @return A list of distinct PartRevision matching IncomingReport from the database ordered by PartRevision ID.
-     * @throws IllegalArgumentException If the IncomingReport ID is null.
+     * Returns a list of distinct PartRevision matching a given DepartReport from the database ordered by PartRevision ID.
+     * The DepartReport ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not contain any PartRevisions matching DepartReport.
+     * @param depart_report The DepartReport to be searched for.
+     * @return A list of distinct PartRevision matching DepartReport from the database ordered by PartRevision ID.
+     * @throws IllegalArgumentException If the DepartReport ID is null.
      * @throws DAOException If something fails at database level.
      */       
-    public List<PartRevision> listPartRevision(IncomingReport incoming_report) throws IllegalArgumentException, DAOException;
+    public List<PartRevision> listPartRevision(DepartReport depart_report) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given DepartLot for a given DepartReport in the database. 

@@ -33,11 +33,9 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Company;
 import model.CompanyAddress;
-import model.DepartItem;
 import model.DepartLot;
 import model.DepartReport;
 import model.Employee;
-import model.IncomingLot;
 import model.PartRevision;
 import model.ProductPart;
 import msa_ms.MainApp;
@@ -98,7 +96,6 @@ public class CreateDepartReportFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
-    private List<PartRevision> partrev_queue = new ArrayList<PartRevision>();
     private List<DepartLot> depart_lots = new ArrayList<DepartLot>();
     
     private ObservableList<Employee> employee = FXCollections.observableArrayList(
@@ -110,8 +107,8 @@ public class CreateDepartReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index())).toString()));
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPartRevision_index()).getRev()));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPart_revision_id())).toString()));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPart_revision_id()).getRev()));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
@@ -166,9 +163,6 @@ public class CreateDepartReportFX implements Initializable {
                 partrev_combo.getEditor().selectAll();
             }
             else{
-                if(!partrev_queue.contains(partrevcombo_selection)){
-                    partrev_queue.add(partrevcombo_selection);
-                }
                 quantity_field.requestFocus();
                 ActionEvent.consume();
             }            
@@ -240,22 +234,12 @@ public class CreateDepartReportFX implements Initializable {
         DepartReport depart_report = new DepartReport();
         depart_report.setReport_date(java.sql.Date.valueOf(reportdate_picker.getValue()));
         msabase.getDepartReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), company_combo.getSelectionModel().getSelectedItem(), address_combo.getSelectionModel().getSelectedItem(), depart_report);
-        saveDepartItems(depart_report);
+        saveDepartLots(depart_report);
     }
     
-    public void saveDepartItems(DepartReport depart_report){
-        for(PartRevision part_revision : partrev_queue){
-            DepartItem depart_item = new DepartItem();
-            msabase.getDepartItemDAO().create(depart_report, part_revision, depart_item);
-            saveDepartLots(part_revision, depart_item);
-        }
-    }
-    
-    public void saveDepartLots(PartRevision part_revision, DepartItem depart_item){
+    public void saveDepartLots(DepartReport depart_report){
         for(DepartLot depart_lot : depart_lots){
-            if(depart_lot.getPartRevision_index().equals(part_revision.getId())){
-                msabase.getDepartLotDAO().create(depart_item, depart_lot);
-            }
+            msabase.getDepartLotDAO().create(depart_report, msabase.getPartRevisionDAO().find(depart_lot.getPart_revision_id()), depart_lot);
         }
     }    
     public void updatePartrev_combo(){

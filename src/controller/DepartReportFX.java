@@ -26,9 +26,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.DepartItem;
 import model.DepartLot;
 import model.DepartReport;
+import model.PartRevision;
 
 /**
  * FXML Controller class
@@ -52,15 +52,15 @@ public class DepartReportFX implements Initializable {
     @FXML
     private TableColumn<DepartReport, String> address_column;
     @FXML
-    private TableView<DepartItem> departitem_tableview;
+    private TableView<PartRevision> partrevision_tableview;
     @FXML
-    private TableColumn<DepartItem, String> part_column;
+    private TableColumn<PartRevision, String> part_column;
     @FXML
-    private TableColumn<DepartItem, String> revision_column;
+    private TableColumn<PartRevision, String> revision_column;
     @FXML
-    private TableColumn<DepartItem, String> item_qty_column;
+    private TableColumn<PartRevision, String> item_qty_column;
     @FXML
-    private TableColumn<DepartItem, String> item_boxqty_column;
+    private TableColumn<PartRevision, String> item_boxqty_column;
     @FXML
     private TableView<DepartLot> departlot_tableview;
     @FXML
@@ -92,19 +92,14 @@ public class DepartReportFX implements Initializable {
         
         depart_report_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
             if(newValue != null){
-                departitem_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartItemDAO().list(newValue)));
-            }else{
-                departitem_tableview.getItems().clear();
-            }
-        });
-        
-        departitem_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartItem> observable, DepartItem oldValue, DepartItem newValue) -> {
-            if(newValue != null){
+                partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listPartRevision(newValue)));
                 departlot_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(newValue)));
+
             }else{
+                partrevision_tableview.getItems().clear();
                 departlot_tableview.getItems().clear();
             }
-        });   
+        });
         
         add_button.setOnAction((ActionEvent) -> {
             add_button.setDisable(true);
@@ -141,13 +136,11 @@ public class DepartReportFX implements Initializable {
     
     public void setItemTable(){
         part_column.setCellValueFactory(c -> new SimpleStringProperty(
-                msabase.getPartRevisionDAO().findProductPart(
-                       msabase .getDepartItemDAO().findPartRevision(c.getValue())
-                ).toString()
-        ));
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartItemDAO().findPartRevision(c.getValue()).getRev()));
-        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getTotalQuantity(c.getValue())));
-        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getTotalBoxQuantity(c.getValue())));
+            msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString())
+        );
+        revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
+        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getPartRevisionQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(),c.getValue())));
+        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getPartRevisionBoxQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(),c.getValue())));
     }
     
     public void setLotTable(){

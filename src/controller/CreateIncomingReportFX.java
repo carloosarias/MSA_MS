@@ -232,7 +232,6 @@ public class CreateIncomingReportFX implements Initializable {
                 incoming_lot.setComments(incoming_lot.getComments()+"Folio de Remisión #"+incoming_lot.getDepartreport_index());
             }
             incoming_lots.add(incoming_lot);
-            System.out.println(partrevcombo_selection.getId());
             clearFields();
             updateLotListview();
             lotnumber_field.requestFocus();

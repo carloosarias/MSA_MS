@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.DepartLot;
 import model.DepartReport;
+import model.PartRevision;
 
 /**
  *
@@ -33,7 +34,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE DEPART_REPORT_ID = ? ORDER BY id";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID =
             "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE lot_number = ? ORDER BY id";
-    private static final String SQL_LIST_OF_PART_REVISIONS = 
+    private static final String SQL_LIST_PART_REVISIONS = 
             "SELECT DISTINCT PART_REVISION_ID FROM DEPART_LOT WHERE DEPART_REPORT_ID = ?";
     private static final String SQL_INSERT =
             "INSERT INTO DEPART_LOT (DEPART_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, process, comments) "
@@ -116,6 +117,32 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         
         return depart_report;
     }
+    
+    @Override public PartRevision findPartRevision(DepartLot depart_lot) throws IllegalArgumentException, DAOException {
+        if(depart_lot.getId() == null){
+            throw new IllegalArgumentException("DepartLot is not created yet, the DepartLot ID is null.");
+        }
+        
+        PartRevision part_revision = null;
+        
+        Object[] values = {
+            depart_lot.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PART_REVISION_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                part_revision = daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID"));
+            }
+        } catch(SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return part_revision;
+    }
 
     @Override
     public List<DepartLot> list(DepartReport depart_report) throws IllegalArgumentException, DAOException {
@@ -167,11 +194,40 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         
         return incoming_lot;
     }
+    @Override
+    public List<PartRevision> listPartRevision(DepartReport depart_report) throws IllegalArgumentException, DAOException {
+        if(depart_report.getId() == null) {
+            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
+        }
+        List<PartRevision> part_revision = new ArrayList<>();
+        
+        Object[] values = {
+            depart_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PART_REVISIONS, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                part_revision.add(daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID")));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part_revision;
+    }
     
     @Override
-    public void create(DepartItem depart_item, DepartLot depart_lot) throws IllegalArgumentException, DAOException {
-        if (depart_item.getId() == null) {
-            throw new IllegalArgumentException("DepartItem is not created yet, the DepartItem ID is null.");
+    public void create(DepartReport depart_report, PartRevision part_revision, DepartLot depart_lot) throws IllegalArgumentException, DAOException {
+        if (depart_report.getId() == null) {
+            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
+        }
+        
+        if(part_revision.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the DepartItem ID is null.");
         }
         
         if(depart_lot.getId() != null){
@@ -179,7 +235,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         }
         
         Object[] values = {
-            depart_item.getId(),
+            depart_report.getId(),
+            part_revision.getId(),
             depart_lot.getLot_number(),
             depart_lot.getQuantity(),
             depart_lot.getBox_quantity(),
@@ -260,19 +317,23 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     }   
     
     @Override
-    public Integer getTotalQuantity(DepartItem depart_item){
+    public Integer getPartRevisionQuantity(DepartReport depart_report, PartRevision part_revision){
         Integer total = 0;
-        for(DepartLot depart_lot : list(depart_item)){
-            total += depart_lot.getQuantity();
+        for(DepartLot depart_lot : list(depart_report)){
+            if(findPartRevision(depart_lot).equals(part_revision)){
+                total += depart_lot.getQuantity();
+            }
         }
         return total;
     }
     
     @Override
-    public Integer getTotalBoxQuantity(DepartItem depart_item){
+    public Integer getPartRevisionBoxQuantity(DepartReport depart_report, PartRevision part_revision){
         Integer total = 0;
-        for(DepartLot depart_lot : list(depart_item)){
-            total += depart_lot.getBox_quantity();
+        for(DepartLot depart_lot : list(depart_report)){
+            if(findPartRevision(depart_lot).equals(part_revision)){
+                total += depart_lot.getBox_quantity();
+            }
         }
         return total;
     }

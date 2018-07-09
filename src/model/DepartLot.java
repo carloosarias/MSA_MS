@@ -74,7 +74,7 @@ public class DepartLot implements Serializable {
         this.part_revision_id = part_revision_id;
     }
     
-    public Integer getPartRevision_index(){
+    public Integer getPart_revision_id(){
         return part_revision_id;
     }
     
