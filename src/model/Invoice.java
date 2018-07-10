@@ -16,7 +16,7 @@ public class Invoice implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date invoice_date;
-    private String company_payment_terms;
+    private String terms;
     private String shipping_method;
     private String fob;
     
@@ -38,12 +38,12 @@ public class Invoice implements Serializable{
         this.invoice_date = invoice_date;
     }
 
-    public String getCompany_payment_terms() {
-        return company_payment_terms;
+    public String getTerms() {
+        return terms;
     }
 
-    public void setCompany_payment_terms(String company_payment_terms) {
-        this.company_payment_terms = company_payment_terms;
+    public void setTerms(String terms) {
+        this.terms = terms;
     }
 
     public String getShipping_method() {
