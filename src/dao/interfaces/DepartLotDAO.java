@@ -58,6 +58,8 @@ public interface DepartLotDAO {
      */
     public List<DepartLot> list(DepartReport depart_report) throws IllegalArgumentException, DAOException;
     
+    public List<DepartLot> list(DepartReport depart_report, boolean rejected) throws IllegalArgumentException, DAOException;
+    
     /**
      * Returns a list of all DepartLot matching a given lot_number from the database ordered by IncomingLot ID.
      * The list is never null and is empty when the database does not contain any DepartLot matching lot_number.
@@ -67,6 +69,7 @@ public interface DepartLotDAO {
      */    
     public List<DepartLot> list(String lot_number) throws IllegalArgumentException;
     
+     public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException;
     /**
      * Returns a list of distinct PartRevision matching a given DepartReport from the database ordered by PartRevision ID.
      * The DepartReport ID must not be null, otherwise it will throw IllegalArgumentException.

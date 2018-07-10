@@ -168,6 +168,10 @@ public class CreateDepartReportFX implements Initializable {
             }            
         });
         
+        quantity_field.setOnAction((ActionEvent) -> {
+            lot_add_button.fireEvent(new ActionEvent());
+        });
+        
         lot_add_button.setOnKeyPressed((KeyEvent ke) -> {
            if(ke.getCode().equals(KeyCode.ENTER)){
                lot_add_button.fireEvent(new ActionEvent());
@@ -190,7 +194,7 @@ public class CreateDepartReportFX implements Initializable {
             updateLotListview();
             lotnumber_field.requestFocus();
         });
-        
+    
         departlot_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartLot> observable, DepartLot oldValue, DepartLot newValue) -> {
             lot_delete_button.setDisable(departlot_tableview.getSelectionModel().isEmpty());
         });

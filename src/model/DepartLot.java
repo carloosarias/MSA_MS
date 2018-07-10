@@ -5,6 +5,7 @@
  */
 package model;
 
+import dao.JDBC.DAOFactory;
 import java.io.Serializable;
 
 /**
@@ -20,6 +21,7 @@ public class DepartLot implements Serializable {
     private String process;
     private String comments;
     private boolean rejected;
+    private boolean pending;
     private Integer part_revision_id;
 
     // Getters/setters ----------------------------------------------------------------------------
@@ -78,7 +80,15 @@ public class DepartLot implements Serializable {
     public boolean isRejected(){
         return rejected;
     }
-        
+    
+    public void setPending(boolean pending){
+        this.pending = pending;
+    }
+    
+    public boolean isPending(){
+        return pending;
+    }
+    
     public void setPart_revision_id(Integer part_revision_id){
         this.part_revision_id = part_revision_id;
     }
@@ -117,7 +127,16 @@ public class DepartLot implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%s",
-                lot_number);
+        String part_number;
+        String rev;
+        if(id != null){
+            DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+            part_number = msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(this)).getPart_number();
+            rev = msabase.getDepartLotDAO().findPartRevision(this).getRev();
+            return String.format("%s %s %s - %d",
+                part_number, rev, lot_number, quantity);
+        }
+        return String.format("%s - %d",
+                lot_number, quantity);
     }        
 }

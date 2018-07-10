@@ -25,22 +25,28 @@ import model.PartRevision;
 public class DepartLotDAOJDBC implements DepartLotDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE id = ?";
+            "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE id = ?";
     private static final String SQL_FIND_DEPART_REPORT_BY_ID =
-            "SELECT DEPART_ITEM_ID FROM DEPART_LOT WHERE id = ?";
+            "SELECT DEPART_REPORT_ID FROM DEPART_LOT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM DEPART_LOT WHERE id = ?";
     private static final String SQL_LIST_OF_DEPART_REPORT_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE DEPART_REPORT_ID = ? ORDER BY id";
+            "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE DEPART_REPORT_ID = ? ORDER BY id";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID =
-            "SELECT id, lot_number, quantity, box_quantity, process, comments FROM DEPART_LOT WHERE lot_number = ? ORDER BY id";
+            "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE lot_number = ? ORDER BY id";
+    private static final String SQL_LIST_OF_DEPART_REPORT_REJECTED_ORDER_BY_ID =
+            "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE DEPART_REPORT_ID = ? AND rejected = ? ORDER BY id";
+    private static final String SQL_LIST_OF_PENDING_REJECTED_ORDER_BY_ID = 
+            "SELECT id, lot_number, quantity, box_quantity, status, comments, rejected, pending FROM DEPART_LOT WHERE rejected = ? AND pending = ? ORDER BY id";
     private static final String SQL_LIST_PART_REVISIONS = 
             "SELECT DISTINCT PART_REVISION_ID FROM DEPART_LOT WHERE DEPART_REPORT_ID = ?";
+    private static final String SQL_LIST_DEPART_REPORTS = 
+            "SELECT DISTINCT DEPART_REPORT_ID FROM DEPART_LOT WHERE rejected = ?";
     private static final String SQL_INSERT =
-            "INSERT INTO DEPART_LOT (DEPART_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, process, comments) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO DEPART_LOT (DEPART_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, process, comments, rejected, pending) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE DEPART_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, process = ?, comments = ? WHERE id = ?";
+            "UPDATE DEPART_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, process = ?, comments = ?, rejected = ?, pending = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM DEPART_LOT WHERE id = ?";
     
@@ -172,6 +178,34 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     }
     
     @Override
+    public List<DepartLot> list(DepartReport depart_report, boolean rejected) throws IllegalArgumentException, DAOException {
+        if(depart_report.getId() == null) {
+            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
+        }    
+        
+        List<DepartLot> depart_lot = new ArrayList<>();
+        
+        Object[] values = {
+            depart_report.getId(),
+            rejected
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_DEPART_REPORT_REJECTED_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                depart_lot.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return depart_lot;
+    }
+    
+    @Override
     public List<DepartLot> list(String lot_number){
         
         List<DepartLot> incoming_lot = new ArrayList<>();
@@ -194,6 +228,30 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         
         return incoming_lot;
     }
+    @Override
+    public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException{
+        
+        List<DepartReport> depart_report = new ArrayList<>();
+        
+        Object[] values = {
+            rejected
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_DEPART_REPORTS, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                depart_report.add(daoFactory.getDepartReportDAO().find(resultSet.getInt("DEPART_REPORT_ID")));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return depart_report;
+    }
+    
     @Override
     public List<PartRevision> listPartRevision(DepartReport depart_report) throws IllegalArgumentException, DAOException {
         if(depart_report.getId() == null) {
@@ -227,7 +285,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         }
         
         if(part_revision.getId() == null) {
-            throw new IllegalArgumentException("PartRevision is not created yet, the DepartItem ID is null.");
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
         if(depart_lot.getId() != null){
@@ -241,7 +299,9 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             depart_lot.getQuantity(),
             depart_lot.getBox_quantity(),
             depart_lot.getProcess(),
-            depart_lot.getComments()
+            depart_lot.getComments(),
+            depart_lot.isRejected(),
+            depart_lot.isPending()
         };
         
         try(
@@ -279,6 +339,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             depart_lot.getBox_quantity(),
             depart_lot.getProcess(),
             depart_lot.getComments(),
+            depart_lot.isRejected(),
+            depart_lot.isPending(),
             depart_lot.getId()
         };
         
@@ -354,6 +416,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         depart_lot.setBox_quantity(resultSet.getInt("box_quantity"));
         depart_lot.setProcess(resultSet.getString("process"));
         depart_lot.setComments(resultSet.getString("comments"));
+        depart_lot.setRejected(resultSet.getBoolean("rejected"));
+        depart_lot.setPending(resultSet.getBoolean("pending"));
         return depart_lot;
     }    
 }

@@ -124,17 +124,17 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <ComboBox fx:id="departreport_combo" editable="true" prefWidth="150.0" promptText="No. de Remisión">
+                                          <ComboBox fx:id="departreport_combo" disable="true" editable="true" prefWidth="150.0" promptText="No. de Remisión">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </ComboBox>
-                                          <Label text="Selección de Lote:">
+                                          <Label fx:id="departlot_label" text="Selección de Lote:">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <ComboBox fx:id="departlot_combo" prefWidth="150.0" promptText="Selección de Lote:">
+                                          <ComboBox fx:id="departlot_combo" disable="true" prefWidth="150.0" promptText="Selección de Lote:">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
@@ -185,7 +185,7 @@
                               </VBox>
                               <VBox>
                                  <children>
-                                    <TableView fx:id="incominglot_tableview" editable="true" focusTraversable="false" prefHeight="340.0" prefWidth="624.0">
+                                    <TableView fx:id="incominglot_tableview" editable="true" focusTraversable="false" prefWidth="624.0">
                                       <columns>
                                         <TableColumn fx:id="lotnumber_column" prefWidth="100.0" text="No. de Lote" />
                                         <TableColumn fx:id="partnumber_column" prefWidth="100.0" text="No. Parte" />
