@@ -6,6 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import static dao.JDBC.InvoiceDAOJDBC.map;
 import dao.interfaces.InvoiceItemDAO;
@@ -13,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.DepartLot;
 import model.Invoice;
@@ -32,7 +34,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             "SELECT DEPART_LOT_ID FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, unit_price, comments FROM INVOICE_ITEM ORDER BY id";
-    private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
+    private static final String SQL_LIST_OF_INVOICE_ORDER_BY_ID = 
             "SELECT id, unit_price, comments FROM INVOICE_ITEM WHERE COMPANY_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE_ITEM (INVOICE_ID, DEPART_LOT_ID, id, unit_price, comments) "
@@ -145,27 +147,137 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
 
     @Override
     public List<InvoiceItem> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<InvoiceItem> invoice_item = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                invoice_item.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return invoice_item;
     }
 
     @Override
     public List<InvoiceItem> list(Invoice invoice) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(invoice.getId() == null) {
+            throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
+        }    
+        
+        List<InvoiceItem> invoice_item = new ArrayList<>();
+        
+        Object[] values = {
+            invoice.getId(),
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_INVOICE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                invoice_item.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return invoice_item;
     }
 
     @Override
     public void create(Invoice invoice, DepartLot depart_lot, InvoiceItem invoice_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    if (invoice.getId() == null) {
+            throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
+        }
+        
+        if(depart_lot.getId() == null){
+            throw new IllegalArgumentException("DepartLot is not created yet, the DepartLot ID is null.");
+        }
+        
+        if(invoice_item.getId() != null){
+            throw new IllegalArgumentException("InvoiceItem is already created, the InvoiceItem ID is not null.");
+        }
+        
+        Object[] values = {
+            invoice.getId(),
+            depart_lot.getId(),
+            invoice_item.getUnit_price(),
+            invoice_item.getComments()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating InvoiceItem failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    invoice_item.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating InvoiceItem failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(InvoiceItem invoice_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (invoice_item.getId() == null) {
+            throw new IllegalArgumentException("InvoiceItem is not created yet, the InvoiceItem ID is null.");
+        }
+        
+        Object[] values = {
+            invoice_item.getUnit_price(),
+            invoice_item.getComments(),
+            invoice_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating InvoiceItem failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(InvoiceItem invoice_item) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            invoice_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting InvoiceItem failed, no rows affected.");
+            } else{
+                invoice_item.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
