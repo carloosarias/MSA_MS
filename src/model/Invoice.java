@@ -19,6 +19,7 @@ public class Invoice implements Serializable{
     private String terms;
     private String shipping_method;
     private String fob;
+    private boolean pending;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -61,6 +62,15 @@ public class Invoice implements Serializable{
     public void setFob(String fob) {
         this.fob = fob;
     }
+    
+    public void setPending(boolean pending){
+        this.pending = pending;
+    }
+    
+    public boolean isPending(){
+        return pending;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**

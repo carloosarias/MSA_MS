@@ -235,7 +235,7 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
 
     @Override
     public void update(IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
-    if (incoming_report.getId() == null) {
+        if (incoming_report.getId() == null) {
             throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
         }
         

@@ -15,6 +15,7 @@ public class InvoiceItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private double unit_price;
+    private String comments;
     
     // Getters/setters ----------------------------------------------------------------------------
     
@@ -32,6 +33,14 @@ public class InvoiceItem implements Serializable{
     
     public double getUnit_price(){
         return unit_price;
+    }
+    
+    public void setComments(String comments){
+        this.comments = comments;
+    }
+    
+    public String getComments(){
+        return comments;
     }
 
     // Object overrides ---------------------------------------------------------------------------
