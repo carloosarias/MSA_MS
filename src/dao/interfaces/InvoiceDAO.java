@@ -17,7 +17,8 @@ import model.Invoice;
  */
 public interface InvoiceDAO {
     // Actions ------------------------------------------------------------------------------------
-       /**
+    
+    /**
      * Returns the Invoice from the database matching the given ID, otherwise null.
      * @param id The ID of the Invoice to be returned.
      * @return The Invoice from the database matching the given ID, otherwise null.
@@ -58,7 +59,7 @@ public interface InvoiceDAO {
     /**
      * Returns a list of all Invoice from the database ordered by Invoice ID. The list is never null and
      * is empty when the database does not contain any Invoice.
-     * @return A list of all DepartReport from the database ordered by Invoice ID.
+     * @return A list of all Invoice from the database ordered by Invoice ID.
      * @throws DAOException If something fails at database level.
      */        
     public List<Invoice> list() throws DAOException;
@@ -77,21 +78,21 @@ public interface InvoiceDAO {
     /**
      * Create the given Invoice in the database.
      * The Company ID must not be null, The BillingAddress must not be null,
-     * The ShippingAddress must not be null and The DepartReport ID must be null,
+     * The ShippingAddress must not be null and The Invoice ID must be null,
      * otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given DepartReport.
-     * @param company The Company to be assigned to this DepartReport.
+     * After creating, the DAO will set the obtained ID in the given Invoice.
+     * @param company The Company to be assigned to this Invoice.
      * @param billing_address The BillingAddress to be assigned to this Invoice.
      * @param shipping_address The ShippingAddress to be assigned to this Invoice.
-     * @param invoice The DepartReport to be created.
+     * @param invoice The Invoice to be created.
      * @throws IllegalArgumentException If the Company ID is null.
-     * @throws IllegalArgumentException If the DepartReport ID is not null.
+     * @throws IllegalArgumentException If the Invoice ID is not null.
      * @throws DAOException If something fails at database level.
      */    
     public void create(Company company, CompanyAddress billing_address, CompanyAddress shipping_address, Invoice invoice) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given DepartReport in the database. The Invoice ID must not be null, 
+     * Update the given Invoice in the database. The Invoice ID must not be null, 
      * otherwise it will throw IllegalArgumentException.
      * @param invoice The Invoice to be updated.
      * @throws IllegalArgumentException If the Invoice ID is null.
@@ -102,8 +103,8 @@ public interface InvoiceDAO {
     /**
      * Delete the given Invoice from the database. After deleting, the DAO will set the ID of the given
      * Invoice to null.
-     * @param depart_report The Invoice to be deleted from the database.
+     * @param invoice The Invoice to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
-    public void delete(Invoice depart_report) throws DAOException;
+    public void delete(Invoice invoice) throws DAOException;
 }
