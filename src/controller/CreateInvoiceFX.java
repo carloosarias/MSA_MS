@@ -9,6 +9,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -24,13 +27,21 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private TextField terms_field;
+    private DatePicker invoicedate_picker;
     @FXML
-    private TextField shippingmethod_field;
+    private ComboBox<?> client_combo;
+    @FXML
+    private ComboBox<?> billingaddress_combo;
+    @FXML
+    private ComboBox<?> shippingaddress_combo;
+    @FXML
+    private TextField terms_field;
     @FXML
     private TextField fob_field;
     @FXML
-    private TableView<?> incominglot_tableview;
+    private TextField shippingmethod_field;
+    @FXML
+    private TableView<?> departlot_tableview;
     @FXML
     private TableColumn<?, ?> remision_column;
     @FXML
@@ -40,15 +51,17 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private TableColumn<?, ?> lot_column;
     @FXML
-    private TableColumn<?, ?> comments_column;
+    private TableColumn<?, ?> unitprice_column;
     @FXML
     private TableColumn<?, ?> lot_qty;
     @FXML
     private TableColumn<?, ?> lot_boxqty_column;
     @FXML
-    private TableColumn<?, ?> unitprice_column;
-    @FXML
     private TableColumn<?, ?> lotprice_column;
+    @FXML
+    private TableColumn<?, ?> comments_column;
+    @FXML
+    private Button add_button;
     @FXML
     private TextField total_field;
 

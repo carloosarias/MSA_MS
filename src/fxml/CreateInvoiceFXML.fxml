@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -18,26 +19,12 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="Cliente:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
                         <Label text="Fecha de Facturación:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <DatePicker prefWidth="150.0">
+                        <DatePicker fx:id="invoicedate_picker" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -46,38 +33,63 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <HBox>
-                           <children>
-                              <VBox>
-                                 <children>
-                                    <Label text="Terminos de pago:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField fx:id="terms_field">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                              </VBox>
-                              <VBox>
-                                 <children>
-                                    <Label text="Método de Envío:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField fx:id="shippingmethod_field">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
+                        <Label text="Cliente:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="client_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+                  <VBox />
+               </children>
+            </HBox>
+            <HBox prefWidth="788.0">
+               <children>
+                  <VBox>
+                     <children>
+                        <Label text="Dirección de Facturación:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="billingaddress_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Dirección de Envío:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="shippingaddress_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Terminos de pago:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="terms_field">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
                      </children>
                   </VBox>
                   <VBox>
@@ -98,57 +110,39 @@
                         </HBox>
                      </children>
                   </VBox>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
                   <VBox>
                      <children>
-                        <Label text="Dirección de Facturación:">
+                        <Label text="Método de Envío:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <TextField fx:id="shippingmethod_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Dirección de Envío:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
+                        </TextField>
                      </children>
                   </VBox>
                </children>
             </HBox>
             <HBox>
                <children>
-                  <TableView fx:id="incominglot_tableview" prefHeight="400.0" prefWidth="862.0">
+                  <TableView fx:id="departlot_tableview" prefHeight="400.0" prefWidth="778.0">
                      <columns>
-                        <TableColumn fx:id="remision_column" prefWidth="100.0" resizable="false" text="No. de Remisión" />
+                        <TableColumn fx:id="remision_column" prefWidth="75.0" resizable="false" text="# Remisión" />
                         <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />
-                        <TableColumn fx:id="revision_column" prefWidth="60.0" resizable="false" text="Revision" />
+                        <TableColumn fx:id="revision_column" prefWidth="75.0" resizable="false" text="Rev" />
                         <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="# Lote" />
-                        <TableColumn fx:id="comments_column" prefWidth="150.0" resizable="false" text="Comentarios" />
+                        <TableColumn fx:id="unitprice_column" prefWidth="75.0" resizable="false" text="Precio Pieza" />
                         <TableColumn prefWidth="160.0" resizable="false" text="Cantidad">
                            <columns>
                               <TableColumn fx:id="lot_qty" prefWidth="75.0" resizable="false" text="Piezas" />
                               <TableColumn fx:id="lot_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
                            </columns>
                         </TableColumn>
-                        <TableColumn fx:id="unitprice_column" prefWidth="100.0" resizable="false" text="Precio Pieza" />
-                        <TableColumn fx:id="lotprice_column" prefWidth="100.0" resizable="false" text="Precio Lote" />
+                        <TableColumn fx:id="lotprice_column" prefWidth="75.0" resizable="false" text="Precio Total" />
+                        <TableColumn fx:id="comments_column" prefWidth="126.0" resizable="false" text="Comentarios" />
                      </columns>
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -156,28 +150,34 @@
                   </TableView>
                </children>
             </HBox>
-            <HBox alignment="TOP_RIGHT">
+            <HBox>
                <children>
                   <VBox>
                      <children>
-                        <HBox>
-                           <children>
-                              <VBox>
-                                 <children>
-                                    <Label text="Total:">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <TextField fx:id="total_field">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
+                        <HBox />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER_LEFT">
+                     <children>
+                        <Button fx:id="add_button" mnemonicParsing="false" text="Agregar Lote de Remisión">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_RIGHT" fillWidth="false" prefHeight="58.0" prefWidth="616.0">
+                     <children>
+                        <Label text="Total a Pagar:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="total_field">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
                      </children>
                   </VBox>
                </children>
