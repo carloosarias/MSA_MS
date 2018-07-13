@@ -47,6 +47,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab depart_tab;
     @FXML
+    private Tab invoice_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -97,6 +99,13 @@ public class MainFX implements Initializable {
                     try {
                         incoming_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
                         depart_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX.fxml")));
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                case "Facturación":
+                    invoice_tab.setDisable(false);
+                    try {
+                        invoice_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }

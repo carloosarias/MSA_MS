@@ -16,6 +16,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import model.Company;
+import model.CompanyAddress;
+import model.DepartLot;
+import model.InvoiceItem;
 
 /**
  * FXML Controller class
@@ -29,11 +33,11 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private DatePicker invoicedate_picker;
     @FXML
-    private ComboBox<?> client_combo;
+    private ComboBox<Company> client_combo;
     @FXML
-    private ComboBox<?> billingaddress_combo;
+    private ComboBox<CompanyAddress> billingaddress_combo;
     @FXML
-    private ComboBox<?> shippingaddress_combo;
+    private ComboBox<CompanyAddress> shippingaddress_combo;
     @FXML
     private TextField terms_field;
     @FXML
@@ -41,25 +45,25 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private TextField shippingmethod_field;
     @FXML
-    private TableView<?> departlot_tableview;
+    private TableView<InvoiceItem> invoiceitem_tableview;
     @FXML
-    private TableColumn<?, ?> remision_column;
+    private TableColumn<InvoiceItem, String> remision_column;
     @FXML
-    private TableColumn<?, ?> part_column;
+    private TableColumn<InvoiceItem, String> part_column;
     @FXML
-    private TableColumn<?, ?> revision_column;
+    private TableColumn<InvoiceItem, String> revision_column;
     @FXML
-    private TableColumn<?, ?> lot_column;
+    private TableColumn<InvoiceItem, String> lot_column;
     @FXML
-    private TableColumn<?, ?> unitprice_column;
+    private TableColumn<InvoiceItem, String> unitprice_column;
     @FXML
-    private TableColumn<?, ?> lot_qty;
+    private TableColumn<InvoiceItem, String> lot_qty;
     @FXML
-    private TableColumn<?, ?> lot_boxqty_column;
+    private TableColumn<InvoiceItem, String> lot_boxqty_column;
     @FXML
-    private TableColumn<?, ?> lotprice_column;
+    private TableColumn<InvoiceItem, String> lotprice_column;
     @FXML
-    private TableColumn<?, ?> comments_column;
+    private TableColumn<InvoiceItem, String> comments_column;
     @FXML
     private Button add_button;
     @FXML
@@ -70,7 +74,7 @@ public class CreateInvoiceFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
     
 }
