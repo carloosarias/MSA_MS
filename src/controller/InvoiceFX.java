@@ -5,11 +5,15 @@
  */
 package controller;
 
+import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,9 +23,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Invoice;
+import model.InvoiceItem;
 
 /**
  * FXML Controller class
@@ -33,19 +40,19 @@ public class InvoiceFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private TableView<?> invoice_tableview;
+    private TableView<Invoice> invoice_tableview;
     @FXML
-    private TableColumn<?, ?> id_column;
+    private TableColumn<Invoice, Integer> id_column;
     @FXML
-    private TableColumn<?, ?> invoicedate_column;
+    private TableColumn<Invoice, Date> invoicedate_column;
     @FXML
-    private TableColumn<?, ?> client_column;
+    private TableColumn<Invoice, String> client_column;
     @FXML
-    private TableColumn<?, ?> billingaddress_column;
+    private TableColumn<Invoice, String> billingaddress_column;
     @FXML
-    private TableColumn<?, ?> shippingaddress_column;
+    private TableColumn<Invoice, String> shippingaddress_column;
     @FXML
-    private TableColumn<?, ?> pending_column;
+    private TableColumn<Invoice, Boolean> pending_column;
     @FXML
     private TextField terms_field;
     @FXML
@@ -53,36 +60,45 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TextField fob_field;
     @FXML
-    private TableView<?> incominglot_tableview;
+    private TableView<InvoiceItem> invoiceitem_tableview;
     @FXML
-    private TableColumn<?, ?> remision_column;
+    private TableColumn<InvoiceItem, String> remision_column;
     @FXML
-    private TableColumn<?, ?> part_column;
+    private TableColumn<InvoiceItem, String> part_column;
     @FXML
-    private TableColumn<?, ?> revision_column;
+    private TableColumn<InvoiceItem, String> revision_column;
     @FXML
-    private TableColumn<?, ?> lot_column;
+    private TableColumn<InvoiceItem, String> lot_column;
     @FXML
-    private TableColumn<?, ?> comments_column;
+    private TableColumn<InvoiceItem, String> comments_column;
     @FXML
-    private TableColumn<?, ?> lot_qty;
+    private TableColumn<InvoiceItem, String> lot_qty;
     @FXML
-    private TableColumn<?, ?> lot_boxqty_column;
+    private TableColumn<InvoiceItem, String> lot_boxqty_column;
     @FXML
-    private TableColumn<?, ?> unitprice_column;
+    private TableColumn<InvoiceItem, Double> unitprice_column;
     @FXML
-    private TableColumn<?, ?> lotprice_column;
+    private TableColumn<InvoiceItem, String> lotprice_column;
     @FXML
     private TextField total_field;
     @FXML
     private Button add_button;
     
     private Stage add_stage = new Stage();
+    
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        setInvoiceTable();
+        invoice_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoiceDAO().list()));
+        
+        invoice_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> observable, Invoice oldValue, Invoice newValue) -> {
+            setInvoiceDetails(newValue);
+        });
         
         add_button.setOnAction((ActionEvent) -> {
             add_button.setDisable(true);
@@ -106,5 +122,44 @@ public class InvoiceFX implements Initializable {
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void setInvoiceDetails(Invoice invoice){
+        if(invoice == null){
+            invoiceitem_tableview.getItems().clear();
+            terms_field.setText(null);
+            shippingmethod_field.setText(null);
+            fob_field.setText(null);
+        }else{
+            invoiceitem_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoiceItemDAO().list(invoice)));
+            terms_field.setText(invoice.getTerms());
+            shippingmethod_field.setText(invoice.getShipping_method());
+            fob_field.setText(invoice.getFob());
+        }
+    }
+    
+    public void setInvoiceTable(){
+        id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
+        client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findCompany(c.getValue()).toString()));
+        billingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findBillingAddress(c.getValue()).toString()));
+        shippingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findShippingAddress(c.getValue()).toString()));
+        pending_column.setCellValueFactory(new PropertyValueFactory<>("pending"));
+    }
+    
+    public void setInvoiceItemTable(){
+        remision_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getId()));
+        part_column.setCellValueFactory(c -> new SimpleStringProperty(
+            msabase.getPartRevisionDAO().findProductPart(
+                    msabase.getDepartLotDAO().findPartRevision(
+                            msabase.getInvoiceItemDAO().findDepartLot(c.getValue()))).getPart_number())
+        );
+        revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
+        lot_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getLot_number()));
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        lot_qty.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()));
+        lot_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getBox_quantity()));
+        unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
+        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUnit_price()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
     }
 }

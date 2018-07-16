@@ -103,7 +103,7 @@
                               </HBox>
                               <HBox>
                                  <children>
-                                    <TableView fx:id="incominglot_tableview" prefHeight="500.0" prefWidth="862.0">
+                                    <TableView fx:id="invoiceitem_tableview" prefHeight="500.0" prefWidth="862.0">
                                        <columns>
                                           <TableColumn fx:id="remision_column" prefWidth="100.0" resizable="false" text="No. de Remisión" />
                                           <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />

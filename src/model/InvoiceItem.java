@@ -16,7 +16,7 @@ public class InvoiceItem implements Serializable{
     private Integer id;
     private double unit_price;
     private String comments;
-    
+    private Integer depart_lot_id;
     // Getters/setters ----------------------------------------------------------------------------
     
     public void setId(Integer id){
@@ -41,6 +41,14 @@ public class InvoiceItem implements Serializable{
     
     public String getComments(){
         return comments;
+    }
+    
+    public void setDepart_lot_id(Integer depart_lot_id){
+        this.depart_lot_id = depart_lot_id;
+    }
+    
+    public Integer getDepart_lot_id(){
+        return depart_lot_id;
     }
 
     // Object overrides ---------------------------------------------------------------------------

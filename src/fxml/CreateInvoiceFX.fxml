@@ -141,8 +141,8 @@
                               <TableColumn fx:id="lot_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
                            </columns>
                         </TableColumn>
-                        <TableColumn fx:id="lotprice_column" prefWidth="75.0" resizable="false" text="Precio Total" />
-                        <TableColumn fx:id="comments_column" prefWidth="126.0" resizable="false" text="Comentarios" />
+                        <TableColumn fx:id="lotprice_column" prefWidth="86.0" resizable="false" text="Precio Parcial" />
+                        <TableColumn fx:id="comments_column" prefWidth="115.0" resizable="false" text="Comentarios" />
                      </columns>
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -150,14 +150,9 @@
                   </TableView>
                </children>
             </HBox>
-            <HBox>
+            <HBox alignment="CENTER">
                <children>
                   <VBox>
-                     <children>
-                        <HBox />
-                     </children>
-                  </VBox>
-                  <VBox alignment="CENTER_LEFT">
                      <children>
                         <Button fx:id="add_button" mnemonicParsing="false" text="Agregar Lote de Remisión">
                            <VBox.margin>
@@ -166,18 +161,34 @@
                         </Button>
                      </children>
                   </VBox>
-                  <VBox alignment="TOP_RIGHT" fillWidth="false" prefHeight="58.0" prefWidth="616.0">
+                  <VBox>
                      <children>
-                        <Label text="Total a Pagar:">
+                        <Button fx:id="delete_button" mnemonicParsing="false" text="Elminar Selección">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </Label>
-                        <TextField fx:id="total_field">
+                        </Button>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox alignment="TOP_RIGHT" fillWidth="false" prefHeight="33.0" prefWidth="442.0">
+                     <children>
+                        <TextField fx:id="total_field" promptText="Precio Total">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                   </VBox>
                </children>

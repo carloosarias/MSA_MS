@@ -7,6 +7,7 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
+import model.Company;
 import model.DepartLot;
 import model.DepartReport;
 import model.IncomingReport;
@@ -59,6 +60,8 @@ public interface DepartLotDAO {
     public List<DepartLot> list(DepartReport depart_report) throws IllegalArgumentException, DAOException;
     
     public List<DepartLot> list(DepartReport depart_report, boolean rejected) throws IllegalArgumentException, DAOException;
+    
+    public List<DepartLot> list(Company company, boolean pending, boolean rejected) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all DepartLot matching a given lot_number from the database ordered by IncomingLot ID.

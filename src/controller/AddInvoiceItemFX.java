@@ -10,10 +10,12 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import model.DepartLot;
 
 /**
  * FXML Controller class
@@ -25,32 +27,36 @@ public class AddInvoiceItemFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private TableView<?> departlot_tableview;
+    private TableView<DepartLot> departlot_tableview;
     @FXML
-    private TableColumn<?, ?> remision_column;
+    private TableColumn<DepartLot, Integer> remision_column;
     @FXML
-    private TableColumn<?, ?> part_column;
+    private TableColumn<DepartLot, String> part_column;
     @FXML
-    private TableColumn<?, ?> revision_column;
+    private TableColumn<DepartLot, String> revision_column;
     @FXML
-    private TableColumn<?, ?> lot_column;
+    private TableColumn<DepartLot, String> lot_column;
     @FXML
-    private TableColumn<?, ?> lot_qty;
+    private TableColumn<DepartLot, Integer> lot_qty;
     @FXML
-    private TableColumn<?, ?> lot_boxqty_column;
+    private TableColumn<DepartLot, Integer> lot_boxqty_column;
     @FXML
-    private TextField terms_field;
+    private ComboBox<DepartLot> departlot_combo;
     @FXML
-    private TextField fob_field;
+    private TextField unitprice_field;
     @FXML
-    private Button add_button;
+    private TextField comments_field;
+    @FXML
+    private Button save_button;
+
+
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
     }    
     
 }
