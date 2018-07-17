@@ -245,7 +245,8 @@ public class CreateDepartReportFX implements Initializable {
         for(DepartLot depart_lot : depart_lots){
             msabase.getDepartLotDAO().create(depart_report, msabase.getPartRevisionDAO().find(depart_lot.getPart_revision_id()), depart_lot);
         }
-    }    
+    }
+    
     public void updatePartrev_combo(){
         try{
             partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));

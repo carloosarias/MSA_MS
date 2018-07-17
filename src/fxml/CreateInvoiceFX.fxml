@@ -128,7 +128,7 @@
             </HBox>
             <HBox>
                <children>
-                  <TableView fx:id="departlot_tableview" prefHeight="400.0" prefWidth="778.0">
+                  <TableView fx:id="invoiceitem_tableview" prefHeight="400.0" prefWidth="778.0">
                      <columns>
                         <TableColumn fx:id="remision_column" prefWidth="75.0" resizable="false" text="# Remisión" />
                         <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />
@@ -163,7 +163,7 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Button fx:id="delete_button" mnemonicParsing="false" text="Elminar Selección">
+                        <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Elminar Selección">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -175,7 +175,7 @@
                   </VBox>
                   <VBox alignment="TOP_RIGHT" fillWidth="false" prefHeight="33.0" prefWidth="442.0">
                      <children>
-                        <TextField fx:id="total_field" promptText="Precio Total">
+                        <TextField fx:id="total_field" editable="false" focusTraversable="false" promptText="Precio Total">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -184,7 +184,7 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
+                        <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Guardar">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>

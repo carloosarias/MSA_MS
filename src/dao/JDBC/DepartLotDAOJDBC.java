@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Company;
 import model.DepartLot;
 import model.DepartReport;
 import model.PartRevision;
@@ -37,7 +38,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     private static final String SQL_LIST_OF_DEPART_REPORT_REJECTED_ORDER_BY_ID =
             "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE DEPART_REPORT_ID = ? AND rejected = ? ORDER BY id";
     private static final String SQL_LIST_OF_PENDING_REJECTED_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, status, comments, rejected, pending FROM DEPART_LOT WHERE rejected = ? AND pending = ? ORDER BY id";
+            "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE rejected = ? AND pending = ? ORDER BY id";
     private static final String SQL_LIST_PART_REVISIONS = 
             "SELECT DISTINCT PART_REVISION_ID FROM DEPART_LOT WHERE DEPART_REPORT_ID = ?";
     private static final String SQL_LIST_DEPART_REPORTS = 
@@ -205,6 +206,37 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         return depart_lot;
     }
     
+    
+    @Override
+    public List<DepartLot> list(Company company, boolean pending, boolean rejected) throws IllegalArgumentException, DAOException {
+        if(company.getId() == null) {
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        }    
+        
+        List<DepartLot> depart_lot = new ArrayList<>();
+        
+        Object[] values = {
+            pending,
+            rejected
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PENDING_REJECTED_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                if(daoFactory.getDepartReportDAO().findCompany(findDepartReport(map(resultSet))).equals(company)){
+                    depart_lot.add(map(resultSet));
+                }
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return depart_lot;
+    }
+    
     @Override
     public List<DepartLot> list(String lot_number){
         
@@ -228,6 +260,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         
         return incoming_lot;
     }
+    
     @Override
     public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException{
         
