@@ -6,51 +6,61 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class InvoiceItem implements Serializable{
+public class Quote implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
+    private Date quote_date;
+    private double unit_price;
+    private boolean approved;
     private String comments;
-    private Integer depart_lot_id;
-    private Integer quote_id;
     // Getters/setters ----------------------------------------------------------------------------
-    
-    public void setId(Integer id){
-        this.id = id;
-    }
-    
-    public Integer getId(){
+
+    public Integer getId() {
         return id;
     }
-    
-    public void setComments(String comments){
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Date getQuote_date() {
+        return quote_date;
+    }
+
+    public void setQuote_date(Date quote_date) {
+        this.quote_date = quote_date;
+    }
+
+    public double getUnit_price() {
+        return unit_price;
+    }
+
+    public void setUnit_price(double unit_price) {
+        this.unit_price = unit_price;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
         this.comments = comments;
     }
     
-    public String getComments(){
-        return comments;
-    }
-    
-    public void setDepart_lot_id(Integer depart_lot_id){
-        this.depart_lot_id = depart_lot_id;
-    }
-    
-    public Integer getDepart_lot_id(){
-        return depart_lot_id;
-    }
-    
-    public void setQuote_id(Integer quote_id){
-        this.quote_id = quote_id;
-    }
-    
-    public Integer getQuote_id(){
-        return quote_id;
-    }
-
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -59,13 +69,13 @@ public class InvoiceItem implements Serializable{
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof InvoiceItem) && (id != null)
-            ? id.equals(((InvoiceItem) other).id)
+        return (other instanceof Quote) && (id != null)
+            ? id.equals(((Quote) other).id)
             : (other == this);
     }
 
     /**
-     * InvoiceItem with same ID should return same hashcode.
+     * Quote with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -76,12 +86,13 @@ public class InvoiceItem implements Serializable{
     }
 
     /**
-     * Returns the String representation of this Invoice. Not required, it just pleases reading logs.
+     * Returns the String representation of this Quote. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return String.format("%d",
                 id);
-    } 
+    
+    }
 }

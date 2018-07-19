@@ -58,16 +58,16 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Label text="Precio Pieza:">
+                        <Label text="Cotización:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="unitprice_field">
+                        <ComboBox fx:id="quote_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </TextField>
+                        </ComboBox>
                      </children>
                   </VBox>
                   <VBox>

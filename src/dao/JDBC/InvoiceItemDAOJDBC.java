@@ -6,9 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.InvoiceDAOJDBC.map;
 import dao.interfaces.InvoiceItemDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +17,7 @@ import java.util.List;
 import model.DepartLot;
 import model.Invoice;
 import model.InvoiceItem;
+import model.Quote;
 
 /**
  *
@@ -27,20 +26,22 @@ import model.InvoiceItem;
 public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, unit_price, comments FROM INVOICE_ITEM WHERE id = ?";
+            "SELECT id, comments FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_FIND_INVOICE_BY_ID = 
             "SELECT INVOICE_ID FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_FIND_DEPART_LOT_BY_ID = 
             "SELECT DEPART_LOT_ID FROM INVOICE_ITEM WHERE id = ?";
+    private static final String SQL_FIND_QUOTE_BY_ID = 
+            "SELECT QUOTE_ID FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, unit_price, comments FROM INVOICE_ITEM ORDER BY id";
+            "SELECT id, comments FROM INVOICE_ITEM ORDER BY id";
     private static final String SQL_LIST_OF_INVOICE_ORDER_BY_ID = 
-            "SELECT id, unit_price, comments FROM INVOICE_ITEM WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT id, comments FROM INVOICE_ITEM WHERE INVOICE_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO INVOICE_ITEM (INVOICE_ID, DEPART_LOT_ID, id, unit_price, comments) "
-            + "VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO INVOICE_ITEM (INVOICE_ID, DEPART_LOT_ID, QUOTE_ID, comments) "
+            + "VALUES (?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE INVOICE_ITEM SET unit_price = ?, comments = ? WHERE id = ?";
+            "UPDATE INVOICE_ITEM SET comments = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM INVOICE_ITEM WHERE id = ?";
     
@@ -144,6 +145,33 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
         
         return depart_lot;
     }
+    
+    @Override
+    public Quote findQuote(InvoiceItem invoice_item) throws IllegalArgumentException, DAOException {
+        if(invoice_item.getId() == null){
+            throw new IllegalArgumentException("InvoiceItem is not created yet, the InvoiceItem ID is null.");
+        }
+        
+        Quote quote = null;
+        
+        Object[] values = {
+            invoice_item.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_QUOTE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if(resultSet.next()){
+                quote = daoFactory.getQuoteDAO().find(resultSet.getInt("QUOTE_ID"));
+            }
+        } catch(SQLException e) {
+            throw new DAOException(e);
+        }
+        
+        return quote;
+    }
 
     @Override
     public List<InvoiceItem> list() throws DAOException {
@@ -192,7 +220,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
     }
 
     @Override
-    public void create(Invoice invoice, DepartLot depart_lot, InvoiceItem invoice_item) throws IllegalArgumentException, DAOException {
+    public void create(Invoice invoice, DepartLot depart_lot, Quote quote, InvoiceItem invoice_item) throws IllegalArgumentException, DAOException {
     if (invoice.getId() == null) {
             throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
         }
@@ -208,7 +236,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
         Object[] values = {
             invoice.getId(),
             depart_lot.getId(),
-            invoice_item.getUnit_price(),
+            quote.getId(),
             invoice_item.getComments()
         };
         
@@ -241,7 +269,6 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
         }
         
         Object[] values = {
-            invoice_item.getUnit_price(),
             invoice_item.getComments(),
             invoice_item.getId()
         };
@@ -291,7 +318,6 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
     public static InvoiceItem map(ResultSet resultSet) throws SQLException{
         InvoiceItem invoice_item = new InvoiceItem();
         invoice_item.setId(resultSet.getInt("id"));
-        invoice_item.setUnit_price(resultSet.getDouble("unit_price"));
         invoice_item.setComments(resultSet.getString("comments"));
         return invoice_item;
     }

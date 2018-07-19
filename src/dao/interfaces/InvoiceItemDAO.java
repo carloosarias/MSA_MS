@@ -10,6 +10,7 @@ import java.util.List;
 import model.DepartLot;
 import model.Invoice;
 import model.InvoiceItem;
+import model.Quote;
 
 /**
  *
@@ -47,6 +48,16 @@ public interface InvoiceItemDAO {
     public DepartLot findDepartLot(InvoiceItem invoice_item) throws IllegalArgumentException, DAOException;
     
     /**
+     * Returns the Quote from the database matching the given InvoiceItem ID, otherwise null.
+     * InvoiceItem ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param invoice_item The InvoiceItem to get the Quote from.
+     * @return The Quote from the database matching the given InvoiceItem ID, otherwise null.
+     * @throws IllegalArgumentException If Invoice ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public Quote findQuote(InvoiceItem invoice_item) throws IllegalArgumentException, DAOException;
+    
+    /**
      * Returns a list of all InvoiceItem from the database ordered by InvoiceItem ID. The list is never null and
      * is empty when the database does not contain any InvoiceItem.
      * @return A list of all InvoiceItem from the database ordered by InvoiceItem ID.
@@ -74,13 +85,14 @@ public interface InvoiceItemDAO {
      * After creating, the DAO will set the obtained ID in the given InvoiceItem.
      * @param invoice The Invoice to be assigned to this InvoiceItem.
      * @param depart_lot The DepartLot to be assigned to this InvoiceItem.
+     * @param quote The Quote to be assigned to this InvoiceItem.
      * @param invoice_item The InvoiceItem to be created.
      * @throws IllegalArgumentException If the Invoice ID is null.
      * @throws IllegalArgumentException If the DepartLot ID is null.
      * @throws IllegalArgumentException If the InvoiceItem ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Invoice invoice, DepartLot depart_lot, InvoiceItem invoice_item) throws IllegalArgumentException, DAOException;
+    public void create(Invoice invoice, DepartLot depart_lot, Quote quote, InvoiceItem invoice_item) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given InvoiceItem in the database. The InvoiceItem ID must not be null, 

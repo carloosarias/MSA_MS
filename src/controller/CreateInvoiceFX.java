@@ -124,11 +124,63 @@ public class CreateInvoiceFX implements Initializable {
         });
         
         save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
             saveInvoice();
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
         });
         
+    }
+    
+    public boolean testFields(){
+        boolean b = true;
+        clearStyle();
+        if(invoicedate_picker.getValue() == null){
+            invoicedate_picker.setStyle("-fx-background-color: lightpink;");
+        }
+        if(client_combo.getSelectionModel().isEmpty()){
+            client_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(billingaddress_combo.getSelectionModel().isEmpty()){
+            billingaddress_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(shippingaddress_combo.getSelectionModel().isEmpty()){
+            shippingaddress_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(terms_field.getText().replace(" ", "").equals("")){
+            terms_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(fob_field.getText().replace(" ", "").equals("")){
+            fob_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(shippingmethod_field.getText().replace(" ", "").equals("")){
+            shippingmethod_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(invoiceitem_tableview.getItems().isEmpty()){
+            invoiceitem_tableview.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        return b;
+    }
+    
+    public void clearStyle(){
+        invoicedate_picker.setStyle(null);
+        client_combo.setStyle(null);
+        billingaddress_combo.setStyle(null);
+        shippingaddress_combo.setStyle(null);
+        terms_field.setStyle(null);
+        fob_field.setStyle(null);
+        shippingmethod_field.setStyle(null);
+        invoiceitem_tableview.setStyle(null);
     }
     
     public void saveInvoice(){
@@ -137,13 +189,18 @@ public class CreateInvoiceFX implements Initializable {
         invoice.setTerms(terms_field.getText());
         invoice.setShipping_method(shippingmethod_field.getText());
         invoice.setFob(fob_field.getText());
+        invoice.setPending(true);
         msabase.getInvoiceDAO().create(client_combo.getSelectionModel().getSelectedItem(), billingaddress_combo.getSelectionModel().getSelectedItem(), shippingaddress_combo.getSelectionModel().getSelectedItem(), invoice);
         saveInvoiceItems(invoice);
     }
     
     public void saveInvoiceItems(Invoice invoice){
         for(InvoiceItem invoice_item : invoiceitem_queue){
-            msabase.getInvoiceItemDAO().create(invoice, msabase.getDepartLotDAO().find(invoice_item.getDepart_lot_id()), invoice_item);
+            DepartLot depart_lot = msabase.getDepartLotDAO().find(invoice_item.getDepart_lot_id());
+            depart_lot.setPending(false);
+            msabase.getDepartLotDAO().update(depart_lot);
+            System.out.println(depart_lot.isPending());
+            msabase.getInvoiceItemDAO().create(invoice, depart_lot, msabase.getQuoteDAO().find(invoice_item.getQuote_id()), invoice_item);
         }
     }
     public void updateInvoiceItemTable(){
@@ -211,7 +268,7 @@ public class CreateInvoiceFX implements Initializable {
         lot_qty.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getQuantity()));
         lot_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getBox_quantity()));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
-        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+(c.getValue().getUnit_price()*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getQuantity())*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getBox_quantity()));
+        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+(msabase.getQuoteDAO().find(c.getValue().getQuote_id()).getUnit_price()*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getQuantity())*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getBox_quantity()));
     }
     
     public static List<DepartLot> getDepartlot_list(){

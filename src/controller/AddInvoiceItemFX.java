@@ -23,6 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.DepartLot;
 import model.InvoiceItem;
+import model.Quote;
 
 /**
  * FXML Controller class
@@ -50,7 +51,7 @@ public class AddInvoiceItemFX implements Initializable {
     @FXML
     private ComboBox<DepartLot> departlot_combo;
     @FXML
-    private TextField unitprice_field;
+    private ComboBox<Quote> quote_combo;
     @FXML
     private TextField comments_field;
     @FXML
@@ -70,9 +71,13 @@ public class AddInvoiceItemFX implements Initializable {
         departlot_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartLot> observable, DepartLot oldValue, DepartLot newValue) -> {
             departlot_combo.getSelectionModel().select(newValue);
             save_button.setDisable(newValue == null);
+            setQuoteCombo(newValue);
         });
         
         save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
             CreateInvoiceFX.getInvoiceitem_queue().add(mapInvoiceItem());
             CreateInvoiceFX.getDepartlot_list().remove(departlot_combo.getSelectionModel().getSelectedItem());
             Stage current_stage = (Stage) root_hbox.getScene().getWindow();
@@ -80,14 +85,44 @@ public class AddInvoiceItemFX implements Initializable {
         });
     }
     
+    public boolean testFields(){
+        boolean b = true;
+        clearStyle();
+        if(departlot_combo.getSelectionModel().isEmpty()){
+            departlot_tableview.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(quote_combo.getSelectionModel().isEmpty()){
+            quote_combo.setStyle("-fx-background-color: lightpink");
+            b = false;
+        }
+        return b;
+    }
+    
+    public void setQuoteCombo(DepartLot depart_lot){
+        if(depart_lot == null){
+            quote_combo.getItems().clear();
+        }else{
+            quote_combo.setItems(msabase.getQuoteDAO().list(FXCollections.observableArrayList(msabase.getDepartLotDAO().findPartRevision(depart_lot))));
+            if(!quote_combo.getItems().isEmpty()){
+                quote_combo.getSelectionModel().selectFirst();
+            }
+        }
+    }
+    
+    public void clearStyle(){
+        departlot_tableview.setStyle(null);
+        quote_combo.setStyle(null);
+    }
+    
     public InvoiceItem mapInvoiceItem(){
         InvoiceItem invoice_item = new InvoiceItem();
         invoice_item.setDepart_lot_id(departlot_combo.getSelectionModel().getSelectedItem().getId());
-        invoice_item.setUnit_price(Double.parseDouble(unitprice_field.getText()));
-        if(comments_field.getText().equals(null)){
-            comments_field.setText("n/a");
-        }
+        invoice_item.setQuote_id(quote_combo.getSelectionModel().getSelectedItem().getId());
         invoice_item.setComments(comments_field.getText());
+        if(invoice_item.getComments().equals("")){
+            invoice_item.setComments("n/a");
+        }
         return invoice_item;
     }
     

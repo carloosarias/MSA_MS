@@ -163,6 +163,7 @@ public class CreateDepartReportFX implements Initializable {
                 partrev_combo.getEditor().selectAll();
             }
             else{
+                process_combo.getSelectionModel().select(partrevcombo_selection.getFinal_process());
                 quantity_field.requestFocus();
                 ActionEvent.consume();
             }            
@@ -189,6 +190,7 @@ public class CreateDepartReportFX implements Initializable {
             depart_lot.setProcess(process_combo.getSelectionModel().getSelectedItem());
             depart_lot.setComments("n/a");
             depart_lot.setPart_revision_id(partrevcombo_selection.getId());
+            depart_lot.setPending(true);
             depart_lots.add(depart_lot);
             clearFields();
             updateLotListview();

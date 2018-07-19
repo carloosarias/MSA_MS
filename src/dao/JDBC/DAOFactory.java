@@ -20,6 +20,7 @@ import dao.interfaces.ProductDAO;
 import dao.interfaces.ProductPartDAO;
 import dao.interfaces.ProductTypeDAO;
 import dao.interfaces.PurchaseItemDAO;
+import dao.interfaces.QuoteDAO;
 import dao.interfaces.SpecificationDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -289,6 +290,14 @@ public abstract class DAOFactory {
      */   
     public InvoiceItemDAO getInvoiceItemDAO(){
         return new InvoiceItemDAOJDBC(this);
+    }    
+    
+    /**
+     * Returns the Quote DAO associated with the current DAOFactory.
+     * @return The Quote DAO associated with the current DAOFactory.
+     */   
+    public QuoteDAO getQuoteDAO(){
+        return new QuoteDAOJDBC(this);
     }    
     // You can add more DAO implementation getters here.
 }

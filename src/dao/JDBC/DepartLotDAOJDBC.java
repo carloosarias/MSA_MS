@@ -216,8 +216,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         List<DepartLot> depart_lot = new ArrayList<>();
         
         Object[] values = {
-            pending,
-            rejected
+            rejected,
+            pending
         };
         
         try(

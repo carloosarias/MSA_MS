@@ -52,7 +52,7 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TableColumn<Invoice, String> shippingaddress_column;
     @FXML
-    private TableColumn<Invoice, Boolean> pending_column;
+    private TableColumn<Invoice, String> pending_column;
     @FXML
     private TextField terms_field;
     @FXML
@@ -94,16 +94,26 @@ public class InvoiceFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setInvoiceTable();
-        invoice_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoiceDAO().list()));
+        setInvoiceItemTable();
+        updateInvoiceTable();
         
         invoice_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> observable, Invoice oldValue, Invoice newValue) -> {
             setInvoiceDetails(newValue);
+            setTotal();
         });
         
         add_button.setOnAction((ActionEvent) -> {
             add_button.setDisable(true);
             showAdd_stage();
         });
+    }
+    
+    public void setTotal(){
+        double total = 0;
+        for(InvoiceItem invoice_item : invoiceitem_tableview.getItems()){
+            total += Double.parseDouble(lotprice_column.getCellData(invoice_item));
+        }
+        total_field.setText(total+"");
     }
     
     public void showAdd_stage(){
@@ -119,9 +129,15 @@ public class InvoiceFX implements Initializable {
             add_stage.setScene(scene);
             add_stage.showAndWait();
             add_button.setDisable(false);
+            updateInvoiceTable();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void updateInvoiceTable(){
+        invoiceitem_tableview.getItems().clear();
+        invoice_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoiceDAO().list()));
     }
     
     public void setInvoiceDetails(Invoice invoice){
@@ -144,7 +160,15 @@ public class InvoiceFX implements Initializable {
         client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findCompany(c.getValue()).toString()));
         billingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findBillingAddress(c.getValue()).toString()));
         shippingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findShippingAddress(c.getValue()).toString()));
-        pending_column.setCellValueFactory(new PropertyValueFactory<>("pending"));
+        pending_column.setCellValueFactory(c -> new SimpleStringProperty(pendingToString(c.getValue().isPending())));
+    }
+    
+    public String pendingToString(boolean pending){
+        if(pending){
+            return "Pendiente";
+        }else{
+            return "Pagada";
+        }
     }
     
     public void setInvoiceItemTable(){
@@ -160,6 +184,8 @@ public class InvoiceFX implements Initializable {
         lot_qty.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()));
         lot_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getBox_quantity()));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
-        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getUnit_price()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
+        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(
+                msabase.getInvoiceItemDAO().findQuote(
+                        msabase.getInvoiceItemDAO().find(c.getValue().getId())).getUnit_price()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
     }
 }
