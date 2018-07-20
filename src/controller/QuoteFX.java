@@ -140,6 +140,9 @@ public class QuoteFX implements Initializable {
             case "Descartado":
                 status = false;
                 break;
+            case "Pendiente":
+                status = null;
+                break;
         }
         return status;
     }
