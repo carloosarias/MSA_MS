@@ -38,7 +38,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE ORDER BY id";
     private static final String SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE = 
-            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE INVOICE_ID = ? ORDER BY quote_date";
+            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? ORDER BY quote_date";
     private static final String SQL_INSERT =
             "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, unit_price, approved, comments) "
             + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -168,7 +168,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
     }
 
     @Override
-    public List<Quote> list(PartRevision part_revision) throws IllegalArgumentException, DAOException {
+    public List<Quote> list(PartRevision part_revision, boolean approved) throws IllegalArgumentException, DAOException {
         if(part_revision.getId() == null) {
             throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }    
@@ -177,6 +177,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
         
         Object[] values = {
             part_revision.getId(),
+            approved
         };
         
         try(
