@@ -168,7 +168,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
     }
 
     @Override
-    public List<Quote> list(PartRevision part_revision, boolean approved) throws IllegalArgumentException, DAOException {
+    public List<Quote> list(PartRevision part_revision, Boolean approved) throws IllegalArgumentException, DAOException {
         if(part_revision.getId() == null) {
             throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }    

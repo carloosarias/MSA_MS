@@ -42,7 +42,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="status_combo" disable="true" prefWidth="150.0" promptText="Estado">
+                        <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>

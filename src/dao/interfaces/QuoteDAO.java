@@ -60,11 +60,12 @@ public interface QuoteDAO {
      * The list is never null and is empty when the database does not 
      * contain any InvoiceItem matching Invoice ID.
      * @param part_revision The Invoice ID to be searched for.
+     * @param approved The status of the item to be searched for
      * @return A list of all InvoiceItem matching Invoice ID from the database ordered by InvoiceItem ID.
      * @throws IllegalArgumentException If Invoice ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<Quote> list(PartRevision part_revision, boolean approved) throws IllegalArgumentException, DAOException;
+    public List<Quote> list(PartRevision part_revision, Boolean approved) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given InvoiceItem in the database.
