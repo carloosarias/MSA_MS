@@ -47,7 +47,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <Button fx:id="add_quote" mnemonicParsing="false" prefWidth="110.0" text="Nueva Cotización">
+                        <Button fx:id="add_button" mnemonicParsing="false" prefWidth="110.0" text="Nueva Cotización">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>

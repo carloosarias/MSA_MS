@@ -14,6 +14,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import model.Company;
+import model.CompanyContact;
 
 /**
  * FXML Controller class
@@ -25,9 +27,9 @@ public class CreateQuoteFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private ComboBox<?> client_combo;
+    private ComboBox<Company> client_combo;
     @FXML
-    private ComboBox<?> contact_combo;
+    private ComboBox<CompanyContact> contact_combo;
     @FXML
     private ComboBox<?> part_combo;
     @FXML
