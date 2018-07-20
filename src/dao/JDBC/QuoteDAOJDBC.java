@@ -6,15 +6,19 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
+import static dao.JDBC.InvoiceDAOJDBC.map;
 import dao.interfaces.QuoteDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Company;
 import model.CompanyContact;
+import model.Invoice;
 import model.InvoiceItem;
 import model.PartRevision;
 import model.Quote;
@@ -26,24 +30,22 @@ import model.Quote;
 public class QuoteDAOJDBC implements QuoteDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, comments FROM INVOICE_ITEM WHERE id = ?";
-    private static final String SQL_FIND_INVOICE_BY_ID = 
-            "SELECT INVOICE_ID FROM INVOICE_ITEM WHERE id = ?";
-    private static final String SQL_FIND_DEPART_LOT_BY_ID = 
-            "SELECT DEPART_LOT_ID FROM INVOICE_ITEM WHERE id = ?";
-    private static final String SQL_FIND_QUOTE_BY_ID = 
-            "SELECT QUOTE_ID FROM INVOICE_ITEM WHERE id = ?";
+            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE id = ?";
+    private static final String SQL_FIND_PART_REVISION_BY_ID = 
+            "SELECT PART_REVISION_ID FROM QUOTE WHERE id = ?";
+    private static final String SQL_FIND_COMPANY_CONTACT_BY_ID = 
+            "SELECT COMPANY_CONTACT_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, comments FROM INVOICE_ITEM ORDER BY id";
-    private static final String SQL_LIST_OF_INVOICE_ORDER_BY_ID = 
-            "SELECT id, comments FROM INVOICE_ITEM WHERE INVOICE_ID = ? ORDER BY id";
+            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE ORDER BY id";
+    private static final String SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE = 
+            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE INVOICE_ID = ? ORDER BY quote_date";
     private static final String SQL_INSERT =
-            "INSERT INTO INVOICE_ITEM (INVOICE_ID, DEPART_LOT_ID, QUOTE_ID, comments) "
-            + "VALUES (?, ?, ?, ?)";
+            "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, unit_price, approved, comments) "
+            + "VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE INVOICE_ITEM SET comments = ? WHERE id = ?";
+            "UPDATE QUOTE SET quote_date = ?, unit_price = ?, approved = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE =
-            "DELETE FROM INVOICE_ITEM WHERE id = ?";
+            "DELETE FROM QUOTE WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -64,7 +66,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
 
     @Override
     public Quote find(Integer id) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return find(SQL_FIND_BY_ID, id);
     }
     
     /**
@@ -94,37 +96,195 @@ public class QuoteDAOJDBC implements QuoteDAO {
     
     @Override
     public PartRevision findPartRevision(Quote quote) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(quote.getId() == null) {
+            throw new IllegalArgumentException("Quote is not created yet, the Quote ID is null.");
+        }
+        
+        PartRevision part_revision = null;
+        
+        Object[] values = {
+            quote.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PART_REVISION_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                part_revision = daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return part_revision;
     }
 
     @Override
     public CompanyContact findCompanyContact(Quote quote) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(quote.getId() == null) {
+            throw new IllegalArgumentException("Quote is not created yet, the Quote ID is null.");
+        }
+        
+        CompanyContact company_contact = null;
+        
+        Object[] values = {
+            quote.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_CONTACT_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                company_contact = daoFactory.getCompanyContactDAO().find(resultSet.getInt("COMPANY_CONTACT_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return company_contact;
     }
 
     @Override
     public List<Quote> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Quote> quote = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                quote.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return quote;
     }
 
     @Override
     public List<Quote> list(PartRevision part_revision) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(part_revision.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }    
+        
+        List<Quote> quote = new ArrayList<>();
+        
+        Object[] values = {
+            part_revision.getId(),
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                quote.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return quote;
     }
 
     @Override
     public void create(PartRevision part_revision, CompanyContact company_contact, Quote quote) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (part_revision.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }
+        
+        if(company_contact.getId() == null){
+            throw new IllegalArgumentException("CompanyContact is not created yet, the CompanyContact ID is null.");
+        }
+        
+        if(quote.getId() != null){
+            throw new IllegalArgumentException("Quote is already created, the Quote ID is not null.");
+        }
+        
+        Object[] values = {
+            part_revision.getId(),
+            company_contact.getId(),
+            DAOUtil.toSqlDate(quote.getQuote_date()),
+            quote.getUnit_price(),
+            quote.isApproved(),
+            quote.getComments()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating Quote failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    quote.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating Quote failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(Quote quote) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (quote.getId() == null) {
+            throw new IllegalArgumentException("Quote is not created yet, the Invoice ID is null.");
+        }
+        
+        Object[] values = {
+            DAOUtil.toSqlDate(quote.getQuote_date()),
+            quote.getUnit_price(),
+            quote.isApproved(),
+            quote.getComments(),
+            quote.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating Quote failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(Quote quote) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            quote.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting Quote failed, no rows affected.");
+            } else{
+                quote.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
