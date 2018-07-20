@@ -5,8 +5,11 @@
  */
 package controller;
 
+import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,6 +17,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import model.PartRevision;
+import model.ProductPart;
+import model.Quote;
 
 /**
  * FXML Controller class
@@ -25,31 +31,34 @@ public class QuoteFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private ComboBox<?> part_combo;
+    private ComboBox<ProductPart> part_combo;
     @FXML
-    private ComboBox<?> partrev_combo;
+    private ComboBox<PartRevision> partrev_combo;
     @FXML
-    private ComboBox<?> status_combo;
+    private ComboBox<String> status_combo;
     @FXML
     private Button add_quote;
     @FXML
-    private TableView<?> quote_tableview;
+    private TableView<Quote> quote_tableview;
     @FXML
-    private TableColumn<?, ?> id_column;
+    private TableColumn<Quote, Integer> id_column;
     @FXML
-    private TableColumn<?, ?> quotedate_column;
+    private TableColumn<Quote, Date> quotedate_column;
     @FXML
-    private TableColumn<?, ?> contact_column;
+    private TableColumn<Quote, String> contact_column;
     @FXML
-    private TableColumn<?, ?> unitprice_column;
+    private TableColumn<Quote, Double> unitprice_column;
     @FXML
-    private TableColumn<?, ?> comments_column;
+    private TableColumn<Quote, String> comments_column;
     @FXML
-    private TableColumn<?, ?> status_column;
+    private TableColumn<Quote, String> status_column;
 
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
     }
 
     

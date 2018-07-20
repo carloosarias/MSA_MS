@@ -19,6 +19,7 @@
           <Tab fx:id="incoming_tab" closable="false" disable="true" text="Reciba" />
           <Tab fx:id="depart_tab" closable="false" disable="true" text="Remisiones" />
           <Tab fx:id="invoice_tab" closable="false" disable="true" text="Facturación" />
+          <Tab fx:id="quote_tab" closable="false" disable="true" text="Cotización" />
         </tabs>
          <BorderPane.margin>
             <Insets />
