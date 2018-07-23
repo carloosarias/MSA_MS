@@ -17,7 +17,7 @@ public class Quote implements Serializable{
     private Integer id;
     private Date quote_date;
     private double unit_price;
-    private boolean approved;
+    private String approved;
     private String comments;
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -45,11 +45,11 @@ public class Quote implements Serializable{
         this.unit_price = unit_price;
     }
 
-    public boolean isApproved() {
+    public String getApproved() {
         return approved;
     }
 
-    public void setApproved(boolean approved) {
+    public void setApproved(String approved) {
         this.approved = approved;
     }
 

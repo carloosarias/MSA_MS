@@ -37,8 +37,10 @@ public class QuoteDAOJDBC implements QuoteDAO {
             "SELECT COMPANY_CONTACT_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE ORDER BY id";
+    private static final String SQL_LIST_OF_PART_REVISION_APPROVED_ORDER_BY_DATE = 
+            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? ORDER BY quote_date DESC, id DESC";
     private static final String SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE = 
-            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? ORDER BY quote_date";
+            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE PART_REVISION_ID = ? ORDER BY quote_date DESC, id DESC";
     private static final String SQL_INSERT =
             "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, unit_price, approved, comments) "
             + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -168,7 +170,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
     }
 
     @Override
-    public List<Quote> list(PartRevision part_revision, Boolean approved) throws IllegalArgumentException, DAOException {
+    public List<Quote> list(PartRevision part_revision, String approved) throws IllegalArgumentException, DAOException {
         if(part_revision.getId() == null) {
             throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }    
@@ -178,6 +180,33 @@ public class QuoteDAOJDBC implements QuoteDAO {
         Object[] values = {
             part_revision.getId(),
             approved
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PART_REVISION_APPROVED_ORDER_BY_DATE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                quote.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return quote;
+    }
+    
+    @Override
+    public List<Quote> list(PartRevision part_revision) throws IllegalArgumentException, DAOException {
+        if(part_revision.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }    
+        
+        List<Quote> quote = new ArrayList<>();
+        
+        Object[] values = {
+            part_revision.getId(),
         };
         
         try(
@@ -194,7 +223,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
         
         return quote;
     }
-
+    
     @Override
     public void create(PartRevision part_revision, CompanyContact company_contact, Quote quote) throws IllegalArgumentException, DAOException {
         if (part_revision.getId() == null) {
@@ -214,7 +243,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
             company_contact.getId(),
             DAOUtil.toSqlDate(quote.getQuote_date()),
             quote.getUnit_price(),
-            quote.isApproved(),
+            quote.getApproved(),
             quote.getComments()
         };
         
@@ -249,7 +278,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
         Object[] values = {
             DAOUtil.toSqlDate(quote.getQuote_date()),
             quote.getUnit_price(),
-            quote.isApproved(),
+            quote.getApproved(),
             quote.getComments(),
             quote.getId()
         };
@@ -301,7 +330,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
         quote.setId(resultSet.getInt("id"));
         quote.setQuote_date(resultSet.getDate("quote_date"));
         quote.setUnit_price(resultSet.getDouble("unit_price"));
-        quote.setApproved(resultSet.getBoolean("approved"));
+        quote.setApproved(resultSet.getString("approved"));
         quote.setComments(resultSet.getString("comments"));
         return quote;
     }

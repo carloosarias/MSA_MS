@@ -23,9 +23,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -66,6 +68,8 @@ public class QuoteFX implements Initializable {
     private TableColumn<Quote, String> comments_column;
     @FXML
     private TableColumn<Quote, String> status_column;
+    @FXML
+    private CheckBox status_checkbox;
     
     private Stage add_stage = new Stage();
     
@@ -78,12 +82,30 @@ public class QuoteFX implements Initializable {
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         status_combo.setItems(FXCollections.observableArrayList(status_items));
         status_combo.getSelectionModel().selectFirst();
+        status_combo.setDisable(!status_checkbox.isSelected());
+        
+        status_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
+        status_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setApproved(t.getNewValue());
+            msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            setQuoteTableItems(partrev_combo.getSelectionModel().getSelectedItem(), status_combo.getSelectionModel().getSelectedItem());
+        });
+        setQuoteTable();
         part_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
             setPartRevisionItems(newValue);
         });
         
         partrev_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
            setQuoteTableItems(newValue, status_combo.getSelectionModel().getSelectedItem());
+        });
+        
+        status_combo.setOnAction((ActionEvent) -> {
+            setQuoteTableItems(partrev_combo.getSelectionModel().getSelectedItem(), status_combo.getSelectionModel().getSelectedItem());
+        });
+        
+        status_checkbox.setOnAction((ActionEvent) -> {
+            setQuoteTableItems(partrev_combo.getSelectionModel().getSelectedItem(), status_combo.getSelectionModel().getSelectedItem());
+            status_combo.setDisable(!status_checkbox.isSelected());
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -119,7 +141,11 @@ public class QuoteFX implements Initializable {
         if(part_revision == null){
             quote_tableview.getItems().clear();
         }else{
-            quote_tableview.setItems(FXCollections.observableArrayList(msabase.getQuoteDAO().list(part_revision, getStatus(status_text))));
+            if(status_checkbox.isSelected()){
+                quote_tableview.setItems(FXCollections.observableArrayList(msabase.getQuoteDAO().list(part_revision, status_text)));
+            }else{
+                quote_tableview.setItems(FXCollections.observableArrayList(msabase.getQuoteDAO().list(part_revision)));
+            }
         }
     }
     public void setQuoteTable(){
@@ -128,36 +154,6 @@ public class QuoteFX implements Initializable {
         contact_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getQuoteDAO().findCompanyContact(c.getValue()).getName()));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
-        status_column.setCellValueFactory(c -> new SimpleStringProperty(getStatusText(c.getValue().isApproved())));
-    }
-    
-    public Boolean getStatus(String status_text){
-        Boolean status = null;
-        switch(status_text){
-            case "Aprovado":
-                status = true;
-                break;
-            case "Descartado":
-                status = false;
-                break;
-            case "Pendiente":
-                status = null;
-                break;
-        }
-        return status;
-    }
-    
-    public String getStatusText(Boolean status){
-        String status_text = "n/a";
-        if(status == null){
-            status_text = "Pendiente";
-        }
-        if(status == true){
-            status_text = "Aprovado";
-        }
-        if(status == false){
-           status_text = "Descartado";
-        }
-        return status_text;
+        status_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getApproved()));
     }
 }

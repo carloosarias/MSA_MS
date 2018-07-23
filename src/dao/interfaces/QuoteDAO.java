@@ -65,8 +65,9 @@ public interface QuoteDAO {
      * @throws IllegalArgumentException If Invoice ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<Quote> list(PartRevision part_revision, Boolean approved) throws IllegalArgumentException, DAOException;
+    public List<Quote> list(PartRevision part_revision, String approved) throws IllegalArgumentException, DAOException;
     
+    public List<Quote> list(PartRevision part_revision) throws IllegalArgumentException, DAOException;
     /**
      * Create the given InvoiceItem in the database.
      * The Company ID must not be null, The BillingAddress must not be null,
