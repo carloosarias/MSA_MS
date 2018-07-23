@@ -5,13 +5,14 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class InvoicePaymentReport {
+public class InvoicePaymentReport implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date report_date;
