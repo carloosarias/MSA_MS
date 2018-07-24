@@ -14,6 +14,8 @@ import dao.interfaces.IncomingLotDAO;
 import dao.interfaces.IncomingReportDAO;
 import dao.interfaces.InvoiceDAO;
 import dao.interfaces.InvoiceItemDAO;
+import dao.interfaces.InvoicePaymentItemDAO;
+import dao.interfaces.InvoicePaymentReportDAO;
 import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProductDAO;
@@ -298,7 +300,24 @@ public abstract class DAOFactory {
      */   
     public QuoteDAO getQuoteDAO(){
         return new QuoteDAOJDBC(this);
-    }    
+    }
+    
+    /**
+     * Returns the InvoicePaymentReport DAO associated with the current DAOFactory.
+     * @return The InvoicePaymentReport DAO associated with the current DAOFactory.
+     */   
+    public InvoicePaymentReportDAO getInvoicePaymentReportDAO(){
+        return new InvoicePaymentReportDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the InvoicePaymentItem DAO associated with the current DAOFactory.
+     * @return The InvoicePaymentItem DAO associated with the current DAOFactory.
+     */   
+    public InvoicePaymentItemDAO getInvoicePaymentItemDAO(){
+        return new InvoicePaymentItemDAOJDBC(this);
+    }
+    
     // You can add more DAO implementation getters here.
 }
 

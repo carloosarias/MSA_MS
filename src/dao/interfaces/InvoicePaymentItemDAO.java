@@ -35,7 +35,7 @@ public interface InvoicePaymentItemDAO {
      * @throws IllegalArgumentException If InvoicePaymentReport ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public Company findInvoicePaymentReport(InvoicePaymentItem invoice_payment_item) throws IllegalArgumentException, DAOException;
+    public InvoicePaymentReport findInvoicePaymentReport(InvoicePaymentItem invoice_payment_item) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns the Invoice from the database matching the given InvoicePaymentItem ID, otherwise null.
@@ -45,7 +45,7 @@ public interface InvoicePaymentItemDAO {
      * @throws IllegalArgumentException If InvoicePaymentReport ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public Company findInvoice(InvoicePaymentItem invoice_payment_item) throws IllegalArgumentException, DAOException;
+    public Invoice findInvoice(InvoicePaymentItem invoice_payment_item) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all InvoicePaymentItem from the database ordered by InvoicePaymentItem ID. The list is never null and

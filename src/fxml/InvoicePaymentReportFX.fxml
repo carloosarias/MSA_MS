@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox>
+         <children>
+            <TabPane tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Historial de Pagos">
+                     <content>
+                        <HBox>
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <TableView>
+                                      <columns>
+                                        <TableColumn prefWidth="75.0" text="ID" />
+                                        <TableColumn prefWidth="100.0" text="Cliente" />
+                                          <TableColumn prefWidth="100.0" text="Fecha" />
+                                          <TableColumn prefWidth="120.0" text="Cantidad Pagada" />
+                                          <TableColumn prefWidth="120.0" text="No. de Cheque" />
+                                          <TableColumn prefWidth="150.0" text="Comentarios" />
+                                      </columns>
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </content>
+                </Tab>
+                <Tab text="Detalles de Selección">
+                     <content>
+                        <HBox alignment="TOP_CENTER">
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <TableView>
+                                       <columns>
+                                          <TableColumn prefWidth="100.0" text="No. de Factura" />
+                                          <TableColumn prefWidth="130.0" text="Fecha de Facturación" />
+                                          <TableColumn prefWidth="100.0" text="Total de Factura" />
+                                          <TableColumn prefWidth="150.0" text="Terminos de Pago" />
+                                       </columns>
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="BOTTOM_LEFT">
+                                 <children>
+                                    <Label text="Total Calculado:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField promptText="Cantidad Total">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <Label text="Cantidad Pagada:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField promptText="Cantidad Pagada">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <Label text="Balance:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField promptText="Balance">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            <HBox>
+               <children>
+                  <Button mnemonicParsing="false" text="Nuevo Reporte de Pago">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>
