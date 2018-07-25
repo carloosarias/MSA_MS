@@ -92,6 +92,7 @@ public class InvoicePaymentReportFX implements Initializable {
     public void setInvoicePaymentReportDetails(InvoicePaymentReport invoice_payment_report){
         if(invoice_payment_report == null){
             invoiceitem_tableview.getItems().clear();
+            ammountpaid_field.setText(""+ammountpaid_column.getCellData(invoice_payment_report));
         }else{
             invoiceitem_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoicePaymentItemDAO().list(invoice_payment_report)));
         }
