@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoicePaymentReportFX">
    <children>
       <VBox>
          <children>
@@ -23,14 +23,14 @@
                            <children>
                               <VBox>
                                  <children>
-                                    <TableView>
+                                    <TableView fx:id="invoicepayment_tableview">
                                       <columns>
-                                        <TableColumn prefWidth="75.0" text="ID" />
-                                        <TableColumn prefWidth="100.0" text="Cliente" />
-                                          <TableColumn prefWidth="100.0" text="Fecha" />
-                                          <TableColumn prefWidth="120.0" text="Cantidad Pagada" />
-                                          <TableColumn prefWidth="120.0" text="No. de Cheque" />
-                                          <TableColumn prefWidth="150.0" text="Comentarios" />
+                                        <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="client_column" prefWidth="100.0" text="Cliente" />
+                                          <TableColumn fx:id="reportdate_column" prefWidth="100.0" text="Fecha" />
+                                          <TableColumn fx:id="ammountpaid_column" prefWidth="120.0" text="Cantidad Pagada" />
+                                          <TableColumn fx:id="checknumber_column" prefWidth="120.0" text="No. de Cheque" />
+                                          <TableColumn fx:id="comments_column" prefWidth="150.0" text="Comentarios" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -48,12 +48,12 @@
                            <children>
                               <VBox>
                                  <children>
-                                    <TableView prefHeight="400.0" prefWidth="510.0">
+                                    <TableView fx:id="invoiceitem_tableview" prefHeight="400.0" prefWidth="510.0">
                                        <columns>
-                                          <TableColumn prefWidth="108.0" text="No. de Factura" />
-                                          <TableColumn prefWidth="150.0" text="Fecha de Facturación" />
-                                          <TableColumn prefWidth="125.0" text="Total de Factura" />
-                                          <TableColumn prefWidth="125.0" text="Terminos de Pago" />
+                                          <TableColumn fx:id="invoiceid_column" prefWidth="108.0" text="No. de Factura" />
+                                          <TableColumn fx:id="invoicedate_column" prefWidth="150.0" text="Fecha de Facturación" />
+                                          <TableColumn fx:id="invoicetotal_column" prefWidth="125.0" text="Total de Factura" />
+                                          <TableColumn fx:id="terms_column" prefWidth="125.0" text="Terminos de Pago" />
                                        </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -68,7 +68,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField promptText="Cantidad Total">
+                                    <TextField fx:id="caculated_field" promptText="Cantidad Total">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -78,7 +78,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField promptText="Cantidad Pagada">
+                                    <TextField fx:id="ammountpaid_field" promptText="Cantidad Pagada">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -88,7 +88,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField promptText="Balance">
+                                    <TextField fx:id="balance_field" promptText="Balance">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -103,7 +103,7 @@
             </TabPane>
             <HBox>
                <children>
-                  <Button mnemonicParsing="false" text="Nuevo Reporte de Pago">
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Pago">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
