@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -92,10 +93,23 @@ public class InvoicePaymentReportFX implements Initializable {
     public void setInvoicePaymentReportDetails(InvoicePaymentReport invoice_payment_report){
         if(invoice_payment_report == null){
             invoiceitem_tableview.getItems().clear();
-            ammountpaid_field.setText(""+ammountpaid_column.getCellData(invoice_payment_report));
+            ammountpaid_field.setText(null);
+            caculated_field.setText(null);
+            balance_field.setText(null);
         }else{
             invoiceitem_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoicePaymentItemDAO().list(invoice_payment_report)));
+            ammountpaid_field.setText(""+ammountpaid_column.getCellData(invoice_payment_report));
+            setTotal();
         }
+    }
+    
+    public void setTotal(){
+        double total = 0;
+        for(InvoicePaymentItem invoice_payment_item: invoiceitem_tableview.getItems()){
+            total += Double.parseDouble(invoicetotal_column.getCellData(invoice_payment_item));
+        }
+        caculated_field.setText(total+"");
+        balance_field.setText(""+(Double.parseDouble(ammountpaid_field.getText()) -  total));
     }
     
     public void setInvoicePaymentReportTable(){
