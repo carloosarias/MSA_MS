@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -71,19 +73,36 @@ public class InvoicePaymentReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setInvoicePaymentReportTable();
+        setInvoicePaymentItemTable();
+        invoicepayment_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoicePaymentReportDAO().list()));
+        
+        invoicepayment_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends InvoicePaymentReport> observable, InvoicePaymentReport oldValue, InvoicePaymentReport newValue) -> {
+            setInvoicePaymentReportDetails(newValue);
+        });
     }
-
+    
+    public void setInvoicePaymentItemTable(){
+        invoiceid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoicePaymentItemDAO().findInvoice(c.getValue()).getId()));
+        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoicePaymentItemDAO().findInvoice(c.getValue()).getInvoice_date()));
+        invoicetotal_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceDAO().findTotal(msabase.getInvoicePaymentItemDAO().findInvoice(c.getValue()))));
+        terms_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoicePaymentItemDAO().findInvoice(c.getValue()).getTerms()));
+    }
+    
+    
+    public void setInvoicePaymentReportDetails(InvoicePaymentReport invoice_payment_report){
+        if(invoice_payment_report == null){
+            invoiceitem_tableview.getItems().clear();
+        }else{
+            invoiceitem_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoicePaymentItemDAO().list(invoice_payment_report)));
+        }
+    }
+    
     public void setInvoicePaymentReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoicePaymentReportDAO().findCompany(c.getValue()).toString()));
         reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
         ammountpaid_column.setCellValueFactory(new PropertyValueFactory<>("ammount_paid"));
         checknumber_column.setCellValueFactory(new PropertyValueFactory<>("check_number"));
-        ammountpaid_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
-    
-    public void setInvoicePaymentItemTable(){
-        
-    }
-    
 }

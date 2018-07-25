@@ -18,6 +18,7 @@ import java.util.List;
 import model.Company;
 import model.CompanyAddress;
 import model.Invoice;
+import model.InvoiceItem;
 
 /**
  *
@@ -215,6 +216,16 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         }
         
         return invoice; 
+    }
+    
+    @Override
+    public Double findTotal(Invoice invoice){
+        double total = 0;
+        List<InvoiceItem> invoiceitems = daoFactory.getInvoiceItemDAO().list(invoice);
+        for(InvoiceItem invoice_item : invoiceitems){
+            total += daoFactory.getInvoiceItemDAO().findQuote(invoice_item).getUnit_price()*daoFactory.getInvoiceItemDAO().findDepartLot(invoice_item).getQuantity();
+        }
+        return total;
     }
 
     @Override

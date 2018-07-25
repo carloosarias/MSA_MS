@@ -45,7 +45,7 @@ public interface InvoiceDAO {
      * @throws DAOException If something fails at database level.
      */
     public CompanyAddress findBillingAddress(Invoice invoice) throws IllegalArgumentException, DAOException;
-    
+    public Double findTotal(Invoice invoice);
     /**
      * Returns the ShippingAddress from the database matching the given Invoice ID, otherwise null.
      * Invoice ID must not be null, otherwise it will throw IllegalArgumentException.
