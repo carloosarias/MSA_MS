@@ -48,12 +48,12 @@
                            <children>
                               <VBox>
                                  <children>
-                                    <TableView>
+                                    <TableView prefHeight="400.0" prefWidth="510.0">
                                        <columns>
-                                          <TableColumn prefWidth="100.0" text="No. de Factura" />
-                                          <TableColumn prefWidth="130.0" text="Fecha de Facturación" />
-                                          <TableColumn prefWidth="100.0" text="Total de Factura" />
-                                          <TableColumn prefWidth="150.0" text="Terminos de Pago" />
+                                          <TableColumn prefWidth="108.0" text="No. de Factura" />
+                                          <TableColumn prefWidth="150.0" text="Fecha de Facturación" />
+                                          <TableColumn prefWidth="125.0" text="Total de Factura" />
+                                          <TableColumn prefWidth="125.0" text="Terminos de Pago" />
                                        </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

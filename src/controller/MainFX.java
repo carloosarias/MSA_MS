@@ -51,6 +51,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab quote_tab;
     @FXML
+    private Tab invoice_payment_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -108,8 +110,10 @@ public class MainFX implements Initializable {
                     break;
                 case "Facturación":
                     invoice_tab.setDisable(false);
+                    invoice_payment_tab.setDisable(false);
                     try {
                         invoice_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
+                        invoice_payment_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoicePaymentReportFX.fxml")));
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox>
+         <children>
+            <TableView fx:id="invoice_tableview">
+               <columns>
+                  <TableColumn fx:id="id_column" prefWidth="99.0" text="# ID" />
+                  <TableColumn fx:id="invoicedate_column" prefWidth="131.0" text="Fecha de Facturación" />
+                  <TableColumn fx:id="client_column" prefWidth="125.0" text="Cliente" />
+                  <TableColumn fx:id="shippingaddress_column" prefWidth="189.0" text="Total a Pagar" />
+               </columns>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TableView>
+            <HBox alignment="TOP_RIGHT">
+               <children>
+                  <VBox>
+                     <children>
+                        <Label text="Selección:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="BOTTOM_LEFT">
+                     <children>
+                        <Button mnemonicParsing="false" text="Guardar">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>
