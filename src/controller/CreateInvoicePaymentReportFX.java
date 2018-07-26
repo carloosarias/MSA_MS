@@ -111,6 +111,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
           else{
               saveInvoicePaymentReport();
               Stage stage = (Stage) root_hbox.getScene().getWindow();
+              stage.close();
           }
        });
                
@@ -166,7 +167,10 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     
     public void saveInvoicePaymentItems(InvoicePaymentReport invoice_payment_report){
         for(InvoicePaymentItem item: invoicepaymentitem_queue){
+            Invoice invoice = msabase.getInvoiceDAO().find(item.getInvoice_id());
             msabase.getInvoicePaymentItemDAO().create(msabase.getInvoiceDAO().find(item.getInvoice_id()), invoice_payment_report, item);
+            invoice.setPending(false);
+            msabase.getInvoiceDAO().update(invoice);
         }
     }
     
