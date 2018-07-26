@@ -25,22 +25,20 @@ import model.InvoicePaymentReport;
 public class InvoicePaymentItemDAOJDBC implements InvoicePaymentItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, report_date, check_number, ammount_paid, comments FROM INVOICE_PAYMENT_REPORT WHERE id = ?";
+            "SELECT id FROM INVOICE_PAYMENT_ITEM WHERE id = ?";
     private static final String SQL_FIND_INVOICE_BY_ID = 
-            "SELECT COMPANY_ID FROM INVOICE_PAYMENT_REPORT WHERE id = ?";
+            "SELECT INVOICE_ID FROM INVOICE_PAYMENT_ITEM WHERE id = ?";
     private static final String SQL_FIND_INVOICE_PAYMENT_REPORT_BY_ID = 
-            "";
+            "SELECT INVOICE_PAYMENT_REPORT_ID FROM INVOICE_PAYMENT_ITEM";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, check_number, ammount_paid, comments FROM INVOICE_PAYMENT_REPORT ORDER BY id";
-    private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, report_date, po_number, packing_list FROM INVOICE_PAYMENT_REPORT WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT id FROM INVOICE_PAYMENT_ITEM ORDER BY id";
+    private static final String SQL_LIST_OF_INVOICE_PAYMENT_REPORT_ORDER_BY_ID = 
+            "SELECT id FROM INVOICE_PAYMENT_ITEM WHERE INVOICE_PAYMENT_REPORT_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO INVOICE_PAYMENT_REPORT (COMPANY_ID, report_date, check_number, ammount_paid, comments) "
-            + "VALUES (?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE = 
-            "UPDATE INVOICE_PAYMENT_REPORT SET report_date = ?, check_number = ?, ammount_paid = ?, comments = ? WHERE id = ?";
+            "INSERT INTO INVOICE_PAYMENT_ITEM (INVOICE_ID, INVOICE_PAYMENT_REPORT_ID)"
+            + "VALUES (?, ?)";
     private static final String SQL_DELETE =
-            "DELETE FROM INVOICE_PAYMENT_REPORT WHERE id = ?";
+            "DELETE FROM INVOICE_PAYMENT_ITEM WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -174,7 +172,7 @@ public class InvoicePaymentItemDAOJDBC implements InvoicePaymentItemDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_COMPANY_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_INVOICE_PAYMENT_REPORT_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -222,29 +220,6 @@ public class InvoicePaymentItemDAOJDBC implements InvoicePaymentItemDAO {
             }
             
         } catch (SQLException e){
-            throw new DAOException(e);
-        }
-    }
-
-    @Override
-    public void update(InvoicePaymentItem invoice_payment_report) throws IllegalArgumentException, DAOException {
-        if (invoice_payment_report.getId() == null) {
-            throw new IllegalArgumentException("InvoicePaymentItem is not created yet, the InvoicePaymentItem ID is null.");
-        }
-        
-        Object[] values = {
-            invoice_payment_report.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
-        ){
-            int affectedRows = statement.executeUpdate();
-            if(affectedRows == 0){
-                throw new DAOException("Updating InvoicePaymentReport failed, no rows affected.");
-            }
-        } catch(SQLException e){
             throw new DAOException(e);
         }
     }

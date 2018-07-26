@@ -127,7 +127,13 @@ public class CreateInvoicePaymentReportFX implements Initializable {
         invoice_payment_report.setCheck_number(checknumber_field.getText());
         invoice_payment_report.setComments(comments_field.getText());
         msabase.getInvoicePaymentReportDAO().create(clientcombo_selection, invoice_payment_report);
-        
+        saveInvoicePaymentItems(invoice_payment_report);
+    }
+    
+    public void saveInvoicePaymentItems(InvoicePaymentReport invoice_payment_report){
+        for(InvoicePaymentItem item: invoicepaymentitem_queue){
+            msabase.getInvoicePaymentItemDAO().create(msabase.getInvoiceDAO().find(item.getInvoice_id()), invoice_payment_report, item);
+        }
     }
     
     public void updateTableList(){

@@ -82,15 +82,6 @@ public interface InvoicePaymentItemDAO {
     public void create(Invoice invoice, InvoicePaymentReport invoice_payment_report, InvoicePaymentItem invoice_payment_item) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given InvoicePaymentItem in the database. The InvoicePaymentItem ID must not be null, 
-     * otherwise it will throw IllegalArgumentException.
-     * @param invoice_payment_item The InvoicePaymentItem to be updated.
-     * @throws IllegalArgumentException If the InvoicePaymentItem ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public void update(InvoicePaymentItem invoice_payment_item) throws IllegalArgumentException, DAOException;
-    
-    /**
      * Delete the given InvoicePaymentItem from the database. After deleting, the DAO will set the ID of the given
      * InvoicePaymentItem to null.
      * @param invoice_payment_item The InvoicePaymentItem to be deleted from the database.
