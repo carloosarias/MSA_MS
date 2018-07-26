@@ -229,9 +229,11 @@ public class CreateDepartReportFX implements Initializable {
         }
         if(reportdate_picker.getValue() == null){
             reportdate_picker.setStyle("-fx-background-color: lightpink;");
+            b = false;
         }
         if(address_combo.getSelectionModel().isEmpty()){
             address_combo.setStyle("-fx-background-color: lightpink ;");
+            b = false;
         }
         return b;
     }

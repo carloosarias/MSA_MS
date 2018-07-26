@@ -11,27 +11,27 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoicePaymentReportFX">
+<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoicePaymentReportFX">
    <children>
       <VBox alignment="CENTER">
          <children>
             <TabPane tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Historial de Pagos">
+               <tabs>
+                  <Tab text="Historial de Pagos">
                      <content>
                         <HBox>
                            <children>
                               <VBox>
                                  <children>
                                     <TableView fx:id="invoicepayment_tableview">
-                                      <columns>
-                                        <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
-                                        <TableColumn fx:id="client_column" prefWidth="100.0" text="Cliente" />
+                                       <columns>
+                                          <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
+                                          <TableColumn fx:id="client_column" prefWidth="100.0" text="Cliente" />
                                           <TableColumn fx:id="reportdate_column" prefWidth="100.0" text="Fecha" />
                                           <TableColumn fx:id="ammountpaid_column" prefWidth="120.0" text="Cantidad Pagada" />
                                           <TableColumn fx:id="checknumber_column" prefWidth="120.0" text="No. de Cheque" />
                                           <TableColumn fx:id="comments_column" prefWidth="150.0" text="Comentarios" />
-                                      </columns>
+                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -41,10 +41,10 @@
                            </children>
                         </HBox>
                      </content>
-                </Tab>
-                <Tab text="Detalles de Selección">
+                  </Tab>
+                  <Tab text="Detalles de Selección">
                      <content>
-                        <HBox alignment="TOP_CENTER">
+                        <HBox>
                            <children>
                               <VBox>
                                  <children>
@@ -98,8 +98,8 @@
                            </children>
                         </HBox>
                      </content>
-                </Tab>
-              </tabs>
+                  </Tab>
+               </tabs>
             </TabPane>
             <HBox alignment="CENTER_LEFT">
                <children>

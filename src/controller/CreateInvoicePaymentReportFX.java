@@ -117,7 +117,41 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     }
     public boolean testFields(){
         boolean b = true;
+        clearStyle();
+        if(invoicepaymentitem_queue.isEmpty()){
+            invoicepaymentitem_tableview.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        if(reportdate_picker.getValue() == null){
+            reportdate_picker.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(client_combo.getSelectionModel().isEmpty()){
+            client_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(checknumber_field.getText().replace(" ", "").equals("")){
+            checknumber_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(comments_field.getText().replace(" ", "").equals("")){
+            comments_field.setText("n/a");
+        }
+        try{
+            Double.parseDouble(ammountpaid_field.getText());
+        }catch(Exception e){
+            ammountpaid_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
         return b;
+    }
+    
+    public void clearStyle(){
+        invoicepaymentitem_tableview.setStyle(null);
+        reportdate_picker.setStyle(null);
+        client_combo.setStyle(null);
+        checknumber_field.setStyle(null);
+        ammountpaid_field.setStyle(null);
     }
     
     public void saveInvoicePaymentReport(){
