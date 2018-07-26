@@ -76,7 +76,7 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TableColumn<InvoiceItem, String> lot_boxqty_column;
     @FXML
-    private TableColumn<InvoiceItem, Double> unitprice_column;
+    private TableColumn<InvoiceItem, String> unitprice_column;
     @FXML
     private TableColumn<InvoiceItem, String> lotprice_column;
     @FXML
@@ -178,14 +178,16 @@ public class InvoiceFX implements Initializable {
                     msabase.getDepartLotDAO().findPartRevision(
                             msabase.getInvoiceItemDAO().findDepartLot(c.getValue()))).getPart_number())
         );
-        revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(
+                    msabase.getDepartLotDAO().findPartRevision(
+                            msabase.getInvoiceItemDAO().findDepartLot(c.getValue())).getRev())
+        );
         lot_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getLot_number()));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         lot_qty.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()));
         lot_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getBox_quantity()));
-        unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findQuote(c.getValue()).getUnit_price()));
         lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(
-                msabase.getInvoiceItemDAO().findQuote(
-                        msabase.getInvoiceItemDAO().find(c.getValue().getId())).getUnit_price()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
+                msabase.getInvoiceItemDAO().findQuote(c.getValue()).getUnit_price()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
     }
 }

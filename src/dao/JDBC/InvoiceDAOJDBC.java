@@ -36,6 +36,8 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
             "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE ORDER BY id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
             "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE COMPANY_ID = ? ORDER BY id";
+    private static final String SQL_LIST_OF_PENDING_ORDER_BY_ID = 
+            "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE pending = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE (COMPANY_ID, BILLING_ADDRESS_ID, SHIPPING_ADDRESS_ID, invoice_date, terms, shipping_method, fob, pending) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -200,12 +202,36 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         List<Invoice> invoice = new ArrayList<>();
         
         Object[] values = {
-            company.getId(),
+            company.getId()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
             PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_COMPANY_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                invoice.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return invoice; 
+    }
+    
+    @Override
+    public List<Invoice> listPending(boolean pending) throws DAOException {
+        
+        List<Invoice> invoice = new ArrayList<>();
+        
+        Object[] values = {
+            pending
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PENDING_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -228,6 +254,17 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         return total;
     }
 
+    @Override
+    public List<Invoice> filterListByCompany(List<Invoice> list, Company company){
+        List<Invoice> filtered_list = new ArrayList<Invoice>();
+        for(Invoice invoice: list){
+            if(findCompany(invoice).getId() == company.getId()){
+                filtered_list.add(invoice);
+            }
+        }
+        return filtered_list;
+    }
+    
     @Override
     public void create(Company company, CompanyAddress billing_address, CompanyAddress shipping_address, Invoice invoice) throws IllegalArgumentException, DAOException {
         if (company.getId() == null) {

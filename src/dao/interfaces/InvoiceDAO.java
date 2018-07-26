@@ -74,7 +74,8 @@ public interface InvoiceDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<Invoice> listCompany(Company company) throws IllegalArgumentException, DAOException;
-    
+    public List<Invoice> listPending(boolean pending) throws DAOException;
+    public List<Invoice> filterListByCompany(List<Invoice> list, Company company);
     /**
      * Create the given Invoice in the database.
      * The Company ID must not be null, The BillingAddress must not be null,

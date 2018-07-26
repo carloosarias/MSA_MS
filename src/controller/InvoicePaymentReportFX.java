@@ -91,6 +91,7 @@ public class InvoicePaymentReportFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
+            add_button.setDisable(true);
             showAdd_stage();
         });
     }

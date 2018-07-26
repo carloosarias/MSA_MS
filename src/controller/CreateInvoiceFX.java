@@ -33,7 +33,6 @@ import javafx.stage.StageStyle;
 import model.Company;
 import model.CompanyAddress;
 import model.DepartLot;
-import model.DepartReport;
 import model.Invoice;
 import model.InvoiceItem;
 

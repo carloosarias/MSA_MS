@@ -33,7 +33,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <ComboBox fx:id="invoice_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -42,7 +42,7 @@
                   </VBox>
                   <VBox alignment="BOTTOM_LEFT">
                      <children>
-                        <Button mnemonicParsing="false" text="Guardar">
+                        <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Guardar">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
