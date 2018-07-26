@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateInvoicePaymentReportFX">
+<HBox fx:id="root_hbox" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateInvoicePaymentReportFX">
    <children>
       <VBox>
          <children>
@@ -20,18 +20,17 @@
                <children>
                   <VBox>
                      <children>
-                        <TableView prefHeight="448.0">
+                        <TableView fx:id="invoicepaymentitem_tableview" prefHeight="448.0">
                            <columns>
-                              <TableColumn prefWidth="108.0" text="No. de Factura" />
-                              <TableColumn prefWidth="150.0" text="Fecha de Facturación" />
-                              <TableColumn prefWidth="125.0" text="Total de Factura" />
-                              <TableColumn prefWidth="125.0" text="Terminos de Pago" />
+                              <TableColumn fx:id="invoiceid_column" prefWidth="108.0" text="No. de Factura" />
+                              <TableColumn fx:id="invoicedate_column" prefWidth="150.0" text="Fecha de Facturación" />
+                              <TableColumn fx:id="invoicetotal_column" prefWidth="125.0" text="Total de Factura" />
                            </columns>
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TableView>
-                        <Button mnemonicParsing="false" text="Agregar Factura">
+                        <Button fx:id="add_button" mnemonicParsing="false" text="Agregar Factura">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -44,7 +43,7 @@
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin></Label>
-                        <DatePicker prefWidth="150.0">
+                        <DatePicker fx:id="reportdate_picker" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin></DatePicker>
@@ -53,7 +52,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <ComboBox fx:id="client_combo" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -62,7 +61,7 @@
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin></Label>
-                        <TextField>
+                        <TextField fx:id="checknumber_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin></TextField>
@@ -71,7 +70,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField>
+                        <TextField fx:id="ammountpaid_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -81,7 +80,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField>
+                        <TextField fx:id="calculated_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -91,7 +90,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField>
+                        <TextField fx:id="balance_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -101,12 +100,12 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea prefHeight="75.0" prefWidth="150.0">
+                        <TextArea fx:id="comments_field" prefHeight="75.0" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextArea>
-                        <Button mnemonicParsing="false" text="Guardar">
+                        <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
