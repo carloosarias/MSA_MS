@@ -66,8 +66,6 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     @FXML
     private TextField calculated_field;
     @FXML
-    private TextField balance_field;
-    @FXML
     private TextArea comments_field;
     @FXML
     private Button save_button;
@@ -96,23 +94,57 @@ public class CreateInvoicePaymentReportFX implements Initializable {
         
         client_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Company> observable, Company oldValue, Company newValue) -> {
             clientcombo_selection = newValue;
-            if(newValue != oldValue){
-                clearInvoicePaymentItemQueue();
-            }
+            clearInvoicePaymentItemQueue();
         });
         
        add_button.setOnAction((ActionEvent) -> {
            add_button.setDisable(true);
            client_combo.setDisable(true);
            showAdd_stage();
+           updateTableList();
+       });
+       
+       save_button.setOnAction((ActionEvent) -> {
+          if(!testFields()){
+              return;
+          }
+          else{
+              saveInvoicePaymentReport();
+              Stage stage = (Stage) root_hbox.getScene().getWindow();
+          }
        });
                
     }
+    public boolean testFields(){
+        boolean b = true;
+        return b;
+    }
+    
+    public void saveInvoicePaymentReport(){
+        InvoicePaymentReport invoice_payment_report = new InvoicePaymentReport();
+        invoice_payment_report.setReport_date(java.sql.Date.valueOf(reportdate_picker.getValue()));
+        invoice_payment_report.setAmmount_paid(Double.parseDouble(ammountpaid_field.getText()));
+        invoice_payment_report.setCheck_number(checknumber_field.getText());
+        invoice_payment_report.setComments(comments_field.getText());
+        msabase.getInvoicePaymentReportDAO().create(clientcombo_selection, invoice_payment_report);
+        
+    }
+    
+    public void updateTableList(){
+        invoicepaymentitem_tableview.setItems(FXCollections.observableArrayList(invoicepaymentitem_queue));
+        double total = 0;
+        for(InvoicePaymentItem item: invoicepaymentitem_tableview.getItems()){
+            total += Double.parseDouble(invoicetotal_column.getCellData(item));
+        }
+        calculated_field.setText(""+total);
+    };
     public void getInvoiceList(){
         invoice_list = msabase.getInvoiceDAO().listPending(true);
     }
     public void clearInvoicePaymentItemQueue(){
+        getInvoiceList();
         invoicepaymentitem_queue.clear();
+        updateTableList();
     }
     
     public void showAdd_stage(){
@@ -135,7 +167,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     }
     
     public void setInvoicePaymentItemTable(){
-        invoiceid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        invoiceid_column.setCellValueFactory(new PropertyValueFactory<>("invoice_id"));
         invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceDAO().find(c.getValue().getInvoice_id()).getInvoice_date()));
         invoicetotal_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceDAO().findTotal(msabase.getInvoiceDAO().find(c.getValue().getInvoice_id()))));
     }

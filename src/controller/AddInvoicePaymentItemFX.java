@@ -20,8 +20,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import model.Company;
 import model.Invoice;
+import model.InvoicePaymentItem;
 
 /**
  * FXML Controller class
@@ -59,6 +61,15 @@ public class AddInvoicePaymentItemFX implements Initializable {
         invoice_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> observable, Invoice oldValue, Invoice newValue) -> {
             save_button.setDisable(invoice_tableview.getSelectionModel().isEmpty());
             invoice_combo.getSelectionModel().select(newValue);
+        });
+        
+        save_button.setOnAction((ActionEvent) -> {
+            InvoicePaymentItem item = new InvoicePaymentItem();
+            item.setInvoice_id(invoice_combo.getSelectionModel().getSelectedItem().getId());
+            CreateInvoicePaymentReportFX.getInvoice_list().remove(invoice_combo.getSelectionModel().getSelectedItem());
+            CreateInvoicePaymentReportFX.getInvoicepaymentitem_queue().add(item);
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close();
         });
     }
     

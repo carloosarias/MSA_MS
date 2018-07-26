@@ -20,7 +20,7 @@
                <children>
                   <VBox>
                      <children>
-                        <TableView fx:id="invoicepaymentitem_tableview" prefHeight="448.0">
+                        <TableView fx:id="invoicepaymentitem_tableview" prefHeight="390.0">
                            <columns>
                               <TableColumn fx:id="invoiceid_column" prefWidth="108.0" text="No. de Factura" />
                               <TableColumn fx:id="invoicedate_column" prefWidth="150.0" text="Fecha de Facturación" />
@@ -39,7 +39,7 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Label text="Fecha de Reporte">
+                        <Label text="Fecha de Reporte:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin></Label>
@@ -47,7 +47,7 @@
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin></DatePicker>
-                        <Label text="Cliente">
+                        <Label text="Cliente:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -57,25 +57,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <Label text="No. de Cheque">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="checknumber_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
-                        <Label text="Cantidad a Pagar">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="ammountpaid_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <Label text="Total Calculado">
+                        <Label text="Total Calculado:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -85,17 +67,25 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
-                        <Label text="Balance">
+                        <Label text="Cantidad Pagada:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="balance_field">
+                        <TextField fx:id="ammountpaid_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
-                        <Label text="Comentarios">
+                        <Label text="No. de Cheque:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></Label>
+                        <TextField fx:id="checknumber_field">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></TextField>
+                        <Label text="Comentarios:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
