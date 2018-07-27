@@ -155,7 +155,7 @@ public class ProductFX implements Initializable {
                 default:
                     return;
             }
-            if(path != ""){
+            if(!path.equals("")){
                 detailsStage = new Stage();
                 detailsStage.initOwner((Stage) root_hbox.getScene().getWindow());
             
