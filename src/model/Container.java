@@ -15,6 +15,7 @@ public class Container implements Serializable{
     // Properties ---------------------------------------------------------------------------------
 
     private Integer id;
+    private String type;
     private String process;
     private String details;
     // Getters/setters ----------------------------------------------------------------------------
@@ -27,6 +28,14 @@ public class Container implements Serializable{
         this.id = id;
     }
 
+    public String getType(){
+        return type;
+    }
+    
+    public void setType(String type){
+        this.type = type;
+    }
+    
     public String getProcess() {
         return process;
     }
