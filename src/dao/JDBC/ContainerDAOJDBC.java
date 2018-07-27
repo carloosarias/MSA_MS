@@ -62,10 +62,10 @@ public class ContainerDAOJDBC implements ContainerDAO{
     }
     
     /**
-     * Returns the Specification from the database matching the given SQL query with the given values.
+     * Returns the Container from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The Specification from the database matching the given SQL query with the given values.
+     * @return The Container from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
     private Container find(String sql, Object... values) throws DAOException {
@@ -88,7 +88,7 @@ public class ContainerDAOJDBC implements ContainerDAO{
     
     @Override
     public List<Container> list() throws DAOException {
-        List<Container> specification = new ArrayList<>();
+        List<Container> container = new ArrayList<>();
         
         try(
             Connection connection = daoFactory.getConnection();
@@ -96,18 +96,18 @@ public class ContainerDAOJDBC implements ContainerDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                specification.add(map(resultSet));
+                container.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return specification;
+        return container;
     }
     
     @Override
     public List<Container> listType(String type) throws DAOException {
-        List<Container> specification = new ArrayList<>();
+        List<Container> container = new ArrayList<>();
         
         Object[] values = {
             type
@@ -119,13 +119,13 @@ public class ContainerDAOJDBC implements ContainerDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                specification.add(map(resultSet));
+                container.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return specification;
+        return container;
     }
     
     @Override
@@ -179,7 +179,7 @@ public class ContainerDAOJDBC implements ContainerDAO{
     public void create(Container container) throws IllegalArgumentException, DAOException {
 
         if(container.getId() != null){
-            throw new IllegalArgumentException("Specification is already created, the Specification ID is not null.");
+            throw new IllegalArgumentException("Container is already created, the Container ID is not null.");
         }
 
         Object[] values = {
@@ -194,14 +194,14 @@ public class ContainerDAOJDBC implements ContainerDAO{
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
-                throw new DAOException("Creating Specification failed, no rows affected.");
+                throw new DAOException("Creating Container failed, no rows affected.");
             }
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     container.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new DAOException("Creating Specification failed, no generated key obtained.");
+                    throw new DAOException("Creating Container failed, no generated key obtained.");
                 }
             }
             
@@ -213,7 +213,7 @@ public class ContainerDAOJDBC implements ContainerDAO{
     @Override
     public void update(Container container) throws IllegalArgumentException, DAOException {
         if (container.getId() == null) {
-            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
+            throw new IllegalArgumentException("Container is not created yet, the Container ID is null.");
         }
         
         Object[] values = {
@@ -229,7 +229,7 @@ public class ContainerDAOJDBC implements ContainerDAO{
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Updating Specification failed, no rows affected.");
+                throw new DAOException("Updating Container failed, no rows affected.");
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -248,7 +248,7 @@ public class ContainerDAOJDBC implements ContainerDAO{
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Deleting Specification failed, no rows affected.");
+                throw new DAOException("Deleting Container failed, no rows affected.");
             } else{
                 container.setId(null);
             }
@@ -260,18 +260,18 @@ public class ContainerDAOJDBC implements ContainerDAO{
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an Specification.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an Specification.
-     * @return The mapped Specification from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an Container.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an Container.
+     * @return The mapped Container from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     public static Container map(ResultSet resultSet) throws SQLException{
-        Container specification = new Container();
-        specification.setId(resultSet.getInt("id"));
-        specification.setType(resultSet.getString("type"));
-        specification.setProcess(resultSet.getString("process"));
-        specification.setDetails(resultSet.getString("details"));
-        return specification;
+        Container container = new Container();
+        container.setId(resultSet.getInt("id"));
+        container.setType(resultSet.getString("type"));
+        container.setProcess(resultSet.getString("process"));
+        container.setDetails(resultSet.getString("details"));
+        return container;
     }
     
 }

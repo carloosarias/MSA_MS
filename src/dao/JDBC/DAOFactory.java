@@ -8,6 +8,7 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.ModuleDAO;
 import dao.interfaces.CompanyAddressDAO;
 import dao.interfaces.CompanyContactDAO;
+import dao.interfaces.ContainerDAO;
 import dao.interfaces.DepartLotDAO;
 import dao.interfaces.DepartReportDAO;
 import dao.interfaces.IncomingLotDAO;
@@ -316,6 +317,14 @@ public abstract class DAOFactory {
      */   
     public InvoicePaymentItemDAO getInvoicePaymentItemDAO(){
         return new InvoicePaymentItemDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Container DAO associated with the current DAOFactory.
+     * @return The Container DAO associated with the current DAOFactory.
+     */   
+    public ContainerDAO getContainerDAO(){
+        return new ContainerDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.

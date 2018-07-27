@@ -8,13 +8,17 @@ package dao.JDBC;
 import dao.DAOException;
 import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
+import dao.interfaces.ProcessReportDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Container;
+import model.Employee;
 import model.PartRevision;
+import model.ProcessReport;
 import model.ProductPart;
 import model.Specification;
 
@@ -22,16 +26,16 @@ import model.Specification;
  *
  * @author Pavilion Mini
  */
-public class ProcessReportDAO {
+public class ProcessReportDAOJDBC implements ProcessReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
             "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE id = ?";
-    private static final String SQL_FIND_BY_PART_REV = 
-            "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND rev = ?";
-    private static final String SQL_FIND_PRODUCT_PART_BY_ID = 
-            "SELECT PRODUCT_PART_ID FROM PART_REVISION WHERE id = ?";
-    private static final String SQL_FIND_SPECIFICATION_BY_ID = 
-            "SELECT SPECIFICATION_ID FROM PART_REVISION WHERE id = ?";
+    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
+            "SELECT EMPLOYEE_ID FROM PART_REVISION WHERE id = ?";
+    private static final String SQL_FIND_PART_REVISION_BY_ID = 
+            "SELECT PART_REVISION_ID FROM PART_REVISION WHERE id = ?";
+    private static final String SQL_FIND_CONTAINER_BY_ID = 
+            "SELECT TANK_ID, CONTAINER_ID FROM PART_REVISION WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
@@ -59,38 +63,29 @@ public class ProcessReportDAO {
     // Constructors -------------------------------------------------------------------------------
 
     /**
-     * Construct a PartRevision DAO for the given DAOFactory. Package private so that it can be constructed
+     * Construct a ProcessReport DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
-     * @param daoFactory The DAOFactory to construct this PartRevision DAO for.
+     * @param daoFactory The DAOFactory to construct this ProcessReport DAO for.
      */
-    PartRevisionDAOJDBC(DAOFactory daoFactory) {
+    ProcessReportDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
 
     // Actions ------------------------------------------------------------------------------------
     @Override
-    public PartRevision find(Integer id) throws DAOException {
+    public ProcessReport find(Integer id) throws DAOException {
         return find(SQL_FIND_BY_ID, id);
-    }
-
-    @Override
-    public PartRevision find(ProductPart part, String rev) throws IllegalArgumentException, DAOException {
-        if(part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
-        }
-        
-        return find(SQL_FIND_BY_PART_REV, part.getId(), rev);
     }
     
     /**
-     * Returns the ProductPart from the database matching the given SQL query with the given values.
+     * Returns the ProcessReport from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The ProductPart from the database matching the given SQL query with the given values.
+     * @return The ProcessReport from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
-    private PartRevision find(String sql, Object... values) throws DAOException {
-        PartRevision part_revision = null;
+    private ProcessReport find(String sql, Object... values) throws DAOException {
+        ProcessReport process_report = null;
 
         try (
             Connection connection = daoFactory.getConnection();
@@ -98,72 +93,125 @@ public class ProcessReportDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                part_revision = map(resultSet);
+                process_report = map(resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
         }
 
+        return process_report;
+    }
+    
+    @Override
+    public Employee findEmployee(ProcessReport process_report) throws IllegalArgumentException, DAOException {
+        if(process_report.getId() == null) {
+            throw new IllegalArgumentException("ProcessReport is not created yet, the ProcessReport ID is null.");
+        }
+        
+        Employee employee = null;
+        
+        Object[] values = {
+            process_report.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                employee = daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return employee;
+    }
+    
+    @Override
+    public PartRevision findPartRevision(ProcessReport process_report) throws IllegalArgumentException, DAOException {
+        if(process_report.getId() == null) {
+            throw new IllegalArgumentException("ProcessReport is not created yet, the ProcessReport ID is null.");
+        }
+        
+        PartRevision part_revision = null;
+        
+        Object[] values = {
+            process_report.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PART_REVISION_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                part_revision = daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
         return part_revision;
     }
     
     @Override
-    public ProductPart findProductPart(PartRevision revision) throws IllegalArgumentException, DAOException {
-        if(revision.getId() == null) {
-            throw new IllegalArgumentException("ProductRevision is not created yet, the ProductRevision ID is null.");
+    public Container findTank(ProcessReport process_report) throws IllegalArgumentException, DAOException {
+        if(process_report.getId() == null) {
+            throw new IllegalArgumentException("ProcessReport is not created yet, the ProcessReport ID is null.");
         }
         
-        ProductPart part = null;
+        Container container = null;
         
         Object[] values = {
-            revision.getId()
+            process_report.getId()
         };
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PRODUCT_PART_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_CONTAINER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                part = daoFactory.getProductPartDAO().find(resultSet.getInt("PRODUCT_PART_ID"));
+                container = daoFactory.getContainerDAO().find(resultSet.getInt("TANK_ID"));
             }
         } catch (SQLException e) {
             throw new DAOException(e);
         }        
         
-        return part;
+        return container;
+    }
+    @Override
+    public Container findContainer(ProcessReport process_report) throws IllegalArgumentException, DAOException {
+        if(process_report.getId() == null) {
+            throw new IllegalArgumentException("ProcessReport is not created yet, the ProcessReport ID is null.");
+        }
+        
+        Container container = null;
+        
+        Object[] values = {
+            process_report.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_CONTAINER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                container = daoFactory.getContainerDAO().find(resultSet.getInt("CONTAINER_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return container;
     }
     
     @Override
-    public Specification findSpecification(PartRevision revision) throws IllegalArgumentException, DAOException {
-        if(revision.getId() == null) {
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }
-        
-        Specification specification = null;
-        
-        Object[] values = {
-            revision.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_SPECIFICATION_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                specification = daoFactory.getSpecificationDAO().find(resultSet.getInt("SPECIFICATION_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return specification;
-    }
-
-    @Override
-    public List<PartRevision> list() throws DAOException {
-        List<PartRevision> revisions = new ArrayList<>();
+    public List<ProcessReport> list() throws DAOException {
+        List<ProcessReport> process_report = new ArrayList<>();
 
         try(
             Connection connection = daoFactory.getConnection();
@@ -171,21 +219,22 @@ public class ProcessReportDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                revisions.add(map(resultSet));
+                process_report.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return revisions;
+        return process_report;
     }
 
+    //CONTINUE HERE-0-0-0-0-0-0-0-0-0--0-0-0-0-0-0
     @Override
-    public List<PartRevision> list(boolean active) throws DAOException {
+    public List<ProcessReport> listEmployee(Employee employee) throws DAOException {
         List<PartRevision> revisions = new ArrayList<>();
         
         Object[] values = {
-            active
+            employee.getId()
         };
         
         try(
