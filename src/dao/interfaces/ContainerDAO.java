@@ -7,11 +7,7 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
-import model.Company;
-import model.CompanyAddress;
 import model.Container;
-import model.DepartReport;
-import model.Employee;
 
 /**
  *
@@ -45,12 +41,10 @@ public interface ContainerDAO {
      */    
     public List<Container> listType(String type) throws DAOException;
     /**
-     * Returns a list of all DepartReport matching Company ID from the database ordered by DepartReport ID. 
-     * The Company ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any DepartReport.
-     * @param type The type to be searched for.
-     * @return A list of all DepartReport matching Company ID from the database ordered by DepartReport ID.
-     * @throws IllegalArgumentException If Company ID is null.
+     * Returns a list of all Container matching process from the database ordered by Container ID. 
+     * The list is never null and is empty when the database does not contain any Container matching process.
+     * @param process The process to be searched for.
+     * @return A list of all Container matching process from the database ordered by Container ID.
      * @throws DAOException If something fails at database level.
      */    
     public List<Container> listProcess(String process) throws DAOException;
@@ -58,28 +52,27 @@ public interface ContainerDAO {
     public List<Container> listTypeProcess(String type, String process) throws DAOException;
     
     /**
-     * Create the given DepartReport in the database.
-     * The Employee ID must not be null, The Company ID must not be null, and
-     * The DepartReport ID must be null, otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given DepartReport.
+     * Create the given Container in the database.
+     * The Container ID must be null, otherwise it will throw IllegalArgumentException.
+     * After creating, the DAO will set the obtained ID in the given Container.
      * @param container The Container to be created.
-     * @throws IllegalArgumentException If the DepartReport ID is not null.
+     * @throws IllegalArgumentException If the Container ID is not null.
      * @throws DAOException If something fails at database level.
      */    
     public void create(Container container) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given DepartReport in the database. The DepartReport ID must not be null, 
+     * Update the given Container in the database. The Container ID must not be null, 
      * otherwise it will throw IllegalArgumentException.
      * @param container The Container to be updated.
-     * @throws IllegalArgumentException If the DepartReport ID is null.
+     * @throws IllegalArgumentException If the Container ID is null.
      * @throws DAOException If something fails at database level.
      */    
     public void update(Container container) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given DepartReport from the database. After deleting, the DAO will set the ID of the given
-     * DepartReport to null.
+     * Delete the given Container from the database. After deleting, the DAO will set the ID of the given
+     * Container to null.
      * @param container The Container to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
