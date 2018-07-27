@@ -23,20 +23,22 @@ import model.Container;
 public class ContainerDAOJDBC implements ContainerDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, specification_number, process, details, active FROM SPECIFICATION WHERE id = ?";
-    private static final String SQL_FIND_BY_SPECIFICATION_NUMBER = 
-            "SELECT id, specification_number, process, details, active FROM SPECIFICATION WHERE specification_number = ?";
+            "SELECT id, type, process, details FROM CONTAINER WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, specification_number, process, details, active FROM SPECIFICATION ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, specification_number, process, details, active FROM SPECIFICATION WHERE active = ? ORDER BY id";
+            "SELECT id, type, process, details FROM CONTAINER ORDER BY id";
+    private static final String SQL_LIST_OF_TYPE_ORDER_BY_ID = 
+            "SELECT id, type, process, details FROM CONTAINER WHERE type = ? ORDER BY id";
+    private static final String SQL_LIST_OF_PROCESS_ORDER_BY_ID = 
+            "SELECT id, type, process, details FROM CONTAINER WHERE process = ? ORDER BY id";
+    private static final String SQL_LIST_OF_TYPE_PROCESS_ORDER_BY_ID = 
+            "SELECT id, type, process, details FROM CONTAINER WHERE type = ? AND process = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO SPECIFICATION (specification_number, process, details, active) "
-            + "VALUES (?,?,?,?)";
+            "INSERT INTO CONTAINER (type, process, details) "
+            + "VALUES (?,?,?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SPECIFICATION SET specification_number = ?, process = ?, details = ?, active = ? WHERE id = ?";
+            "UPDATE CONTAINER SET type = ?, process = ?, details = ? WHERE id = ?";
     private static final String SQL_DELETE =
-            "DELETE FROM SPECIFICATION WHERE id = ?";
+            "DELETE FROM CONTAINER WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -113,7 +115,7 @@ public class ContainerDAOJDBC implements ContainerDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_TYPE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -128,12 +130,49 @@ public class ContainerDAOJDBC implements ContainerDAO{
     
     @Override
     public List<Container> listProcess(String process) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Container> container = new ArrayList<>();
+        
+        Object[] values = {
+            process
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PROCESS_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                container.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return container;
     }
 
     @Override
     public List<Container> listTypeProcess(String type, String process) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Container> container = new ArrayList<>();
+        
+        Object[] values = {
+            type,
+            process
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_TYPE_PROCESS_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                container.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return container;
     }
     
     @Override
