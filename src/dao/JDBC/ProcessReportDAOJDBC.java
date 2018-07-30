@@ -14,13 +14,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Container;
 import model.Employee;
 import model.PartRevision;
 import model.ProcessReport;
-import model.ProductPart;
-import model.Specification;
 
 /**
  *
@@ -29,32 +28,28 @@ import model.Specification;
 public class ProcessReportDAOJDBC implements ProcessReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE id = ?";
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM PART_REVISION WHERE id = ?";
+            "SELECT EMPLOYEE_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
-            "SELECT PART_REVISION_ID FROM PART_REVISION WHERE id = ?";
+            "SELECT PART_REVISION_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_CONTAINER_BY_ID = 
-            "SELECT TANK_ID, CONTAINER_ID FROM PART_REVISION WHERE id = ?";
+            "SELECT TANK_ID, CONTAINER_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE active = ? ORDER BY id";
-    private static final String SQL_LIST_OF_PART_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_OF_PART_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND active = ? ORDER BY id";
-    private static final String SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE SPECIFICATION_ID = ? ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active FROM PART_REVISION WHERE SPECIFICATION_ID = ? AND active = ? ORDER BY id";
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT ORDER BY id";
+    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
+    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO PART_REVISION (PRODUCT_PART_ID, SPECIFICATION_ID, rev, rev_date, final_process, base_metal, area, base_weight, final_weight, active) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO PROCESS_REPORT (EMPLOYEE_ID, PART_REVISION_ID, TANK_ID, CONTAINER_ID, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, final_process = ?, base_metal = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
+            "UPDATE PROCESS_REPORT SET process = ?, report_date = ?, lot_number = ?, quantity = ?, amperage = ?, voltage = ?, start_time = ?, end_time = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM PART_REVISION WHERE id = ?";
+            "DELETE FROM PROCESS_REPORT WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -228,10 +223,13 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         return process_report;
     }
 
-    //CONTINUE HERE-0-0-0-0-0-0-0-0-0--0-0-0-0-0-0
     @Override
     public List<ProcessReport> listEmployee(Employee employee) throws DAOException {
-        List<PartRevision> revisions = new ArrayList<>();
+        if(employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }    
+        
+        List<ProcessReport> process_report = new ArrayList<>();
         
         Object[] values = {
             employee.getId()
@@ -239,153 +237,107 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                revisions.add(map(resultSet));
+                process_report.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return revisions;
+        return process_report;
     }
     @Override
-    public List<PartRevision> list(ProductPart part) throws IllegalArgumentException, DAOException {
-        if(part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
-        }    
-        
-        List<PartRevision> revisions = new ArrayList<>();
+    public List<ProcessReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException {
+   
+        List<ProcessReport> process_report = new ArrayList<>();
         
         Object[] values = {
-            part.getId()
+            start,
+            end
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PART_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_DATE_RANGE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                revisions.add(map(resultSet));
+                process_report.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return revisions;
+        return process_report;
     }
 
     @Override
-    public List<PartRevision> list(ProductPart part, boolean active) throws IllegalArgumentException, DAOException {
-        if(part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
+    public List<ProcessReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException {
+        if(employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
         }    
         
-        List<PartRevision> revisions = new ArrayList<>();
+        List<ProcessReport> process_report = new ArrayList<>();
         
         Object[] values = {
-            part.getId(),
-            active
+            employee.getId(),
+            start,
+            end
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_PART_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                revisions.add(map(resultSet));
+                process_report.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return revisions;        
+        return process_report;        
     }
 
     @Override
-    public List<PartRevision> list(Specification specification) throws IllegalArgumentException, DAOException {
-        if(specification.getId() == null) {
-            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
-        }    
-        
-        List<PartRevision> revisions = new ArrayList<>();
-        
-        Object[] values = {
-            specification.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                revisions.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
+    public void create(Employee employee, PartRevision part_revision, Container tank, Container container, ProcessReport process_report) throws IllegalArgumentException, DAOException {
+        if (employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
         }
         
-        return revisions;
-    }
-
-    @Override
-    public List<PartRevision> list(Specification specification, boolean active) throws IllegalArgumentException, DAOException {
-        if(specification.getId() == null) {
-            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
-        }    
-        
-        List<PartRevision> revisions = new ArrayList<>();
-        
-        Object[] values = {
-            specification.getId(),
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                revisions.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
+        if(part_revision.getId() == null){
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
-        return revisions;
-    }
-
-    @Override
-    public void create(ProductPart part, Specification specification, PartRevision revision) throws IllegalArgumentException, DAOException {
-        if (part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
+        if(tank.getId() == null){
+            throw new IllegalArgumentException("Container is not created yet, the Container ID is null.");
         }
         
-        if(specification.getId() == null){
-            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
+        if(container.getId() == null){
+            throw new IllegalArgumentException("Container is not created yet, the Container ID is null.");
         }
-        
-        if(revision.getId() != null){
-            throw new IllegalArgumentException("PartRevision is already created, the PartRevision ID is null.");
+        if(process_report.getId() != null){
+            throw new IllegalArgumentException("ProcessReport is already created, the ProcessReport ID is null.");
         }
         
         Object[] values = {
-            part.getId(),
-            specification.getId(),
-            revision.getRev(),
-            DAOUtil.toSqlDate(revision.getRev_date()),
-            revision.getFinal_process(),
-            revision.getBase_metal(),
-            revision.getArea(),
-            revision.getBase_weight(),
-            revision.getFinal_weight(),
-            revision.isActive()
+            employee.getId(),
+            part_revision.getId(),
+            tank.getId(),
+            container.getId(),
+            process_report.getProcess(),
+            DAOUtil.toSqlDate(process_report.getReport_date()),
+            process_report.getLot_number(),
+            process_report.getQuantity(),
+            process_report.getAmperage(),
+            process_report.getVoltage(),
+            process_report.getStart_time(),
+            process_report.getEnd_time(),
+            process_report.getComments()
         };
         
         try(
@@ -394,14 +346,14 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
-                throw new DAOException("Creating PartRevision failed, no rows affected.");
+                throw new DAOException("Creating ProcessReport failed, no rows affected.");
             }
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    revision.setId(generatedKeys.getInt(1));
+                    process_report.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new DAOException("Creating PartRevision failed, no generated key obtained.");
+                    throw new DAOException("Creating ProcessReport failed, no generated key obtained.");
                 }
             }
             
@@ -411,21 +363,22 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     }
 
     @Override
-    public void update(PartRevision revision) throws IllegalArgumentException, DAOException {
-        if (revision.getId() == null) {
+    public void update(ProcessReport process_report) throws IllegalArgumentException, DAOException {
+        if (process_report.getId() == null) {
             throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
         Object[] values = {
-            revision.getRev(),
-            DAOUtil.toSqlDate(revision.getRev_date()),
-            revision.getFinal_process(),
-            revision.getBase_metal(),
-            revision.getArea(),
-            revision.getBase_weight(),
-            revision.getFinal_weight(),
-            revision.isActive(),
-            revision.getId()
+            process_report.getProcess(),
+            DAOUtil.toSqlDate(process_report.getReport_date()),
+            process_report.getLot_number(),
+            process_report.getQuantity(),
+            process_report.getAmperage(),
+            process_report.getVoltage(),
+            process_report.getStart_time(),
+            process_report.getEnd_time(),
+            process_report.getComments(),
+            process_report.getId()
         };
         
         try(
@@ -434,7 +387,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Updating PartRevision failed, no rows affected.");
+                throw new DAOException("Updating ProcessReport failed, no rows affected.");
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -442,9 +395,9 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     }
 
     @Override
-    public void delete(PartRevision revision) throws DAOException {
+    public void delete(ProcessReport process_report) throws DAOException {
         Object[] values = {
-            revision.getId()
+            process_report.getId()
         };
         
         try(
@@ -453,9 +406,9 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Deleting PartRevision failed, no rows affected.");
+                throw new DAOException("Deleting ProcessReport failed, no rows affected.");
             } else{
-                revision.setId(null);
+                process_report.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -470,17 +423,18 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
      * @return The mapped PartRevision from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static PartRevision map(ResultSet resultSet) throws SQLException{
-        PartRevision revision = new PartRevision();
-        revision.setId(resultSet.getInt("id"));
-        revision.setRev(resultSet.getString("rev"));
-        revision.setRev_date(resultSet.getDate("rev_date"));
-        revision.setFinal_process(resultSet.getString("final_process"));
-        revision.setBase_metal(resultSet.getString("base_metal"));
-        revision.setArea(resultSet.getDouble("area"));
-        revision.setBase_weight(resultSet.getDouble("base_weight"));
-        revision.setFinal_weight(resultSet.getDouble("final_weight"));
-        revision.setActive(resultSet.getBoolean("active"));
-        return revision;
+    public static ProcessReport map(ResultSet resultSet) throws SQLException{
+        ProcessReport process_report = new ProcessReport();
+        process_report.setId(resultSet.getInt("id"));
+        process_report.setProcess(resultSet.getString("process"));
+        process_report.setReport_date(resultSet.getDate("report_date"));
+        process_report.setLot_number(resultSet.getString("lot_number"));
+        process_report.setQuantity(resultSet.getInt("quantity"));
+        process_report.setAmperage(resultSet.getDouble("amperage"));
+        process_report.setVoltage(resultSet.getDouble("voltage"));
+        process_report.setStart_time(resultSet.getTime("start_time"));
+        process_report.setEnd_time(resultSet.getTime("end_time"));
+        process_report.setComments(resultSet.getString("comments"));
+        return process_report;
     }    
 }

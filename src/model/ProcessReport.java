@@ -16,8 +16,9 @@ import java.util.Date;
 public class ProcessReport implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private String lot_number;
+    private String process;
     private Date report_date;
+    private String lot_number;
     private Integer quantity;
     private Double amperage;
     private Double voltage;
@@ -33,13 +34,13 @@ public class ProcessReport implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public String getLot_number() {
-        return lot_number;
+    
+    public String getProcess(){
+        return process;
     }
-
-    public void setLot_number(String lot_number) {
-        this.lot_number = lot_number;
+    
+    public void setProcess(String process){
+        this.process = process;
     }
 
     public Date getReport_date() {
@@ -49,7 +50,14 @@ public class ProcessReport implements Serializable {
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
     }
+    
+    public String getLot_number() {
+        return lot_number;
+    }
 
+    public void setLot_number(String lot_number) {
+        this.lot_number = lot_number;
+    }
     public Integer getQuantity() {
         return quantity;
     }
