@@ -24,18 +24,18 @@
                            <children>
                               <VBox>
                                  <children>
-                                    <TableView fx:id="invoicepayment_tableview">
+                                    <TableView fx:id="processreport_tableview">
                                        <columns>
                                           <TableColumn fx:id="id_column" prefWidth="96.0" text="No. de Reporte" />
-                                          <TableColumn fx:id="client_column" prefWidth="79.0" text="Empleado" />
+                                          <TableColumn fx:id="employee_column" prefWidth="79.0" text="Empleado" />
                                           <TableColumn fx:id="reportdate_column" prefWidth="121.0" text="Fecha de Reporte" />
-                                          <TableColumn fx:id="ammountpaid_column" prefWidth="92.0" text="No. de Parte" />
-                                          <TableColumn fx:id="checknumber_column" prefWidth="84.0" text="Revisión" />
-                                          <TableColumn prefWidth="78.0" text="No. de Lote" />
-                                          <TableColumn prefWidth="103.0" text="No. Tanque" />
-                                          <TableColumn prefWidth="103.0" text="No. Contenendor" />
-                                          <TableColumn fx:id="comments_column" prefWidth="85.0" text="Proceso" />
-                                          <TableColumn prefWidth="77.0" text="Cantidad" />
+                                          <TableColumn fx:id="partnumber_column" prefWidth="92.0" text="No. de Parte" />
+                                          <TableColumn fx:id="revision_column" prefWidth="84.0" text="Revisión" />
+                                          <TableColumn fx:id="lotnumber_column" prefWidth="78.0" text="No. de Lote" />
+                                          <TableColumn fx:id="tankid_column" prefWidth="103.0" text="No. Tanque" />
+                                          <TableColumn fx:id="containerid_column" prefWidth="103.0" text="No. Contenendor" />
+                                          <TableColumn fx:id="process_column" prefWidth="85.0" text="Proceso" />
+                                          <TableColumn fx:id="quantity_column" prefWidth="77.0" text="Cantidad" />
                                        </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -51,26 +51,56 @@
             </TabPane>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <VBox>
                      <children>
-                        <Label text="Amperaje:" />
-                        <TextField />
-                        <Label text="Voltaje:" />
-                        <TextField />
+                        <Label text="Amperaje:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></Label>
+                        <TextField fx:id="amperage_field">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></TextField>
+                        <Label text="Voltaje:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></Label>
+                        <TextField fx:id="voltage_field">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></TextField>
                      </children>
                   </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <VBox>
                      <children>
-                        <Label text="Hora de Ingreso:" />
-                        <TextField />
-                        <Label text="Hora de Salida:" />
-                        <TextField />
+                        <Label text="Hora de Ingreso:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></Label>
+                        <TextField fx:id="starttime_field">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></TextField>
+                        <Label text="Hora de Salida:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></Label>
+                        <TextField fx:id="endtime_field">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></TextField>
                      </children>
                   </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
+                  <VBox>
                      <children>
-                        <Label text="Comentarios:" />
-                        <TextArea prefHeight="200.0" prefWidth="200.0" />
+                        <Label text="Comentarios:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></Label>
+                        <TextArea fx:id="comments_field" prefHeight="200.0" prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin></TextArea>
                      </children>
                   </VBox>
                </children>
