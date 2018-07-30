@@ -10,7 +10,7 @@
 
 <BorderPane fx:id="root_pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainFX">
    <center>
-      <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab fx:id="employee_tab" closable="false" disable="true" text="Empleados" />
           <Tab fx:id="company_tab" closable="false" disable="true" text="Compañías" />
