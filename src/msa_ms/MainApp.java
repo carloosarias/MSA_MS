@@ -23,6 +23,10 @@ public class MainApp extends Application{
             "Virgen",
             "Rechazo"
             );
+    public static List<String> container_type_list = Arrays.asList(
+            "Tanque",
+            "Barril",
+            "Rack");
     @Override
     public void start(Stage primaryStage) throws Exception {
         
