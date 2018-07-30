@@ -55,6 +55,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab container_tab;
     @FXML
+    private Tab process_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -81,6 +83,7 @@ public class MainFX implements Initializable {
                     quote_tab.setDisable(true);
                     invoice_payment_tab.setDisable(true);
                     container_tab.setDisable(true);
+                    process_tab.setDisable(true);
                     break;
                 case "Recursos Humanos":
                     employee_tab.setDisable(false);
@@ -132,6 +135,13 @@ public class MainFX implements Initializable {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
+                case "Producción":
+                    process_tab.setDisable(false);
+                    try{
+                        process_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ProcessReportFX.fxml")));
+                    } catch(IOException ex) {
+                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+                    }
             }
         }
         
