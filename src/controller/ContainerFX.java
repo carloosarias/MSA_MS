@@ -6,11 +6,17 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -18,6 +24,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Container;
 
 /**
@@ -51,14 +58,48 @@ public class ContainerFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setContainerTable();
+        setContainerTable();        
+        container_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Container> observable, Container oldValue, Container newValue) -> {
+            if(newValue == null){
+                details_area.setText(null);
+            }
+            else{
+            details_area.setText(newValue.getDetails());
+            }
+        });
+        
+        add_button.setOnAction((ActionEvent) -> {
+            showAdd_stage();
+        });
+    }
+   
+    public void updateContainerTable(){
         container_tableview.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().list()));
     }
     
+    public void showAdd_stage(){
+        try {
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateContainerFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            add_stage.setTitle("Nuevo Contenedor");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
+            add_button.setDisable(false);
+            updateContainerTable();
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+        
     public void setContainerTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        type_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
-        process_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
+        type_column.setCellValueFactory(new PropertyValueFactory<>("type"));
+        process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
 }

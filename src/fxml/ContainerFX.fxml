@@ -36,7 +36,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea fx:id="details_area" prefHeight="200.0" prefWidth="200.0">
+                        <TextArea fx:id="details_area" editable="false" prefHeight="200.0" prefWidth="200.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
