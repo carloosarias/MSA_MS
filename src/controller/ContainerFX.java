@@ -60,12 +60,7 @@ public class ContainerFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setContainerTable();        
         container_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Container> observable, Container oldValue, Container newValue) -> {
-            if(newValue == null){
-                details_area.setText(null);
-            }
-            else{
-            details_area.setText(newValue.getDetails());
-            }
+            setContainerDetails(newValue);
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -73,6 +68,15 @@ public class ContainerFX implements Initializable {
         });
     }
    
+    public void setContainerDetails(Container container){
+        if(container == null){
+            details_area.setText(null);
+        }
+        else{
+            details_area.setText(container.getDetails());
+        }
+    }
+    
     public void updateContainerTable(){
         container_tableview.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().list()));
     }

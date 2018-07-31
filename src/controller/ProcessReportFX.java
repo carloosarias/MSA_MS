@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -21,6 +23,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.ProcessReport;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -76,6 +79,29 @@ public class ProcessReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setProcessReportTable();
+        processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listEmployeeDateRange(msabase.getEmployeeDAO().find(MainApp.employee_id), new Date() , new Date())));
+        
+        processreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProcessReport> observable, ProcessReport oldValue, ProcessReport newValue) -> {
+            setProcessReportDetails(newValue);
+        });
+        
+    }
+    
+    public void setProcessReportDetails(ProcessReport process_report){
+        if(process_report == null){
+            amperage_field.setText(null);
+            voltage_field.setText(null);
+            starttime_field.setText(null);
+            endtime_field.setText(null);
+            comments_field.setText(null);
+        }
+        else{
+            amperage_field.setText(process_report.getAmperage()+"");
+            voltage_field.setText(process_report.getVoltage()+"");
+            starttime_field.setText(process_report.getStart_time().toString());
+            endtime_field.setText(process_report.getEnd_time().toString());
+            comments_field.setText(process_report.getComments());
+        }
     }
     
     public void setProcessReportTable(){
