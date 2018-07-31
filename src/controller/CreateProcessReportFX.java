@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +25,7 @@ import javafx.scene.layout.HBox;
 import model.Container;
 import model.Employee;
 import model.PartRevision;
+import model.ProcessReport;
 import model.ProductPart;
 import msa_ms.MainApp;
 
@@ -85,9 +87,13 @@ public class CreateProcessReportFX implements Initializable {
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType("Tanque")));
         containertype_combo.setItems(FXCollections.observableArrayList("Barril", "Rack"));
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
-        
         employee_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
+        
+        containertype_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            container_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType(newValue)));
+            container_combo.setDisable(container_combo.getItems().isEmpty());
+        });
     }
     
 }
