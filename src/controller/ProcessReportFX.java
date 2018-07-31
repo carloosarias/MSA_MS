@@ -85,6 +85,10 @@ public class ProcessReportFX implements Initializable {
             setProcessReportDetails(newValue);
         });
         
+        add_button.setOnAction((ActionEvent) -> {
+        
+        });
+        
     }
     
     public void setProcessReportDetails(ProcessReport process_report){
