@@ -80,10 +80,6 @@ public class CreateProcessReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        starthour_spinner.setStyle(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
-        startminute_spinner.setStyle(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
-        timerhour_spinner.setStyle(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
-        timerminute_spinner.setStyle(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType("Tanque")));

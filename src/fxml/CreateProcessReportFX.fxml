@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -22,7 +23,8 @@
                         <Label text="Empleado:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
+                           </VBox.margin>
+                        </Label>
                         <ComboBox fx:id="employee_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -30,12 +32,18 @@
                         </ComboBox>
                      </children>
                   </VBox>
+                  <Separator orientation="VERTICAL">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Separator>
                   <VBox>
                      <children>
                         <Label text="Fecha:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
+                           </VBox.margin>
+                        </Label>
                         <DatePicker fx:id="reportdate_picker" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -45,36 +53,13 @@
                   </VBox>
                </children>
             </HBox>
+            <Separator>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Separator>
             <HBox>
                <children>
-                  <VBox>
-                     <children>
-                        <Label text="Proceso:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="process_combo" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="No. de Tanque:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="tank_combo" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
                   <VBox>
                      <children>
                         <Label text="Tipo de Contenedor:">
@@ -99,8 +84,42 @@
                         </ComboBox>
                      </children>
                   </VBox>
+                  <Separator orientation="VERTICAL">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Separator>
+                  <VBox>
+                     <children>
+                        <Label text="No. de Tanque:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="tank_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                        <Label text="Proceso:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="process_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
                </children>
             </HBox>
+            <Separator>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Separator>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <VBox>
@@ -127,6 +146,11 @@
                         </ComboBox>
                      </children>
                   </VBox>
+                  <Separator orientation="VERTICAL">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Separator>
                   <VBox>
                      <children>
                         <Label text="No. de Lote:">
@@ -139,10 +163,6 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
                         <Label text="Cantidad:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -157,6 +177,11 @@
                   </VBox>
                </children>
             </HBox>
+            <Separator>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Separator>
             <HBox>
                <children>
                   <VBox>
@@ -166,7 +191,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="amperage_field">
+                        <TextField fx:id="amperage_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -176,13 +201,18 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="voltage_field">
+                        <TextField fx:id="voltage_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
                      </children>
                   </VBox>
+                  <Separator orientation="VERTICAL">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Separator>
                   <VBox>
                      <children>
                         <Label text="Hora de entrada:">
@@ -192,12 +222,12 @@
                         </Label>
                         <HBox>
                            <children>
-                              <Spinner fx:id="starthour_spinner">
+                              <Spinner fx:id="starthour_spinner" prefWidth="70.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Spinner>
-                              <Spinner fx:id="startminute_spinner">
+                              <Spinner fx:id="startminute_spinner" prefWidth="70.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -211,12 +241,12 @@
                         </Label>
                         <HBox>
                            <children>
-                              <Spinner fx:id="timerhour_spinner">
+                              <Spinner fx:id="timerhour_spinner" prefWidth="70.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Spinner>
-                              <Spinner fx:id="timerminute_spinner">
+                              <Spinner fx:id="timerminute_spinner" prefWidth="70.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -227,6 +257,11 @@
                   </VBox>
                </children>
             </HBox>
+            <Separator>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Separator>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <VBox>
@@ -236,7 +271,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea fx:id="comments_area" prefHeight="100.0" prefWidth="200.0" wrapText="true">
+                        <TextArea fx:id="comments_area" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
