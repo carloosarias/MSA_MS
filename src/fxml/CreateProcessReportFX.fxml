@@ -23,7 +23,7 @@
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin></Label>
-                        <ComboBox fx:id="employee_combo" prefWidth="150.0">
+                        <ComboBox fx:id="employee_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -77,12 +77,22 @@
                   </VBox>
                   <VBox>
                      <children>
+                        <Label text="Tipo de Contenedor:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="containertype_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
                         <Label text="No. de Contenedor:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="container_combo" prefWidth="150.0">
+                        <ComboBox fx:id="container_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -117,7 +127,7 @@
                         </ComboBox>
                      </children>
                   </VBox>
-                  <VBox alignment="BOTTOM_LEFT">
+                  <VBox>
                      <children>
                         <Label text="No. de Lote:">
                            <VBox.margin>
@@ -131,7 +141,7 @@
                         </TextField>
                      </children>
                   </VBox>
-                  <VBox alignment="BOTTOM_LEFT">
+                  <VBox>
                      <children>
                         <Label text="Cantidad:">
                            <VBox.margin>

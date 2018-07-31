@@ -5,8 +5,11 @@
  */
 package controller;
 
+import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -16,6 +19,11 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import model.Container;
+import model.Employee;
+import model.PartRevision;
+import model.ProductPart;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -27,19 +35,21 @@ public class CreateProcessReportFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private ComboBox<?> employee_combo;
+    private ComboBox<Employee> employee_combo;
     @FXML
     private DatePicker reportdate_picker;
     @FXML
-    private ComboBox<?> process_combo;
+    private ComboBox<String> process_combo;
     @FXML
-    private ComboBox<?> tank_combo;
+    private ComboBox<Container> tank_combo;
     @FXML
-    private ComboBox<?> container_combo;
+    private ComboBox<String> containertype_combo;
     @FXML
-    private ComboBox<?> partnumber_combo;
+    private ComboBox<Container> container_combo;
     @FXML
-    private ComboBox<?> revision_combo;
+    private ComboBox<ProductPart> partnumber_combo;
+    @FXML
+    private ComboBox<PartRevision> revision_combo;
     @FXML
     private TextField lotnumber_field;
     @FXML
@@ -49,24 +59,31 @@ public class CreateProcessReportFX implements Initializable {
     @FXML
     private TextField voltage_field;
     @FXML
-    private Spinner<?> starthour_spinner;
+    private Spinner<Integer> starthour_spinner;
     @FXML
-    private Spinner<?> startminute_spinner;
+    private Spinner<Integer> startminute_spinner;
     @FXML
-    private Spinner<?> timerhour_spinner;
+    private Spinner<Integer> timerhour_spinner;
     @FXML
-    private Spinner<?> timerminute_spinner;
+    private Spinner<Integer> timerminute_spinner;
     @FXML
     private TextArea comments_area;
     @FXML
     private Button save_button;
+    
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
+        process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
+        tank_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType("Tanque")));
+        containertype_combo.setItems(FXCollections.observableArrayList("Barril", "Rack"));
+        employee_combo.getSelectionModel().selectFirst();
+        reportdate_picker.setValue(LocalDate.now());
     }    
     
 }
