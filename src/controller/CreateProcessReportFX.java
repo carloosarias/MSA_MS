@@ -8,6 +8,8 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -59,13 +61,13 @@ public class CreateProcessReportFX implements Initializable {
     @FXML
     private TextField voltage_field;
     @FXML
-    private Spinner<Integer> starthour_spinner;
+    private Spinner<Integer> starthour_spinner =  new Spinner<Integer>(0, 23, 1);
     @FXML
-    private Spinner<Integer> startminute_spinner;
+    private Spinner<Integer> startminute_spinner =  new Spinner<Integer>(0, 59, 1);
     @FXML
-    private Spinner<Integer> timerhour_spinner;
+    private Spinner<Integer> timerhour_spinner =  new Spinner<Integer>(0, 23, 1);
     @FXML
-    private Spinner<Integer> timerminute_spinner;
+    private Spinner<Integer> timerminute_spinner =  new Spinner<Integer>(0, 59, 1);
     @FXML
     private TextArea comments_area;
     @FXML
@@ -78,12 +80,18 @@ public class CreateProcessReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        starthour_spinner.setStyle(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
+        startminute_spinner.setStyle(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
+        timerhour_spinner.setStyle(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
+        timerminute_spinner.setStyle(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType("Tanque")));
         containertype_combo.setItems(FXCollections.observableArrayList("Barril", "Rack"));
+        partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
+        
         employee_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
-    }    
+    }
     
 }
