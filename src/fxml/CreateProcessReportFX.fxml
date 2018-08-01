@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateProcessReportFX">
    <children>
@@ -129,7 +130,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="partnumber_combo" prefWidth="150.0">
+                        <ComboBox fx:id="partnumber_combo" editable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -139,7 +140,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="revision_combo" prefWidth="150.0">
+                        <ComboBox fx:id="revision_combo" disable="true" editable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -215,7 +216,7 @@
                   </Separator>
                   <VBox>
                      <children>
-                        <Label text="Hora de entrada:">
+                        <Label text="Hora de entrada a proceso:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -234,10 +235,13 @@
                               </Spinner>
                            </children>
                         </HBox>
-                        <Label text="Tiempo en proceso:">
+                        <Label text="Tiempo estimado en proceso:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
+                           <font>
+                              <Font size="11.0" />
+                           </font>
                         </Label>
                         <HBox>
                            <children>
