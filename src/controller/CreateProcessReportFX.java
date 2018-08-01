@@ -148,7 +148,20 @@ public class CreateProcessReportFX implements Initializable {
     }
     
     public void clearStyle(){
-        
+        reportdate_picker.setStyle(null);
+        process_combo.setStyle(null);
+        tank_combo.setStyle(null);   
+        containertype_combo.setStyle(null);
+        container_combo.setStyle(null);
+        lotnumber_field.setStyle(null);        
+        quantity_field.setStyle(null);        
+        partnumber_combo.setStyle(null);        
+        revision_combo.setStyle(null);
+        amperage_field.setStyle(null);        
+        voltage_field.setStyle(null);
+        timerhour_spinner.setStyle(null);
+        timerminute_spinner.setStyle(null);
+        comments_area.setStyle(null);
     }
     
     public boolean testFields(){
@@ -224,7 +237,7 @@ public class CreateProcessReportFX implements Initializable {
             b = false;
         }
 
-        if(timerhour_spinner.getValue() == 0){
+        if(timerhour_spinner.getValue() == 0 && timerminute_spinner.getValue() == 0){
             timerhour_spinner.setStyle("-fx-border-color: lightpink;");
             timerminute_spinner.setStyle("-fx-border-color: lightpink;");
             b = false;
