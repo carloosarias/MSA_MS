@@ -142,6 +142,9 @@ public class MainFX implements Initializable {
                     } catch(IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    break;
+                case "Historial Producción":
+                    break;
             }
         }
         

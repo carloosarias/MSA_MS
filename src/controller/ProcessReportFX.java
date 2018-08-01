@@ -8,7 +8,9 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +22,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -28,6 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Module;
 import model.ProcessReport;
 import msa_ms.MainApp;
 
@@ -76,14 +82,28 @@ public class ProcessReportFX implements Initializable {
     private Button add_button;
     
     private Stage add_stage = new Stage();
-    
+    private List<Module> modules;
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
+    @FXML
+    private HBox filter_hbox;
+    @FXML
+    private CheckBox employeefilter_checkbox;
+    @FXML
+    private ComboBox<?> employee_combo;
+    @FXML
+    private CheckBox datefilter_checkbox;
+    @FXML
+    private DatePicker startdate_picker;
+    @FXML
+    private DatePicker enddate_picker;
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        setFilterHBox();
         setProcessReportTable();
         updateProcessReportTable();
         processreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProcessReport> observable, ProcessReport oldValue, ProcessReport newValue) -> {
@@ -96,7 +116,15 @@ public class ProcessReportFX implements Initializable {
         });
         
     }
-    
+    public void setFilterHBox(){
+        modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
+        for(Module module : modules){
+            if(module.getName().equals("Historial Producción")){
+                filter_hbox.setDisable(false);
+                return;
+            }
+        }
+    }
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
@@ -117,7 +145,11 @@ public class ProcessReportFX implements Initializable {
     }
     
     public void updateProcessReportTable(){
-        processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listEmployeeDateRange(msabase.getEmployeeDAO().find(MainApp.employee_id), new Date() , new Date())));
+        processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listEmployeeDateRange(
+                msabase.getEmployeeDAO().find(MainApp.employee_id), 
+                java.sql.Date.valueOf(LocalDate.now()) , 
+                java.sql.Date.valueOf(LocalDate.now().plusDays(1))))
+        );
     }
     
     public void setProcessReportDetails(ProcessReport process_report){

@@ -2,9 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -16,39 +17,87 @@
    <children>
       <VBox alignment="CENTER">
          <children>
-            <TabPane tabClosingPolicy="UNAVAILABLE">
-               <tabs>
-                  <Tab text="Reportes De Proceso">
-                     <content>
-                        <HBox>
-                           <children>
-                              <VBox>
-                                 <children>
-                                    <TableView fx:id="processreport_tableview">
-                                       <columns>
-                                          <TableColumn fx:id="id_column" prefWidth="96.0" text="No. de Reporte" />
-                                          <TableColumn fx:id="employee_column" prefWidth="79.0" text="Empleado" />
-                                          <TableColumn fx:id="reportdate_column" prefWidth="121.0" text="Fecha de Reporte" />
-                                          <TableColumn fx:id="partnumber_column" prefWidth="92.0" text="No. de Parte" />
-                                          <TableColumn fx:id="revision_column" prefWidth="84.0" text="Revisión" />
-                                          <TableColumn fx:id="lotnumber_column" prefWidth="78.0" text="No. de Lote" />
-                                          <TableColumn fx:id="tankid_column" prefWidth="103.0" text="No. Tanque" />
-                                          <TableColumn fx:id="containerid_column" prefWidth="103.0" text="No. Contenendor" />
-                                          <TableColumn fx:id="process_column" prefWidth="85.0" text="Proceso" />
-                                          <TableColumn fx:id="quantity_column" prefWidth="77.0" text="Cantidad" />
-                                       </columns>
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TableView>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                     </content>
-                  </Tab>
-               </tabs>
-            </TabPane>
+            <HBox fx:id="filter_hbox" disable="true">
+               <children>
+                  <VBox>
+                     <children>
+                        <CheckBox fx:id="employeefilter_checkbox" mnemonicParsing="false" selected="true" text="Filtrar por Empleado">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        <Label text="Empleado:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="employee_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <CheckBox fx:id="datefilter_checkbox" mnemonicParsing="false" selected="true" text="Filtrar por Fecha">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        <Label text="Desde:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <DatePicker fx:id="startdate_picker" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </DatePicker>
+                     </children>
+                  </VBox>
+                  <VBox alignment="BOTTOM_LEFT">
+                     <children>
+                        <Label text="Hasta:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <DatePicker fx:id="enddate_picker" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </DatePicker>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
+                        <TableView fx:id="processreport_tableview">
+                           <columns>
+                              <TableColumn fx:id="id_column" prefWidth="96.0" text="No. de Reporte" />
+                              <TableColumn fx:id="employee_column" prefWidth="79.0" text="Empleado" />
+                              <TableColumn fx:id="reportdate_column" prefWidth="121.0" text="Fecha de Reporte" />
+                              <TableColumn fx:id="partnumber_column" prefWidth="92.0" text="No. de Parte" />
+                              <TableColumn fx:id="revision_column" prefWidth="84.0" text="Revisión" />
+                              <TableColumn fx:id="lotnumber_column" prefWidth="78.0" text="No. de Lote" />
+                              <TableColumn fx:id="tankid_column" prefWidth="103.0" text="No. Tanque" />
+                              <TableColumn fx:id="containerid_column" prefWidth="103.0" text="No. Contenendor" />
+                              <TableColumn fx:id="process_column" prefWidth="85.0" text="Proceso" />
+                              <TableColumn fx:id="quantity_column" prefWidth="77.0" text="Cantidad" />
+                           </columns>
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <VBox>
@@ -107,7 +156,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Pago">
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Proceso">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
