@@ -7,6 +7,7 @@ package controller;
 
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,6 +26,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import model.Container;
 import model.Employee;
 import model.PartRevision;
@@ -144,7 +146,32 @@ public class CreateProcessReportFX implements Initializable {
             if(!testFields()){
                 return;
             }
+            saveProcessReport();
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close();
         });
+    }
+    public void saveProcessReport(){
+        ProcessReport process_report = new ProcessReport();
+        process_report.setProcess(revisioncombo_text);
+        process_report.setReport_date(Date.valueOf(reportdate_picker.getValue()));
+        process_report.setLot_number(lotnumber_field.getText());
+        process_report.setQuantity(Integer.parseInt(quantity_field.getText()));
+        process_report.setAmperage(Double.parseDouble(amperage_field.getText()));
+        process_report.setVoltage(Double.parseDouble(voltage_field.getText()));
+        Time start_time = new Time(starthour_spinner.getValue(), startminute_spinner.getValue(), 0);
+        Time end_time = Time.valueOf(start_time.toLocalTime().plusHours(timerhour_spinner.getValue()));
+        end_time = Time.valueOf(end_time.toLocalTime().plusMinutes(timerminute_spinner.getValue()));
+        process_report.setStart_time(start_time);
+        process_report.setEnd_time(end_time);
+        process_report.setComments(comments_area.getText());
+        
+        msabase.getProcessReportDAO().create(
+            employee_combo.getSelectionModel().getSelectedItem(),
+            revisioncombo_selection,
+            tank_combo.getSelectionModel().getSelectedItem(),
+            container_combo.getSelectionModel().getSelectedItem(),
+            process_report);
     }
     
     public void clearStyle(){
