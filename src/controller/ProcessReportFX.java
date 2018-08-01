@@ -33,6 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Employee;
 import model.Module;
 import model.ProcessReport;
 import msa_ms.MainApp;
@@ -51,7 +52,7 @@ public class ProcessReportFX implements Initializable {
     @FXML
     private CheckBox employeefilter_checkbox;
     @FXML
-    private ComboBox<?> employee_combo;
+    private ComboBox<Employee> employee_combo;
     @FXML
     private CheckBox datefilter_checkbox;
     @FXML
@@ -144,11 +145,29 @@ public class ProcessReportFX implements Initializable {
     }
     
     public void updateProcessReportTable(){
-        processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listEmployeeDateRange(
-                msabase.getEmployeeDAO().find(MainApp.employee_id), 
-                java.sql.Date.valueOf(LocalDate.now()) , 
-                java.sql.Date.valueOf(LocalDate.now().plusDays(1))))
-        );
+        if(employeefilter_checkbox.isSelected()){
+            if(datefilter_checkbox.isSelected()){
+                processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listEmployeeDateRange(
+                    employee_combo.getSelectionModel().getSelectedItem(), 
+                    java.sql.Date.valueOf(startdate_picker.getValue()), 
+                    java.sql.Date.valueOf(enddate_picker.getValue())))
+                );
+            }
+            else{
+                processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listEmployee(
+                    employee_combo.getSelectionModel().getSelectedItem()))
+                );
+            }
+        }
+        else if(datefilter_checkbox.isSelected()){
+            processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listDateRange(
+                    java.sql.Date.valueOf(startdate_picker.getValue()), 
+                    java.sql.Date.valueOf(enddate_picker.getValue())))
+            );            
+        }
+        else{
+            processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().list()));            
+        }
     }
     
     public void setProcessReportDetails(ProcessReport process_report){
