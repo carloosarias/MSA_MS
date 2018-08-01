@@ -47,6 +47,18 @@ public class ProcessReportFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
+    private HBox filter_hbox;
+    @FXML
+    private CheckBox employeefilter_checkbox;
+    @FXML
+    private ComboBox<?> employee_combo;
+    @FXML
+    private CheckBox datefilter_checkbox;
+    @FXML
+    private DatePicker startdate_picker;
+    @FXML
+    private DatePicker enddate_picker;
+    @FXML
     private TableView<ProcessReport> processreport_tableview;
     @FXML
     private TableColumn<ProcessReport, Integer> id_column;
@@ -84,19 +96,6 @@ public class ProcessReportFX implements Initializable {
     private Stage add_stage = new Stage();
     private List<Module> modules;
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    
-    @FXML
-    private HBox filter_hbox;
-    @FXML
-    private CheckBox employeefilter_checkbox;
-    @FXML
-    private ComboBox<?> employee_combo;
-    @FXML
-    private CheckBox datefilter_checkbox;
-    @FXML
-    private DatePicker startdate_picker;
-    @FXML
-    private DatePicker enddate_picker;
     
     /**
      * Initializes the controller class.
