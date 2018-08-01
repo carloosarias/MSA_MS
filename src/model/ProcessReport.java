@@ -25,6 +25,7 @@ public class ProcessReport implements Serializable {
     private Time start_time;
     private Time end_time;
     private String comments;
+    private boolean quality_passed;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -106,6 +107,14 @@ public class ProcessReport implements Serializable {
         this.comments = comments;
     }
     
+    public boolean isQuality_passed() {
+        return quality_passed;
+    }
+
+    public void setQuality_passed(boolean quality_passed) {
+        this.quality_passed = quality_passed;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -139,4 +148,4 @@ public class ProcessReport implements Serializable {
         return String.format("%d",
                 id);
     }
-}
+}  

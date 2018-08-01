@@ -165,6 +165,7 @@ public class CreateProcessReportFX implements Initializable {
         process_report.setStart_time(start_time);
         process_report.setEnd_time(end_time);
         process_report.setComments(comments_area.getText());
+        process_report.setQuality_passed(true);
         
         msabase.getProcessReportDAO().create(
             employee_combo.getSelectionModel().getSelectedItem(),

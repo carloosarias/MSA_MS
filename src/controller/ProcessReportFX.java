@@ -56,6 +56,8 @@ public class ProcessReportFX implements Initializable {
     @FXML
     private CheckBox datefilter_checkbox;
     @FXML
+    private Button filter_button;
+    @FXML
     private DatePicker startdate_picker;
     @FXML
     private DatePicker enddate_picker;
@@ -93,6 +95,8 @@ public class ProcessReportFX implements Initializable {
     private TextArea comments_field;
     @FXML
     private Button add_button;
+    @FXML
+    private TableColumn<?, ?> quality_column;
     
     private Stage add_stage = new Stage();
     private List<Module> modules;
@@ -103,9 +107,18 @@ public class ProcessReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().listActive(true)));
+        employee_combo.getSelectionModel().select(msabase.getEmployeeDAO().find(MainApp.employee_id));
+        startdate_picker.setValue(LocalDate.now());
+        enddate_picker.setValue(LocalDate.now().plusDays(1));
         setFilterHBox();
         setProcessReportTable();
         updateProcessReportTable();
+        
+        filter_button.setOnAction((ActionEvent) -> {
+            updateProcessReportTable();
+        });
+        
         processreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProcessReport> observable, ProcessReport oldValue, ProcessReport newValue) -> {
             setProcessReportDetails(newValue);
         });

@@ -28,7 +28,7 @@ import model.ProcessReport;
 public class ProcessReportDAOJDBC implements ProcessReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
@@ -36,18 +36,18 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     private static final String SQL_FIND_CONTAINER_BY_ID = 
             "SELECT TANK_ID, CONTAINER_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT ORDER BY id";
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
     private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO PROCESS_REPORT (EMPLOYEE_ID, PART_REVISION_ID, TANK_ID, CONTAINER_ID, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO PROCESS_REPORT (EMPLOYEE_ID, PART_REVISION_ID, TANK_ID, CONTAINER_ID, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PROCESS_REPORT SET process = ?, report_date = ?, lot_number = ?, quantity = ?, amperage = ?, voltage = ?, start_time = ?, end_time = ?, comments = ? WHERE id = ?";
+            "UPDATE PROCESS_REPORT SET process = ?, report_date = ?, lot_number = ?, quantity = ?, amperage = ?, voltage = ?, start_time = ?, end_time = ?, comments = ?, quality_passed = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM PROCESS_REPORT WHERE id = ?";
     
@@ -337,7 +337,8 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             process_report.getVoltage(),
             process_report.getStart_time(),
             process_report.getEnd_time(),
-            process_report.getComments()
+            process_report.getComments(),
+            process_report.isQuality_passed()
         };
         
         try(
@@ -378,7 +379,8 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             process_report.getStart_time(),
             process_report.getEnd_time(),
             process_report.getComments(),
-            process_report.getId()
+            process_report.getId(),
+            process_report.isQuality_passed()
         };
         
         try(
@@ -435,6 +437,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         process_report.setStart_time(resultSet.getTime("start_time"));
         process_report.setEnd_time(resultSet.getTime("end_time"));
         process_report.setComments(resultSet.getString("comments"));
+        process_report.setQuality_passed(resultSet.getBoolean("quality_passed"));
         return process_report;
     }    
 }
