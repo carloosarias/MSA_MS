@@ -7,7 +7,9 @@ package controller;
 
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -66,11 +68,11 @@ public class CreateProcessReportFX implements Initializable {
     @FXML
     private Spinner<Integer> starthour_spinner;
     @FXML
-    private Spinner<Integer> startminute_spinner =  new Spinner<Integer>(0, 59, 1);
+    private Spinner<Integer> startminute_spinner;
     @FXML
-    private Spinner<Integer> timerhour_spinner =  new Spinner<Integer>(0, 23, 1);
+    private Spinner<Integer> timerhour_spinner;
     @FXML
-    private Spinner<Integer> timerminute_spinner =  new Spinner<Integer>(0, 59, 1);
+    private Spinner<Integer> timerminute_spinner;
     @FXML
     private TextArea comments_area;
     @FXML
@@ -82,8 +84,8 @@ public class CreateProcessReportFX implements Initializable {
     private PartRevision revisioncombo_selection;
     private String revisioncombo_text;
     
-    private SpinnerValueFactory starthour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0);
-    private SpinnerValueFactory startminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0);
+    private SpinnerValueFactory starthour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour());
+    private SpinnerValueFactory startminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, LocalTime.now().getMinute());
     private SpinnerValueFactory timerhour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0);
     private SpinnerValueFactory timerminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0);
     
@@ -95,7 +97,6 @@ public class CreateProcessReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setSpinnerValues();
-        
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType("Tanque")));
@@ -105,6 +106,7 @@ public class CreateProcessReportFX implements Initializable {
         reportdate_picker.setValue(LocalDate.now());
         
         containertype_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            container_combo.getSelectionModel().clearSelection();
             container_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType(newValue)));
             container_combo.setDisable(container_combo.getItems().isEmpty());
         });
@@ -138,6 +140,101 @@ public class CreateProcessReportFX implements Initializable {
             }            
         });
         
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
+        });
+    }
+    
+    public void clearStyle(){
+        
+    }
+    
+    public boolean testFields(){
+        boolean b = true;
+        clearStyle();
+        if(reportdate_picker.getValue() == null){
+            reportdate_picker.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        if(process_combo.getSelectionModel().isEmpty()){
+            process_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        if(tank_combo.getSelectionModel().isEmpty()){
+            tank_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(containertype_combo.getSelectionModel().isEmpty()){
+            containertype_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        if(container_combo.getSelectionModel().isEmpty()){
+            container_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        if(lotnumber_field.getText().replace(" ", "").equals("")){
+            lotnumber_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        try{
+            Double.parseDouble(quantity_field.getText());
+        }catch(Exception e){
+            quantity_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        try{
+            partnumbercombo_selection.getId();
+        }
+        catch(Exception e){
+            partnumber_combo.setStyle("-fx-background-color: lightpink;");
+            partnumber_combo.getSelectionModel().select(null);
+            partnumber_combo.getEditor().setText(null);
+            b = false;
+        }
+        
+        try {
+            revisioncombo_selection.getId();
+        }
+        catch(Exception e){
+            revision_combo.setStyle("-fx-background-color: lightpink;");
+            revision_combo.getSelectionModel().select(null);
+            revision_combo.getEditor().setText(null);
+            b = false;
+        }
+        
+        try {
+            Double.parseDouble(amperage_field.getText());
+        }catch(Exception e){
+            amperage_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        try {
+            Double.parseDouble(voltage_field.getText());
+        }catch(Exception e){
+            voltage_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+
+        if(timerhour_spinner.getValue() == 0){
+            timerhour_spinner.setStyle("-fx-border-color: lightpink;");
+            timerminute_spinner.setStyle("-fx-border-color: lightpink;");
+            b = false;
+        }
+        
+        if(comments_area.getText().replace(" ", "").equals("")){
+            comments_area.setText("n/a");
+        }
+        
+        return b;
     }
     
     public void setSpinnerValues(){
