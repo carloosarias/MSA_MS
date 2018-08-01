@@ -29,6 +29,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -84,6 +85,8 @@ public class ProcessReportFX implements Initializable {
     @FXML
     private TableColumn<ProcessReport, Integer> quantity_column;
     @FXML
+    private TableColumn<ProcessReport, Boolean> quality_column;
+    @FXML
     private TextField amperage_field;
     @FXML
     private TextField voltage_field;
@@ -95,8 +98,6 @@ public class ProcessReportFX implements Initializable {
     private TextArea comments_field;
     @FXML
     private Button add_button;
-    @FXML
-    private TableColumn<?, ?> quality_column;
     
     private Stage add_stage = new Stage();
     private List<Module> modules;
@@ -211,6 +212,8 @@ public class ProcessReportFX implements Initializable {
         containerid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findContainer(c.getValue()).toString()));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quality_column.setCellFactory(CheckBoxTableCell.forTableColumn(quality_column));
+        quality_column.setCellValueFactory(new PropertyValueFactory<>("quality_passed"));
     }
     
     
