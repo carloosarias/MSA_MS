@@ -379,8 +379,8 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             process_report.getStart_time(),
             process_report.getEnd_time(),
             process_report.getComments(),
-            process_report.getId(),
-            process_report.isQuality_passed()
+            process_report.isQuality_passed(),
+            process_report.getId()
         };
         
         try(
