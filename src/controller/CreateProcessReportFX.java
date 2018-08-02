@@ -136,7 +136,6 @@ public class CreateProcessReportFX implements Initializable {
                 revision_combo.getEditor().selectAll();
             }
             else{
-                process_combo.getSelectionModel().select(revisioncombo_selection.getFinal_process());
                 lotnumber_field.requestFocus();
                 ActionEvent.consume();
             }            
