@@ -12,59 +12,67 @@ import java.util.Date;
  *
  * @author Pavilion Mini
  */
-public class DepartReport implements Serializable {
+public class TransactionHistory implements Serializable{
     // Properties ---------------------------------------------------------------------------------
-    private Integer id;
-    private Date report_date;
+    private String type;
+    private Integer quantity;
+    private Date date;
     
     // Getters/setters ----------------------------------------------------------------------------
-    public Integer getId() {
-        return id;
+    public String getType() {
+        return type;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public Date getReport_date() {
-        return report_date;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setReport_date(Date report_date) {
-        this.report_date = report_date;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
-    
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**
-     * This should compare DepartReport by ID only.
+     * This should compare TransactionHistory by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof DepartReport) && (id != null)
-            ? id.equals(((DepartReport) other).id)
+        return (other instanceof TransactionHistory) && (type != null)
+            ? type.equals(((TransactionHistory) other).type)
             : (other == this);
     }
 
     /**
-     * DepartReport with same ID should return same hashcode.
+     * ProcessReport with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
-        return (id != null) 
-             ? (this.getClass().hashCode() + id.hashCode()) 
+        return (type != null) 
+             ? (this.getClass().hashCode() + type.hashCode()) 
              : super.hashCode();
     }
 
     /**
-     * Returns the String representation of this DepartReport. Not required, it just pleases reading logs.
+     * Returns the String representation of this ProcessReport. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return String.format("%d",
-                id);
+        return String.format("%s",
+                type);
     }
 }
