@@ -68,7 +68,6 @@ public class MainFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
         modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
         
         for(Module module : modules){
