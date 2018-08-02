@@ -18,25 +18,77 @@ import model.TransactionHistory;
 public interface TransactionHistoryDAO {
         
     /**
-     * Returns the total IncomingReport quantity in a range of dates from the database matching the given ProductPart, otherwise null.
+     * Returns the total IncomingReport quantity in a range of dates from the database matching the given ProductPart. 
+     * ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
      * @param product_part The ProductPart to be searched for.
      * @param start_date The start date for the search.
      * @param end_date The end date for the search.
-     * @return The total IncovmingReport quantity in a range of dates from the database matching the given ProductPart, otherwise null.
-     * @throws IllegalArgumentException if product_part_id equals null
+     * @return The total IncomingReport quantity in a range of dates from the database matching the given ProductPart, otherwise null.
+     * @throws IllegalArgumentException if ProductPart ID is null.
      * @throws DAOException If something fails at database level.
      */ 
     public Integer IncomingQuantityDateRange(ProductPart product_part, Date start_date, Date end_date) throws IllegalArgumentException, DAOException;
     
+    /**
+     * Returns the total DepartReport quantity in a range of dates from the database matching the given ProductPart. 
+     * ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param product_part The ProductPart to be searched for.
+     * @param start_date The start date for the search.
+     * @param end_date The end date for the search.
+     * @return The total DepartReport quantity in a range of dates from the database matching the given ProductPart, otherwise null.
+     * @throws IllegalArgumentException if ProductPart ID is null.
+     * @throws DAOException If something fails at database level.
+     */ 
     public Integer DepartQuantityDateRange(ProductPart product_part, Date start_date, Date end_date) throws IllegalArgumentException, DAOException;
     
+    /**
+     * Returns the total DepartReport quantity in a range of dates from the database matching the given ProductPart. 
+     * ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param product_part The ProductPart to be searched for.
+     * @param start_date The start date for the search.
+     * @param end_date The end date for the search.
+     * @param rejected The rejected status for the search.
+     * @return The total DepartReport quantity in a range of dates from the database matching the given ProductPart, otherwise null.
+     * @throws IllegalArgumentException if ProductPart ID is null.
+     * @throws DAOException If something fails at database level.
+     */ 
     public Integer DepartQuantityDateRange(ProductPart product_part, Date start_date, Date end_date, boolean rejected) throws IllegalArgumentException, DAOException;
     
+    /**
+     * Returns the total ProcessReport quantity in a range of dates from the database matching the given ProductPart. 
+     * ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param product_part The ProductPart to be searched for.
+     * @param start_date The start date for the search.
+     * @param end_date The end date for the search.
+     * @return The total ProcessReport quantity in a range of dates from the database matching the given ProductPart, otherwise null.
+     * @throws IllegalArgumentException if ProductPart ID is null.
+     * @throws DAOException If something fails at database level.
+     */ 
     public Integer ProcessQuantityDateRange(ProductPart product_part, Date start_date, Date end_date) throws IllegalArgumentException, DAOException;
     
-    public Integer ProcessQuantityDateRange(ProductPart product_part, Date start_date, Date end_date, boolean quaility_passed) throws IllegalArgumentException, DAOException;
-    
-    public List<TransactionHistory> List();
+    /**
+     * Returns the total DepartReport quantity in a range of dates from the database matching the given ProductPart. 
+     * ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param product_part The ProductPart to be searched for.
+     * @param start_date The start date for the search.
+     * @param end_date The end date for the search.
+     * @param quality_passed The quality_passed status for the search.
+     * @return The total DepartReport quantity in a range of dates from the database matching the given ProductPart, otherwise null.
+     * @throws IllegalArgumentException if ProductPart ID is null.
+     * @throws DAOException If something fails at database level.
+     */ 
+    public Integer ProcessQuantityDateRange(ProductPart product_part, Date start_date, Date end_date, boolean quality_passed) throws IllegalArgumentException, DAOException;
+    /**
+    * Generates a list of TransactionHistory objects generated from the input, it includes IncomingReport,
+    * DepartReport and ProcessReport items of a given ProductPart and between the given range of dates.
+    * @param product_part the ProductPart 
+    * @param start_date The start date for the search.
+    * @param end_date The end date for the search.
+    * @return A list of TransactionHistory including IncomingReport, DepartReport and ProcessReport items of a given ProductPart and between a given range of dates
+    * @throws IllegalArgumentException If ProductPart ID is null.
+    * @throws DAOException If Something fails at database level.
+    */
+    public List<TransactionHistory> List(ProductPart product_part, Date start_date, Date end_date) throws IllegalArgumentException, DAOException;
     
     /*
         User selects part number
