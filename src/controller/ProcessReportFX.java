@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,6 +28,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -34,6 +37,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import model.Employee;
 import model.Module;
 import model.ProcessReport;
@@ -212,10 +216,21 @@ public class ProcessReportFX implements Initializable {
         containerid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findContainer(c.getValue()).toString()));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        quality_column.setCellFactory(CheckBoxTableCell.forTableColumn(quality_column));
-        quality_column.setCellValueFactory(new PropertyValueFactory<>("quality_passed"));
+        //quality_column.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isQuality_passed()));
+        //quality_column.setCellFactory(tc -> new CheckBoxTableCell<>());
+        quality_column.setCellFactory(column -> new CheckBoxTableCell<>());
+        quality_column.setCellValueFactory(cellData -> {
+            ProcessReport cellValue = cellData.getValue();
+            BooleanProperty property = new SimpleBooleanProperty(cellValue.isQuality_passed());
+            // Add listener to handler change
+            property.addListener((observable, oldValue, newValue) -> {
+                cellValue.setQuality_passed(newValue);
+                msabase.getProcessReportDAO().update(cellValue);
+            });
+            return property;
+        });
     }
     
-    
-    
 }
+
+
