@@ -74,11 +74,7 @@ public class LoginFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        List<ProductPart> part_list = msabase.getProductPartDAO().listActive(true);
-        
-        msabase.getDepartLotDAO().listDateRange(msabase.getProductPartDAO().find(1), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()));
-        msabase.getProcessReportDAO().listDateRange(msabase.getProductPartDAO().find(1), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()));
-        msabase.getIncomingLotDAO().listDateRange(msabase.getProductPartDAO().find(1), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()));
+
         enter_button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
