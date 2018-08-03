@@ -57,6 +57,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab process_tab;
     @FXML
+    private Tab transaction_history_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -143,6 +145,14 @@ public class MainFX implements Initializable {
                     }
                     break;
                 case "Historial Producción":
+                    break;
+                case "Historial de Transacciones":
+                    transaction_history_tab.setDisable(false);
+                    try{
+                        transaction_history_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
+                    } catch(IOException ex) {
+                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
             }
         }
