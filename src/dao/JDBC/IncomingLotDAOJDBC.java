@@ -7,17 +7,20 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
+import static dao.JDBC.DepartLotDAOJDBC.map;
 import dao.interfaces.IncomingLotDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.DepartLot;
 import model.IncomingLot;
 import model.IncomingReport;
 import model.PartRevision;
+import model.ProductPart;
 
 /**
  *
@@ -46,6 +49,13 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             "UPDATE INCOMING_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, status = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM INCOMING_LOT WHERE id = ?";
+    private static final String LIST_INCOMING_LOT_BY_PRODUCT_PART_DATE_RANGE = 
+            "SELECT INCOMING_LOT.INCOMING_REPORT_ID, INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments "
+            + "FROM INCOMING_LOT "
+            + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN INCOMING_REPORT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND INCOMING_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY INCOMING_REPORT.report_date, INCOMING_LOT.INCOMING_REPORT_ID, INCOMING_LOT.id";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -424,6 +434,37 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             }
         }
         return total;
+    }
+    
+    @Override
+    public List<IncomingLot> listDateRange(ProductPart product_part, Date start, Date end){
+        List<IncomingLot> incominglot_list = new ArrayList<IncomingLot>();
+        System.out.println("we are here");
+        System.out.println(start);
+        System.out.println(end);
+        Object[] values = {
+            product_part.getId(),
+            start,
+            end
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, LIST_INCOMING_LOT_BY_PRODUCT_PART_DATE_RANGE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                System.out.println("Item match #"+resultSet.getRow());
+                System.out.println(resultSet.getInt("id"));
+                System.out.println(resultSet.getInt("INCOMING_REPORT_ID"));
+                System.out.println(resultSet.getInt("quantity"));
+                incominglot_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return incominglot_list;
     }
     
     // Helpers ------------------------------------------------------------------------------------

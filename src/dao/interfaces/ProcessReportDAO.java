@@ -12,6 +12,7 @@ import model.Container;
 import model.Employee;
 import model.PartRevision;
 import model.ProcessReport;
+import model.ProductPart;
 
 /**
  *
@@ -146,4 +147,7 @@ public interface ProcessReportDAO {
      * @throws DAOException If something fails at database level.
      */
     public void delete(ProcessReport process_report) throws DAOException;
+    
+    public List<ProcessReport> listDateRange(ProductPart product_part, Date start, Date end);
+
 }

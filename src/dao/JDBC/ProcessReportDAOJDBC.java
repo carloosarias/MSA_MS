@@ -20,6 +20,7 @@ import model.Container;
 import model.Employee;
 import model.PartRevision;
 import model.ProcessReport;
+import model.ProductPart;
 
 /**
  *
@@ -50,6 +51,12 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             "UPDATE PROCESS_REPORT SET process = ?, report_date = ?, lot_number = ?, quantity = ?, amperage = ?, voltage = ?, start_time = ?, end_time = ?, comments = ?, quality_passed = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM PROCESS_REPORT WHERE id = ?";
+    private static final String LIST_PROCESS_REPORT_BY_PRODUCT_PART_DATE_RANGE = 
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PROCESS_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY PROCESS_REPORT.report_date, PROCESS_REPORT.id";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -415,6 +422,36 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         } catch(SQLException e){
             throw new DAOException(e);
         }
+    }
+    
+    @Override
+    public List<ProcessReport> listDateRange(ProductPart product_part, Date start, Date end){
+        List<ProcessReport> processreport_list = new ArrayList<ProcessReport>();
+        System.out.println("we are here");
+        System.out.println(start);
+        System.out.println(end);
+        Object[] values = {
+            product_part.getId(),
+            start,
+            end
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, LIST_PROCESS_REPORT_BY_PRODUCT_PART_DATE_RANGE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                System.out.println("Item match #"+resultSet.getRow());
+                System.out.println(resultSet.getInt("id"));
+                System.out.println(resultSet.getInt("quantity"));
+                processreport_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return processreport_list;
     }
     
     // Helpers ------------------------------------------------------------------------------------

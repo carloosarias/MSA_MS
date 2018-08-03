@@ -6,12 +6,14 @@
 package dao.interfaces;
 
 import dao.DAOException;
+import java.util.Date;
 import java.util.List;
 import model.Company;
 import model.DepartLot;
 import model.DepartReport;
 import model.IncomingReport;
 import model.PartRevision;
+import model.ProductPart;
 
 /**
  *
@@ -119,4 +121,6 @@ public interface DepartLotDAO {
     public Integer getPartRevisionQuantity(DepartReport depart_report, PartRevision part_revision);
     
     public Integer getPartRevisionBoxQuantity(DepartReport depart_report, PartRevision part_revision);
+    
+    public List<DepartLot> listDateRange(ProductPart product_part, Date start, Date end);
 }

@@ -13,11 +13,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Company;
 import model.DepartLot;
 import model.DepartReport;
 import model.PartRevision;
+import model.ProductPart;
 
 /**
  *
@@ -50,6 +52,13 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             "UPDATE DEPART_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, process = ?, comments = ?, rejected = ?, pending = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM DEPART_LOT WHERE id = ?";
+    private static final String LIST_DEPART_LOT_BY_PRODUCT_PART_DATE_RANGE = 
+            "SELECT DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending "
+            + "FROM DEPART_LOT "
+            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND DEPART_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.id";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -431,6 +440,37 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             }
         }
         return total;
+    }
+    
+    @Override
+    public List<DepartLot> listDateRange(ProductPart product_part, Date start, Date end){
+        List<DepartLot> departlot_list = new ArrayList<DepartLot>();
+        System.out.println("we are here");
+        System.out.println(start);
+        System.out.println(end);
+        Object[] values = {
+            product_part.getId(),
+            start,
+            end
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, LIST_DEPART_LOT_BY_PRODUCT_PART_DATE_RANGE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                System.out.println("Item match #"+resultSet.getRow());
+                System.out.println(resultSet.getInt("id"));
+                System.out.println(resultSet.getInt("DEPART_REPORT_ID"));
+                System.out.println(resultSet.getInt("quantity"));
+                departlot_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return departlot_list;
     }
     
     // Helpers ------------------------------------------------------------------------------------

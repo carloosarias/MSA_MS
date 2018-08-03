@@ -9,6 +9,8 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +33,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Employee;
+import model.ProductPart;
 import msa_ms.MainApp;
 
 
@@ -71,7 +74,11 @@ public class LoginFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        List<ProductPart> part_list = msabase.getProductPartDAO().listActive(true);
+        
+        msabase.getDepartLotDAO().listDateRange(msabase.getProductPartDAO().find(1), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()));
+        msabase.getProcessReportDAO().listDateRange(msabase.getProductPartDAO().find(1), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()));
+        msabase.getIncomingLotDAO().listDateRange(msabase.getProductPartDAO().find(1), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()));
         enter_button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
