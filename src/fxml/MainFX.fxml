@@ -23,6 +23,7 @@
           <Tab fx:id="quote_tab" closable="false" disable="true" text="Cotización" />
           <Tab fx:id="invoice_payment_tab" closable="false" disable="true" text="Pago de Facturas" />
           <Tab fx:id="process_tab" closable="false" disable="true" text="Producción" />
+          <Tab fx:id="transaction_history_tab" closable="false" disable="true" text="Historial de Transacciones" />
         </tabs>
          <BorderPane.margin>
             <Insets />
