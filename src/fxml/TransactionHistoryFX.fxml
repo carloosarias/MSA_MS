@@ -4,6 +4,10 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -53,6 +57,102 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </DatePicker>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
+                        <TabPane prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab text="Reciba">
+                                 <content>
+                                    <HBox>
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <TableView fx:id="incoming_tableview" prefHeight="600.0" prefWidth="800.0">
+                                                  <columns>
+                                                    <TableColumn fx:id="incomingid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
+                                                    <TableColumn fx:id="incomingdate_column" prefWidth="100.0" resizable="false" text="Fecha" />
+                                                      <TableColumn fx:id="incominglotnumber_column" prefWidth="100.0" resizable="false" text="No. de Lote" />
+                                                      <TableColumn fx:id="incomingrevision_column" prefWidth="100.0" resizable="false" text="Revisión" />
+                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad">
+                                                         <columns>
+                                                            <TableColumn fx:id="incomingquantitiy_column" prefWidth="100.0" resizable="false" text="Piezas" />
+                                                            <TableColumn fx:id="incomingboxquantity_column" prefWidth="100.0" resizable="false" text="Cajas" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn fx:id="incomingstatus_column" prefWidth="100.0" resizable="false" text="Estado" />
+                                                      <TableColumn prefWidth="100.0" text="N/A" />
+                                                  </columns>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children></HBox>
+                                 </content>
+                              </Tab>
+                            <Tab text="Producción">
+                                 <content>
+                                    <HBox prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <TableView fx:id="process_tableview" prefHeight="600.0" prefWidth="800.0">
+                                                   <columns>
+                                                      <TableColumn fx:id="processid_column" prefWidth="100.0" text="No. de Reporte" />
+                                                      <TableColumn fx:id="processdate_column" prefWidth="100.0" text="Fecha" />
+                                                      <TableColumn fx:id="processlotnumber_column" prefWidth="100.0" text="No. de Lote" />
+                                                      <TableColumn fx:id="processrevision_column" prefWidth="100.0" text="Revisión" />
+                                                      <TableColumn prefWidth="100.0" text="Cantidad">
+                                                         <columns>
+                                                            <TableColumn fx:id="processquantity_column" prefWidth="100.0" text="Piezas" />
+                                                            <TableColumn prefWidth="100.0" text="N/A" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn fx:id="processstatus_column" prefWidth="100.0" text="Estado" />
+                                                      <TableColumn fx:id="processprocess_column" prefWidth="100.0" text="Proceso" />
+                                                   </columns>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children></HBox>
+                                 </content>
+                              </Tab>
+                              <Tab text="Remisiones">
+                                 <content>
+                                    <HBox prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <TableView fx:id="depart_tableview" prefHeight="600.0" prefWidth="800.0">
+                                                   <columns>
+                                                      <TableColumn fx:id="departid_column" prefWidth="100.0" text="No. de Reporte" />
+                                                      <TableColumn fx:id="departdate_column" prefWidth="100.0" text="Fecha" />
+                                                      <TableColumn fx:id="departlotnumber_column" prefWidth="100.0" text="No. de Lote" />
+                                                      <TableColumn fx:id="departrevision_column" prefWidth="100.0" text="Revisión" />
+                                                      <TableColumn prefWidth="100.0" text="Cantidad">
+                                                         <columns>
+                                                            <TableColumn fx:id="departquantity_column" prefWidth="100.0" text="Piezas" />
+                                                            <TableColumn fx:id="departquantitybox_column" prefWidth="100.0" text="Cajas" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn fx:id="departstatus_column" prefWidth="100.0" text="Estado" />
+                                                      <TableColumn fx:id="departprocess_column" prefWidth="100.0" text="Proceso" />
+                                                   </columns>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children></HBox>
+                                 </content>
+                              </Tab>
+                          </tabs>
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TabPane>
                      </children>
                   </VBox>
                </children>
