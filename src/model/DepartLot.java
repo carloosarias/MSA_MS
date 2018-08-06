@@ -97,6 +97,16 @@ public class DepartLot implements Serializable {
         return part_revision_id;
     }
     
+    public String getStatus(){
+        if(rejected){
+            return "Rechazado";
+        }else if(pending){
+            return "Pendiente";
+        }else{
+            return "Facturado";
+        }
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**

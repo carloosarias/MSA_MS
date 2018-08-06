@@ -91,13 +91,11 @@ public class DepartReportFX implements Initializable {
         depart_report_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartReportDAO().list()));
         
         depart_report_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
+            partrevision_tableview.getItems().clear();
+            departlot_tableview.getItems().clear();
             if(newValue != null){
-                partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listPartRevision(newValue)));
                 departlot_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(newValue)));
-
-            }else{
-                partrevision_tableview.getItems().clear();
-                departlot_tableview.getItems().clear();
+                partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listPartRevision(newValue)));
             }
         });
         
@@ -139,8 +137,8 @@ public class DepartReportFX implements Initializable {
             msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString())
         );
         revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getPartRevisionQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(),c.getValue())));
-        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getPartRevisionBoxQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(),c.getValue())));
+        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getPartRevisionQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getPartRevisionBoxQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
     }
     
     public void setLotTable(){

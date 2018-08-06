@@ -93,12 +93,11 @@ public class IncomingReportFX implements Initializable {
         incoming_report_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingReportDAO().list()));
         
         incoming_report_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport> observable, IncomingReport oldValue, IncomingReport newValue) -> {
+            partrevision_tableview.getItems().clear();
+            incominglot_tableview.getItems().clear();
             if(newValue != null){
                 partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listPartRevision(newValue)));
                 incominglot_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().list(incoming_report_tableview.getSelectionModel().getSelectedItem())));
-            }else{
-                partrevision_tableview.getItems().clear();
-                incominglot_tableview.getItems().clear();
             }
         });
         
