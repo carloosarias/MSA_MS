@@ -115,6 +115,14 @@ public class ProcessReport implements Serializable {
         this.quality_passed = quality_passed;
     }
     
+    public String getStatus(){
+        if(quality_passed){
+            return "Bueno";
+        }else{
+            return "Malo";
+        }
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**

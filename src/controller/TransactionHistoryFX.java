@@ -104,6 +104,7 @@ public class TransactionHistoryFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        setProcessReportTableViewItems();
         setIncomingTableViewItems();
         partnumber_combo.setItems(FXCollections.observableList(msabase.getProductPartDAO().listActive(true)));
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
@@ -125,7 +126,7 @@ public class TransactionHistoryFX implements Initializable {
     public void updateList(ProductPart product_part, Date start_date, Date end_date){
         try{
             msabase.getDepartLotDAO().listDateRange(product_part, start_date, end_date);
-            msabase.getProcessReportDAO().listDateRange(product_part, start_date, end_date);
+            process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listDateRange(product_part, start_date, end_date)));
             incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date)));
         }catch(Exception e){
             System.out.println("test");
@@ -143,19 +144,13 @@ public class TransactionHistoryFX implements Initializable {
     }
     
     public void setProcessReportTableViewItems(){
-            private TableColumn<ProcessReport, Integer> processid_column;
-    @FXML
-    private TableColumn<ProcessReport, Date> processdate_column;
-    @FXML
-    private TableColumn<ProcessReport, String> processlotnumber_column;
-    @FXML
-    private TableColumn<ProcessReport, String> processrevision_column;
-    @FXML
-    private TableColumn<ProcessReport, Integer> processquantity_column;
-    @FXML
-    private TableColumn<ProcessReport, String> processstatus_column;
-    @FXML
-    private TableColumn<ProcessReport, String> processprocess_column;
+    processid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+    processdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+    processlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+    processrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findPartRevision(c.getValue()).getRev()));
+    processquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+    processstatus_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
+    processprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
 }
