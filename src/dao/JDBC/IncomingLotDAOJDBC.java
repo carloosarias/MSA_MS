@@ -50,7 +50,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     private static final String SQL_DELETE =
             "DELETE FROM INCOMING_LOT WHERE id = ?";
     private static final String LIST_INCOMING_LOT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT INCOMING_LOT.INCOMING_REPORT_ID, INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments "
+            "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments "
             + "FROM INCOMING_LOT "
             + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN INCOMING_REPORT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id "
@@ -438,10 +438,9 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     
     @Override
     public List<IncomingLot> listDateRange(ProductPart product_part, Date start, Date end){
-        List<IncomingLot> incominglot_list = new ArrayList<IncomingLot>();
-        System.out.println("we are here");
-        System.out.println(start);
-        System.out.println(end);
+        
+        List<IncomingLot> incominglot_list = new ArrayList<>();
+        
         Object[] values = {
             product_part.getId(),
             start,
@@ -454,10 +453,6 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                System.out.println("Item match #"+resultSet.getRow());
-                System.out.println(resultSet.getInt("id"));
-                System.out.println(resultSet.getInt("INCOMING_REPORT_ID"));
-                System.out.println(resultSet.getInt("quantity"));
                 incominglot_list.add(map(resultSet));
             }
         } catch(SQLException e){
