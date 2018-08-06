@@ -8,9 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -18,7 +16,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import model.IncomingLot;
 import model.ProductPart;
 
 /**
@@ -36,7 +37,63 @@ public class TransactionHistoryFX implements Initializable {
     private DatePicker startdate_picker;
     @FXML
     private DatePicker enddate_picker;
-
+    
+    //IncomingLot TableView ----------------------------------------------------
+    @FXML
+    private TableView<IncomingLot> incoming_tableview;
+    @FXML
+    private TableColumn<?, ?> incomingid_column;
+    @FXML
+    private TableColumn<?, ?> incomingdate_column;
+    @FXML
+    private TableColumn<?, ?> incominglotnumber_column;
+    @FXML
+    private TableColumn<?, ?> incomingrevision_column;
+    @FXML
+    private TableColumn<?, ?> incomingquantitiy_column;
+    @FXML
+    private TableColumn<?, ?> incomingboxquantity_column;
+    @FXML
+    private TableColumn<?, ?> incomingstatus_column;
+    
+    //ProcessReport TableView --------------------------------------------------
+    @FXML
+    private TableView<?> process_tableview;
+    @FXML
+    private TableColumn<?, ?> processid_column;
+    @FXML
+    private TableColumn<?, ?> processdate_column;
+    @FXML
+    private TableColumn<?, ?> processlotnumber_column;
+    @FXML
+    private TableColumn<?, ?> processrevision_column;
+    @FXML
+    private TableColumn<?, ?> processquantity_column;
+    @FXML
+    private TableColumn<?, ?> processstatus_column;
+    @FXML
+    private TableColumn<?, ?> processprocess_column;
+    
+    //DepartLot TableView ------------------------------------------------------
+    @FXML
+    private TableView<?> depart_tableview;
+    @FXML
+    private TableColumn<?, ?> departid_column;
+    @FXML
+    private TableColumn<?, ?> departdate_column;
+    @FXML
+    private TableColumn<?, ?> departlotnumber_column;
+    @FXML
+    private TableColumn<?, ?> departrevision_column;
+    @FXML
+    private TableColumn<?, ?> departquantity_column;
+    @FXML
+    private TableColumn<?, ?> departquantitybox_column;
+    @FXML
+    private TableColumn<?, ?> departstatus_column;
+    @FXML
+    private TableColumn<?, ?> departprocess_column;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
