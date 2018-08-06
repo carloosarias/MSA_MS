@@ -42,19 +42,19 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TableView<IncomingLot> incoming_tableview;
     @FXML
-    private TableColumn<?, ?> incomingid_column;
+    private TableColumn<IncomingLot, Integer> incomingid_column;
     @FXML
-    private TableColumn<?, ?> incomingdate_column;
+    private TableColumn<IncomingLot, Date> incomingdate_column;
     @FXML
-    private TableColumn<?, ?> incominglotnumber_column;
+    private TableColumn<IncomingLot, String> incominglotnumber_column;
     @FXML
-    private TableColumn<?, ?> incomingrevision_column;
+    private TableColumn<IncomingLot, String> incomingrevision_column;
     @FXML
-    private TableColumn<?, ?> incomingquantitiy_column;
+    private TableColumn<IncomingLot, ?> incomingquantity_column;
     @FXML
-    private TableColumn<?, ?> incomingboxquantity_column;
+    private TableColumn<IncomingLot, ?> incomingboxquantity_column;
     @FXML
-    private TableColumn<?, ?> incomingstatus_column;
+    private TableColumn<IncomingLot, ?> incomingstatus_column;
     
     //ProcessReport TableView --------------------------------------------------
     @FXML
