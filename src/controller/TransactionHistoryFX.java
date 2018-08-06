@@ -10,6 +10,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,8 +19,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import model.IncomingLot;
+import model.ProcessReport;
 import model.ProductPart;
 
 /**
@@ -44,35 +47,35 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TableColumn<IncomingLot, Integer> incomingid_column;
     @FXML
-    private TableColumn<IncomingLot, Date> incomingdate_column;
+    private TableColumn<IncomingLot, String> incomingdate_column;
     @FXML
     private TableColumn<IncomingLot, String> incominglotnumber_column;
     @FXML
     private TableColumn<IncomingLot, String> incomingrevision_column;
     @FXML
-    private TableColumn<IncomingLot, ?> incomingquantity_column;
+    private TableColumn<IncomingLot, Integer> incomingquantity_column;
     @FXML
-    private TableColumn<IncomingLot, ?> incomingboxquantity_column;
+    private TableColumn<IncomingLot, Integer> incomingboxquantity_column;
     @FXML
-    private TableColumn<IncomingLot, ?> incomingstatus_column;
+    private TableColumn<IncomingLot, String> incomingstatus_column;
     
     //ProcessReport TableView --------------------------------------------------
     @FXML
-    private TableView<?> process_tableview;
+    private TableView<ProcessReport> process_tableview;
     @FXML
-    private TableColumn<?, ?> processid_column;
+    private TableColumn<ProcessReport, Integer> processid_column;
     @FXML
-    private TableColumn<?, ?> processdate_column;
+    private TableColumn<ProcessReport, Date> processdate_column;
     @FXML
-    private TableColumn<?, ?> processlotnumber_column;
+    private TableColumn<ProcessReport, String> processlotnumber_column;
     @FXML
-    private TableColumn<?, ?> processrevision_column;
+    private TableColumn<ProcessReport, String> processrevision_column;
     @FXML
-    private TableColumn<?, ?> processquantity_column;
+    private TableColumn<ProcessReport, Integer> processquantity_column;
     @FXML
-    private TableColumn<?, ?> processstatus_column;
+    private TableColumn<ProcessReport, String> processstatus_column;
     @FXML
-    private TableColumn<?, ?> processprocess_column;
+    private TableColumn<ProcessReport, String> processprocess_column;
     
     //DepartLot TableView ------------------------------------------------------
     @FXML
@@ -101,6 +104,7 @@ public class TransactionHistoryFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        setIncomingTableViewItems();
         partnumber_combo.setItems(FXCollections.observableList(msabase.getProductPartDAO().listActive(true)));
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
@@ -122,10 +126,36 @@ public class TransactionHistoryFX implements Initializable {
         try{
             msabase.getDepartLotDAO().listDateRange(product_part, start_date, end_date);
             msabase.getProcessReportDAO().listDateRange(product_part, start_date, end_date);
-            msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date);
+            incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date)));
         }catch(Exception e){
             System.out.println("test");
         }
+    }
+    
+    public void setIncomingTableViewItems(){
+        incomingid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        incomingdate_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingLotDAO().findIncomingReport(c.getValue()).getReport_date().toString()));
+        incominglotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        incomingrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingLotDAO().findPartRevision(c.getValue()).getRev()));
+        incomingquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        incomingboxquantity_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        incomingstatus_column.setCellValueFactory(new PropertyValueFactory<>("status"));
+    }
+    
+    public void setProcessReportTableViewItems(){
+            private TableColumn<ProcessReport, Integer> processid_column;
+    @FXML
+    private TableColumn<ProcessReport, Date> processdate_column;
+    @FXML
+    private TableColumn<ProcessReport, String> processlotnumber_column;
+    @FXML
+    private TableColumn<ProcessReport, String> processrevision_column;
+    @FXML
+    private TableColumn<ProcessReport, Integer> processquantity_column;
+    @FXML
+    private TableColumn<ProcessReport, String> processstatus_column;
+    @FXML
+    private TableColumn<ProcessReport, String> processprocess_column;
     }
     
 }
