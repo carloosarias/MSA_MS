@@ -9,6 +9,7 @@ import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -19,6 +20,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import model.DepartLot;
@@ -98,6 +100,27 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TableColumn<DepartLot, String> departprocess_column;
     
+    @FXML
+    private TextField incomingqty_field;
+    @FXML
+    private TextField incomingnew_field;
+    @FXML
+    private TextField incomingrework_field;
+    @FXML
+    private TextField processqty_field;
+    @FXML
+    private TextField processgood_field;
+    @FXML
+    private TextField processbad_field;
+    @FXML
+    private TextField departqty_field;
+    @FXML
+    private TextField departaccepted_field;
+    @FXML
+    private TextField departrejected_field;
+    @FXML
+    private TextField qtypending_field;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
@@ -114,6 +137,7 @@ public class TransactionHistoryFX implements Initializable {
         
         partnumber_combo.setOnAction((ActionEvent) -> {
             updateList(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(startdate_picker.getValue()), java.sql.Date.valueOf(enddate_picker.getValue()));
+            setFieldValues();
         });
         
         startdate_picker.setOnAction((ActionEvent) ->{
@@ -166,4 +190,17 @@ public class TransactionHistoryFX implements Initializable {
         departprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
+    private void setFieldValues(){
+        incomingqty_field.setText(""+getIncomingQuantity());
+    }
+    
+    private Integer getIncomingQuantity(){
+        List<IncomingLot> incominglot_list = incoming_tableview.getItems();
+        int quantity_total = 0;
+        
+        for(IncomingLot item : incominglot_list){
+            quantity_total += item.getQuantity();
+        }
+        return quantity_total;
+    }
 }

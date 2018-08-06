@@ -427,9 +427,6 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     @Override
     public List<ProcessReport> listDateRange(ProductPart product_part, Date start, Date end){
         List<ProcessReport> processreport_list = new ArrayList<ProcessReport>();
-        System.out.println("we are here");
-        System.out.println(start);
-        System.out.println(end);
         Object[] values = {
             product_part.getId(),
             start,
@@ -442,9 +439,6 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                System.out.println("Item match #"+resultSet.getRow());
-                System.out.println(resultSet.getInt("id"));
-                System.out.println(resultSet.getInt("quantity"));
                 processreport_list.add(map(resultSet));
             }
         } catch(SQLException e){
