@@ -81,7 +81,7 @@
                                                       <TableColumn fx:id="incomingrevision_column" prefWidth="100.0" resizable="false" text="Revisión" />
                                                       <TableColumn prefWidth="100.0" resizable="false" text="Cantidad">
                                                          <columns>
-                                                            <TableColumn fx:id="incomingquantitiy_column" prefWidth="100.0" resizable="false" text="Piezas" />
+                                                            <TableColumn fx:id="incomingquantity_column" prefWidth="100.0" resizable="false" text="Piezas" />
                                                             <TableColumn fx:id="incomingboxquantity_column" prefWidth="100.0" resizable="false" text="Cajas" />
                                                          </columns>
                                                       </TableColumn>
