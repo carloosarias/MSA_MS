@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -162,7 +163,7 @@ public class TransactionHistoryFX implements Initializable {
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         
         partnumber_combo.setOnAction((ActionEvent) -> {
-            updateList(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(startdate_picker.getValue()), java.sql.Date.valueOf(enddate_picker.getValue()));
+            updateList(partnumber_combo.getSelectionModel().getSelectedItem(),startdate_picker.getValue(), enddate_picker.getValue());
             setFieldValues();
         });
         
@@ -175,11 +176,11 @@ public class TransactionHistoryFX implements Initializable {
         });
     }
     
-    public void updateList(ProductPart product_part, Date start_date, Date end_date){
+    public void updateList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
         try{
-            depart_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDateRange(product_part, start_date, end_date)));
-            process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listDateRange(product_part, start_date, end_date)));
-            incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date)));
+            depart_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
+            process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
+            incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
             setWeeklySummary(start_date, end_date);
         }catch(Exception e){
             System.out.println("test");
@@ -303,9 +304,11 @@ public class TransactionHistoryFX implements Initializable {
         
     }
     
-    public void setWeeklySummary(Date start_date, Date end_date){
+    public void setWeeklySummary(LocalDate start_date, LocalDate end_date){
         List<weekly_summary> weekly_summary_list = new ArrayList<>();
-
+        for(LocalDate current_date = start_date; current_date.isBefore(end_date); current_date = current_date.plusWeeks(1)){
+            weekly_summary_list.add(new weekly_summary(java.sql.Date.valueOf(current_date), java.sql.Date.valueOf(current_date.plusWeeks(1))));
+        }
     }
     
     public class weekly_summary{
