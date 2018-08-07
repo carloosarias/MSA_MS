@@ -64,7 +64,7 @@
             </HBox>
             <HBox>
                <children>
-                  <VBox>
+                  <VBox prefWidth="835.0">
                      <children>
                         <TabPane prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
@@ -149,6 +149,49 @@
                                        </children></HBox>
                                  </content>
                               </Tab>
+                              <Tab text="Resumen Semanal">
+                                 <content>
+                                    <HBox>
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <TableView fx:id="weekly_tableview" prefHeight="571.0">
+                                                   <columns>
+                                                      <TableColumn prefWidth="100.0" resizable="false" text="Fecha">
+                                                         <columns>
+                                                            <TableColumn fx:id="weeklysrtartdate_column" prefWidth="75.0" text="Desde" />
+                                                            <TableColumn fx:id="weeklyenddate_column" prefWidth="75.0" text="Hasta" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad Reciba">
+                                                         <columns>
+                                                            <TableColumn fx:id="weeklyincomingtotal_column" prefWidth="75.0" resizable="false" text="Total" />
+                                                            <TableColumn fx:id="weeklyincomingnew_column" prefWidth="75.0" resizable="false" text="Virgen" />
+                                                            <TableColumn fx:id="weeklyincomingrejected_column" prefWidth="75.0" resizable="false" text="Rechazo" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad Producción">
+                                                         <columns>
+                                                            <TableColumn fx:id="weeklyprocesstotal_column" prefWidth="75.0" resizable="false" text="Total" />
+                                                            <TableColumn fx:id="weeklyprocessgood_column" prefWidth="75.0" resizable="false" text="Bueno" />
+                                                            <TableColumn fx:id="weeklyprocessbad_column" prefWidth="75.0" text="Malo" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn prefWidth="75.0" text="Cantidad Remisiones">
+                                                         <columns>
+                                                            <TableColumn fx:id="weeklydeparttotal_column" prefWidth="75.0" text="Total" />
+                                                            <TableColumn fx:id="weeklydepartaccepted_column" prefWidth="75.0" text="Aceptada" />
+                                                            <TableColumn fx:id="weeklydepartrejected_column" prefWidth="75.0" text="Rechazo" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                   </columns>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </content>
+                              </Tab>
                           </tabs>
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -158,11 +201,11 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox alignment="CENTER">
                <children>
                   <VBox>
                      <children>
-                        <Label text="Piezas Recibidas Total:">
+                        <Label text="Reciba Total:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -172,22 +215,12 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TextField>
-                        <Label text="Cantidad Nuevo:">
+                        <Label text="Remisiones Total:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="incomingnew_field" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <Label text="Cantidad Retrabajo:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="incomingrework_field" prefWidth="150.0">
+                        <TextField fx:id="departqty_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -196,46 +229,12 @@
                   </VBox>
                   <VBox prefWidth="150.0">
                      <children>
-                        <Label text="Piezas Procesadas Total:">
+                        <Label text="Cantidad Virgen:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="processqty_field" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <Label text="Cantidad Bueno:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="processgood_field" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <Label text="Cantidad Malo:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="processbad_field" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Piezas Enviadas Total:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="departqty_field" prefWidth="150.0">
+                        <TextField fx:id="incomingnew_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -246,6 +245,20 @@
                            </VBox.margin>
                         </Label>
                         <TextField fx:id="departaccepted_field" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Cantidad Retrabajo:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="incomingrework_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -264,12 +277,46 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Label text="Piezas sin procesar:">
+                        <Label text="Piezas Procesadas Total:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="processqty_field" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Pendientes de Procesar:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
                         <TextField fx:id="qtypending_field" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Cantidad Bueno:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="processgood_field" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <Label text="Cantidad Malo:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="processbad_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
