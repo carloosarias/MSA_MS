@@ -122,14 +122,14 @@ public class TransactionHistoryFX implements Initializable {
     private TextField departrejected_field;
     @FXML
     private TextField qtypending_field;
-    
-    private TableView<?> weekly_tableview;
     @FXML
-    private TableColumn<?, ?> weeklysrtartdate_column;
+    private TableView<weekly_summary> weekly_tableview;
     @FXML
-    private TableColumn<?, ?> weeklyenddate_column;
+    private TableColumn<weekly_summary, Date> weeklystartdate_column;
     @FXML
-    private TableColumn<?, ?> weeklyincomingtotal_column;
+    private TableColumn<weekly_summary, Date> weeklyenddate_column;
+    @FXML
+    private TableColumn<weekly_summary, String> weeklyincomingtotal_column;
     @FXML
     private TableColumn<?, ?> weeklyincomingnew_column;
     @FXML
@@ -148,7 +148,6 @@ public class TransactionHistoryFX implements Initializable {
     private TableColumn<?, ?> weeklydepartrejected_column;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    @FXML
     
     /**
      * Initializes the controller class.
@@ -158,12 +157,14 @@ public class TransactionHistoryFX implements Initializable {
         setDepartTableViewItems();
         setProcessReportTableViewItems();
         setIncomingTableViewItems();
+        setWeeklyTableViewItems();
         partnumber_combo.setItems(FXCollections.observableList(msabase.getProductPartDAO().listActive(true)));
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         
         partnumber_combo.setOnAction((ActionEvent) -> {
-            updateList(partnumber_combo.getSelectionModel().getSelectedItem(),startdate_picker.getValue(), enddate_picker.getValue());
+            updateList(partnumber_combo.getSelectionModel().getSelectedItem(), startdate_picker.getValue(), enddate_picker.getValue());
+            weekly_tableview.setItems(FXCollections.observableArrayList(getWeeklySummaryList(partnumber_combo.getSelectionModel().getSelectedItem(), startdate_picker.getValue(), enddate_picker.getValue())));
             setFieldValues();
         });
         
@@ -181,7 +182,6 @@ public class TransactionHistoryFX implements Initializable {
             depart_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
             process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
             incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
-            setWeeklySummary(start_date, end_date);
         }catch(Exception e){
             System.out.println("test");
         }
@@ -218,25 +218,30 @@ public class TransactionHistoryFX implements Initializable {
         departprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
+    public void setWeeklyTableViewItems(){
+        weeklystartdate_column.setCellValueFactory(new PropertyValueFactory<>("start_date"));
+        weeklyenddate_column.setCellValueFactory(new PropertyValueFactory<>("end_date"));
+        weeklyincomingtotal_column.setCellValueFactory(new PropertyValueFactory<>("incoming_total"));
+    }
+    
     public void setFieldValues(){
-        incomingqty_field.setText(""+getIncomingQuantity());
-        incomingnew_field.setText(""+getIncomingStatus("Virgen"));
-        incomingrework_field.setText(""+getIncomingStatus("Rechazo"));
+        incomingqty_field.setText(""+getIncomingQuantity(incoming_tableview.getItems()));
+        incomingnew_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Virgen"));
+        incomingrework_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Rechazo"));
         processqty_field.setText(""+getProcessQuantity());
         processgood_field.setText(""+getProcessStatus("Bueno"));
         processbad_field.setText(""+getProcessStatus("Malo"));
         departqty_field.setText(""+getDepartQuantity());
         departrejected_field.setText(""+getDepartStatus("Rechazado"));
         departaccepted_field.setText(""+(getDepartQuantity() - getDepartStatus("Rechazado")));
-        int balance = getIncomingQuantity()-getProcessQuantity();
-        if(getIncomingQuantity()-getProcessQuantity() < 0){
+        int balance = getIncomingQuantity(incoming_tableview.getItems())-getProcessQuantity();
+        if(getIncomingQuantity(incoming_tableview.getItems())-getProcessQuantity() < 0){
             balance = 0;
         }
         qtypending_field.setText(""+balance);
     }
     
-    public Integer getIncomingQuantity(){
-        List<IncomingLot> incominglot_list = incoming_tableview.getItems();
+    public Integer getIncomingQuantity(List<IncomingLot> incominglot_list){
         int quantity_total = 0;
         
         for(IncomingLot item : incominglot_list){
@@ -245,8 +250,7 @@ public class TransactionHistoryFX implements Initializable {
         return quantity_total;
     }
     
-    public Integer getIncomingStatus(String status){
-        List<IncomingLot> incominglot_list = incoming_tableview.getItems();
+    public Integer getIncomingStatus(List<IncomingLot> incominglot_list, String status){
         int quantity_total = 0;
         
         for(IncomingLot item: incominglot_list){
@@ -304,16 +308,47 @@ public class TransactionHistoryFX implements Initializable {
         
     }
     
-    public void setWeeklySummary(LocalDate start_date, LocalDate end_date){
+    public List<weekly_summary> getWeeklySummaryList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
         List<weekly_summary> weekly_summary_list = new ArrayList<>();
         for(LocalDate current_date = start_date; current_date.isBefore(end_date); current_date = current_date.plusWeeks(1)){
-            weekly_summary_list.add(new weekly_summary(java.sql.Date.valueOf(current_date), java.sql.Date.valueOf(current_date.plusWeeks(1))));
+            weekly_summary_list.add(new weekly_summary(product_part, java.sql.Date.valueOf(current_date), java.sql.Date.valueOf(current_date.plusWeeks(1))));
         }
+        return weekly_summary_list;
     }
     
     public class weekly_summary{
-        public weekly_summary(Date start_date, Date end_date){
-            System.out.println("start"+start_date+"\nend"+end_date);
+        private Date start_date;
+        private Date end_date;
+        private Integer incoming_total;
+        
+        public weekly_summary(ProductPart product_part, Date start_date, Date end_date){
+            this.start_date = start_date;
+            this.end_date = end_date;
+            incoming_total = getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date));
+        }
+
+        public Date getStart_date() {
+            return start_date;
+        }
+
+        public void setStart_date(Date start_date) {
+            this.start_date = start_date;
+        }
+
+        public Date getEnd_date() {
+            return end_date;
+        }
+
+        public void setEnd_date(Date end_date) {
+            this.end_date = end_date;
+        }
+
+        public Integer getIncoming_total() {
+            return incoming_total;
+        }
+
+        public void setIncoming_total(Integer incoming_total) {
+            this.incoming_total = incoming_total;
         }
     }
 }

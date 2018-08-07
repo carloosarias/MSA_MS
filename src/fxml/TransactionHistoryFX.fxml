@@ -159,7 +159,7 @@
                                                    <columns>
                                                       <TableColumn prefWidth="100.0" resizable="false" text="Fecha">
                                                          <columns>
-                                                            <TableColumn fx:id="weeklysrtartdate_column" prefWidth="75.0" text="Desde" />
+                                                            <TableColumn fx:id="weeklystartdate_column" prefWidth="75.0" text="Desde" />
                                                             <TableColumn fx:id="weeklyenddate_column" prefWidth="75.0" text="Hasta" />
                                                          </columns>
                                                       </TableColumn>
