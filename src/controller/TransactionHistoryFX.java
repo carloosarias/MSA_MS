@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -121,7 +122,32 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TextField qtypending_field;
     
+    private TableView<?> weekly_tableview;
+    @FXML
+    private TableColumn<?, ?> weeklysrtartdate_column;
+    @FXML
+    private TableColumn<?, ?> weeklyenddate_column;
+    @FXML
+    private TableColumn<?, ?> weeklyincomingtotal_column;
+    @FXML
+    private TableColumn<?, ?> weeklyincomingnew_column;
+    @FXML
+    private TableColumn<?, ?> weeklyincomingrejected_column;
+    @FXML
+    private TableColumn<?, ?> weeklyprocesstotal_column;
+    @FXML
+    private TableColumn<?, ?> weeklyprocessgood_column;
+    @FXML
+    private TableColumn<?, ?> weeklyprocessbad_column;
+    @FXML
+    private TableColumn<?, ?> weeklydeparttotal_column;
+    @FXML
+    private TableColumn<?, ?> weeklydepartaccepted_column;
+    @FXML
+    private TableColumn<?, ?> weeklydepartrejected_column;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    @FXML
     
     /**
      * Initializes the controller class.
@@ -154,6 +180,7 @@ public class TransactionHistoryFX implements Initializable {
             depart_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDateRange(product_part, start_date, end_date)));
             process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listDateRange(product_part, start_date, end_date)));
             incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date)));
+            setWeeklySummary(start_date, end_date);
         }catch(Exception e){
             System.out.println("test");
         }
@@ -190,11 +217,24 @@ public class TransactionHistoryFX implements Initializable {
         departprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
-    private void setFieldValues(){
+    public void setFieldValues(){
         incomingqty_field.setText(""+getIncomingQuantity());
+        incomingnew_field.setText(""+getIncomingStatus("Virgen"));
+        incomingrework_field.setText(""+getIncomingStatus("Rechazo"));
+        processqty_field.setText(""+getProcessQuantity());
+        processgood_field.setText(""+getProcessStatus("Bueno"));
+        processbad_field.setText(""+getProcessStatus("Malo"));
+        departqty_field.setText(""+getDepartQuantity());
+        departrejected_field.setText(""+getDepartStatus("Rechazado"));
+        departaccepted_field.setText(""+(getDepartQuantity() - getDepartStatus("Rechazado")));
+        int balance = getIncomingQuantity()-getProcessQuantity();
+        if(getIncomingQuantity()-getProcessQuantity() < 0){
+            balance = 0;
+        }
+        qtypending_field.setText(""+balance);
     }
     
-    private Integer getIncomingQuantity(){
+    public Integer getIncomingQuantity(){
         List<IncomingLot> incominglot_list = incoming_tableview.getItems();
         int quantity_total = 0;
         
@@ -202,5 +242,75 @@ public class TransactionHistoryFX implements Initializable {
             quantity_total += item.getQuantity();
         }
         return quantity_total;
+    }
+    
+    public Integer getIncomingStatus(String status){
+        List<IncomingLot> incominglot_list = incoming_tableview.getItems();
+        int quantity_total = 0;
+        
+        for(IncomingLot item: incominglot_list){
+            if(item.getStatus().equals(status)){
+                quantity_total += item.getQuantity();
+            }
+        }
+        return quantity_total;
+    }
+    
+    public Integer getProcessQuantity(){
+        List<ProcessReport> processreport_list = process_tableview.getItems(); 
+        int quantity_total = 0;
+        
+        for(ProcessReport item : processreport_list){
+            quantity_total += item.getQuantity();
+        }
+        
+        return quantity_total;
+    }
+    
+    public Integer getProcessStatus(String status){
+        List<ProcessReport> processreport_list = process_tableview.getItems();
+        int quantity_total = 0;
+        
+        for(ProcessReport item: processreport_list){
+            if(item.getStatus().equals(status)){
+                quantity_total += item.getQuantity();
+            }
+        }
+        return quantity_total;
+    }
+    
+    public Integer getDepartQuantity(){
+        List<DepartLot> departlot_list = depart_tableview.getItems(); 
+        int quantity_total = 0;
+        
+        for(DepartLot item : departlot_list){
+            quantity_total += item.getQuantity();
+        }
+        
+        return quantity_total;
+    }
+    
+    public Integer getDepartStatus(String status){
+        List<DepartLot> departlot_list = depart_tableview.getItems();
+        int quantity_total = 0;
+        
+        for(DepartLot item: departlot_list){
+            if(item.getStatus().equals(status)){
+                quantity_total += item.getQuantity();
+            }
+        }
+        return quantity_total;
+        
+    }
+    
+    public void setWeeklySummary(Date start_date, Date end_date){
+        List<weekly_summary> weekly_summary_list = new ArrayList<>();
+
+    }
+    
+    public class weekly_summary{
+        public weekly_summary(Date start_date, Date end_date){
+            System.out.println("start"+start_date+"\nend"+end_date);
+        }
     }
 }
