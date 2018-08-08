@@ -131,21 +131,21 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TableColumn<weekly_summary, String> weeklyincomingtotal_column;
     @FXML
-    private TableColumn<?, ?> weeklyincomingnew_column;
+    private TableColumn<weekly_summary, String> weeklyincomingnew_column;
     @FXML
-    private TableColumn<?, ?> weeklyincomingrejected_column;
+    private TableColumn<weekly_summary, String> weeklyincomingrejected_column;
     @FXML
-    private TableColumn<?, ?> weeklyprocesstotal_column;
+    private TableColumn<weekly_summary, String> weeklyprocesstotal_column;
     @FXML
-    private TableColumn<?, ?> weeklyprocessgood_column;
+    private TableColumn<weekly_summary, String> weeklyprocessgood_column;
     @FXML
-    private TableColumn<?, ?> weeklyprocessbad_column;
+    private TableColumn<weekly_summary, String> weeklyprocessbad_column;
     @FXML
-    private TableColumn<?, ?> weeklydeparttotal_column;
+    private TableColumn<weekly_summary, String> weeklydeparttotal_column;
     @FXML
-    private TableColumn<?, ?> weeklydepartaccepted_column;
+    private TableColumn<weekly_summary, String> weeklydepartaccepted_column;
     @FXML
-    private TableColumn<?, ?> weeklydepartrejected_column;
+    private TableColumn<weekly_summary, String> weeklydepartrejected_column;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -222,20 +222,28 @@ public class TransactionHistoryFX implements Initializable {
         weeklystartdate_column.setCellValueFactory(new PropertyValueFactory<>("start_date"));
         weeklyenddate_column.setCellValueFactory(new PropertyValueFactory<>("end_date"));
         weeklyincomingtotal_column.setCellValueFactory(new PropertyValueFactory<>("incoming_total"));
+        weeklyincomingnew_column.setCellValueFactory(new PropertyValueFactory<>("incoming_new"));
+        weeklyincomingrejected_column.setCellValueFactory(new PropertyValueFactory<>("incoming_rejected"));
+        weeklyprocesstotal_column.setCellValueFactory(new PropertyValueFactory<>("process_total"));
+        weeklyprocessgood_column.setCellValueFactory(new PropertyValueFactory<>("process_good"));
+        weeklyprocessbad_column.setCellValueFactory(new PropertyValueFactory<>("process_bad"));
+        weeklydeparttotal_column.setCellValueFactory(new PropertyValueFactory<>("depart_total"));
+        weeklydepartaccepted_column.setCellValueFactory(new PropertyValueFactory<>("depart_accepted"));
+        weeklydepartrejected_column.setCellValueFactory(new PropertyValueFactory<>("depart_rejected"));
     }
     
     public void setFieldValues(){
         incomingqty_field.setText(""+getIncomingQuantity(incoming_tableview.getItems()));
         incomingnew_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Virgen"));
         incomingrework_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Rechazo"));
-        processqty_field.setText(""+getProcessQuantity());
-        processgood_field.setText(""+getProcessStatus("Bueno"));
-        processbad_field.setText(""+getProcessStatus("Malo"));
-        departqty_field.setText(""+getDepartQuantity());
-        departrejected_field.setText(""+getDepartStatus("Rechazado"));
-        departaccepted_field.setText(""+(getDepartQuantity() - getDepartStatus("Rechazado")));
-        int balance = getIncomingQuantity(incoming_tableview.getItems())-getProcessQuantity();
-        if(getIncomingQuantity(incoming_tableview.getItems())-getProcessQuantity() < 0){
+        processqty_field.setText(""+getProcessQuantity(process_tableview.getItems()));
+        processgood_field.setText(""+getProcessStatus(process_tableview.getItems(), "Bueno"));
+        processbad_field.setText(""+getProcessStatus(process_tableview.getItems(), "Malo"));
+        departqty_field.setText(""+getDepartQuantity(depart_tableview.getItems()));
+        departrejected_field.setText(""+getDepartStatus(depart_tableview.getItems(), "Rechazado"));
+        departaccepted_field.setText(""+(getDepartQuantity(depart_tableview.getItems()) - getDepartStatus(depart_tableview.getItems(), "Rechazado")));
+        int balance = getIncomingQuantity(incoming_tableview.getItems())-getProcessQuantity(process_tableview.getItems());
+        if(getIncomingQuantity(incoming_tableview.getItems())-getProcessQuantity(process_tableview.getItems()) < 0){
             balance = 0;
         }
         qtypending_field.setText(""+balance);
@@ -261,8 +269,7 @@ public class TransactionHistoryFX implements Initializable {
         return quantity_total;
     }
     
-    public Integer getProcessQuantity(){
-        List<ProcessReport> processreport_list = process_tableview.getItems(); 
+    public Integer getProcessQuantity(List<ProcessReport> processreport_list){ 
         int quantity_total = 0;
         
         for(ProcessReport item : processreport_list){
@@ -272,8 +279,7 @@ public class TransactionHistoryFX implements Initializable {
         return quantity_total;
     }
     
-    public Integer getProcessStatus(String status){
-        List<ProcessReport> processreport_list = process_tableview.getItems();
+    public Integer getProcessStatus(List<ProcessReport> processreport_list, String status){
         int quantity_total = 0;
         
         for(ProcessReport item: processreport_list){
@@ -284,8 +290,7 @@ public class TransactionHistoryFX implements Initializable {
         return quantity_total;
     }
     
-    public Integer getDepartQuantity(){
-        List<DepartLot> departlot_list = depart_tableview.getItems(); 
+    public Integer getDepartQuantity(List<DepartLot> departlot_list){
         int quantity_total = 0;
         
         for(DepartLot item : departlot_list){
@@ -295,8 +300,7 @@ public class TransactionHistoryFX implements Initializable {
         return quantity_total;
     }
     
-    public Integer getDepartStatus(String status){
-        List<DepartLot> departlot_list = depart_tableview.getItems();
+    public Integer getDepartStatus(List<DepartLot> departlot_list, String status){
         int quantity_total = 0;
         
         for(DepartLot item: departlot_list){
@@ -320,11 +324,30 @@ public class TransactionHistoryFX implements Initializable {
         private Date start_date;
         private Date end_date;
         private Integer incoming_total;
+        private Integer incoming_new;
+        private Integer incoming_rejected;
+        private Integer process_total;
+        private Integer process_good;
+        private Integer process_bad;
+        private Integer depart_total;
+        private Integer depart_accepted;
+        private Integer depart_rejected;
         
         public weekly_summary(ProductPart product_part, Date start_date, Date end_date){
+            List<IncomingLot> incoming_list = msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date);
+            List<DepartLot> depart_list = msabase.getDepartLotDAO().listDateRange(product_part, start_date, end_date);
+            List<ProcessReport> process_list = msabase.getProcessReportDAO().listDateRange(product_part, start_date, end_date);
             this.start_date = start_date;
             this.end_date = end_date;
-            incoming_total = getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date));
+            incoming_total = getIncomingQuantity(incoming_list);
+            incoming_new = getIncomingStatus(incoming_list, "Virgen");
+            incoming_rejected = getIncomingStatus(incoming_list, "Rechazo");
+            process_total = getProcessQuantity(process_list);
+            process_good = getProcessStatus(process_list, "Bueno");
+            process_bad = getProcessStatus(process_list, "Malo");
+            depart_total = getDepartQuantity(depart_list);
+            depart_rejected = getDepartStatus(depart_list, "Rechazado");
+            depart_accepted = depart_total - depart_rejected;
         }
 
         public Date getStart_date() {
@@ -349,6 +372,70 @@ public class TransactionHistoryFX implements Initializable {
 
         public void setIncoming_total(Integer incoming_total) {
             this.incoming_total = incoming_total;
+        }
+
+        public Integer getIncoming_new() {
+            return incoming_new;
+        }
+
+        public void setIncoming_new(Integer incoming_new) {
+            this.incoming_new = incoming_new;
+        }
+
+        public Integer getIncoming_rejected() {
+            return incoming_rejected;
+        }
+
+        public void setIncoming_rejected(Integer incoming_rejected) {
+            this.incoming_rejected = incoming_rejected;
+        }
+
+        public Integer getProcess_total() {
+            return process_total;
+        }
+
+        public void setProcess_total(Integer process_total) {
+            this.process_total = process_total;
+        }
+
+        public Integer getProcess_good() {
+            return process_good;
+        }
+
+        public void setProcess_good(Integer process_good) {
+            this.process_good = process_good;
+        }
+
+        public Integer getProcess_bad() {
+            return process_bad;
+        }
+
+        public void setProcess_bad(Integer process_bad) {
+            this.process_bad = process_bad;
+        }
+
+        public Integer getDepart_total() {
+            return depart_total;
+        }
+
+        public void setDepart_total(Integer depart_total) {
+            this.depart_total = depart_total;
+        }
+
+        public Integer getDepart_accepted() {
+            return depart_accepted;
+        }
+
+        public void setDepart_accepted(Integer depart_accepted) {
+            this.depart_accepted = depart_accepted;
+        }
+
+        public Integer getDepart_rejected() {
+            return depart_rejected;
+        }
+
+        public void setDepart_rejected(Integer depart_rejected) {
+            this.depart_rejected = depart_rejected;
         }
     }
 }
