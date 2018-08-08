@@ -152,7 +152,7 @@ public class CreateProcessReportFX implements Initializable {
     }
     public void saveProcessReport(){
         ProcessReport process_report = new ProcessReport();
-        process_report.setProcess(revisioncombo_text);
+        process_report.setProcess(process_combo.getSelectionModel().getSelectedItem());
         process_report.setReport_date(Date.valueOf(reportdate_picker.getValue()));
         process_report.setLot_number(lotnumber_field.getText());
         process_report.setQuantity(Integer.parseInt(quantity_field.getText()));
