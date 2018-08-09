@@ -8,7 +8,6 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -120,8 +119,6 @@ public class TransactionHistoryFX implements Initializable {
     private TextField departaccepted_field;
     @FXML
     private TextField departrejected_field;
-    @FXML
-    private TextField qtypending_field;
     @FXML
     private TableView<weekly_summary> weekly_tableview;
     @FXML
@@ -242,11 +239,6 @@ public class TransactionHistoryFX implements Initializable {
         departqty_field.setText(""+getDepartQuantity(depart_tableview.getItems()));
         departrejected_field.setText(""+getDepartStatus(depart_tableview.getItems(), "Rechazado"));
         departaccepted_field.setText(""+(getDepartQuantity(depart_tableview.getItems()) - getDepartStatus(depart_tableview.getItems(), "Rechazado")));
-        int balance = getIncomingQuantity(incoming_tableview.getItems())-getProcessQuantity(process_tableview.getItems());
-        if(getIncomingQuantity(incoming_tableview.getItems())-getProcessQuantity(process_tableview.getItems()) < 0){
-            balance = 0;
-        }
-        qtypending_field.setText(""+balance);
     }
     
     public Integer getIncomingQuantity(List<IncomingLot> incominglot_list){
@@ -314,7 +306,7 @@ public class TransactionHistoryFX implements Initializable {
     
     public List<weekly_summary> getWeeklySummaryList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
         List<weekly_summary> weekly_summary_list = new ArrayList<>();
-        for(LocalDate current_date = start_date; current_date.isBefore(end_date); current_date = current_date.plusWeeks(1)){
+        for(LocalDate current_date = start_date; current_date.isBefore(end_date); current_date = current_date.plusWeeks(1).plusDays(1)){
             weekly_summary_list.add(new weekly_summary(product_part, java.sql.Date.valueOf(current_date), java.sql.Date.valueOf(current_date.plusWeeks(1))));
         }
         return weekly_summary_list;
