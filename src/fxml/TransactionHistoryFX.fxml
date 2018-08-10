@@ -208,7 +208,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Total Recibido:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Total Recibido (Rango):">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -223,7 +223,7 @@
                         <Separator prefWidth="200.0" />
                         <HBox>
                            <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Total Enviado:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Total Enviado (Rango):">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -238,7 +238,7 @@
                         <Separator />
                         <HBox>
                            <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Total Procesado:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Carga a Proceso (Rango):">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -253,7 +253,7 @@
                         <Separator />
                         <HBox>
                            <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Total On-Hand:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Total On-Hand (General):">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -267,7 +267,7 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <VBox prefWidth="579.0">
+                  <VBox prefWidth="549.0">
                      <children>
                         <HBox>
                            <children>
@@ -344,6 +344,20 @@
                            </children>
                         </HBox>
                         <Separator />
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Balance (Rango):">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="balance_field" prefWidth="120.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>
