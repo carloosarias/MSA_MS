@@ -120,6 +120,8 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TextField departrejected_field;
     @FXML
+    private TextField onhand_field;
+    @FXML
     private TableView<weekly_summary> weekly_tableview;
     @FXML
     private TableColumn<weekly_summary, Date> weeklystartdate_column;
@@ -239,6 +241,7 @@ public class TransactionHistoryFX implements Initializable {
         departqty_field.setText(""+getDepartQuantity(depart_tableview.getItems()));
         departrejected_field.setText(""+getDepartStatus(depart_tableview.getItems(), "Rechazado"));
         departaccepted_field.setText(""+(getDepartQuantity(depart_tableview.getItems()) - getDepartStatus(depart_tableview.getItems(), "Rechazado")));
+        onhand_field.setText(""+(getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.MAX))) - getDepartQuantity(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.MAX)))));
     }
     
     public Integer getIncomingQuantity(List<IncomingLot> incominglot_list){
