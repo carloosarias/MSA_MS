@@ -75,7 +75,7 @@
                                        <children>
                                           <VBox>
                                              <children>
-                                                <TableView fx:id="incoming_tableview" prefHeight="600.0" prefWidth="800.0">
+                                                <TableView fx:id="incoming_tableview" prefHeight="600.0" prefWidth="827.0">
                                                   <columns>
                                                     <TableColumn fx:id="incomingid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
                                                     <TableColumn fx:id="incomingdate_column" prefWidth="100.0" resizable="false" text="Fecha" />
@@ -88,7 +88,7 @@
                                                          </columns>
                                                       </TableColumn>
                                                       <TableColumn fx:id="incomingstatus_column" prefWidth="100.0" resizable="false" text="Estado" />
-                                                      <TableColumn prefWidth="100.0" text="N/A" />
+                                                      <TableColumn prefWidth="127.0" resizable="false" text="N/A" />
                                                   </columns>
                                                 </TableView>
                                              </children>
@@ -102,20 +102,20 @@
                                        <children>
                                           <VBox>
                                              <children>
-                                                <TableView fx:id="process_tableview" prefHeight="600.0" prefWidth="800.0">
+                                                <TableView fx:id="process_tableview" prefHeight="600.0" prefWidth="827.0">
                                                    <columns>
-                                                      <TableColumn fx:id="processid_column" prefWidth="100.0" text="No. de Reporte" />
-                                                      <TableColumn fx:id="processdate_column" prefWidth="100.0" text="Fecha" />
-                                                      <TableColumn fx:id="processlotnumber_column" prefWidth="100.0" text="No. de Lote" />
-                                                      <TableColumn fx:id="processrevision_column" prefWidth="100.0" text="Revisión" />
-                                                      <TableColumn prefWidth="100.0" text="Cantidad">
+                                                      <TableColumn fx:id="processid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
+                                                      <TableColumn fx:id="processdate_column" prefWidth="100.0" resizable="false" text="Fecha" />
+                                                      <TableColumn fx:id="processlotnumber_column" prefWidth="100.0" resizable="false" text="No. de Lote" />
+                                                      <TableColumn fx:id="processrevision_column" prefWidth="100.0" resizable="false" text="Revisión" />
+                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad">
                                                          <columns>
-                                                            <TableColumn fx:id="processquantity_column" prefWidth="100.0" text="Piezas" />
-                                                            <TableColumn prefWidth="100.0" text="N/A" />
+                                                            <TableColumn fx:id="processquantity_column" prefWidth="100.0" resizable="false" text="Piezas" />
+                                                            <TableColumn prefWidth="100.0" resizable="false" text="N/A" />
                                                          </columns>
                                                       </TableColumn>
-                                                      <TableColumn fx:id="processstatus_column" prefWidth="100.0" text="Estado" />
-                                                      <TableColumn fx:id="processprocess_column" prefWidth="100.0" text="Proceso" />
+                                                      <TableColumn fx:id="processstatus_column" prefWidth="100.0" resizable="false" text="Estado" />
+                                                      <TableColumn fx:id="processprocess_column" prefWidth="127.0" resizable="false" text="Proceso" />
                                                    </columns>
                                                 </TableView>
                                              </children>
@@ -129,20 +129,20 @@
                                        <children>
                                           <VBox>
                                              <children>
-                                                <TableView fx:id="depart_tableview" prefHeight="600.0" prefWidth="800.0">
+                                                <TableView fx:id="depart_tableview" prefHeight="600.0" prefWidth="827.0">
                                                    <columns>
-                                                      <TableColumn fx:id="departid_column" prefWidth="100.0" text="No. de Reporte" />
-                                                      <TableColumn fx:id="departdate_column" prefWidth="100.0" text="Fecha" />
-                                                      <TableColumn fx:id="departlotnumber_column" prefWidth="100.0" text="No. de Lote" />
-                                                      <TableColumn fx:id="departrevision_column" prefWidth="100.0" text="Revisión" />
-                                                      <TableColumn prefWidth="100.0" text="Cantidad">
+                                                      <TableColumn fx:id="departid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
+                                                      <TableColumn fx:id="departdate_column" prefWidth="100.0" resizable="false" text="Fecha" />
+                                                      <TableColumn fx:id="departlotnumber_column" prefWidth="100.0" resizable="false" text="No. de Lote" />
+                                                      <TableColumn fx:id="departrevision_column" prefWidth="100.0" resizable="false" text="Revisión" />
+                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad">
                                                          <columns>
-                                                            <TableColumn fx:id="departquantity_column" prefWidth="100.0" text="Piezas" />
-                                                            <TableColumn fx:id="departquantitybox_column" prefWidth="100.0" text="Cajas" />
+                                                            <TableColumn fx:id="departquantity_column" prefWidth="100.0" resizable="false" text="Piezas" />
+                                                            <TableColumn fx:id="departquantitybox_column" prefWidth="100.0" resizable="false" text="Cajas" />
                                                          </columns>
                                                       </TableColumn>
-                                                      <TableColumn fx:id="departstatus_column" prefWidth="100.0" text="Estado" />
-                                                      <TableColumn fx:id="departprocess_column" prefWidth="100.0" text="Proceso" />
+                                                      <TableColumn fx:id="departstatus_column" prefWidth="100.0" resizable="false" text="Estado" />
+                                                      <TableColumn fx:id="departprocess_column" prefWidth="127.0" resizable="false" text="Proceso" />
                                                    </columns>
                                                 </TableView>
                                              </children>
@@ -160,8 +160,8 @@
                                                    <columns>
                                                       <TableColumn prefWidth="100.0" resizable="false" text="Fecha">
                                                          <columns>
-                                                            <TableColumn fx:id="weeklystartdate_column" prefWidth="75.0" text="Desde" />
-                                                            <TableColumn fx:id="weeklyenddate_column" prefWidth="75.0" text="Hasta" />
+                                                            <TableColumn fx:id="weeklystartdate_column" prefWidth="75.0" resizable="false" text="Desde" />
+                                                            <TableColumn fx:id="weeklyenddate_column" prefWidth="75.0" resizable="false" text="Hasta" />
                                                          </columns>
                                                       </TableColumn>
                                                       <TableColumn prefWidth="100.0" resizable="false" text="Cantidad Reciba">
@@ -175,14 +175,14 @@
                                                          <columns>
                                                             <TableColumn fx:id="weeklyprocesstotal_column" prefWidth="75.0" resizable="false" text="Total" />
                                                             <TableColumn fx:id="weeklyprocessgood_column" prefWidth="75.0" resizable="false" text="Bueno" />
-                                                            <TableColumn fx:id="weeklyprocessbad_column" prefWidth="75.0" text="Malo" />
+                                                            <TableColumn fx:id="weeklyprocessbad_column" prefWidth="75.0" resizable="false" text="Malo" />
                                                          </columns>
                                                       </TableColumn>
-                                                      <TableColumn prefWidth="75.0" text="Cantidad Remisiones">
+                                                      <TableColumn prefWidth="75.0" resizable="false" text="Cantidad Remisiones">
                                                          <columns>
-                                                            <TableColumn fx:id="weeklydeparttotal_column" prefWidth="75.0" text="Total" />
-                                                            <TableColumn fx:id="weeklydepartaccepted_column" prefWidth="75.0" text="Aceptada" />
-                                                            <TableColumn fx:id="weeklydepartrejected_column" prefWidth="75.0" text="Rechazo" />
+                                                            <TableColumn fx:id="weeklydeparttotal_column" prefWidth="75.0" resizable="false" text="Total" />
+                                                            <TableColumn fx:id="weeklydepartaccepted_column" prefWidth="75.0" resizable="false" text="Aceptada" />
+                                                            <TableColumn fx:id="weeklydepartrejected_column" prefWidth="75.0" resizable="false" text="Rechazo" />
                                                          </columns>
                                                       </TableColumn>
                                                    </columns>
@@ -202,13 +202,13 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox alignment="CENTER">
+            <HBox>
                <children>
                   <VBox>
                      <children>
                         <HBox>
                            <children>
-                              <Label prefWidth="120.0" text="Total:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Total Recibido:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -218,7 +218,60 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TextField>
-                              <Label prefWidth="120.0" text="Virgen:">
+                           </children>
+                        </HBox>
+                        <Separator prefWidth="200.0" />
+                        <HBox>
+                           <children>
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Total Enviado:">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="departqty_field" prefWidth="120.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <Separator />
+                        <HBox>
+                           <children>
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Total Procesado:">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="processqty_field" prefWidth="120.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <Separator />
+                        <HBox>
+                           <children>
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Total On-Hand:">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="onhand_field" prefWidth="120.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox prefWidth="579.0">
+                     <children>
+                        <HBox>
+                           <children>
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Virgen:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -228,7 +281,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TextField>
-                              <Label prefWidth="120.0" text="Retrabajo:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Retrabajo:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -240,20 +293,10 @@
                               </TextField>
                            </children>
                         </HBox>
-                        <Separator prefWidth="200.0" />
+                        <Separator />
                         <HBox>
                            <children>
-                              <Label prefWidth="120.0" text="Remisiones Total:">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="departqty_field" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Label prefWidth="120.0" text="Envío Aceptado:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Aceptado:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -263,7 +306,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TextField>
-                              <Label prefWidth="120.0" text="Envío Rechazado:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Rechazado:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -275,20 +318,10 @@
                               </TextField>
                            </children>
                         </HBox>
-                        <Separator prefWidth="200.0" />
+                        <Separator />
                         <HBox>
                            <children>
-                              <Label prefWidth="120.0" text="Procesos Total:">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="processqty_field" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Label prefWidth="120.0" text="Cantidad Bueno:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Bueno:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -298,7 +331,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TextField>
-                              <Label prefWidth="120.0" text="Cantidad Malo:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Malo:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -310,6 +343,7 @@
                               </TextField>
                            </children>
                         </HBox>
+                        <Separator />
                      </children>
                   </VBox>
                </children>
