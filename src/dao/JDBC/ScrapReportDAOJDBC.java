@@ -45,7 +45,7 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
     private static final String SQL_DELETE = 
             "DELETE FROM SCRAP_REPORT WHERE id = ?";
     private static final String LIST_SCRAP_REPORT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.lot_number, SCRAP_REPORT.quantity, PROCESS_REPORT.comments "
+            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.lot_number, SCRAP_REPORT.quantity, SCRAP_REPORT.comments "
             + "FROM SCRAP_REPORT "
             + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
             + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND SCRAP_REPORT.report_date BETWEEN ? AND ? "
