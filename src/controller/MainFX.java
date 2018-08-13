@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -59,6 +60,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab transaction_history_tab;
     @FXML
+    private Tab scrap_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -85,6 +88,7 @@ public class MainFX implements Initializable {
                     invoice_payment_tab.setDisable(true);
                     container_tab.setDisable(true);
                     process_tab.setDisable(true);
+                    scrap_tab.setDisable(true);
                     break;
                 case "Recursos Humanos":
                     employee_tab.setDisable(false);
@@ -150,6 +154,14 @@ public class MainFX implements Initializable {
                     transaction_history_tab.setDisable(false);
                     try{
                         transaction_history_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
+                    } catch(IOException ex) {
+                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case "Scrap":
+                    scrap_tab.setDisable(false);
+                    try{
+                        scrap_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
                     } catch(IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -2,82 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProcessReportFX">
+<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ScrapReportFX">
    <children>
       <VBox alignment="CENTER">
          <children>
-            <HBox fx:id="filter_hbox" disable="true">
-               <children>
-                  <VBox>
-                     <children>
-                        <CheckBox fx:id="employeefilter_checkbox" mnemonicParsing="false" selected="true" text="Filtrar por Empleado">
-                           <VBox.margin>
-                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                           </VBox.margin>
-                        </CheckBox>
-                        <Label text="Empleado:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="employee_combo" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <CheckBox fx:id="datefilter_checkbox" mnemonicParsing="false" selected="true" text="Filtrar por Fecha">
-                           <VBox.margin>
-                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                           </VBox.margin>
-                        </CheckBox>
-                        <Label text="Desde:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker fx:id="startdate_picker" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-                  <VBox alignment="BOTTOM_LEFT">
-                     <children>
-                        <Button fx:id="filter_button" mnemonicParsing="false" text="Filtrar Lista">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                        <Label text="Hasta:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker fx:id="enddate_picker" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
             <HBox>
                <children>
                   <VBox>
@@ -90,11 +23,8 @@
                               <TableColumn fx:id="partnumber_column" prefWidth="92.0" text="No. de Parte" />
                               <TableColumn fx:id="revision_column" prefWidth="84.0" text="Revisión" />
                               <TableColumn fx:id="lotnumber_column" prefWidth="78.0" text="No. de Lote" />
-                              <TableColumn fx:id="tankid_column" prefWidth="103.0" text="No. Tanque" />
-                              <TableColumn fx:id="containerid_column" prefWidth="103.0" text="No. Contenendor" />
-                              <TableColumn fx:id="process_column" prefWidth="85.0" text="Proceso" />
                               <TableColumn fx:id="quantity_column" prefWidth="77.0" text="Cantidad" />
-                              <TableColumn fx:id="quality_column" prefWidth="100.0" text="Bueno ✓ Malo □" />
+                              <TableColumn fx:id="comments_column" prefWidth="100.0" text="Comentarios" />
                            </columns>
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -104,65 +34,9 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <VBox>
-                     <children>
-                        <Label text="Amperaje:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="amperage_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
-                        <Label text="Voltaje:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="voltage_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Hora de Ingreso:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="starttime_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
-                        <Label text="Hora de Salida:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="endtime_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Comentarios:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextArea fx:id="comments_field" prefHeight="200.0" prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextArea>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Proceso">
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Scrap">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
