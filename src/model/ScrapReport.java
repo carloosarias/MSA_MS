@@ -5,13 +5,14 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class ScrapReport {
+public class ScrapReport implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date report_date;
