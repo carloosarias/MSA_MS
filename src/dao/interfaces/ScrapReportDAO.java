@@ -69,55 +69,37 @@ public interface ScrapReportDAO {
     public List<ScrapReport> listProductPart(ProductPart product_part) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all ProcessReport matching Employee ID from the database ordered by ProcessReport ID. 
-     * The Employee ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any ProcessReport matching Employee ID.
-     * @param employee The Employee ID to be searched for.
-     * @param start The start date of the range.
-     * @param end the end date of the range.
-     * @return A list of all ProcessReport matching Employee ID from the database ordered by ProcessReport ID.
-     * @throws IllegalArgumentException If Employee ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<ProcessReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Create the given ProcessReport in the database.
+     * Create the given ScrapReport in the database.
      * The Employee ID must not be null, The PartRevision ID must not be null,
-     * The Container ID must not be null, The Container ID must not be null, and
-     * The ProcessReport ID must be null, otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given ProcessReport.
-     * @param employee The Employee to be assigned to this ProcessReport.
-     * @param part_revision The PartRevision to be assigned to this ProcessReport.
-     * @param tank The Container to be assigned to this ProcessReport.
-     * @param container The Container to be assigned to this ProcessReport.
-     * @param process_report The ProcessReport to be created.
+     * and the ScrapReport ID must be null, otherwise it will throw IllegalArgumentException.
+     * After creating, the DAO will set the obtained ID in the given ScrapReport.
+     * @param employee The Employee to be assigned to this ScrapReport.
+     * @param part_revision The PartRevision to be assigned to this ScrapReport.
+     * @param scrap_report The ScrapReport to be created.
      * @throws IllegalArgumentException If the Employee ID is null.
      * @throws IllegalArgumentException If the PartRevision ID is null.
-     * @throws IllegalArgumentException If the Container ID is null.
-     * @throws IllegalArgumentException If the Container ID is null.
-     * @throws IllegalArgumentException If the ProcessReport ID is not null.
+     * @throws IllegalArgumentException If the ScrapReport ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Employee employee, PartRevision part_revision, Container tank, Container container, ProcessReport process_report) throws IllegalArgumentException, DAOException;
+    public void create(Employee employee, PartRevision part_revision, ScrapReport scrap_report) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given ProcessReport in the database. The ProcessReport ID must not be null, 
+     * Update the given ScrapReport in the database. The ScrapReport ID must not be null, 
      * otherwise it will throw IllegalArgumentException.
-     * @param process_report The ProcessReport to be updated.
-     * @throws IllegalArgumentException If the ProcessReport ID is null.
+     * @param scrap_report The ScrapReport to be updated.
+     * @throws IllegalArgumentException If the ScrapReport ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public void update(ProcessReport process_report) throws IllegalArgumentException, DAOException;
+    public void update(ScrapReport scrap_report) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given ProcessReport from the database. After deleting, the DAO will set the ID of the given
-     * ProcessReport to null.
-     * @param process_report The ProcessReport to be deleted from the database.
+     * Delete the given ScrapReport from the database. After deleting, the DAO will set the ID of the given
+     * ScrapReport to null.
+     * @param scrap_report The ScrapReport to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
-    public void delete(ProcessReport process_report) throws DAOException;
+    public void delete(ScrapReport scrap_report) throws DAOException;
     
-    public List<ProcessReport> listDateRange(ProductPart product_part, Date start, Date end);
+    public List<ScrapReport> listDateRange(ProductPart product_part, Date start, Date end);
 
 }
