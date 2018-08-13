@@ -16,10 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import model.Container;
 import model.Employee;
 import model.PartRevision;
-import model.ProcessReport;
 import model.ProductPart;
 import model.ScrapReport;
 
@@ -30,34 +28,28 @@ import model.ScrapReport;
 public class ScrapReportDAOJDBC implements ScrapReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT id, report_date, lot_number, quantity, comments FROM SCRAP_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT EMPLOYEE_ID FROM SCRAP_REPORT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
-            "SELECT PART_REVISION_ID FROM PROCESS_REPORT WHERE id = ?";
-    private static final String SQL_FIND_CONTAINER_BY_ID = 
-            "SELECT TANK_ID, CONTAINER_ID FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT PART_REVISION_ID FROM SCRAP_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT ORDER BY id";
+            "SELECT id, report_date, lot_number, quantity, comments FROM SCRAP_REPORT ORDER BY id";
     private static final String SQL_LIST_PRODUCT_PART_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
-    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
-    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, report_date, lot_number, quantity, comments FROM SCRAP_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO PROCESS_REPORT (EMPLOYEE_ID, PART_REVISION_ID, TANK_ID, CONTAINER_ID, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO SCRAP_REPORT (EMPLOYEE_ID, PART_REVISION_ID, report_date, lot_number, quantity, comments) "
+            + "VALUES(?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PROCESS_REPORT SET process = ?, report_date = ?, lot_number = ?, quantity = ?, amperage = ?, voltage = ?, start_time = ?, end_time = ?, comments = ?, quality_passed = ? WHERE id = ?";
+            "UPDATE SCRAP_REPORT SET report_date = ?, lot_number = ?, quantity = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM PROCESS_REPORT WHERE id = ?";
+            "DELETE FROM SCRAP_REPORT WHERE id = ?";
     private static final String LIST_SCRAP_REPORT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed "
-            + "FROM PROCESS_REPORT "
-            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PROCESS_REPORT.report_date BETWEEN ? AND ? "
-            + "ORDER BY PROCESS_REPORT.report_date, PROCESS_REPORT.id";
+            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.lot_number, SCRAP_REPORT.quantity, PROCESS_REPORT.comments "
+            + "FROM SCRAP_REPORT "
+            + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND SCRAP_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY SCRAP_REPORT.report_date, SCRAP_REPORT.id";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -66,9 +58,9 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
     // Constructors -------------------------------------------------------------------------------
 
     /**
-     * Construct a ProcessReport DAO for the given DAOFactory. Package private so that it can be constructed
+     * Construct a ScrapReport DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
-     * @param daoFactory The DAOFactory to construct this ProcessReport DAO for.
+     * @param daoFactory The DAOFactory to construct this ScrapReport DAO for.
      */
     ScrapReportDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
@@ -81,10 +73,10 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
     }
     
     /**
-     * Returns the ProcessReport from the database matching the given SQL query with the given values.
+     * Returns the ScrapReport from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The ProcessReport from the database matching the given SQL query with the given values.
+     * @return The ScrapReport from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
     private ScrapReport find(String sql, Object... values) throws DAOException {
