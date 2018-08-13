@@ -25,6 +25,7 @@ import dao.interfaces.ProductPartDAO;
 import dao.interfaces.ProductTypeDAO;
 import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.QuoteDAO;
+import dao.interfaces.ScrapReportDAO;
 import dao.interfaces.SpecificationDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -334,6 +335,14 @@ public abstract class DAOFactory {
      */   
     public ProcessReportDAO getProcessReportDAO(){
         return new ProcessReportDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the ScrapReport DAO associated with the current DAOFactory.
+     * @return The ScrapReport DAO associated with the current DAOFactory.
+     */   
+    public ScrapReportDAO getScrapReportDAO(){
+        return new ScrapReportDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.
