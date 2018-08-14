@@ -216,8 +216,6 @@ public class ProcessReportFX implements Initializable {
         containerid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findContainer(c.getValue()).toString()));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        //quality_column.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isQuality_passed()));
-        //quality_column.setCellFactory(tc -> new CheckBoxTableCell<>());
         quality_column.setCellFactory(column -> new CheckBoxTableCell<>());
         quality_column.setCellValueFactory(cellData -> {
             ProcessReport cellValue = cellData.getValue();
