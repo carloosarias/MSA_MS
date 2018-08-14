@@ -5,15 +5,23 @@
  */
 package controller;
 
+import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import model.ProcessReport;
 import model.ScrapReport;
 
 /**
@@ -45,13 +53,29 @@ public class ScrapReportFX implements Initializable {
     private TableColumn<ScrapReport, String> comments_column;
     @FXML
     private Button add_button;
-
+    
+    private Stage addStage = new Stage();
+    
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        setScrapReportTable();
     }    
+    
+    public void setScrapReportTable(){
+        id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        employee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getScrapReportDAO().findEmployee(c.getValue()).toString()));
+        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getScrapReportDAO().findPartRevision(c.getValue())).getPart_number()));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getScrapReportDAO().findPartRevision(c.getValue()).getRev()));
+        lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+    }
     
 }
