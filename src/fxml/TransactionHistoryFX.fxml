@@ -213,7 +213,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="incomingqty_field" prefWidth="120.0">
+                              <TextField fx:id="incomingqty_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -228,7 +228,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="departqty_field" prefWidth="120.0">
+                              <TextField fx:id="departqty_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -243,7 +243,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="processqty_field" prefWidth="120.0">
+                              <TextField fx:id="processqty_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -258,7 +258,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="scrapqty_field" prefWidth="120.0">
+                              <TextField fx:id="scrapqty_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -276,7 +276,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="incomingnew_field" prefWidth="120.0">
+                              <TextField fx:id="incomingnew_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -286,7 +286,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="incomingrework_field" prefWidth="120.0">
+                              <TextField fx:id="incomingrework_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -301,7 +301,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="departaccepted_field" prefWidth="120.0">
+                              <TextField fx:id="departaccepted_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -311,7 +311,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="departrejected_field" prefWidth="120.0">
+                              <TextField fx:id="departrejected_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -326,7 +326,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="processgood_field" prefWidth="120.0">
+                              <TextField fx:id="processgood_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -336,7 +336,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="processbad_field" prefWidth="120.0">
+                              <TextField fx:id="processbad_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -353,7 +353,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="balance_field" prefWidth="120.0">
+                                    <TextField fx:id="balance_field" editable="false" prefWidth="120.0">
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
@@ -365,7 +365,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="onhand_field" prefWidth="120.0">
+                              <TextField fx:id="onhand_field" editable="false" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
