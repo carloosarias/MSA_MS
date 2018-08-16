@@ -15,7 +15,7 @@
                <children>
                   <VBox>
                      <children>
-                        <TableView fx:id="processreport_tableview" editable="true">
+                        <TableView fx:id="scrapreport_tableview" editable="true">
                            <columns>
                               <TableColumn fx:id="id_column" prefWidth="96.0" text="No. de Reporte" />
                               <TableColumn fx:id="employee_column" prefWidth="79.0" text="Empleado" />
