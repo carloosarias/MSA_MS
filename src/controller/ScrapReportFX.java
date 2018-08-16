@@ -12,23 +12,24 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.ProcessReport;
+import model.IncomingReport;
+import model.ProductPart;
 import model.ScrapReport;
 
 /**
@@ -40,6 +41,10 @@ public class ScrapReportFX implements Initializable {
 
     @FXML
     private HBox root_hbox;
+    @FXML
+    private CheckBox partnumber_checkbox;
+    @FXML
+    private ComboBox<ProductPart> partnumber_combo;
     @FXML
     private TableView<ScrapReport> scrapreport_tableview;
     @FXML
@@ -71,8 +76,19 @@ public class ScrapReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
+        partnumber_combo.getSelectionModel().selectFirst();
         setScrapReportTable();
         updateScrapReportTable();
+        
+        partnumber_checkbox.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            partnumber_combo.setDisable(!newValue);
+            updateScrapReportTable();
+        });
+        
+        partnumber_combo.setOnAction((ActionEvent) -> {
+            updateScrapReportTable();
+        });
         
         add_button.setOnAction((ActionEvent) -> {
             add_button.setDisable(true);
@@ -82,7 +98,11 @@ public class ScrapReportFX implements Initializable {
     }    
     
     public void updateScrapReportTable(){
-        scrapreport_tableview.setItems(FXCollections.observableArrayList(msabase.getScrapReportDAO().list()));
+        if(partnumber_checkbox.isSelected()){
+            scrapreport_tableview.setItems(FXCollections.observableArrayList(msabase.getScrapReportDAO().listProductPart(partnumber_combo.getSelectionModel().getSelectedItem())));
+        }else{
+            scrapreport_tableview.setItems(FXCollections.observableArrayList(msabase.getScrapReportDAO().list()));
+        }
     }
     
     public void showAdd_stage(){

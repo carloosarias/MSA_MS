@@ -2,6 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
@@ -11,6 +14,33 @@
    <children>
       <VBox alignment="CENTER">
          <children>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
+                        <CheckBox fx:id="partnumber_checkbox" mnemonicParsing="false" selected="true" text="Filtrar por No. de Parte">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        <HBox>
+                           <children>
+                              <Label text="Selección:">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ComboBox fx:id="partnumber_combo" prefWidth="150.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
             <HBox>
                <children>
                   <VBox>
