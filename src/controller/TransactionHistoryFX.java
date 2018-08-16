@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -150,6 +151,8 @@ public class TransactionHistoryFX implements Initializable {
     private TableColumn<weekly_summary, String> weeklydepartaccepted_column;
     @FXML
     private TableColumn<weekly_summary, String> weeklydepartrejected_column;
+    @FXML
+    private Button update_button;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -178,6 +181,9 @@ public class TransactionHistoryFX implements Initializable {
         
         enddate_picker.setOnAction((ActionEvent) -> {
             partnumber_combo.fireEvent(new ActionEvent());
+        });
+        update_button.setOnAction((ActionEvent) -> {
+           partnumber_combo.fireEvent(new ActionEvent()); 
         });
     }
     
