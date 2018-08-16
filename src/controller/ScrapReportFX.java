@@ -6,14 +6,20 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,6 +27,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.ProcessReport;
 import model.ScrapReport;
 
@@ -34,7 +41,7 @@ public class ScrapReportFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private TableView<ScrapReport> processreport_tableview;
+    private TableView<ScrapReport> scrapreport_tableview;
     @FXML
     private TableColumn<ScrapReport, Integer> id_column;
     @FXML
@@ -54,7 +61,7 @@ public class ScrapReportFX implements Initializable {
     @FXML
     private Button add_button;
     
-    private Stage addStage = new Stage();
+    private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -65,7 +72,37 @@ public class ScrapReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setScrapReportTable();
+        updateScrapReportTable();
+        
+        add_button.setOnAction((ActionEvent) -> {
+            add_button.setDisable(true);
+            showAdd_stage();
+        });
+        
     }    
+    
+    public void updateScrapReportTable(){
+        scrapreport_tableview.setItems(FXCollections.observableArrayList(msabase.getScrapReportDAO().list()));
+    }
+    
+    public void showAdd_stage(){
+        try {
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateProcessReportFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            add_stage.setTitle("Nuevo Reporte de Proceso");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
+            add_button.setDisable(false);
+            updateScrapReportTable();
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public void setScrapReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
