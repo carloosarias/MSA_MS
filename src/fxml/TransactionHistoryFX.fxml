@@ -253,12 +253,12 @@
                         <Separator />
                         <HBox>
                            <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Total On-Hand (General):">
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Scrap (Rango):">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="onhand_field" prefWidth="120.0">
+                              <TextField fx:id="scrapqty_field" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -281,7 +281,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TextField>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Retrabajo:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Retrabajo:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -306,7 +306,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TextField>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Rechazado:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Rechazado:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -331,7 +331,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </TextField>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Malo:">
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Malo:">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -344,14 +344,28 @@
                            </children>
                         </HBox>
                         <Separator />
-                        <HBox prefHeight="100.0" prefWidth="200.0">
+                        <HBox>
                            <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Balance (Rango):">
+                              <HBox>
+                                 <children>
+                                    <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Balance (Rango):">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="balance_field" prefWidth="120.0">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Total On-Hand (General):">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="balance_field" prefWidth="120.0">
+                              <TextField fx:id="onhand_field" prefWidth="120.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>

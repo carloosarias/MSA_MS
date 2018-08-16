@@ -9,6 +9,7 @@ import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -69,6 +70,7 @@ public class CreateScrapReportFX implements Initializable {
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         employee_combo.getSelectionModel().selectFirst();
+        reportdate_picker.setValue(LocalDate.now());
         
         partnumber_combo.setOnAction((ActionEvent) -> {
             partnumbercombo_text = partnumber_combo.getEditor().textProperty().getValue();

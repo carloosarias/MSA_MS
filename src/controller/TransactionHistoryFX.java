@@ -28,6 +28,7 @@ import model.DepartLot;
 import model.IncomingLot;
 import model.ProcessReport;
 import model.ProductPart;
+import model.ScrapReport;
 
 /**
  * FXML Controller class
@@ -119,6 +120,8 @@ public class TransactionHistoryFX implements Initializable {
     private TextField departaccepted_field;
     @FXML
     private TextField departrejected_field;
+    @FXML
+    private TextField scrapqty_field;
     @FXML
     private TextField onhand_field;
     @FXML
@@ -237,14 +240,15 @@ public class TransactionHistoryFX implements Initializable {
         incomingqty_field.setText(""+getIncomingQuantity(incoming_tableview.getItems()));
         incomingnew_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Virgen"));
         incomingrework_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Rechazo"));
+        scrapqty_field.setText(""+getScrapReportQuantity(msabase.getScrapReportDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()))));
         processqty_field.setText(""+getProcessQuantity(process_tableview.getItems()));
         processgood_field.setText(""+getProcessStatus(process_tableview.getItems(), "Bueno"));
         processbad_field.setText(""+getProcessStatus(process_tableview.getItems(), "Malo"));
         departqty_field.setText(""+getDepartQuantity(depart_tableview.getItems()));
         departrejected_field.setText(""+getDepartStatus(depart_tableview.getItems(), "Rechazado"));
         departaccepted_field.setText(""+(getDepartQuantity(depart_tableview.getItems()) - getDepartStatus(depart_tableview.getItems(), "Rechazado")));
-        onhand_field.setText(""+(getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()))) - getDepartQuantity(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now())))));
-        balance_field.setText(""+((getIncomingQuantity(incoming_tableview.getItems()))-(getDepartQuantity(depart_tableview.getItems()))));
+        onhand_field.setText(""+(getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()))) - getDepartQuantity(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()))) - getScrapReportQuantity(msabase.getScrapReportDAO().listProductPart(partnumber_combo.getSelectionModel().getSelectedItem()))));
+        balance_field.setText(""+((getIncomingQuantity(incoming_tableview.getItems()))-(getDepartQuantity(depart_tableview.getItems())) - Integer.parseInt(scrapqty_field.getText())));
     }
     
     public Integer getIncomingQuantity(List<IncomingLot> incominglot_list){
@@ -264,6 +268,16 @@ public class TransactionHistoryFX implements Initializable {
                 quantity_total += item.getQuantity();
             }
         }
+        return quantity_total;
+    }
+    
+    public Integer getScrapReportQuantity(List<ScrapReport> scrapreport_list){
+        int quantity_total = 0;
+        
+        for(ScrapReport item : scrapreport_list){
+            quantity_total += item.getQuantity();
+        }
+        
         return quantity_total;
     }
     
@@ -297,6 +311,7 @@ public class TransactionHistoryFX implements Initializable {
         
         return quantity_total;
     }
+    
     
     public Integer getDepartStatus(List<DepartLot> departlot_list, String status){
         int quantity_total = 0;
