@@ -89,10 +89,10 @@ public class ScrapReportFX implements Initializable {
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateProcessReportFX.fxml"));
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateScrapReportFX.fxml"));
             Scene scene = new Scene(root);
             
-            add_stage.setTitle("Nuevo Reporte de Proceso");
+            add_stage.setTitle("Nuevo Reporte de Scrap");
             add_stage.setResizable(false);
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
