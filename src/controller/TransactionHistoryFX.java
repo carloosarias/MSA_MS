@@ -161,7 +161,6 @@ public class TransactionHistoryFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
         setDepartTableViewItems();
         setProcessReportTableViewItems();
         setIncomingTableViewItems();

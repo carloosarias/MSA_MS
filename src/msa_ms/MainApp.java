@@ -1,8 +1,11 @@
 package msa_ms;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -27,9 +30,11 @@ public class MainApp extends Application{
             "Tanque",
             "Barril",
             "Rack");
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
+        File file = new File("src/template/Test.pdf");
+        Desktop.getDesktop().open(file);
         BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("MSA Manager");

@@ -6,12 +6,14 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.HostServices;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -29,6 +31,7 @@ import javafx.stage.StageStyle;
 import model.DepartLot;
 import model.DepartReport;
 import model.PartRevision;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -75,6 +78,8 @@ public class DepartReportFX implements Initializable {
     private TableColumn<DepartLot, String> lot_comments_column;
     @FXML
     private Button add_button;
+    @FXML
+    private Button pdf_button;
     
     private Stage add_stage = new Stage();
 
@@ -103,7 +108,12 @@ public class DepartReportFX implements Initializable {
             add_button.setDisable(true);
             showAdd_stage();
             depart_report_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartReportDAO().list()));
-        });        
+        });
+        
+        pdf_button.setOnAction((ActionEvent) -> {
+            System.out.println("test");
+
+        });
     }
     
     public void showAdd_stage(){
