@@ -5,15 +5,24 @@
  */
 package controller;
 
+import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.fields.PdfFormField;
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.HostServices;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,7 +40,6 @@ import javafx.stage.StageStyle;
 import model.DepartLot;
 import model.DepartReport;
 import model.PartRevision;
-import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -111,8 +119,12 @@ public class DepartReportFX implements Initializable {
         });
         
         pdf_button.setOnAction((ActionEvent) -> {
-            System.out.println("test");
-
+            try{
+                showPDF(depart_report_tableview.getSelectionModel().getSelectedItem());
+            }
+            catch(Exception e){
+                
+            }
         });
     }
     
@@ -157,5 +169,14 @@ public class DepartReportFX implements Initializable {
         lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         lot_process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         lot_comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+    }
+
+    private void showPDF(DepartReport selectedItem) throws Exception{
+            PdfDocument pdf = new PdfDocument(
+            new PdfReader(new File("./src/template/DepartReportTemplate.pdf")), new PdfWriter(new File("./src/pdf/DepartReportPDF.pdf")));
+            PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
+            Map<String, PdfFormField> fields = form.getFormFields();
+            fields.get("date").setValue("test");
+            pdf.close();
     }
 }
