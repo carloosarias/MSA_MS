@@ -33,8 +33,8 @@ public class MainApp extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        File file = new File("src/template/Test.pdf");
-        Desktop.getDesktop().open(file);
+        //File file = new File("src/template/Test.pdf");
+        //Desktop.getDesktop().open(file);
         BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("MSA Manager");
