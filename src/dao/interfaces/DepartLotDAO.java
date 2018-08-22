@@ -85,7 +85,7 @@ public interface DepartLotDAO {
      * @throws DAOException If something fails at database level.
      */       
     public List<PartRevision> listPartRevision(DepartReport depart_report) throws IllegalArgumentException, DAOException;
-    
+    //public List<String> listProcess(PartRevision part_revision, DepartReport depart_report) throws IllegalArgumentException, DAOException;
     /**
      * Create the given DepartLot for a given DepartReport in the database. 
      * The DepartReport ID must not be null, the PartRevision ID must not be null

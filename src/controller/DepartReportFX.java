@@ -14,11 +14,13 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -37,9 +39,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.CompanyContact;
 import model.DepartLot;
 import model.DepartReport;
 import model.PartRevision;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -110,6 +114,7 @@ public class DepartReportFX implements Initializable {
                 departlot_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(newValue)));
                 partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listPartRevision(newValue)));
             }
+            pdf_button.setDisable(newValue == null);
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -120,7 +125,8 @@ public class DepartReportFX implements Initializable {
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
-                showPDF(depart_report_tableview.getSelectionModel().getSelectedItem());
+                buildPDF(depart_report_tableview.getSelectionModel().getSelectedItem());
+                MainApp.openPDF("./src/pdf/DepartReportPDF.pdf");
             }
             catch(Exception e){
                 
@@ -171,12 +177,43 @@ public class DepartReportFX implements Initializable {
         lot_comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
 
-    private void showPDF(DepartReport selectedItem) throws Exception{
+    private void buildPDF(DepartReport depart_report) throws Exception{
             PdfDocument pdf = new PdfDocument(
-            new PdfReader(new File("./src/template/DepartReportTemplate.pdf")), new PdfWriter(new File("./src/pdf/DepartReportPDF.pdf")));
+                new PdfReader(new File("./src/template/DepartReportTemplate.pdf")),
+                new PdfWriter(new File("./src/pdf/DepartReportPDF.pdf"))
+            );
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
             Map<String, PdfFormField> fields = form.getFormFields();
-            fields.get("date").setValue("test");
+            fields.get("depart_report_id").setValue(""+depart_report.getId());
+            fields.get("date").setValue(depart_report.getReport_date().toString());
+            fields.get("client").setValue(msabase.getDepartReportDAO().findCompany(depart_report).getName());
+            fields.get("client_address").setValue(msabase.getDepartReportDAO().findCompanyAddress(depart_report).getAddress());
+            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report));
+            if(company_contact.isEmpty()){
+                fields.get("contact").setValue("n/a");
+                fields.get("contact_email").setValue("n/a");
+                fields.get("contact_number").setValue("n/a");
+            }else{
+                fields.get("contact").setValue(company_contact.get(0).getName());
+                fields.get("contact_email").setValue(company_contact.get(0).getEmail());
+                fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
+            }
+            List<DepartLot> depart_lot_list = msabase.getDepartLotDAO().list(depart_report);
+            
+            int i = 0;
+            for(DepartLot depart_lot : depart_lot_list){
+                int current_row = i+1;
+                if(current_row > 26) break;
+                fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(depart_lot)).getPart_number());
+                fields.get("revision"+current_row).setValue(msabase.getDepartLotDAO().findPartRevision(depart_lot).getRev());
+                fields.get("description"+current_row).setValue(msabase.getProductPartDAO().findProduct(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(depart_lot))).getName());
+                //fields.get("process#"+current_row).setValue(depart_lot.getProcess());
+                //fields.get("quantity#"+current_row).setValue(""+depart_lot.getQuantity());
+                //fields.get("quantity_box#"+current_row).setValue(""+depart_lot.getBox_quantity());
+                i++;
+            }
+            form.flattenFields();
             pdf.close();
     }
+    
 }
