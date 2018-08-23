@@ -62,7 +62,7 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private TableView<InvoiceItem> invoiceitem_tableview;
     @FXML
-    private TableColumn<InvoiceItem, Integer> remision_column;
+    private TableColumn<InvoiceItem, String> remision_column;
     @FXML
     private TableColumn<InvoiceItem, String> part_column;
     @FXML
@@ -255,7 +255,7 @@ public class CreateInvoiceFX implements Initializable {
     }
     
     public void setInvoiceItemTable(){
-        remision_column.setCellValueFactory(new PropertyValueFactory<>("depart_lot_id"));
+        remision_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findDepartReport(msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id())).getId()));
         part_column.setCellValueFactory(c -> new SimpleStringProperty(
             msabase.getPartRevisionDAO().findProductPart(
                     msabase.getDepartLotDAO().findPartRevision(
