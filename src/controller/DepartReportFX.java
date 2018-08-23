@@ -129,7 +129,7 @@ public class DepartReportFX implements Initializable {
                 MainApp.openPDF("./src/pdf/DepartReportPDF.pdf");
             }
             catch(Exception e){
-                
+                e.printStackTrace();
             }
         });
     }
@@ -221,21 +221,6 @@ public class DepartReportFX implements Initializable {
                     i++;
                 }
             }
-            
-            
-            
-            /*int i = 0;
-            for(DepartLot depart_lot : depart_lot_list){
-                int current_row = i+1;
-                if(current_row > 26) break;
-                fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(depart_lot)).getPart_number());
-                fields.get("revision"+current_row).setValue(msabase.getDepartLotDAO().findPartRevision(depart_lot).getRev());
-                fields.get("description"+current_row).setValue(msabase.getProductPartDAO().findProduct(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(depart_lot))).getName());
-                fields.get("process"+current_row).setValue(depart_lot.getProcess());
-                fields.get("quantity"+current_row).setValue(""+depart_lot.getQuantity());
-                fields.get("quantity_box"+current_row).setValue(""+depart_lot.getBox_quantity());
-                i++;
-            }*/
             form.flattenFields();
             pdf.close();
     }
