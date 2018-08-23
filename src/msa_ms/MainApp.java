@@ -20,9 +20,18 @@ import javafx.stage.StageStyle;
 public class MainApp extends Application{
     public static Integer employee_id;
     public static List<String> process_list = Arrays.asList(
+            "Nickel Sulfato",
+            "Nickel Woods",
+            "Zinc Azul",
+            "Zinc Amarillo",
+            "Zinc Negro",
+            "Estaño Brillante",
+            "Estaño Opaco",
             "Plata",
-            "Zinc",
-            "Estaño");
+            "Pasivado",
+            "Limpieza",
+            "Bright Dip",
+            "Cobrizado");
     public static List<String> status_list = Arrays.asList(
             "Virgen",
             "Rechazo"
