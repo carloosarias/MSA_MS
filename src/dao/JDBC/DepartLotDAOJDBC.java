@@ -41,8 +41,12 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE DEPART_REPORT_ID = ? AND rejected = ? ORDER BY id";
     private static final String SQL_LIST_OF_PENDING_REJECTED_ORDER_BY_ID = 
             "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE rejected = ? AND pending = ? ORDER BY id";
+    private static final String SQL_LIST_OF_PART_REVISION_PROCESS_DEPART_REPORT_ORDER_BY_ID = 
+            "SELECT id, lot_number, quantity, box_quantity, process, comments, rejected, pending FROM DEPART_LOT WHERE PART_REVISION_ID = ? AND process = ? AND DEPART_REPORT_ID = ? ORDER BY id";
     private static final String SQL_LIST_PART_REVISIONS = 
             "SELECT DISTINCT PART_REVISION_ID FROM DEPART_LOT WHERE DEPART_REPORT_ID = ?";
+    private static final String SQL_LIST_PROCESS = 
+            "SELECT DISTINCT process FROM DEPART_LOT WHERE PART_REVISION_ID = ? AND DEPART_REPORT_ID = ?";
     private static final String SQL_LIST_DEPART_REPORTS = 
             "SELECT DISTINCT DEPART_REPORT_ID FROM DEPART_LOT WHERE rejected = ?";
     private static final String SQL_INSERT =
@@ -247,7 +251,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     }
     
     @Override
-    public List<DepartLot> list(String lot_number){
+    public List<DepartLot> list(String lot_number) throws DAOException{
         
         List<DepartLot> incoming_lot = new ArrayList<>();
         
@@ -271,7 +275,40 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     }
     
     @Override
-    public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException{
+    public List<DepartLot> list(PartRevision part_revision, String process, DepartReport depart_report) throws IllegalArgumentException, DAOException{
+        if(part_revision.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }
+        
+        if(depart_report.getId() == null) {
+            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
+        }
+        
+        List<DepartLot> depart_lot = new ArrayList<>();
+        
+        Object[] values = {
+            part_revision.getId(),
+            process,
+            depart_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PART_REVISION_PROCESS_DEPART_REPORT_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                depart_lot.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return depart_lot;
+    }
+    
+    @Override
+    public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException, DAOException{
         
         List<DepartReport> depart_report = new ArrayList<>();
         
@@ -318,6 +355,37 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         }
         
         return part_revision;
+    }
+    @Override
+    public List<String> listProcess(PartRevision part_revision, DepartReport depart_report) throws IllegalArgumentException, DAOException {
+        if(part_revision.getId() == null){
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null");
+        }
+        
+        if(depart_report.getId() == null) {
+            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
+        }
+        
+        List<String> process = new ArrayList<>();
+        
+        Object[] values = {
+            part_revision.getId(),
+            depart_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PROCESS, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                process.add(resultSet.getString("process"));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return process;
     }
     
     @Override

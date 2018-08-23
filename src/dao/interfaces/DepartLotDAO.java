@@ -65,6 +65,8 @@ public interface DepartLotDAO {
     
     public List<DepartLot> list(Company company, boolean pending, boolean rejected) throws IllegalArgumentException, DAOException;
     
+    public List<DepartLot> list(PartRevision part_revision, String process, DepartReport depart_report) throws IllegalArgumentException, DAOException;
+    
     /**
      * Returns a list of all DepartLot matching a given lot_number from the database ordered by IncomingLot ID.
      * The list is never null and is empty when the database does not contain any DepartLot matching lot_number.
@@ -74,7 +76,8 @@ public interface DepartLotDAO {
      */    
     public List<DepartLot> list(String lot_number) throws IllegalArgumentException;
     
-     public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException;
+    public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException;
+    
     /**
      * Returns a list of distinct PartRevision matching a given DepartReport from the database ordered by PartRevision ID.
      * The DepartReport ID must not be null, otherwise it will throw IllegalArgumentException.
@@ -85,7 +88,8 @@ public interface DepartLotDAO {
      * @throws DAOException If something fails at database level.
      */       
     public List<PartRevision> listPartRevision(DepartReport depart_report) throws IllegalArgumentException, DAOException;
-    //public List<String> listProcess(PartRevision part_revision, DepartReport depart_report) throws IllegalArgumentException, DAOException;
+    public List<String> listProcess(PartRevision part_revision, DepartReport depart_report) throws IllegalArgumentException, DAOException;
+    
     /**
      * Create the given DepartLot for a given DepartReport in the database. 
      * The DepartReport ID must not be null, the PartRevision ID must not be null

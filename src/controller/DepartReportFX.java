@@ -198,20 +198,44 @@ public class DepartReportFX implements Initializable {
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());
                 fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
             }
-            List<DepartLot> depart_lot_list = msabase.getDepartLotDAO().list(depart_report);
-            
+            List<PartRevision> part_revision_list = msabase.getDepartLotDAO().listPartRevision(depart_report);
             int i = 0;
+            for(PartRevision part_revision : part_revision_list){
+                List<String> process_list = msabase.getDepartLotDAO().listProcess(part_revision, depart_report);
+                for(String process : process_list){
+                    int current_row = i+1;
+                    if(current_row > 26) break;
+                    fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(part_revision).getPart_number());
+                    fields.get("revision"+current_row).setValue(part_revision.getRev());
+                    fields.get("description"+current_row).setValue(msabase.getProductPartDAO().findProduct(msabase.getPartRevisionDAO().findProductPart(part_revision)).getName());
+                    fields.get("process"+current_row).setValue(process);
+                    List<DepartLot> depart_lot_list = msabase.getDepartLotDAO().list(part_revision, process, depart_report);
+                    int quantity = 0;
+                    int quantity_box = 0;
+                    for(DepartLot depart_lot : depart_lot_list){
+                        quantity += depart_lot.getQuantity();
+                        quantity_box += depart_lot.getBox_quantity();
+                    }
+                    fields.get("quantity"+current_row).setValue(""+quantity);
+                    fields.get("quantity_box"+current_row).setValue(""+quantity_box);
+                    i++;
+                }
+            }
+            
+            
+            
+            /*int i = 0;
             for(DepartLot depart_lot : depart_lot_list){
                 int current_row = i+1;
                 if(current_row > 26) break;
                 fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(depart_lot)).getPart_number());
                 fields.get("revision"+current_row).setValue(msabase.getDepartLotDAO().findPartRevision(depart_lot).getRev());
                 fields.get("description"+current_row).setValue(msabase.getProductPartDAO().findProduct(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(depart_lot))).getName());
-                //fields.get("process#"+current_row).setValue(depart_lot.getProcess());
-                //fields.get("quantity#"+current_row).setValue(""+depart_lot.getQuantity());
-                //fields.get("quantity_box#"+current_row).setValue(""+depart_lot.getBox_quantity());
+                fields.get("process"+current_row).setValue(depart_lot.getProcess());
+                fields.get("quantity"+current_row).setValue(""+depart_lot.getQuantity());
+                fields.get("quantity_box"+current_row).setValue(""+depart_lot.getBox_quantity());
                 i++;
-            }
+            }*/
             form.flattenFields();
             pdf.close();
     }
