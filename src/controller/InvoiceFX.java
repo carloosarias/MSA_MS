@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Invoice;
 import model.InvoiceItem;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -83,6 +84,8 @@ public class InvoiceFX implements Initializable {
     private TextField total_field;
     @FXML
     private Button add_button;
+    @FXML
+    private Button pdf_button;
     
     private Stage add_stage = new Stage();
     
@@ -105,6 +108,16 @@ public class InvoiceFX implements Initializable {
         add_button.setOnAction((ActionEvent) -> {
             add_button.setDisable(true);
             showAdd_stage();
+        });
+        
+        pdf_button.setOnAction((ActionEvent) -> {
+            try{
+                buildPDF(invoice_tableview.getSelectionModel().getSelectedItem());
+                MainApp.openPDF("./src/pdf/InvoicePDF.pdf");
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
         });
     }
     
@@ -172,7 +185,7 @@ public class InvoiceFX implements Initializable {
     }
     
     public void setInvoiceItemTable(){
-        remision_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getId()));
+        remision_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findDepartReport(msabase.getInvoiceItemDAO().findDepartLot(c.getValue())).getId()));
         part_column.setCellValueFactory(c -> new SimpleStringProperty(
             msabase.getPartRevisionDAO().findProductPart(
                     msabase.getDepartLotDAO().findPartRevision(
@@ -189,5 +202,9 @@ public class InvoiceFX implements Initializable {
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findQuote(c.getValue()).getUnit_price()));
         lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(
                 msabase.getInvoiceItemDAO().findQuote(c.getValue()).getUnit_price()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
+    }
+
+    private void buildPDF(Invoice invoice) {
+        
     }
 }
