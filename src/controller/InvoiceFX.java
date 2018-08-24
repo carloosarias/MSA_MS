@@ -5,10 +5,18 @@
  */
 package controller;
 
+import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.fields.PdfFormField;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,8 +35,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.CompanyContact;
 import model.Invoice;
 import model.InvoiceItem;
+import model.PartRevision;
 import msa_ms.MainApp;
 
 /**
@@ -204,7 +214,36 @@ public class InvoiceFX implements Initializable {
                 msabase.getInvoiceItemDAO().findQuote(c.getValue()).getUnit_price()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
     }
 
-    private void buildPDF(Invoice invoice) {
-        
+    private void buildPDF(Invoice invoice) throws IOException {
+            PdfDocument pdf = new PdfDocument(
+                new PdfReader(new File("./src/template/InvoiceTemplate.pdf")),
+                new PdfWriter(new File("./src/pdf/InvoicePDF.pdf"))
+            );
+            PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
+            Map<String, PdfFormField> fields = form.getFormFields();
+            fields.get("invoice_id").setValue(""+invoice.getId());
+            fields.get("date").setValue(invoice.getInvoice_date().toString());
+            fields.get("client").setValue(msabase.getInvoiceDAO().findCompany(invoice).getName());
+            fields.get("billing_address").setValue(msabase.getInvoiceDAO().findBillingAddress(invoice).getAddress());
+            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getInvoiceDAO().findCompany(invoice));
+            if(company_contact.isEmpty()){
+                fields.get("contact").setValue("n/a");
+                fields.get("contact_email").setValue("n/a");
+                fields.get("contact_number").setValue("n/a");
+            }else{
+                fields.get("contact").setValue(company_contact.get(0).getName());
+                fields.get("contact_email").setValue(company_contact.get(0).getEmail());
+                fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
+            }
+            fields.get("shipping_address").setValue(msabase.getInvoiceDAO().findShippingAddress(invoice).getAddress());
+            fields.get("payment_terms").setValue(invoice.getTerms());
+            fields.get("shipping_method").setValue(invoice.getShipping_method());
+            fields.get("fob").setValue(invoice.getFob());
+            List<PartRevision> a = msabase.getInvoiceItemDAO().listPartRevision(invoice);
+            for(PartRevision part_revision : a){
+                System.out.println(part_revision.getId());
+            }
+            form.flattenFields();
+            pdf.close();
     }
 }
