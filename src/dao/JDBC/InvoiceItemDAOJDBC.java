@@ -17,6 +17,7 @@ import java.util.List;
 import model.DepartLot;
 import model.Invoice;
 import model.InvoiceItem;
+import model.PartRevision;
 import model.Quote;
 
 /**
@@ -37,6 +38,12 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             "SELECT id, comments FROM INVOICE_ITEM ORDER BY id";
     private static final String SQL_LIST_OF_INVOICE_ORDER_BY_ID = 
             "SELECT id, comments FROM INVOICE_ITEM WHERE INVOICE_ID = ? ORDER BY id";
+    private static final String SQL_LIST_PART_REVISION = 
+            "SELECT DISTINCT DEPART_LOT.PART_REVISION_ID "
+            + "FROM INVOICE_ITEM "
+            + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
+            + "WHERE INVOICE_ID = ? "
+            + "ORDER BY DEPART_LOT.PART_REVISION_ID";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE_ITEM (INVOICE_ID, DEPART_LOT_ID, QUOTE_ID, comments) "
             + "VALUES (?, ?, ?, ?)";
@@ -219,6 +226,32 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
         return invoice_item;
     }
 
+    @Override
+    public List<PartRevision> listPartRevision(Invoice invoice) throws IllegalArgumentException, DAOException {
+        if(invoice.getId() == null) {
+            throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
+        }
+        
+        List<PartRevision> part_revision_list = new ArrayList<>();
+        
+        Object[] values = {
+            invoice.getId(),
+        };
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PART_REVISION, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                part_revision_list.add(daoFactory.getPartRevisionDAO().find(resultSet.getInt("DEPART_LOT.PART_REVISION_ID")));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return part_revision_list;
+    }
+    
     @Override
     public void create(Invoice invoice, DepartLot depart_lot, Quote quote, InvoiceItem invoice_item) throws IllegalArgumentException, DAOException {
     if (invoice.getId() == null) {
