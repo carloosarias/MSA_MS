@@ -239,10 +239,45 @@ public class InvoiceFX implements Initializable {
             fields.get("payment_terms").setValue(invoice.getTerms());
             fields.get("shipping_method").setValue(invoice.getShipping_method());
             fields.get("fob").setValue(invoice.getFob());
-            List<PartRevision> a = msabase.getInvoiceItemDAO().listPartRevision(invoice);
-            for(PartRevision part_revision : a){
-                System.out.println(part_revision.getId());
+            
+            List<InvoiceItem> invoice_item_list = msabase.getInvoiceItemDAO().list(invoice);
+            int i = 0;
+            double total_price = 0;
+            for(InvoiceItem invoice_item : invoice_item_list){
+                int current_row = i+1;
+                double lot_price = 0;
+                double quantity = +msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getQuantity();
+                double unit_price = msabase.getInvoiceItemDAO().findQuote(invoice_item).getUnit_price();
+                fields.get("depart_report_id"+current_row).setValue(""+msabase.getDepartLotDAO().findDepartReport(msabase.getInvoiceItemDAO().findDepartLot(invoice_item)).getId());
+                fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(msabase.getInvoiceItemDAO().findDepartLot(invoice_item))).getPart_number());
+                fields.get("quantity_box"+current_row).setValue(""+msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getBox_quantity());
+                fields.get("quantity"+current_row).setValue(""+quantity);
+                fields.get("unit_price"+current_row).setValue("$ "+unit_price);
+                lot_price = unit_price * quantity;
+                fields.get("lot_price"+current_row).setValue("$ "+lot_price);
+                total_price += lot_price;
+                i++;
             }
+            fields.get("total_price").setValue("$ "+total_price);
+            
+            /*List<PartRevision> part_revision_list = msabase.getInvoiceItemDAO().listPartRevision(invoice);
+            int i = 0;
+            double total_price = 0;
+            for(PartRevision part_revision : part_revision_list){
+                int current_row = i+1;
+                if(current_row > 26) break;
+                List<InvoiceItem> invoice_item_list = msabase.getInvoiceItemDAO().list(invoice, part_revision);
+                int quantity = 0;
+                int quantity_box = 0;
+                double unit_price = 0;
+                for(InvoiceItem invoice_item : invoice_item_list){
+                    quantity += msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getQuantity();
+                    quantity_box += msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getBox_quantity();
+                    unit_price = msabase.getInvoiceItemDAO().findQuote(invoice_item).getUnit_price();
+                }
+                double lot_price = unit_price * quantity;
+                total_price += lot_price;
+            }*/
             form.flattenFields();
             pdf.close();
     }

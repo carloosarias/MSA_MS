@@ -38,11 +38,17 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             "SELECT id, comments FROM INVOICE_ITEM ORDER BY id";
     private static final String SQL_LIST_OF_INVOICE_ORDER_BY_ID = 
             "SELECT id, comments FROM INVOICE_ITEM WHERE INVOICE_ID = ? ORDER BY id";
+    private static final String SQL_LIST_OF_INVOICE_PART_REVISION_ORDER_BY_ID = 
+            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments "
+            + "FROM INVOICE_ITEM "
+            + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
+            + "WHERE INVOICE_ID = ? AND DEPART_LOT.PART_REVISION_ID = ? "
+            + "ORDER BY INVOICE_ITEM.id";
     private static final String SQL_LIST_PART_REVISION = 
             "SELECT DISTINCT DEPART_LOT.PART_REVISION_ID "
             + "FROM INVOICE_ITEM "
             + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
-            + "WHERE INVOICE_ID = ? "
+            + "WHERE INVOICE_ID = ?"
             + "ORDER BY DEPART_LOT.PART_REVISION_ID";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE_ITEM (INVOICE_ID, DEPART_LOT_ID, QUOTE_ID, comments) "
@@ -225,7 +231,38 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
         
         return invoice_item;
     }
-
+    @Override
+    public List<InvoiceItem> list(Invoice invoice, PartRevision part_revision) throws IllegalArgumentException, DAOException {
+        if(invoice.getId() == null) {
+            throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
+        }    
+        
+        if(part_revision.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }
+        
+        List<InvoiceItem> invoice_item = new ArrayList<>();
+        
+        Object[] values = {
+            invoice.getId(),
+            part_revision.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_INVOICE_PART_REVISION_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                invoice_item.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return invoice_item;
+    }
+    
     @Override
     public List<PartRevision> listPartRevision(Invoice invoice) throws IllegalArgumentException, DAOException {
         if(invoice.getId() == null) {

@@ -77,7 +77,7 @@ public interface InvoiceItemDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<InvoiceItem> list(Invoice invoice) throws IllegalArgumentException, DAOException;
-    
+    public List<InvoiceItem> list(Invoice invoice, PartRevision part_revision) throws IllegalArgumentException, DAOException;
     public List<PartRevision> listPartRevision(Invoice invoice) throws IllegalArgumentException, DAOException;
     
     /**
