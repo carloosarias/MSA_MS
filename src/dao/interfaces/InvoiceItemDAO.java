@@ -10,6 +10,7 @@ import java.util.List;
 import model.DepartLot;
 import model.Invoice;
 import model.InvoiceItem;
+import model.PartRevision;
 import model.Quote;
 
 /**
@@ -76,6 +77,8 @@ public interface InvoiceItemDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<InvoiceItem> list(Invoice invoice) throws IllegalArgumentException, DAOException;
+    
+    public List<PartRevision> listPartRevision(Invoice invoice) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given InvoiceItem in the database.
