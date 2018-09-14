@@ -66,12 +66,14 @@
                            <children>
                               <VBox>
                                  <children>
-                                    <TableView fx:id="quote_tableview" editable="true" prefHeight="600.0" prefWidth="750.0">
+                                    <TableView fx:id="quote_tableview" editable="true" prefHeight="600.0">
                                       <columns>
                                         <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
                                         <TableColumn fx:id="quotedate_column" prefWidth="100.0" text="Fecha" />
                                           <TableColumn fx:id="contact_column" prefWidth="150.0" text="Contacto" />
                                           <TableColumn fx:id="unitprice_column" prefWidth="114.0" text="Precio Pieza" />
+                                          <TableColumn fx:id="eau_column" prefWidth="75.0" text="EAU" />
+                                          <TableColumn fx:id="process_column" prefWidth="75.0" text="Proceso" />
                                           <TableColumn fx:id="comments_column" prefWidth="200.0" text="Comentarios" />
                                           <TableColumn fx:id="status_column" prefWidth="109.0" text="Estado" />
                                       </columns>

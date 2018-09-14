@@ -16,10 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Company;
 import model.CompanyContact;
-import model.Invoice;
-import model.InvoiceItem;
 import model.PartRevision;
 import model.Quote;
 
@@ -30,22 +27,22 @@ import model.Quote;
 public class QuoteDAOJDBC implements QuoteDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE id = ?";
+            "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_CONTACT_BY_ID = 
             "SELECT COMPANY_CONTACT_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE ORDER BY id";
+            "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE ORDER BY id";
     private static final String SQL_LIST_OF_PART_REVISION_APPROVED_ORDER_BY_DATE = 
-            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? ORDER BY quote_date DESC, id DESC";
+            "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? ORDER BY quote_date DESC, id DESC";
     private static final String SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE = 
-            "SELECT id, quote_date, unit_price, approved, comments FROM QUOTE WHERE PART_REVISION_ID = ? ORDER BY quote_date DESC, id DESC";
+            "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE WHERE PART_REVISION_ID = ? ORDER BY quote_date DESC, id DESC";
     private static final String SQL_INSERT =
-            "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, unit_price, approved, comments) "
+            "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, unit_price, approved, comments, process, eau) "
             + "VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE QUOTE SET quote_date = ?, unit_price = ?, approved = ?, comments = ? WHERE id = ?";
+            "UPDATE QUOTE SET quote_date = ?, unit_price = ?, approved = ?, comments = ?, process = ?, eau = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM QUOTE WHERE id = ?";
     
@@ -244,7 +241,9 @@ public class QuoteDAOJDBC implements QuoteDAO {
             DAOUtil.toSqlDate(quote.getQuote_date()),
             quote.getUnit_price(),
             quote.getApproved(),
-            quote.getComments()
+            quote.getComments(),
+            quote.getProcess(),
+            quote.getEau()
         };
         
         try(
@@ -280,6 +279,8 @@ public class QuoteDAOJDBC implements QuoteDAO {
             quote.getUnit_price(),
             quote.getApproved(),
             quote.getComments(),
+            quote.getProcess(),
+            quote.getEau(),
             quote.getId()
         };
         
@@ -332,6 +333,8 @@ public class QuoteDAOJDBC implements QuoteDAO {
         quote.setUnit_price(resultSet.getDouble("unit_price"));
         quote.setApproved(resultSet.getString("approved"));
         quote.setComments(resultSet.getString("comments"));
+        quote.setProcess(resultSet.getString("process"));
+        quote.setEau(resultSet.getInt("eau"));
         return quote;
     }
 }

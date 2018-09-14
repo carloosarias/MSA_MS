@@ -19,6 +19,8 @@ public class Quote implements Serializable{
     private double unit_price;
     private String approved;
     private String comments;
+    private String process;
+    private int eau;
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -59,6 +61,22 @@ public class Quote implements Serializable{
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+    
+    public String getProcess() {
+        return process;
+    }
+    
+    public void setProcess(String process) {
+        this.process = process;
+    }
+    
+    public int getEau() {
+        return eau;
+    }
+    
+    public void setEau(int eau) {
+        this.eau = eau;
     }
     
     // Object overrides ---------------------------------------------------------------------------

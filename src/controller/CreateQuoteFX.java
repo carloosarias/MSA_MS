@@ -48,6 +48,10 @@ public class CreateQuoteFX implements Initializable {
     private TextArea comments_area;
     @FXML
     private Button save_button;
+    @FXML
+    private ComboBox<String> process_combo;
+    @FXML
+    private TextField eau_field;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
@@ -74,6 +78,8 @@ public class CreateQuoteFX implements Initializable {
                quote.setUnit_price(Double.parseDouble(unitprice_field.getText()));
                quote.setComments(comments_area.getText());
                quote.setApproved("Pendiente");
+               quote.setEau(Integer.parseInt(eau_field.getText()));
+               quote.setProcess(process_combo.getSelectionModel().getSelectedItem());
                msabase.getQuoteDAO().create(partrev_combo.getSelectionModel().getSelectedItem(), contact_combo.getSelectionModel().getSelectedItem(), quote);
                Stage stage = (Stage) root_hbox.getScene().getWindow();
                stage.close();
@@ -92,10 +98,20 @@ public class CreateQuoteFX implements Initializable {
             contact_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
+        if(process_combo.getSelectionModel().isEmpty()){
+            process_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
         try{
             Double.parseDouble(unitprice_field.getText());
         } catch(Exception e){
             unitprice_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        try{
+            Integer.parseInt(eau_field.getText());
+        } catch(Exception e){
+            eau_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(comments_area.getText().replace(" ", "").equals("")){

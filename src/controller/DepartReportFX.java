@@ -182,6 +182,7 @@ public class DepartReportFX implements Initializable {
                 new PdfReader(new File("./src/template/DepartReportTemplate.pdf")),
                 new PdfWriter(new File("./src/pdf/DepartReportPDF.pdf"))
             );
+            
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
             Map<String, PdfFormField> fields = form.getFormFields();
             fields.get("depart_report_id").setValue(""+depart_report.getId());
@@ -221,6 +222,7 @@ public class DepartReportFX implements Initializable {
                     i++;
                 }
             }
+            
             form.flattenFields();
             pdf.close();
     }

@@ -70,6 +70,10 @@ public class QuoteFX implements Initializable {
     private TableColumn<Quote, String> status_column;
     @FXML
     private CheckBox status_checkbox;
+    @FXML
+    private TableColumn<Quote, Integer> eau_column;
+    @FXML
+    private TableColumn<Quote, String> process_column;
     
     private Stage add_stage = new Stage();
     
@@ -155,5 +159,7 @@ public class QuoteFX implements Initializable {
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         status_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getApproved()));
+        process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
+        eau_column.setCellValueFactory(new PropertyValueFactory<>("eau"));
     }
 }
