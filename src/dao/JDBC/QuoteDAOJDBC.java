@@ -40,7 +40,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
             "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE WHERE PART_REVISION_ID = ? ORDER BY quote_date DESC, id DESC";
     private static final String SQL_INSERT =
             "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, unit_price, approved, comments, process, eau) "
-            + "VALUES (?, ?, ?, ?, ?, ?)";
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE QUOTE SET quote_date = ?, unit_price = ?, approved = ?, comments = ?, process = ?, eau = ? WHERE id = ?";
     private static final String SQL_DELETE =

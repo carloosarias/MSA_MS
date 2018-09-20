@@ -69,11 +69,13 @@ public class QuoteFX implements Initializable {
     @FXML
     private TableColumn<Quote, String> status_column;
     @FXML
-    private CheckBox status_checkbox;
-    @FXML
     private TableColumn<Quote, Integer> eau_column;
     @FXML
     private TableColumn<Quote, String> process_column;
+    @FXML
+    private CheckBox status_checkbox;
+    @FXML
+    private Button pdf_button;
     
     private Stage add_stage = new Stage();
     

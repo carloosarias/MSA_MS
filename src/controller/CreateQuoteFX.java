@@ -24,6 +24,7 @@ import model.CompanyContact;
 import model.PartRevision;
 import model.ProductPart;
 import model.Quote;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -49,8 +50,6 @@ public class CreateQuoteFX implements Initializable {
     @FXML
     private Button save_button;
     @FXML
-    private ComboBox<String> process_combo;
-    @FXML
     private TextField eau_field;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -69,6 +68,7 @@ public class CreateQuoteFX implements Initializable {
            setPartRevisionItems(newValue);
        });
        
+       
        save_button.setOnAction((ActionEvent) -> {
            if(!testFields()){
                return;
@@ -79,7 +79,7 @@ public class CreateQuoteFX implements Initializable {
                quote.setComments(comments_area.getText());
                quote.setApproved("Pendiente");
                quote.setEau(Integer.parseInt(eau_field.getText()));
-               quote.setProcess(process_combo.getSelectionModel().getSelectedItem());
+               quote.setProcess(partrev_combo.getSelectionModel().getSelectedItem().getFinal_process());
                msabase.getQuoteDAO().create(partrev_combo.getSelectionModel().getSelectedItem(), contact_combo.getSelectionModel().getSelectedItem(), quote);
                Stage stage = (Stage) root_hbox.getScene().getWindow();
                stage.close();
@@ -96,10 +96,6 @@ public class CreateQuoteFX implements Initializable {
         }
         if(contact_combo.getSelectionModel().isEmpty()){
             contact_combo.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        if(process_combo.getSelectionModel().isEmpty()){
-            process_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         try{
