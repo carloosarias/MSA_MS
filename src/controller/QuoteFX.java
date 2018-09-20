@@ -136,7 +136,7 @@ public class QuoteFX implements Initializable {
         pdf_button.setOnAction((ActionEvent) -> {
             try{
                 buildPDF(quote_tableview.getSelectionModel().getSelectedItem());
-                MainApp.openPDF("./src/pdf/QuoteTemplatePDF.pdf");
+                MainApp.openPDF("./src/pdf/QuotePDF.pdf");
             }
             catch(Exception e){
                 e.printStackTrace();
