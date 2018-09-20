@@ -5,13 +5,20 @@
  */
 package controller;
 
+import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.fields.PdfFormField;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,10 +39,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.CompanyAddress;
+import model.CompanyContact;
 import model.DepartLot;
+import model.Invoice;
 import model.PartRevision;
 import model.ProductPart;
 import model.Quote;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -117,6 +128,20 @@ public class QuoteFX implements Initializable {
         add_button.setOnAction((ActionEvent) -> {
             showAddStage();
         });
+        
+        quote_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Quote> observable, Quote oldValue, Quote newValue) -> {
+            pdf_button.setDisable(quote_tableview.getSelectionModel().isEmpty());
+        });
+        
+        pdf_button.setOnAction((ActionEvent) -> {
+            try{
+                buildPDF(quote_tableview.getSelectionModel().getSelectedItem());
+                MainApp.openPDF("./src/pdf/QuoteTemplatePDF.pdf");
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        });
     }
     
     public void showAddStage(){
@@ -163,5 +188,35 @@ public class QuoteFX implements Initializable {
         status_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getApproved()));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         eau_column.setCellValueFactory(new PropertyValueFactory<>("eau"));
+    }
+    
+    private void buildPDF(Quote quote) throws IOException {
+            PdfDocument pdf = new PdfDocument(
+                new PdfReader(new File("./src/template/QuoteTemplate.pdf")),
+                new PdfWriter(new File("./src/pdf/QuotePDF.pdf"))
+            );
+            PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
+            Map<String, PdfFormField> fields = form.getFormFields();
+            fields.get("quote_id").setValue(""+quote.getId());
+            fields.get("date").setValue(quote.getQuote_date().toString());
+            fields.get("client").setValue(msabase.getCompanyContactDAO().findCompany(msabase.getQuoteDAO().findCompanyContact(quote)).getName());
+            fields.get("contact").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getName());
+            fields.get("contact_email").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getEmail());
+            fields.get("contact_number").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getPhone_number());
+            List<CompanyAddress> company_address = msabase.getCompanyAddressDAO().listActive(msabase.getCompanyContactDAO().findCompany(msabase.getQuoteDAO().findCompanyContact(quote)), true);
+            if(company_address.isEmpty()){
+                fields.get("client_address").setValue("n/a");
+            }else{
+                fields.get("client_address").setValue(company_address.get(0).getAddress());
+            }
+            fields.get("part_number").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getPart_number());
+            fields.get("revision").setValue(msabase.getQuoteDAO().findPartRevision(quote).getRev());
+            fields.get("description").setValue(msabase.getProductPartDAO().findProduct(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote))).getName());
+            fields.get("process").setValue(quote.getProcess());
+            fields.get("eau").setValue(""+quote.getEau());
+            fields.get("unit_price").setValue(""+quote.getUnit_price());
+            fields.get("comments").setValue(quote.getComments());
+            form.flattenFields();
+            pdf.close();
     }
 }

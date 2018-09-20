@@ -17,6 +17,7 @@ import java.util.List;
 import model.Company;
 import model.CompanyAddress;
 import model.CompanyContact;
+import model.Invoice;
 
 /**
  *
@@ -28,6 +29,8 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
             "SELECT id, name, position, email, phone_number FROM COMPANY_CONTACT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, name, position, email, phone_number FROM COMPANY_CONTACT WHERE COMPANY_ID = ? ORDER BY id";
+    private static final String SQL_FIND_COMPANY_BY_ID = 
+            "SELECT COMPANY_ID FROM COMPANY_CONTACT WHERE id = ?";
     private static final String SQL_INSERT = 
             "INSERT INTO COMPANY_CONTACT (COMPANY_ID, name, position, email, phone_number) "
             +"VALUES (?, ?, ?, ?, ?)";
@@ -84,7 +87,7 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
     }
     
     @Override
-    public List<CompanyContact> list(Company company) throws DAOException {
+    public List<CompanyContact> list(Company company) throws IllegalArgumentException, DAOException {
         if(company.getId() == null){
             throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
         }
@@ -108,6 +111,33 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
         }
         
         return companyContacts;
+    }
+    
+    @Override
+    public Company findCompany(CompanyContact contact) throws IllegalArgumentException, DAOException {
+        if(contact.getId() == null) {
+            throw new IllegalArgumentException("CompanyContact is not created yet, the CompanyContact ID is null.");
+        }
+        
+        Company company = null;
+        
+        Object[] values = {
+            contact.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                company = daoFactory.getCompanyDAO().find(resultSet.getInt("COMPANY_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return company;
     }
 
     @Override

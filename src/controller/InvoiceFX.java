@@ -38,7 +38,6 @@ import javafx.stage.StageStyle;
 import model.CompanyContact;
 import model.Invoice;
 import model.InvoiceItem;
-import model.PartRevision;
 import msa_ms.MainApp;
 
 /**
