@@ -122,7 +122,7 @@ public class IncomingReportFX implements Initializable {
             add_stage.showAndWait();
             add_button.setDisable(false);
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(IncomingReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

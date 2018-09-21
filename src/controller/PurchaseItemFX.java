@@ -5,23 +5,18 @@
  */
 package controller;
 
-import controller.OrderPurchaseDetailsFX;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.sql.Date;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import model.Product;
 import model.PurchaseItem;
 
 /**
@@ -36,8 +31,6 @@ public class PurchaseItemFX implements Initializable {
     @FXML
     private DatePicker deliverydate_picker;
     @FXML
-    private ComboBox<Product> product_combo;
-    @FXML
     private TextArea description_area;
     @FXML
     private TextField unitprice_field;
@@ -50,16 +43,11 @@ public class PurchaseItemFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
-    private ObservableList<Product> product_list = FXCollections.observableArrayList(
-        msabase.getProductDAO().listActive(true)
-    );
-    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        product_combo.setItems(product_list);
         save_button.setOnAction((ActionEvent) -> {
             if(testFields()){
                 OrderPurchaseDetailsFX.getPurchaseItems().add(mapPurchaseItem(new PurchaseItem()));
@@ -81,10 +69,7 @@ public class PurchaseItemFX implements Initializable {
             deliverydate_picker.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
-        if(product_combo.getSelectionModel().isEmpty()){
-            product_combo.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
+
         if(description_area.getText().replace(" ", "").equals("")){
             description_area.setStyle("-fx-background-color: lightpink;");
             b = false;
@@ -106,7 +91,6 @@ public class PurchaseItemFX implements Initializable {
     
     public void clearStyle(){
         deliverydate_picker.setStyle(null);
-        product_combo.setStyle(null);
         description_area.setStyle(null);
         unitprice_field.setStyle(null);
         quantity_field.setStyle(null);
@@ -114,7 +98,6 @@ public class PurchaseItemFX implements Initializable {
     
     public PurchaseItem mapPurchaseItem(PurchaseItem purchase_item){
         purchase_item.setDelivery_date(Date.valueOf(deliverydate_picker.getValue()));
-        purchase_item.setProduct_id(product_combo.getSelectionModel().getSelectedItem().getId());
         purchase_item.setDescription(description_area.getText());
         purchase_item.setUnit_price(Double.parseDouble(unitprice_field.getText()));
         purchase_item.setQuantity(Integer.parseInt(quantity_field.getText()));

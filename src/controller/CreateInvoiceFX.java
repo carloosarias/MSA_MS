@@ -250,7 +250,7 @@ public class CreateInvoiceFX implements Initializable {
             updateInvoiceItemTable();
 
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreateInvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

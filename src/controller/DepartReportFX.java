@@ -148,7 +148,7 @@ public class DepartReportFX implements Initializable {
             add_stage.showAndWait();
             add_button.setDisable(false);
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DepartReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -208,7 +208,7 @@ public class DepartReportFX implements Initializable {
                     if(current_row > 26) break;
                     fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(part_revision).getPart_number());
                     fields.get("revision"+current_row).setValue(part_revision.getRev());
-                    fields.get("description"+current_row).setValue(msabase.getProductPartDAO().findProduct(msabase.getPartRevisionDAO().findProductPart(part_revision)).getName());
+                    fields.get("description"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(part_revision).getDescription());
                     fields.get("process"+current_row).setValue(process);
                     List<DepartLot> depart_lot_list = msabase.getDepartLotDAO().list(part_revision, process, depart_report);
                     int quantity = 0;

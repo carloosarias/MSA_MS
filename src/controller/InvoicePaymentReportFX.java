@@ -111,7 +111,7 @@ public class InvoicePaymentReportFX implements Initializable {
             updateInvoicePaymentItems();
             add_button.setDisable(false);
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InvoicePaymentReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

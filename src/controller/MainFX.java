@@ -40,7 +40,7 @@ public class MainFX implements Initializable {
     @FXML
     private Tab company_tab;
     @FXML
-    private Tab product_tab;
+    private Tab productpart_tab;
     @FXML
     private Tab orderpurchase_tab;
     @FXML
@@ -80,7 +80,7 @@ public class MainFX implements Initializable {
                 default:
                     employee_tab.setDisable(true);
                     company_tab.setDisable(true);
-                    product_tab.setDisable(true);
+                    productpart_tab.setDisable(true);
                     orderpurchase_tab.setDisable(true);
                     incoming_tab.setDisable(true);
                     depart_tab.setDisable(true);
@@ -100,12 +100,12 @@ public class MainFX implements Initializable {
                     break;
                 case "Compras":
                     company_tab.setDisable(false);
-                    product_tab.setDisable(false);
+                    productpart_tab.setDisable(false);
                     container_tab.setDisable(false);
                     orderpurchase_tab.setDisable(false);
                     try {
                         company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
-                        product_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
+                        productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
                         container_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ContainerFX.fxml")));
                         orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
                     } catch (IOException ex) {

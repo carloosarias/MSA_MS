@@ -159,7 +159,7 @@ public class QuoteFX implements Initializable {
             add_button.setDisable(false);
             setQuoteTableItems(partrev_combo.getSelectionModel().getSelectedItem(), status_combo.getSelectionModel().getSelectedItem());
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(QuoteFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -211,7 +211,7 @@ public class QuoteFX implements Initializable {
             }
             fields.get("part_number").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getPart_number());
             fields.get("revision").setValue(msabase.getQuoteDAO().findPartRevision(quote).getRev());
-            fields.get("description").setValue(msabase.getProductPartDAO().findProduct(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote))).getName());
+            fields.get("description").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getDescription());
             fields.get("process").setValue(quote.getProcess());
             fields.get("eau").setValue(""+quote.getEau());
             fields.get("unit_price").setValue(""+quote.getUnit_price());

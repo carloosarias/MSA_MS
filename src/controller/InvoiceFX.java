@@ -153,7 +153,7 @@ public class InvoiceFX implements Initializable {
             add_button.setDisable(false);
             updateInvoiceTable();
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

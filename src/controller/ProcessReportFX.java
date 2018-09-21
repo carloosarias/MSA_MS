@@ -158,7 +158,7 @@ public class ProcessReportFX implements Initializable {
             add_button.setDisable(false);
             updateProcessReportTable();
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProcessReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

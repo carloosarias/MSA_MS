@@ -96,7 +96,7 @@ public class ContainerFX implements Initializable {
             add_button.setDisable(false);
             updateContainerTable();
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ContainerFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
         

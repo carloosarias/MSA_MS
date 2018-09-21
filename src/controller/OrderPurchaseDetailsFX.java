@@ -16,11 +16,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -76,9 +74,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
     @FXML
     private TableColumn<PurchaseItem, Integer> quantity_column;
     @FXML
-    private TableColumn<PurchaseItem, String> product_column;
-    @FXML
-    private TableColumn<PurchaseItem, String> itemdesc_column;
+    private TableColumn<PurchaseItem, String> description_column;
     @FXML
     private TableColumn<PurchaseItem, Date> deliverydate_column;
     @FXML
@@ -115,7 +111,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         purchase_items.clear();
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        itemdesc_column.setCellValueFactory(new PropertyValueFactory<>("description"));
+        description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
         deliverydate_column.setCellValueFactory(new PropertyValueFactory<>("delivery_date"));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
         import_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity() * c.getValue().getUnit_price()));
@@ -161,7 +157,7 @@ public class OrderPurchaseDetailsFX implements Initializable {
                 msabase.getOrderPurchaseDAO().create(employee_combo.getSelectionModel().getSelectedItem(), supplier_combo.getSelectionModel().getSelectedItem()
                         , address_combo.getSelectionModel().getSelectedItem(), mapOrderPurchase(OrderPurchaseFX.getOrder_purchase()));
                 for(PurchaseItem p : purchase_items){
-                    msabase.getPurchaseItemDAO().create(OrderPurchaseFX.getOrder_purchase(), msabase.getProductDAO().find(p.getProduct_id()), p);
+                    msabase.getPurchaseItemDAO().create(OrderPurchaseFX.getOrder_purchase(), p);
                 }
                 Stage stage = (Stage) root_hbox.getScene().getWindow();
                 stage.close();
@@ -301,13 +297,12 @@ public class OrderPurchaseDetailsFX implements Initializable {
             add_button.setDisable(false);
             
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderPurchaseDetailsFX.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
     
     public void newOrder(){
         disableFields(false);
-        product_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductDAO().find(c.getValue().getProduct_id()).toString()));
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
         employee_combo.getSelectionModel().selectFirst();
         supplier_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listSupplier(true)));
@@ -315,7 +310,6 @@ public class OrderPurchaseDetailsFX implements Initializable {
     
     public void loadOrder(OrderPurchase order_purchase){
         disableFields(true);
-        product_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPurchaseItemDAO().findProduct(c.getValue()).toString()));
         id_field.setText(""+order_purchase.getId());
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findEmployee(order_purchase)));
         employee_combo.getSelectionModel().selectFirst();

@@ -112,7 +112,7 @@ public class OrderPurchaseFX implements Initializable {
             add_button.setDisable(false);
             updateOrderpurchase_tableview();
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderPurchaseFX.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
