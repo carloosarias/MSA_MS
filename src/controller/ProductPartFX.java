@@ -6,23 +6,28 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.PartRevision;
 import model.ProductPart;
 
@@ -72,7 +77,11 @@ public class ProductPartFX implements Initializable {
     @FXML
     private Button addpartrevision_button;
     
-    private Stage add_stage = new Stage();
+    private static ProductPart productpart_selection;
+    
+    private Stage addproductpart_stage = new Stage();
+    
+    private Stage addpartrevision_stage = new Stage();
     
     private List<String> status_items = Arrays.asList("Activo", "Inactivo");
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -84,7 +93,59 @@ public class ProductPartFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setProductPartTable();
         setPartRevisionTable();
+        
+        productpart_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
+            addpartrevision_button.setDisable(productpart_tableview.getSelectionModel().isEmpty());
+        });
+        
+        addproductpart_button.setOnAction((ActionEvent) -> {
+            showAddProductPartStage();
+        });
+        
+        addpartrevision_button.setOnAction((ActionEvent) -> {
+            productpart_tableview.setDisable(true);
+            showAddPartRevisionStage();
+            productpart_tableview.setDisable(false);
+            productpart_selection = productpart_tableview.getSelectionModel().getSelectedItem();
+        });
     }    
+    public void showAddPartRevisionStage(){
+        try {
+            addpartrevision_stage = new Stage();
+            addpartrevision_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddPartRevisionFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            addpartrevision_stage.setTitle("Nueva Revisión");
+            addpartrevision_stage.setResizable(false);
+            addpartrevision_stage.initStyle(StageStyle.UTILITY);
+            addpartrevision_stage.setScene(scene);
+            addpartrevision_stage.showAndWait();
+            addpartrevision_button.setDisable(false);
+            setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void showAddProductPartStage(){
+        try {
+            addproductpart_stage = new Stage();
+            addproductpart_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddProductPartFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            addproductpart_stage.setTitle("Nuevo Número de Parte");
+            addproductpart_stage.setResizable(false);
+            addproductpart_stage.initStyle(StageStyle.UTILITY);
+            addproductpart_stage.setScene(scene);
+            addproductpart_stage.showAndWait();
+            addproductpart_button.setDisable(false);
+            setProductPartItems();
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public void setProductPartTable(){
         productpartid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -130,6 +191,10 @@ public class ProductPartFX implements Initializable {
         }else{
             return false;
         }
+    }
+    
+    public static ProductPart getProductpart_selection(){
+        return productpart_selection;
     }
     
 }
