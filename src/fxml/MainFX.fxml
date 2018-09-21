@@ -14,7 +14,7 @@
         <tabs>
           <Tab fx:id="employee_tab" closable="false" disable="true" text="Empleados" />
           <Tab fx:id="company_tab" closable="false" disable="true" text="Compañías" />
-          <Tab fx:id="product_tab" closable="false" disable="true" text="Productos" />
+          <Tab fx:id="productpart_tab" closable="false" disable="true" text="Partes y Revisiones" />
           <Tab fx:id="container_tab" closable="false" disable="true" text="Tanques y Contenedores" />
           <Tab fx:id="orderpurchase_tab" closable="false" disable="true" text="Orden De Compra" />
           <Tab fx:id="incoming_tab" closable="false" disable="true" text="Reciba" />

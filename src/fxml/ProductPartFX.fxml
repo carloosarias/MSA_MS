@@ -11,7 +11,7 @@
 
 <HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductPartFX">
    <children>
-      <VBox>
+      <VBox alignment="CENTER">
          <children>
             <TabPane tabClosingPolicy="UNAVAILABLE">
               <tabs>
@@ -34,7 +34,7 @@
                         </VBox>
                      </content>
                 </Tab>
-                <Tab fx:id="partrevision_tableview" text="Revisiones">
+                <Tab text="Revisiones">
                      <content>
                         <VBox>
                            <children>
@@ -73,7 +73,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="addpartrevision_button" mnemonicParsing="false" text="Nueva Revisión">
+                  <Button fx:id="addpartrevision_button" disable="true" mnemonicParsing="false" text="Nueva Revisión">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin></Button>

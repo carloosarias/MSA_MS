@@ -98,7 +98,7 @@ public class ScrapReportFX implements Initializable {
     }    
     
     public void updateScrapReportTable(){
-        if(partnumber_checkbox.isSelected()){
+        if(partnumber_checkbox.isSelected() && !partnumber_combo.getItems().isEmpty()){
             scrapreport_tableview.setItems(FXCollections.observableArrayList(msabase.getScrapReportDAO().listProductPart(partnumber_combo.getSelectionModel().getSelectedItem())));
         }else{
             scrapreport_tableview.setItems(FXCollections.observableArrayList(msabase.getScrapReportDAO().list()));

@@ -36,7 +36,11 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, report_date, lot_number, quantity, comments FROM SCRAP_REPORT ORDER BY id";
     private static final String SQL_LIST_PRODUCT_PART_ORDER_BY_ID = 
-            "SELECT id, report_date, lot_number, quantity, comments FROM SCRAP_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.lot_number, SCRAP_REPORT.quantity, SCRAP_REPORT.comments "
+            + "FROM SCRAP_REPORT "
+            + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? "
+            + "ORDER BY SCRAP_REPORT.report_date, SCRAP_REPORT.id";
     private static final String SQL_INSERT = 
             "INSERT INTO SCRAP_REPORT (EMPLOYEE_ID, PART_REVISION_ID, report_date, lot_number, quantity, comments) "
             + "VALUES(?, ?, ?, ?, ?, ?)";

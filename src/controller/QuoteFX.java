@@ -101,13 +101,8 @@ public class QuoteFX implements Initializable {
         status_combo.getSelectionModel().selectFirst();
         status_combo.setDisable(!status_checkbox.isSelected());
         
-        status_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
-        status_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
-            t.getTableView().getItems().get(t.getTablePosition().getRow()).setApproved(t.getNewValue());
-            msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            setQuoteTableItems(partrev_combo.getSelectionModel().getSelectedItem(), status_combo.getSelectionModel().getSelectedItem());
-        });
         setQuoteTable();
+        
         part_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
             setPartRevisionItems(newValue);
         });
@@ -179,6 +174,7 @@ public class QuoteFX implements Initializable {
             }
         }
     }
+    
     public void setQuoteTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         quotedate_column.setCellValueFactory(new PropertyValueFactory<>("quote_date"));
@@ -188,6 +184,12 @@ public class QuoteFX implements Initializable {
         status_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getApproved()));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         eau_column.setCellValueFactory(new PropertyValueFactory<>("eau"));
+        status_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
+        status_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setApproved(t.getNewValue());
+            msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            setQuoteTableItems(partrev_combo.getSelectionModel().getSelectedItem(), status_combo.getSelectionModel().getSelectedItem());
+        });
     }
     
     private void buildPDF(Quote quote) throws IOException {
