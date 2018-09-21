@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Product;
 import model.ProductPart;
 
 /**
@@ -24,20 +23,18 @@ import model.ProductPart;
 public class ProductPartDAOJDBC implements ProductPartDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, part_number FROM PRODUCT_PART WHERE id = ?";
+            "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE id = ?";
     private static final String SQL_FIND_BY_PART_NUMBER = 
-            "SELECT id, part_number FROM PRODUCT_PART WHERE part_number = ?";
-    private static final String SQL_FIND_BY_PRODUCT_ID = 
-            "SELECT id, part_number FROM PRODUCT_PART WHERE PRODUCT_ID = ?";
-    private static final String SQL_FIND_PRODUCT_BY_ID =
-            "SELECT PRODUCT_ID FROM PRODUCT_PART WHERE id = ?";
+            "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE part_number = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, part_number FROM PRODUCT_PART ORDER BY id";
+            "SELECT id, part_number, description, active FROM PRODUCT_PART ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO PRODUCT_PART (PRODUCT_ID, part_number) "
-            + "VALUES (?, ?)";
+            "INSERT INTO PRODUCT_PART (part_number, description, active) "
+            + "VALUES (?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PRODUCT_PART SET part_number = ? WHERE id = ?";
+            "UPDATE PRODUCT_PART SET part_number = ?, description = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM PRODUCT_PART WHERE id = ?";
     
@@ -68,14 +65,6 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         return find(SQL_FIND_BY_PART_NUMBER, part_number);
     }
     
-    @Override
-    public ProductPart find(Product product) throws IllegalArgumentException, DAOException {
-        if(product.getId() == null){
-            throw new IllegalArgumentException("Product is not created yet, Product ID is null");
-        }
-        return find(SQL_FIND_BY_PRODUCT_ID, product.getId());
-    }
-    
     /**
      * Returns the ProductPart from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
@@ -100,33 +89,6 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
 
         return part;
     }
-    
-    @Override
-    public Product findProduct(ProductPart part) throws IllegalArgumentException, DAOException {
-        if(part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
-        }
-        
-        Product product = null;
-        
-        Object[] values = {
-            part.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PRODUCT_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                product = daoFactory.getProductDAO().find(resultSet.getInt("PRODUCT_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-        
-        return product;
-    }
 
     @Override
     public List<ProductPart> list() throws DAOException {
@@ -150,36 +112,37 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
     @Override
     public List<ProductPart> listActive(boolean active) throws DAOException {
         List<ProductPart> part = new ArrayList<>();
-
+        
+        Object[] values = {
+            active
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                if(findProduct(map(resultSet)).isActive() == active){
-                    part.add(map(resultSet));
-                }
+                part.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
         return part;
-    }    
+    }
+    
     @Override
-    public void create(Product product, ProductPart part) throws IllegalArgumentException, DAOException {
-        if (product.getId() == null) {
-            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
-        }
+    public void create(ProductPart part) throws IllegalArgumentException, DAOException {
         
         if(part.getId() != null){
             throw new IllegalArgumentException("ProductPart is already created, the ProductPart ID is not null.");
         }
         
         Object[] values = {
-            product.getId(),
-            part.getPart_number()
+            part.getPart_number(),
+            part.getDescription(),
+            part.isActive()
         };
         
         try(
@@ -212,6 +175,8 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         
         Object[] values = {
             part.getPart_number(),
+            part.getDescription(),
+            part.isActive(),
             part.getId()
         };
         
@@ -261,6 +226,8 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         ProductPart part = new ProductPart();
         part.setId(resultSet.getInt("id"));
         part.setPart_number(resultSet.getString("part_number"));
+        part.setDescription(resultSet.getString("description"));
+        part.setActive(resultSet.getBoolean("active"));
         return part;
     }
     

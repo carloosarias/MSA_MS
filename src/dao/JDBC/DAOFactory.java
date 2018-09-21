@@ -20,13 +20,10 @@ import dao.interfaces.InvoicePaymentReportDAO;
 import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProcessReportDAO;
-import dao.interfaces.ProductDAO;
 import dao.interfaces.ProductPartDAO;
-import dao.interfaces.ProductTypeDAO;
 import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.QuoteDAO;
 import dao.interfaces.ScrapReportDAO;
-import dao.interfaces.SpecificationDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -191,30 +188,6 @@ public abstract class DAOFactory {
      */
     public CompanyContactDAO getCompanyContactDAO() {
         return new CompanyContactDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the Specification DAO associated with the current DAOFactory.
-     * @return The Specification DAO associated with the current DAOFactory.
-     */
-    public SpecificationDAO getSpecificationDAO() {
-        return new SpecificationDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the ProductType DAO associated with the current DAOFactory.
-     * @return The ProductType DAO associated with the current DAOFactory.
-     */
-    public ProductTypeDAO getProductTypeDAO() {
-        return new ProductTypeDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the Product DAO associated with the current DAOFactory.
-     * @return The Product DAO associated with the current DAOFactory.
-     */
-    public ProductDAO getProductDAO() {
-        return new ProductDAOJDBC(this);
     }
     
     /**

@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
@@ -24,22 +23,12 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </DatePicker>
-            <Label text="Producto:">
+            <Label text="Descripción (Producto, Detalles, etc.):">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <ComboBox fx:id="product_combo" prefWidth="150.0">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </ComboBox>
-            <Label text="Descripción:">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Label>
-            <TextArea fx:id="description_area" prefHeight="75.0" prefWidth="150.0" wrapText="true">
+            <TextArea fx:id="description_area" prefHeight="100.0" prefWidth="200.0" wrapText="true">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>

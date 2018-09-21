@@ -15,10 +15,9 @@ import java.util.Date;
 public class PurchaseItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Integer product_id;
     private Date delivery_date;
+    public String description;
     private Double unit_price;
-    private String description;
     private Integer quantity;
     
     // Getters/setters ----------------------------------------------------------------------------
@@ -30,14 +29,6 @@ public class PurchaseItem implements Serializable{
         this.id = id;
     }
     
-    public Integer getProduct_id(){
-        return product_id;
-    }
-    
-    public void setProduct_id(Integer product_id){
-        this.product_id = product_id;
-    }
-    
     public Date getDelivery_date(){
         return delivery_date;
     }
@@ -46,20 +37,20 @@ public class PurchaseItem implements Serializable{
         this.delivery_date = delivery_date;
     }
     
-    public Double getUnit_price(){
-        return unit_price;
-    }
-    
-    public void setUnit_price(Double unit_price){
-        this.unit_price = unit_price;
-    }
-    
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public Double getUnit_price(){
+        return unit_price;
+    }
+    
+    public void setUnit_price(Double unit_price){
+        this.unit_price = unit_price;
     }
 
     public Integer getQuantity() {

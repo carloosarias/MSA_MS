@@ -132,7 +132,7 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="Descripción:">
+                        <Label text="Comentarios">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -168,8 +168,7 @@
             <TableView fx:id="purchaseitem_tableview" prefHeight="200.0">
                <columns>
                   <TableColumn fx:id="quantity_column" minWidth="9.0" prefWidth="67.0" resizable="false" text="Cantidad" />
-                  <TableColumn fx:id="product_column" minWidth="50.0" prefWidth="83.0" text="Producto" />
-                  <TableColumn fx:id="itemdesc_column" minWidth="75.0" prefWidth="153.0" resizable="false" text="Descripción" />
+                  <TableColumn fx:id="description_column" minWidth="75.0" prefWidth="169.0" resizable="false" text="Descripción" />
                   <TableColumn fx:id="deliverydate_column" minWidth="116.0" prefWidth="116.0" text="Fecha de Entrega" />
                   <TableColumn fx:id="unitprice_column" prefWidth="91.0" text="Precio" />
                   <TableColumn fx:id="import_column" prefWidth="79.0" text="Importe" />

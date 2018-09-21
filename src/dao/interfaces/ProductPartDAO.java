@@ -7,7 +7,6 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
-import model.Product;
 import model.ProductPart;
 
 /**
@@ -35,44 +34,30 @@ public interface ProductPartDAO {
     public ProductPart find(String part_number) throws DAOException;
     
     /**
-     * Returns the ProductPart from the database matching the given product, otherwise null. 
-     * The Product ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param product The product of the ProductPart.
-     * @return The ProductPart from the database matching the given product, otherwise null.
-     * @throws IllegalArgumentException If product ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public ProductPart find(Product product) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns the Product from the database matching the given ProductPart, otherwise null.
-     * The ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param part The ProductPart to be searched for.
-     * @return The Product from the database matching the given ProductPart, otherwise null
-     * @throws IllegalArgumentException If the ProductPart ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public Product findProduct(ProductPart part) throws IllegalArgumentException, DAOException;
-    
-    /**
      * Returns a list of all ProductParts from the database ordered by ProductPart ID. The list is never null and
      * is empty when the database does not contain any ProductPart.
      * @return A list of all ProductParts from the database ordered by ProductPart ID.
      * @throws DAOException If something fails at database level.
      */
     public List<ProductPart> list() throws DAOException;
-    public List<ProductPart> listActive (boolean active) throws DAOException;
+    
     /**
-     * Create the given ProductPart in the database. The Product ID must not be null and
-     * the ProductPart ID must be null, otherwise it will throw IllegalArgumentException.
+     * Returns a list of all active ProductParts from the database ordered by ProductPart ID. The list is never null and
+     * is empty when the database does not contain any ProductPart.
+     * @return A list of all ProductParts from the database ordered by ProductPart ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<ProductPart> listActive (boolean active) throws DAOException;
+    
+    /**
+     * Create the given ProductPart in the database. The ProductPart ID must be null, 
+     * otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given ProductPart.
-     * @param product The Product to be assigned to this ProductPart.
      * @param part The ProductPart to be created.
-     * @throws IllegalArgumentException if the Product ID is null.
      * @throws IllegalArgumentException If the ProductPart ID is not null.
      * @throws DAOException If something fails at database level.
      */
-    public void create(Product product, ProductPart part) throws IllegalArgumentException, DAOException;
+    public void create(ProductPart part) throws IllegalArgumentException, DAOException;
 
     /**
      * Update the given ProductPart in the database. The ProductPart ID must not be null, 

@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.OrderPurchase;
-import model.Product;
 import model.PurchaseItem;
 
 /**
@@ -25,18 +24,16 @@ import model.PurchaseItem;
 public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, delivery_date, unit_price, description, quantity FROM PURCHASE_ITEM WHERE id = ?";
+            "SELECT id, delivery_date, description, unit_price, quantity FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_FIND_ORDER_PURCHASE_BY_ID =
             "SELECT ORDER_PURCHASE_ID FROM PURCHASE_ITEM WHERE id = ?";
-    private static final String SQL_FIND_PRODUCT_BY_ID =
-            "SELECT PRODUCT_ID FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_LIST_OF_ORDER_PURCHASE_ORDER_BY_ID = 
-            "SELECT id, delivery_date, unit_price, description, quantity FROM PURCHASE_ITEM WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
+            "SELECT id, delivery_date, description, unit_price, quantity FROM PURCHASE_ITEM WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO PURCHASE_ITEM (ORDER_PURCHASE_ID, PRODUCT_ID, delivery_date, unit_price, description, quantity) "
-            + "VALUES (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO PURCHASE_ITEM (ORDER_PURCHASE_ID, delivery_date, description, unit_price, quantity) "
+            + "VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PURCHASE_ITEM SET delivery_date = ?, unit_price = ?, description = ?, quantity = ? WHERE id = ?";
+            "UPDATE PURCHASE_ITEM SET delivery_date = ?, description = ?, unit_price = ?, quantity = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM PURCHASE_ITEM WHERE id = ?";
     
@@ -115,33 +112,6 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     }
 
     @Override
-    public Product findProduct(PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
-        if(purchase_item.getId() == null) {
-            throw new IllegalArgumentException("PurchaseItem is not created yet, the PurchaseItem ID is null.");
-        }
-        
-        Product product = null;
-        
-        Object[] values = {
-            purchase_item.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PRODUCT_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                product = daoFactory.getProductDAO().find(resultSet.getInt("PRODUCT_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }
-        
-        return product;
-    }
-
-    @Override
     public List<PurchaseItem> list(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
         if(order_purchase.getId() == null) {
             throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
@@ -169,13 +139,9 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     }
 
     @Override
-    public void create(OrderPurchase order_purchase, Product product, PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
+    public void create(OrderPurchase order_purchase, PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
         if (order_purchase.getId() == null) {
             throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
-        }
-        
-        if(product.getId() == null){
-            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
         }
         
         if(purchase_item.getId() != null){
@@ -184,10 +150,9 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
         
         Object[] values = {
             order_purchase.getId(),
-            product.getId(),
             purchase_item.getDelivery_date(),
-            purchase_item.getUnit_price(),
             purchase_item.getDescription(),
+            purchase_item.getUnit_price(),
             purchase_item.getQuantity()
         };
         
@@ -221,8 +186,8 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
         
         Object[] values = {
             purchase_item.getDelivery_date(),
-            purchase_item.getUnit_price(),
             purchase_item.getDescription(),
+            purchase_item.getUnit_price(),
             purchase_item.getQuantity(),
             purchase_item.getId()
         };
@@ -273,8 +238,8 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
         PurchaseItem purchase_item = new PurchaseItem();
         purchase_item.setId(resultSet.getInt("id"));
         purchase_item.setDelivery_date(resultSet.getDate("delivery_date"));
-        purchase_item.setUnit_price(resultSet.getDouble("unit_price"));
         purchase_item.setDescription(resultSet.getString("description"));
+        purchase_item.setUnit_price(resultSet.getDouble("unit_price"));
         purchase_item.setQuantity(resultSet.getInt("quantity"));
         return purchase_item;
     }    

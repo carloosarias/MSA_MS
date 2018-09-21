@@ -2,85 +2,87 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductPartFX">
+<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductPartFX">
    <children>
-      <VBox alignment="CENTER">
+      <VBox>
          <children>
+            <TabPane tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Números de Parte">
+                     <content>
+                        <VBox>
+                           <children>
+                              <TableView fx:id="productpart_tableview">
+                                <columns>
+                                  <TableColumn fx:id="productpartid_column" prefWidth="75.0" resizable="false" text="ID" />
+                                  <TableColumn fx:id="partnumber_column" prefWidth="150.0" resizable="false" text="# de Parte" />
+                                    <TableColumn fx:id="description_column" prefWidth="600.0" resizable="false" text="Descripción" />
+                                    <TableColumn fx:id="productpartstatus_column" prefWidth="125.0" resizable="false" text="Estado" />
+                                </columns>
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+                <Tab fx:id="partrevision_tableview" text="Revisiones">
+                     <content>
+                        <VBox>
+                           <children>
+                              <HBox />
+                              <TableView fx:id="partrevision_tableview">
+                                <columns>
+                                  <TableColumn fx:id="partrevisionid_column" prefWidth="75.0" text="ID" />
+                                  <TableColumn fx:id="rev_column" prefWidth="75.0" text="# de Rev." />
+                                    <TableColumn fx:id="revdate_column" prefWidth="125.0" text="Fecha de Revisión" />
+                                    <TableColumn fx:id="basemetal_column" prefWidth="100.0" text="Metal Base" />
+                                    <TableColumn fx:id="finalprocess_column" prefWidth="100.0" text="Proceso Final" />
+                                    <TableColumn fx:id="specificationnumber_column" prefWidth="125.0" text="# de Specificación" />
+                                    <TableColumn fx:id="area_column" prefWidth="75.0" text="Área" />
+                                    <TableColumn prefWidth="75.0" text="Peso">
+                                       <columns>
+                                          <TableColumn fx:id="baseweight_column" prefWidth="75.0" text="Base" />
+                                          <TableColumn fx:id="finalweight_column" prefWidth="75.0" text="Final" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn fx:id="partrevisionstatus_column" prefWidth="125.0" text="Estado" />
+                                </columns>
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
             <HBox>
                <children>
-                  <VBox>
-                     <children>
-                        <Label text="Detalles de Parte:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label text="ID:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="id_field" disable="true">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                        <Button fx:id="revision_button" mnemonicParsing="false" text="Ver Revisiones">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label>
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label text="Número de Parte:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="partnumber_field" disable="true">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <Button fx:id="edit_button" mnemonicParsing="false" text="Editar">
+                  <Button fx:id="addproductpart_button" mnemonicParsing="false" text="Nuevo # de Parte">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Guardar">
+                  <Button fx:id="addpartrevision_button" mnemonicParsing="false" text="Nueva Revisión">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="cancel_button" disable="true" mnemonicParsing="false" text="Cancelar">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
+                     </HBox.margin></Button>
                </children>
             </HBox>
          </children>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
       </VBox>
    </children>
-   <padding>
-      <Insets top="4.0" />
-   </padding>
 </HBox>
