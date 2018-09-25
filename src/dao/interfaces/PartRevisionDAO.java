@@ -7,6 +7,7 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
+import model.Metal;
 import model.PartRevision;
 import model.ProductPart;
 import model.Specification;
@@ -56,6 +57,16 @@ public interface PartRevisionDAO {
      * @throws DAOException If something fails at database level.
      */    
     public Specification findSpecification(PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns the Metal from the database matching the given PartRevision, otherwise null.
+     * The PartRevision ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param part_revision The PartRevision to be searched for.
+     * @return The Metal from the database matching the given PartRevision, otherwise null
+     * @throws IllegalArgumentException If the PartRevision ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public Metal findMetal(PartRevision part_revision) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all PartRevisions from the database ordered by PartRevision ID. The list is never null and

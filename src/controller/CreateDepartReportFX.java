@@ -163,7 +163,7 @@ public class CreateDepartReportFX implements Initializable {
                 partrev_combo.getEditor().selectAll();
             }
             else{
-                process_combo.getSelectionModel().select(partrevcombo_selection.getFinal_process());
+                process_combo.getSelectionModel().select(msabase.getPartRevisionDAO().findSpecification(partrevcombo_selection).getProcess());
                 quantity_field.requestFocus();
                 ActionEvent.consume();
             }            

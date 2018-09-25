@@ -25,17 +25,15 @@ public class AddPartRevisionFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private ComboBox<?> productpart_combo;
-    @FXML
     private DatePicker revdate_picker;
     @FXML
     private TextField rev_field;
     @FXML
-    private TextField basemetal_field;
+    private ComboBox<?> productpart_combo;
     @FXML
-    private ComboBox<?> finalprocess_combo;
+    private ComboBox<?> metal_combo;
     @FXML
-    private TextField specification_field;
+    private ComboBox<?> specification_combo;
     @FXML
     private TextField area_field;
     @FXML

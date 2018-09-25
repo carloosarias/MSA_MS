@@ -79,7 +79,7 @@ public class CreateQuoteFX implements Initializable {
                quote.setComments(comments_area.getText());
                quote.setApproved("Pendiente");
                quote.setEau(Integer.parseInt(eau_field.getText()));
-               quote.setProcess(partrev_combo.getSelectionModel().getSelectedItem().getFinal_process());
+               quote.setProcess(msabase.getPartRevisionDAO().findSpecification(partrev_combo.getSelectionModel().getSelectedItem()).getProcess());
                msabase.getQuoteDAO().create(partrev_combo.getSelectionModel().getSelectedItem(), contact_combo.getSelectionModel().getSelectedItem(), quote);
                Stage stage = (Stage) root_hbox.getScene().getWindow();
                stage.close();
