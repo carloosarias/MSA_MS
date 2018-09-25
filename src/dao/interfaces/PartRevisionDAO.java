@@ -9,6 +9,7 @@ import dao.DAOException;
 import java.util.List;
 import model.PartRevision;
 import model.ProductPart;
+import model.Specification;
 
 /**
  *
@@ -45,6 +46,16 @@ public interface PartRevisionDAO {
      * @throws DAOException If something fails at database level.
      */    
     public ProductPart findProductPart(PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns the Specification from the database matching the given PartRevision, otherwise null.
+     * The PartRevision ID must not be null, otherwise it will throw IllegalArgumentException.
+     * @param part_revision The PartRevision to be searched for.
+     * @return The Specification from the database matching the given PartRevision, otherwise null
+     * @throws IllegalArgumentException If the PartRevision ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public Specification findSpecification(PartRevision part_revision) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all PartRevisions from the database ordered by PartRevision ID. The list is never null and
@@ -101,12 +112,13 @@ public interface PartRevisionDAO {
      * not be null and the PartRevision ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given PartRevision.
      * @param part The ProductPart to be assigned to this PartRevision.
+     * @param specification The Specification to be assigned to this PartRevision.
      * @param part_revision The PartRevision to be created.
      * @throws IllegalArgumentException if the ProductPart ID is null.
      * @throws IllegalArgumentException If the PartRevision ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(ProductPart part, PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    public void create(ProductPart part, Specification specification, PartRevision part_revision) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given PartRevision in the database. The PartRevision ID must not be null, 

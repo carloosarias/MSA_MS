@@ -17,6 +17,7 @@ import dao.interfaces.InvoiceDAO;
 import dao.interfaces.InvoiceItemDAO;
 import dao.interfaces.InvoicePaymentItemDAO;
 import dao.interfaces.InvoicePaymentReportDAO;
+import dao.interfaces.MetalDAO;
 import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProcessReportDAO;
@@ -24,6 +25,7 @@ import dao.interfaces.ProductPartDAO;
 import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.QuoteDAO;
 import dao.interfaces.ScrapReportDAO;
+import dao.interfaces.SpecificationDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -196,6 +198,22 @@ public abstract class DAOFactory {
      */    
     public ProductPartDAO getProductPartDAO(){
         return new ProductPartDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Metal DAO associated with the current DAOFactory.
+     * @return The Metal DAO associated with the current DAOFactory.
+     */    
+    public MetalDAO getMetalDAO(){
+        return new MetalDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Specification DAO associated with the current DAOFactory.
+     * @return The Specification DAO associated with the current DAOFactory.
+     */    
+    public SpecificationDAO getSpecificationDAO(){
+        return new SpecificationDAOJDBC(this);
     }
     
     /**
