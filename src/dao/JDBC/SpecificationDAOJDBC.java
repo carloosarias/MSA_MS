@@ -23,16 +23,16 @@ import model.Specification;
 public class SpecificationDAOJDBC implements SpecificationDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, specification_number, process FROM SPECIFICATION WHERE id = ?";
+            "SELECT id, specification_number, specification_name, process FROM SPECIFICATION WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, specification_number, process FROM SPECIFICATION ORDER BY id";
+            "SELECT id, specification_number, specification_name, process FROM SPECIFICATION ORDER BY id";
     private static final String SQL_LIST_PROCESS_ORDER_BY_ID = 
-            "SELECT id, specification_number, process FROM SPECIFICATION WHERE process = ? ORDER BY id";
+            "SELECT id, specification_number, specification_name, process FROM SPECIFICATION WHERE process = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO SPECIFICATION (specification_number, process) "
-            + "VALUES(?, ?)";
+            "INSERT INTO SPECIFICATION (specification_number, specification_name, process) "
+            + "VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SPECIFICATION SET specification_number = ?, process = ? WHERE id = ?";
+            "UPDATE SPECIFICATION SET specification_number = ?, specification_name = ?, process = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM SPECIFICATION WHERE id = ?";
     
@@ -215,6 +215,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         Specification specification = new Specification();
         specification.setId(resultSet.getInt("id"));
         specification.setSpecification_number(resultSet.getString("specification_number"));
+        specification.setSpecification_name(resultSet.getString("specification_name"));
         specification.setProcess(resultSet.getString("process"));
         return specification;
     }

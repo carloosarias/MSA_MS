@@ -15,6 +15,7 @@ public class Specification implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private String specification_number;
+    private String specification_name;
     private String process;
     
     // Getters/setters ----------------------------------------------------------------------------
@@ -33,6 +34,14 @@ public class Specification implements Serializable {
     
     public void setSpecification_number(String specification_number) {
         this.specification_number = specification_number;
+    }
+    
+    public String getSpecification_name() {
+        return specification_name;
+    }
+    
+    public void setSpecification_name(String specification_name) {
+        this.specification_name = specification_name;
     }
     
     public String getProcess() {
@@ -73,7 +82,7 @@ public class Specification implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%s",
-                specification_number);
+        return String.format("%s: %s",
+                specification_number, specification_name);
     }
 }
