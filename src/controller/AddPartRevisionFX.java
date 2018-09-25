@@ -5,13 +5,13 @@
  */
 package controller;
 
-import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
@@ -20,27 +20,37 @@ import javafx.scene.layout.HBox;
  *
  * @author Pavilion Mini
  */
-public class AddProductPartFX implements Initializable {
-    
+public class AddPartRevisionFX implements Initializable {
+
     @FXML
     private HBox root_hbox;
     @FXML
-    private TextField partnumber_field;
+    private ComboBox<?> productpart_combo;
     @FXML
-    private TextArea description_field;
+    private DatePicker revdate_picker;
+    @FXML
+    private TextField rev_field;
+    @FXML
+    private TextField basemetal_field;
+    @FXML
+    private ComboBox<?> finalprocess_combo;
+    @FXML
+    private TextField specification_field;
+    @FXML
+    private TextField area_field;
+    @FXML
+    private TextField baseweight_field;
+    @FXML
+    private TextField finalprocess_field;
     @FXML
     private Button save_button;
-    
-    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        save_button.setOnAction((ActionEvent) -> {
-        
-        });
+        // TODO
     }    
     
 }

@@ -25,26 +25,26 @@ import model.ProductPart;
 public class PartRevisionDAOJDBC implements PartRevisionDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, specification_number, area, base_weight, final_weight, active FROM PART_REVISION WHERE id = ?";
+            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE id = ?";
     private static final String SQL_FIND_BY_PART_REV = 
-            "SELECT id, rev, rev_date, base_metal, final_process, specification_number, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND rev = ?";
+            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND rev = ?";
     private static final String SQL_FIND_PRODUCT_PART_BY_ID = 
             "SELECT PRODUCT_PART_ID FROM PART_REVISION WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, specification_number, area, base_weight, final_weight, active FROM PART_REVISION ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, specification_number, area, base_weight, final_weight, active FROM PART_REVISION WHERE active = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE active = ? ORDER BY id";
     private static final String SQL_LIST_OF_PART_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, specification_number, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? ORDER BY id";
     private static final String SQL_LIST_ACTIVE_OF_PART_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, specification_number, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND active = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND active = ? ORDER BY id";
     private static final String SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, base_metal, final_process, specification_number, area, base_weight, final_weight, active FROM PART_REVISION WHERE specification_number = ? ORDER BY id";
+            "SELECT id, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active FROM PART_REVISION WHERE specification_number = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO PART_REVISION (PRODUCT_PART_ID, rev, rev_date, base_metal, final_process, specification_number, area, base_weight, final_weight, active) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO PART_REVISION (PRODUCT_PART_ID, rev, rev_date, base_metal, final_process, area, base_weight, final_weight, active) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, base_metal = ?, final_process = ?, specification_number = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
+            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, base_metal = ?, final_process = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM PART_REVISION WHERE id = ?";
     
@@ -267,7 +267,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             DAOUtil.toSqlDate(revision.getRev_date()),
             revision.getBase_metal(),
             revision.getFinal_process(),
-            revision.getSpecification_number(),
             revision.getArea(),
             revision.getBase_weight(),
             revision.getFinal_weight(),
@@ -307,7 +306,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             DAOUtil.toSqlDate(revision.getRev_date()),
             revision.getBase_metal(),
             revision.getFinal_process(),
-            revision.getSpecification_number(),
             revision.getArea(),
             revision.getBase_weight(),
             revision.getFinal_weight(),
@@ -364,7 +362,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         revision.setRev_date(resultSet.getDate("rev_date"));
         revision.setBase_metal(resultSet.getString("base_metal"));
         revision.setFinal_process(resultSet.getString("final_process"));
-        revision.setSpecification_number(resultSet.getString("specification_number"));
         revision.setArea(resultSet.getDouble("area"));
         revision.setBase_weight(resultSet.getDouble("base_weight"));
         revision.setFinal_weight(resultSet.getDouble("final_weight"));
