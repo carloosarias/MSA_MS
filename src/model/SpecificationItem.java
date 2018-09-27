@@ -16,6 +16,7 @@ public class SpecificationItem implements Serializable {
     private Integer id;
     private double minimum_thickness;
     private double maximum_thickness;
+    private Metal temp_metal;
     
     // Getters/setters ----------------------------------------------------------------------------
     
@@ -41,6 +42,14 @@ public class SpecificationItem implements Serializable {
     
     public void setMaximum_thickness(double maximum_thickness) {
         this.maximum_thickness = maximum_thickness;
+    }
+    
+    public Metal getTemp_metal(){
+        return temp_metal;
+    }
+    
+    public void setTemp_metal(Metal temp_metal){
+        this.temp_metal = temp_metal;
     }
     
     // Object overrides ---------------------------------------------------------------------------

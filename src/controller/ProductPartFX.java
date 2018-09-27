@@ -134,6 +134,7 @@ public class ProductPartFX implements Initializable {
         setProductPartTable();
         setPartRevisionTable();
         setSpecificationTable();
+        setSpecificationItemTable();
         setMetalTable();
         setSpecificationItems();
         setMetalItems();
@@ -168,6 +169,12 @@ public class ProductPartFX implements Initializable {
         
         addspecification_button.setOnAction((ActionEvent) -> {
             addspecification_button.setDisable(true);
+            showAddSpecificationStage();
+        });
+        
+        addmetal_button.setOnAction((ActionEvent) -> {
+            addmetal_button.setDisable(true);
+            showAddMetalStage();
         });
     }
     
@@ -213,7 +220,7 @@ public class ProductPartFX implements Initializable {
         try {
             addspecification_stage = new Stage();
             addspecification_stage.initOwner((Stage) root_hbox.getScene().getWindow());
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddSpecificationFX.fxml"));
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateSpecificationFX.fxml"));
             Scene scene = new Scene(root);
             
             addspecification_stage.setTitle("Nueva Especificación");
@@ -222,7 +229,26 @@ public class ProductPartFX implements Initializable {
             addspecification_stage.setScene(scene);
             addspecification_stage.showAndWait();
             addspecification_button.setDisable(false);
-            setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
+            setSpecificationItems();
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void showAddMetalStage(){
+        try {
+            addmetal_stage = new Stage();
+            addmetal_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddMetalFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            addmetal_stage.setTitle("Nueva Especificación");
+            addmetal_stage.setResizable(false);
+            addmetal_stage.initStyle(StageStyle.UTILITY);
+            addmetal_stage.setScene(scene);
+            addmetal_stage.showAndWait();
+            addmetal_button.setDisable(false);
+            setMetalItems();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -272,7 +298,6 @@ public class ProductPartFX implements Initializable {
         metal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getSpecificationItemDAO().findMetal(c.getValue()).getMetal_name()));
         minimumthickness_column.setCellValueFactory(new PropertyValueFactory<>("minimum_thickness"));
         maximumthickness_column.setCellValueFactory(new PropertyValueFactory<>("maximum_thickness"));
-        
     }
     
     public void setMetalTable(){
