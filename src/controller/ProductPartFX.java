@@ -119,6 +119,10 @@ public class ProductPartFX implements Initializable {
     
     private Stage addpartrevision_stage = new Stage();
     
+    private Stage addspecification_stage = new Stage();
+    
+    private Stage addmetal_stage = new Stage();
+    
     private List<String> status_items = Arrays.asList("Activo", "Inactivo");
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -161,6 +165,10 @@ public class ProductPartFX implements Initializable {
             showAddPartRevisionStage();
             productpart_tableview.setDisable(false);
         });
+        
+        addspecification_button.setOnAction((ActionEvent) -> {
+            addspecification_button.setDisable(true);
+        });
     }
     
     public void showAddProductPartStage(){
@@ -195,6 +203,25 @@ public class ProductPartFX implements Initializable {
             addpartrevision_stage.setScene(scene);
             addpartrevision_stage.showAndWait();
             addpartrevision_button.setDisable(false);
+            setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void showAddSpecificationStage(){
+        try {
+            addspecification_stage = new Stage();
+            addspecification_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddSpecificationFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            addspecification_stage.setTitle("Nueva Especificación");
+            addspecification_stage.setResizable(false);
+            addspecification_stage.initStyle(StageStyle.UTILITY);
+            addspecification_stage.setScene(scene);
+            addspecification_stage.showAndWait();
+            addspecification_button.setDisable(false);
             setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
