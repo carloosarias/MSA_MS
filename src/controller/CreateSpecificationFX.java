@@ -11,38 +11,41 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import model.Metal;
-import model.ProductPart;
-import model.Specification;
 
 /**
  * FXML Controller class
  *
  * @author Pavilion Mini
  */
-public class AddPartRevisionFX implements Initializable {
+public class CreateSpecificationFX implements Initializable {
 
     @FXML
     private HBox root_hbox;
     @FXML
-    private DatePicker revdate_picker;
+    private TextField specificationnumber_field;
     @FXML
-    private TextField rev_field;
+    private ComboBox<?> process_combo;
     @FXML
-    private ComboBox<ProductPart> productpart_combo;
+    private TextArea specificationname_area;
     @FXML
-    private ComboBox<Metal> metal_combo;
+    private TableView<?> specificationitem_tableview;
     @FXML
-    private ComboBox<Specification> specification_combo;
+    private TableColumn<?, ?> listnumber_column;
     @FXML
-    private TextField area_field;
+    private TableColumn<?, ?> metal_column;
     @FXML
-    private TextField baseweight_field;
+    private TableColumn<?, ?> minimumthickness_column;
     @FXML
-    private TextField finalprocess_field;
+    private TableColumn<?, ?> maximumthickness_column;
+    @FXML
+    private Button addspecificationitem_button;
+    @FXML
+    private Button delete_button;
     @FXML
     private Button save_button;
 
