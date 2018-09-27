@@ -26,6 +26,7 @@ import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.QuoteDAO;
 import dao.interfaces.ScrapReportDAO;
 import dao.interfaces.SpecificationDAO;
+import dao.interfaces.SpecificationItemDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -214,6 +215,14 @@ public abstract class DAOFactory {
      */    
     public SpecificationDAO getSpecificationDAO(){
         return new SpecificationDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the SpecificationItem DAO associated with the current DAOFactory.
+     * @return The SpecificationItem DAO associated with the current DAOFactory.
+     */    
+    public SpecificationItemDAO getSpecificationItemDAO(){
+        return new SpecificationItemDAOJDBC(this);
     }
     
     /**

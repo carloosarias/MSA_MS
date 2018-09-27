@@ -29,8 +29,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Metal;
 import model.PartRevision;
 import model.ProductPart;
+import model.Specification;
+import model.SpecificationItem;
 
 /**
  * FXML Controller class
@@ -64,7 +67,7 @@ public class ProductPartFX implements Initializable {
     @FXML
     private TableColumn<PartRevision, String> finalprocess_column;
     @FXML
-    private TableColumn<PartRevision, String> specificationnumber_column;
+    private TableColumn<PartRevision, String> revspecnumber_column;
     @FXML
     private TableColumn<PartRevision, Double> area_column;
     @FXML
@@ -74,9 +77,41 @@ public class ProductPartFX implements Initializable {
     @FXML
     private TableColumn<PartRevision, String> partrevisionstatus_column;
     @FXML
+    private TableView<Specification> specification_tableview;
+    @FXML
+    private TableColumn<Specification, Integer> specificationid_column;
+    @FXML
+    private TableColumn<Specification, String> specificationnumber_column;
+    @FXML
+    private TableColumn<Specification, String> specificationname_column;
+    @FXML
+    private TableColumn<Specification, String> process_column;
+    @FXML
+    private TableView<SpecificationItem> specificationitem_tableview;
+    @FXML
+    private TableColumn<SpecificationItem, Integer> specificationitemid_column;
+    @FXML
+    private TableColumn<SpecificationItem, String> metal_column;
+    @FXML
+    private TableColumn<SpecificationItem, Double> minimumthickness_column;
+    @FXML
+    private TableColumn<SpecificationItem, Double> maximumthickness_column;
+    @FXML
+    private TableView<Metal> metal_tableview;
+    @FXML
+    private TableColumn<Metal, Integer> metalid_column;
+    @FXML
+    private TableColumn<Metal, String> metalname_column;
+    @FXML
+    private TableColumn<Metal, Double> density_column;
+    @FXML
     private Button addproductpart_button;
     @FXML
     private Button addpartrevision_button;
+    @FXML
+    private Button addspecification_button;
+    @FXML
+    private Button addmetal_button;
     
     private static ProductPart productpart_selection;
     
@@ -94,39 +129,38 @@ public class ProductPartFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setProductPartTable();
         setPartRevisionTable();
+        setSpecificationTable();
+        setMetalTable();
+        setSpecificationItems();
+        setMetalItems();
+        setProductPartItems();
         
         productpart_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
             addpartrevision_button.setDisable(productpart_tableview.getSelectionModel().isEmpty());
+            if(!productpart_tableview.getSelectionModel().isEmpty()){
+                setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
+            }
+        });
+        
+        specification_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Specification> observable, Specification oldValue, Specification newValue) -> {
+            if(!specification_tableview.getSelectionModel().isEmpty()){
+                setSpecificationItemItems(specification_tableview.getSelectionModel().getSelectedItem());
+            }
         });
         
         addproductpart_button.setOnAction((ActionEvent) -> {
+            addproductpart_button.setDisable(true);
             showAddProductPartStage();
+            setProductPartItems();
         });
         
         addpartrevision_button.setOnAction((ActionEvent) -> {
+            productpart_selection = productpart_tableview.getSelectionModel().getSelectedItem();
             productpart_tableview.setDisable(true);
+            addpartrevision_button.setDisable(true);
             showAddPartRevisionStage();
             productpart_tableview.setDisable(false);
-            productpart_selection = productpart_tableview.getSelectionModel().getSelectedItem();
         });
-    }    
-    public void showAddPartRevisionStage(){
-        try {
-            addpartrevision_stage = new Stage();
-            addpartrevision_stage.initOwner((Stage) root_hbox.getScene().getWindow());
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddPartRevisionFX.fxml"));
-            Scene scene = new Scene(root);
-            
-            addpartrevision_stage.setTitle("Nueva Revisión");
-            addpartrevision_stage.setResizable(false);
-            addpartrevision_stage.initStyle(StageStyle.UTILITY);
-            addpartrevision_stage.setScene(scene);
-            addpartrevision_stage.showAndWait();
-            addpartrevision_button.setDisable(false);
-            setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
-        } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public void showAddProductPartStage(){
@@ -148,10 +182,30 @@ public class ProductPartFX implements Initializable {
         }
     }
     
+    public void showAddPartRevisionStage(){
+        try {
+            addpartrevision_stage = new Stage();
+            addpartrevision_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddPartRevisionFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            addpartrevision_stage.setTitle("Nueva Revisión");
+            addpartrevision_stage.setResizable(false);
+            addpartrevision_stage.initStyle(StageStyle.UTILITY);
+            addpartrevision_stage.setScene(scene);
+            addpartrevision_stage.showAndWait();
+            addpartrevision_button.setDisable(false);
+            setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void setProductPartTable(){
         productpartid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        partnumber_column.setCellValueFactory(new PropertyValueFactory<>("quote_date"));
+        partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
+        productpartstatus_column.setCellValueFactory(c -> new SimpleStringProperty(getStatus(c.getValue().isActive())));
         productpartstatus_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
         productpartstatus_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, String> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setActive(getActive(t.getNewValue()));
@@ -166,17 +220,40 @@ public class ProductPartFX implements Initializable {
         revdate_column.setCellValueFactory(new PropertyValueFactory<>("rev_date"));
         basemetal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findMetal(c.getValue()).getMetal_name()));
         finalprocess_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findSpecification(c.getValue()).getProcess()));
-        specificationnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findSpecification(c.getValue()).getSpecification_number()));
+        revspecnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findSpecification(c.getValue()).getSpecification_number()));
         area_column.setCellValueFactory(new PropertyValueFactory<>("area"));
         baseweight_column.setCellValueFactory(new PropertyValueFactory<>("base_weight"));
         finalweight_column.setCellValueFactory(new PropertyValueFactory<>("final_weight"));
+        partrevisionstatus_column.setCellValueFactory(c -> new SimpleStringProperty(getStatus(c.getValue().isActive())));
         partrevisionstatus_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
         partrevisionstatus_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setActive(getActive(t.getNewValue()));
             msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
+            setPartRevisionItems(productpart_selection);
         });
     }
+    
+    public void setSpecificationTable(){
+        specificationid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        specificationnumber_column.setCellValueFactory(new PropertyValueFactory<>("specification_number"));
+        specificationname_column.setCellValueFactory(new PropertyValueFactory<>("specification_name"));
+        process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
+    }
+    
+    public void setSpecificationItemTable(){
+        specificationitemid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        metal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getSpecificationItemDAO().findMetal(c.getValue()).getMetal_name()));
+        minimumthickness_column.setCellValueFactory(new PropertyValueFactory<>("minimum_thickness"));
+        maximumthickness_column.setCellValueFactory(new PropertyValueFactory<>("maximum_thickness"));
+        
+    }
+    
+    public void setMetalTable(){
+        metalid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        metalname_column.setCellValueFactory(new PropertyValueFactory<>("metal_name"));
+        density_column.setCellValueFactory(new PropertyValueFactory<>("density"));
+    }
+    
     
     public void setProductPartItems(){
         productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
@@ -186,11 +263,31 @@ public class ProductPartFX implements Initializable {
         partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(product_part)));
     }
     
+    public void setSpecificationItems(){
+        specification_tableview.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list()));
+    }
+    
+    public void setSpecificationItemItems(Specification specification){
+        specificationitem_tableview.setItems(FXCollections.observableArrayList(msabase.getSpecificationItemDAO().list(specification)));
+    }
+    
+    public void setMetalItems(){
+        metal_tableview.setItems(FXCollections.observableArrayList(msabase.getMetalDAO().list()));
+    }
+    
     public boolean getActive(String productpart_status){
         if(productpart_status.equals("Activo")){
             return true;
         }else{
             return false;
+        }
+    }
+    
+    public String getStatus(Boolean active){
+        if(active){
+            return "Activo";
+        }else{
+            return "Inactivo";
         }
     }
     
