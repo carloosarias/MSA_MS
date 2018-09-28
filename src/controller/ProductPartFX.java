@@ -90,7 +90,7 @@ public class ProductPartFX implements Initializable {
     @FXML
     private TableView<SpecificationItem> specificationitem_tableview;
     @FXML
-    private TableColumn<SpecificationItem, Integer> specificationitemid_column;
+    private TableColumn<SpecificationItem, String> specificationitemid_column;
     @FXML
     private TableColumn<SpecificationItem, String> metal_column;
     @FXML
@@ -298,7 +298,7 @@ public class ProductPartFX implements Initializable {
     public void setSpecificationItemTable(){
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(6);
-        specificationitemid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        specificationitemid_column.setCellValueFactory(c -> new SimpleStringProperty(""+(specificationitem_tableview.getItems().indexOf(c.getValue())+1)));
         metal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getSpecificationItemDAO().findMetal(c.getValue()).getMetal_name()));
         minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())));
         maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())));

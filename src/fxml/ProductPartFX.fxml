@@ -23,7 +23,7 @@
                                 <columns>
                                   <TableColumn fx:id="productpartid_column" prefWidth="75.0" resizable="false" text="ID" />
                                   <TableColumn fx:id="partnumber_column" prefWidth="150.0" resizable="false" text="# de Parte" />
-                                    <TableColumn fx:id="description_column" prefWidth="560.0" resizable="false" text="Descripción" />
+                                    <TableColumn fx:id="description_column" prefWidth="550.0" resizable="false" text="Descripción" />
                                     <TableColumn fx:id="productpartstatus_column" prefWidth="150.0" resizable="false" text="Estado" />
                                 </columns>
                                  <VBox.margin>
@@ -85,10 +85,10 @@
                                     </TableView>
                                     <TableView fx:id="specificationitem_tableview">
                                       <columns>
-                                        <TableColumn fx:id="specificationitemid_column" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="specificationitemid_column" prefWidth="75.0" text="#" />
                                         <TableColumn fx:id="metal_column" prefWidth="100.0" text="Metal" />
-                                          <TableColumn fx:id="minimumthickness_column" prefWidth="120.0" text="Espesor Mínimo" />
-                                          <TableColumn fx:id="maximumthickness_column" prefWidth="120.0" text="Espesor Máximo" />
+                                          <TableColumn fx:id="minimumthickness_column" prefWidth="115.0" text="Espesor Mínimo" />
+                                          <TableColumn fx:id="maximumthickness_column" prefWidth="115.0" text="Espesor Máximo" />
                                       </columns>
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

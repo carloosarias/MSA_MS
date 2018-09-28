@@ -168,7 +168,7 @@ public class CreateSpecificationFX implements Initializable {
     public void setSpecificationItemTable(){
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(6);
-        listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(item_list.indexOf(c.getValue())+1)));
+        listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(specificationitem_tableview.getItems().indexOf(c.getValue())+1)));
         metal_column.setCellValueFactory(new PropertyValueFactory("temp_metal"));
         minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())));
         maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())));
