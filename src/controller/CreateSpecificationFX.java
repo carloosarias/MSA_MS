@@ -68,7 +68,7 @@ public class CreateSpecificationFX implements Initializable {
     
     private Stage add_stage = new Stage();
     
-    private static ArrayList<SpecificationItem> item_list;
+    private static ArrayList<SpecificationItem> item_list = new ArrayList<SpecificationItem>();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 

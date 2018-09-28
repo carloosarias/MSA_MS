@@ -128,7 +128,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="finalprocess_field" prefWidth="150.0">
+                        <TextField fx:id="finalweight_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -137,11 +137,15 @@
                   </VBox>
                </children>
             </HBox>
-            <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Button>
+            <HBox nodeOrientation="RIGHT_TO_LEFT">
+               <children>
+                  <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </children>

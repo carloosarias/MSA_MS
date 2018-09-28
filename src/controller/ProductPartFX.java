@@ -124,6 +124,7 @@ public class ProductPartFX implements Initializable {
     private Stage addmetal_stage = new Stage();
     
     private List<String> status_items = Arrays.asList("Activo", "Inactivo");
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
