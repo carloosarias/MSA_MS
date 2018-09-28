@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -56,9 +57,9 @@ public class CreateSpecificationFX implements Initializable {
     @FXML
     private TableColumn<SpecificationItem, Metal> metal_column;
     @FXML
-    private TableColumn<SpecificationItem, Double> minimumthickness_column;
+    private TableColumn<SpecificationItem, String> minimumthickness_column;
     @FXML
-    private TableColumn<SpecificationItem, Double> maximumthickness_column;
+    private TableColumn<SpecificationItem, String> maximumthickness_column;
     @FXML
     private Button addspecificationitem_button;
     @FXML
@@ -77,6 +78,7 @@ public class CreateSpecificationFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        item_list.clear();
         setSpecificationItemTable();
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         setSpecificationItemItems();
@@ -164,10 +166,12 @@ public class CreateSpecificationFX implements Initializable {
     }
     
     public void setSpecificationItemTable(){
-        listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+item_list.indexOf(c.getValue())));
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(6);
+        listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(item_list.indexOf(c.getValue())+1)));
         metal_column.setCellValueFactory(new PropertyValueFactory("temp_metal"));
-        minimumthickness_column.setCellValueFactory(new PropertyValueFactory<>("minimum_thickness"));
-        maximumthickness_column.setCellValueFactory(new PropertyValueFactory<>("maximum_thickness"));
+        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())));
+        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())));
     }
     
     public void setSpecificationItemItems(){

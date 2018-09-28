@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -93,9 +94,9 @@ public class ProductPartFX implements Initializable {
     @FXML
     private TableColumn<SpecificationItem, String> metal_column;
     @FXML
-    private TableColumn<SpecificationItem, Double> minimumthickness_column;
+    private TableColumn<SpecificationItem, String> minimumthickness_column;
     @FXML
-    private TableColumn<SpecificationItem, Double> maximumthickness_column;
+    private TableColumn<SpecificationItem, String> maximumthickness_column;
     @FXML
     private TableView<Metal> metal_tableview;
     @FXML
@@ -295,10 +296,12 @@ public class ProductPartFX implements Initializable {
     }
     
     public void setSpecificationItemTable(){
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(6);
         specificationitemid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         metal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getSpecificationItemDAO().findMetal(c.getValue()).getMetal_name()));
-        minimumthickness_column.setCellValueFactory(new PropertyValueFactory<>("minimum_thickness"));
-        maximumthickness_column.setCellValueFactory(new PropertyValueFactory<>("maximum_thickness"));
+        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())));
+        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())));
     }
     
     public void setMetalTable(){
