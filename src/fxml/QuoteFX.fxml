@@ -5,96 +5,211 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.QuoteFX">
    <children>
-      <VBox alignment="CENTER">
-         <children>
-            <HBox>
-               <children>
-                  <VBox>
-                     <children>
-                        <Label text="Número de Parte:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="part_combo" prefWidth="150.0" promptText="Número de Parte">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                        <Label text="Revisión:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="partrev_combo" disable="true" prefWidth="150.0" promptText="Revisión">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                        <CheckBox fx:id="status_checkbox" mnemonicParsing="false" text="Filtrar por estado">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </CheckBox>
-                        <Label text="Estado:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                        <Button fx:id="add_button" mnemonicParsing="false" prefWidth="110.0" text="Nueva Cotización">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                        <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Abrir PDF">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
-                  <VBox>
+      <TabPane tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Lista de Cotizaciones">
+               <content>
+                  <VBox alignment="CENTER">
                      <children>
                         <HBox>
                            <children>
                               <VBox>
                                  <children>
-                                    <TableView fx:id="quote_tableview" editable="true" prefHeight="600.0">
-                                      <columns>
-                                        <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
-                                        <TableColumn fx:id="quotedate_column" prefWidth="100.0" text="Fecha" />
-                                          <TableColumn fx:id="contact_column" prefWidth="150.0" text="Contacto" />
-                                          <TableColumn fx:id="unitprice_column" prefWidth="114.0" text="Precio Pieza" />
-                                          <TableColumn fx:id="eau_column" prefWidth="75.0" text="EAU" />
-                                          <TableColumn fx:id="process_column" prefWidth="75.0" text="Proceso" />
-                                          <TableColumn fx:id="comments_column" prefWidth="200.0" text="Comentarios" />
-                                          <TableColumn fx:id="status_column" prefWidth="109.0" text="Estado" />
-                                      </columns>
+                                    <Label text="Número de Parte:">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
-                                    </TableView>
+                                    </Label>
+                                    <ComboBox fx:id="part_combo" prefWidth="150.0" promptText="Número de Parte">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </ComboBox>
+                                    <Label text="Revisión:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="partrev_combo" disable="true" prefWidth="150.0" promptText="Revisión">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </ComboBox>
+                                    <CheckBox fx:id="status_checkbox" mnemonicParsing="false" text="Filtrar por estado">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </CheckBox>
+                                    <Label text="Estado:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </ComboBox>
+                                    <Button fx:id="add_button" mnemonicParsing="false" prefWidth="110.0" text="Nueva Cotización">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Abrir PDF">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <HBox>
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <TableView fx:id="quote_tableview" editable="true" prefHeight="483.0">
+                                                  <columns>
+                                                    <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
+                                                    <TableColumn fx:id="quotedate_column" prefWidth="100.0" text="Fecha" />
+                                                      <TableColumn fx:id="contact_column" prefWidth="150.0" text="Contacto" />
+                                                      <TableColumn fx:id="eau_column" prefWidth="150.0" text="Uso Anual Estimado" />
+                                                      <TableColumn fx:id="comments_column" prefWidth="200.0" text="Comentarios" />
+                                                      <TableColumn fx:id="status_column" prefWidth="123.0" text="Estado" />
+                                                  </columns>
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
                            </children>
                         </HBox>
                      </children>
                   </VBox>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
+               </content>
+          </Tab>
+          <Tab text="Detalles de Cotización">
+               <content>
+                  <VBox>
+                     <children>
+                        <Label text="Detalles de Proceso:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TableView>
+                          <columns>
+                            <TableColumn fx:id="listnumber_column" prefWidth="75.0" text="#" />
+                              <TableColumn prefWidth="75.0" text="Metal">
+                                 <columns>
+                                    <TableColumn fx:id="metal_name_column" prefWidth="100.0" text="Nombre" />
+                                    <TableColumn fx:id="density_column" prefWidth="150.0" text="Densidad (g/mm³)" />
+                                  <TableColumn fx:id="unitprice_column" prefWidth="150.0" text="Precio Unitario ($/g)" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="maximumthickness_column" prefWidth="150.0" text="Espesor Máximo (mm)" />
+                              <TableColumn fx:id="volume_column" prefWidth="106.0" text="Volumen (mm³)" />
+                              <TableColumn fx:id="weight_column" prefWidth="100.0" text="Peso (g)" />
+                              <TableColumn fx:id="estimatedprice_column" prefWidth="125.0" text="Precio Estimado" />
+                          </columns>
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TableView>
+                        <HBox alignment="TOP_RIGHT">
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <Label text="Número de Especificación:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField fx:id="specificationnumber_field">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Proceso:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField fx:id="specificationprocess_field">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Área (mm²):">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField fx:id="revisionarea_field">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Margen Agregado (%):">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField fx:id="quotemargin_field">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Precio Total Estimado:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextField fx:id="totalprice_field">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </HBox>
