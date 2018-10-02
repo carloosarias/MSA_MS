@@ -312,13 +312,17 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public void create(ProductPart part, Specification specification, PartRevision revision) throws IllegalArgumentException, DAOException {
+    public void create(ProductPart part, Specification specification, Metal metal, PartRevision revision) throws IllegalArgumentException, DAOException {
         if (part.getId() == null) {
             throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
         }
         
         if (specification.getId() == null) {
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
+        }
+        
+        if (metal.getId() == null) {
+            throw new IllegalArgumentException("Metal is not created yet, the Metal ID is null.");
         }
         
         if(revision.getId() != null){
@@ -328,6 +332,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         Object[] values = {
             part.getId(),
             specification.getId(),
+            metal.getId(),
             revision.getRev(),
             DAOUtil.toSqlDate(revision.getRev_date()),
             revision.getArea(),

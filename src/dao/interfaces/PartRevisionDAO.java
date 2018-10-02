@@ -124,12 +124,13 @@ public interface PartRevisionDAO {
      * After creating, the DAO will set the obtained ID in the given PartRevision.
      * @param part The ProductPart to be assigned to this PartRevision.
      * @param specification The Specification to be assigned to this PartRevision.
+     * @param metal The Metal to be assigned to this PartRevision.
      * @param part_revision The PartRevision to be created.
      * @throws IllegalArgumentException if the ProductPart ID is null.
      * @throws IllegalArgumentException If the PartRevision ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(ProductPart part, Specification specification, PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    public void create(ProductPart part, Specification specification, Metal metal, PartRevision part_revision) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given PartRevision in the database. The PartRevision ID must not be null, 

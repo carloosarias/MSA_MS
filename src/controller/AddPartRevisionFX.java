@@ -90,7 +90,7 @@ public class AddPartRevisionFX implements Initializable {
         part_revision.setBase_weight(Double.parseDouble(baseweight_field.getText()));
         part_revision.setFinal_weight(Double.parseDouble(finalweight_field.getText()));
         
-        msabase.getPartRevisionDAO().create(productpart_combo.getSelectionModel().getSelectedItem(), specification_combo.getSelectionModel().getSelectedItem(), part_revision);
+        msabase.getPartRevisionDAO().create(productpart_combo.getSelectionModel().getSelectedItem(), specification_combo.getSelectionModel().getSelectedItem(), metal_combo.getSelectionModel().getSelectedItem(), part_revision);
     }
     
     public boolean testFields(){
