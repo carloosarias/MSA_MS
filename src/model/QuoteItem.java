@@ -6,21 +6,15 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class Quote implements Serializable{
+public class QuoteItem implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Date quote_date;
-    private int estimated_annual_usage;
-    private String comments;
-    private double margin;
-    private double estimated_total;
-    private String approved;
+    private Double unit_price;
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -31,53 +25,14 @@ public class Quote implements Serializable{
         this.id = id;
     }
 
-    public Date getQuote_date() {
-        return quote_date;
+    public Double getUnit_price() {
+        return unit_price;
     }
 
-    public void setQuote_date(Date quote_date) {
-        this.quote_date = quote_date;
+    public void setUnit_price(Double unit_price) {
+        this.unit_price = unit_price;
     }
     
-    public int getEstimated_annual_usage() {
-        return estimated_annual_usage;
-    }
-    
-    public void setEstimated_annual_usage(int estimated_annual_usage) {
-        this.estimated_annual_usage = estimated_annual_usage;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-    
-    public Double getMargin(){
-        return margin;
-    }
-    
-    public void setMargin(Double margin){
-        this.margin = margin;
-    }
-    
-    public Double getEstimated_total(){
-        return estimated_total;
-    }
-    
-    public void setEstimated_total(Double estimated_total){
-        this.estimated_total = estimated_total;
-    }
-    
-    public String getApproved() {
-        return approved;
-    }
-
-    public void setApproved(String approved) {
-        this.approved = approved;
-    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -86,8 +41,8 @@ public class Quote implements Serializable{
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof Quote) && (id != null)
-            ? id.equals(((Quote) other).id)
+        return (other instanceof QuoteItem) && (id != null)
+            ? id.equals(((QuoteItem) other).id)
             : (other == this);
     }
 

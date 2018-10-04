@@ -267,7 +267,7 @@ public class CreateInvoiceFX implements Initializable {
         lot_qty.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getQuantity()));
         lot_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getBox_quantity()));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
-        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+(msabase.getQuoteDAO().find(c.getValue().getQuote_id()).getUnit_price()*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getQuantity())*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getBox_quantity()));
+        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+(msabase.getQuoteDAO().find(c.getValue().getQuote_id()).getEstimated_total()*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getQuantity())*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getBox_quantity()));
     }
     
     public static List<DepartLot> getDepartlot_list(){

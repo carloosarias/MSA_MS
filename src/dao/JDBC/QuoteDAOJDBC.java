@@ -27,22 +27,22 @@ import model.Quote;
 public class QuoteDAOJDBC implements QuoteDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE WHERE id = ?";
+            "SELECT id, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved FROM QUOTE WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_CONTACT_BY_ID = 
             "SELECT COMPANY_CONTACT_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE ORDER BY id";
+            "SELECT id, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved FROM QUOTE ORDER BY id";
     private static final String SQL_LIST_OF_PART_REVISION_APPROVED_ORDER_BY_DATE = 
-            "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? ORDER BY quote_date DESC, id DESC";
+            "SELECT id, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? ORDER BY quote_date DESC, id DESC";
     private static final String SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE = 
-            "SELECT id, quote_date, unit_price, approved, comments, process, eau FROM QUOTE WHERE PART_REVISION_ID = ? ORDER BY quote_date DESC, id DESC";
+            "SELECT id, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved FROM QUOTE WHERE PART_REVISION_ID = ? ORDER BY quote_date DESC, id DESC";
     private static final String SQL_INSERT =
-            "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, unit_price, approved, comments, process, eau) "
+            "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE QUOTE SET quote_date = ?, unit_price = ?, approved = ?, comments = ?, process = ?, eau = ? WHERE id = ?";
+            "UPDATE QUOTE SET quote_date = ?, estimated_annual_usage = ?, comments = ?, margin = ?, estimated_total = ?, approved = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM QUOTE WHERE id = ?";
     
@@ -239,11 +239,11 @@ public class QuoteDAOJDBC implements QuoteDAO {
             part_revision.getId(),
             company_contact.getId(),
             DAOUtil.toSqlDate(quote.getQuote_date()),
-            quote.getUnit_price(),
-            quote.getApproved(),
+            quote.getEstimated_annual_usage(),
             quote.getComments(),
-            quote.getProcess(),
-            quote.getEau()
+            quote.getMargin(),
+            quote.getEstimated_total(),
+            quote.getApproved()
         };
         
         try(
@@ -276,11 +276,11 @@ public class QuoteDAOJDBC implements QuoteDAO {
         
         Object[] values = {
             DAOUtil.toSqlDate(quote.getQuote_date()),
-            quote.getUnit_price(),
-            quote.getApproved(),
+            quote.getEstimated_annual_usage(),
             quote.getComments(),
-            quote.getProcess(),
-            quote.getEau(),
+            quote.getMargin(),
+            quote.getEstimated_total(),
+            quote.getApproved(),
             quote.getId()
         };
         
@@ -330,11 +330,11 @@ public class QuoteDAOJDBC implements QuoteDAO {
         Quote quote = new Quote();
         quote.setId(resultSet.getInt("id"));
         quote.setQuote_date(resultSet.getDate("quote_date"));
-        quote.setUnit_price(resultSet.getDouble("unit_price"));
-        quote.setApproved(resultSet.getString("approved"));
+        quote.setEstimated_annual_usage(resultSet.getInt("estimated_annual_usage"));
         quote.setComments(resultSet.getString("comments"));
-        quote.setProcess(resultSet.getString("process"));
-        quote.setEau(resultSet.getInt("eau"));
+        quote.setMargin(resultSet.getDouble("margin"));
+        quote.setEstimated_total(resultSet.getDouble("estimated_total"));
+        quote.setApproved(resultSet.getString("approved"));
         return quote;
     }
 }

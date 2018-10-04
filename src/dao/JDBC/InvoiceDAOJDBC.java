@@ -249,7 +249,7 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         double total = 0;
         List<InvoiceItem> invoiceitems = daoFactory.getInvoiceItemDAO().list(invoice);
         for(InvoiceItem invoice_item : invoiceitems){
-            total += daoFactory.getInvoiceItemDAO().findQuote(invoice_item).getUnit_price()*daoFactory.getInvoiceItemDAO().findDepartLot(invoice_item).getQuantity();
+            total += daoFactory.getInvoiceItemDAO().findQuote(invoice_item).getEstimated_total()*daoFactory.getInvoiceItemDAO().findDepartLot(invoice_item).getQuantity();
         }
         return total;
     }

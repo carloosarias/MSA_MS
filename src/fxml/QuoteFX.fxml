@@ -55,12 +55,12 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
+                                    <ComboBox fx:id="status_combo" disable="true" prefWidth="150.0" promptText="Estado">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </ComboBox>
-                                    <Button fx:id="add_button" mnemonicParsing="false" prefWidth="110.0" text="Nueva Cotización">
+                                    <Button fx:id="add_button" disable="true" mnemonicParsing="false" prefWidth="110.0" text="Nueva Cotización">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -80,12 +80,12 @@
                                              <children>
                                                 <TableView fx:id="quote_tableview" editable="true" prefHeight="483.0">
                                                   <columns>
-                                                    <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
-                                                    <TableColumn fx:id="quotedate_column" prefWidth="100.0" text="Fecha" />
-                                                      <TableColumn fx:id="contact_column" prefWidth="150.0" text="Contacto" />
-                                                      <TableColumn fx:id="eau_column" prefWidth="150.0" text="Uso Anual Estimado" />
-                                                      <TableColumn fx:id="comments_column" prefWidth="200.0" text="Comentarios" />
-                                                      <TableColumn fx:id="status_column" prefWidth="123.0" text="Estado" />
+                                                    <TableColumn fx:id="id_column" prefWidth="75.0" resizable="false" text="ID" />
+                                                    <TableColumn fx:id="quotedate_column" prefWidth="100.0" resizable="false" text="Fecha" />
+                                                      <TableColumn fx:id="contact_column" prefWidth="150.0" resizable="false" text="Contacto" />
+                                                      <TableColumn fx:id="eau_column" prefWidth="150.0" resizable="false" text="Uso Anual Estimado" />
+                                                      <TableColumn fx:id="comments_column" prefWidth="200.0" resizable="false" text="Comentarios" />
+                                                      <TableColumn fx:id="status_column" prefWidth="123.0" resizable="false" text="Estado" />
                                                   </columns>
                                                    <VBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -114,18 +114,18 @@
                         </Label>
                         <TableView>
                           <columns>
-                            <TableColumn fx:id="listnumber_column" prefWidth="75.0" text="#" />
-                              <TableColumn prefWidth="75.0" text="Metal">
+                            <TableColumn fx:id="listnumber_column" prefWidth="75.0" resizable="false" text="#" />
+                              <TableColumn prefWidth="75.0" resizable="false" text="Metal">
                                  <columns>
-                                    <TableColumn fx:id="metal_name_column" prefWidth="100.0" text="Nombre" />
-                                    <TableColumn fx:id="density_column" prefWidth="150.0" text="Densidad (g/mm³)" />
-                                  <TableColumn fx:id="unitprice_column" prefWidth="150.0" text="Precio Unitario ($/g)" />
+                                    <TableColumn fx:id="metal_name_column" prefWidth="100.0" resizable="false" text="Nombre" />
+                                    <TableColumn fx:id="density_column" prefWidth="150.0" resizable="false" text="Densidad (g/mm³)" />
+                                  <TableColumn fx:id="unitprice_column" prefWidth="150.0" resizable="false" text="Precio Unitario ($/g)" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn fx:id="maximumthickness_column" prefWidth="150.0" text="Espesor Máximo (mm)" />
-                              <TableColumn fx:id="volume_column" prefWidth="106.0" text="Volumen (mm³)" />
-                              <TableColumn fx:id="weight_column" prefWidth="100.0" text="Peso (g)" />
-                              <TableColumn fx:id="estimatedprice_column" prefWidth="125.0" text="Precio Estimado" />
+                              <TableColumn fx:id="maximumthickness_column" prefWidth="150.0" resizable="false" text="Espesor Máximo (mm)" />
+                              <TableColumn fx:id="volume_column" prefWidth="106.0" resizable="false" text="Volumen (mm³)" />
+                              <TableColumn fx:id="weight_column" prefWidth="100.0" resizable="false" text="Peso (g)" />
+                              <TableColumn fx:id="estimatedprice_column" prefWidth="125.0" resizable="false" text="Precio Estimado" />
                           </columns>
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -196,7 +196,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="totalprice_field">
+                                    <TextField fx:id="estimatedtotal_field">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>

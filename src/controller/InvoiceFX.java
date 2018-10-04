@@ -208,9 +208,9 @@ public class InvoiceFX implements Initializable {
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         lot_qty.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()));
         lot_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getBox_quantity()));
-        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findQuote(c.getValue()).getUnit_price()));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findQuote(c.getValue()).getEstimated_total()));
         lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(
-                msabase.getInvoiceItemDAO().findQuote(c.getValue()).getUnit_price()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
+                msabase.getInvoiceItemDAO().findQuote(c.getValue()).getEstimated_total()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
     }
 
     private void buildPDF(Invoice invoice) throws IOException {
@@ -246,7 +246,7 @@ public class InvoiceFX implements Initializable {
                 int current_row = i+1;
                 double lot_price = 0;
                 double quantity = +msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getQuantity();
-                double unit_price = msabase.getInvoiceItemDAO().findQuote(invoice_item).getUnit_price();
+                double unit_price = msabase.getInvoiceItemDAO().findQuote(invoice_item).getEstimated_total();
                 fields.get("depart_report_id"+current_row).setValue(""+msabase.getDepartLotDAO().findDepartReport(msabase.getInvoiceItemDAO().findDepartLot(invoice_item)).getId());
                 fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(msabase.getInvoiceItemDAO().findDepartLot(invoice_item))).getPart_number());
                 fields.get("quantity_box"+current_row).setValue(""+msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getBox_quantity());
