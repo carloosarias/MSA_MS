@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import model.PartRevision;
 import model.ProductPart;
 import model.Quote;
+import model.QuoteItem;
 
 
 
@@ -63,21 +64,23 @@ public class QuoteFX implements Initializable {
     @FXML
     private TableColumn<Quote, String> status_column;
     @FXML
-    private TableColumn<?, ?> listnumber_column;
+    private TableView<QuoteItem> quoteitem_tableview;
     @FXML
-    private TableColumn<?, ?> metal_name_column;
+    private TableColumn<QuoteItem, String> listnumber_column;
     @FXML
-    private TableColumn<?, ?> density_column;
+    private TableColumn<QuoteItem, String> metal_name_column;
     @FXML
-    private TableColumn<?, ?> unitprice_column;
+    private TableColumn<QuoteItem, String> density_column;
     @FXML
-    private TableColumn<?, ?> maximumthickness_column;
+    private TableColumn<QuoteItem, Double> unitprice_column;
     @FXML
-    private TableColumn<?, ?> volume_column;
+    private TableColumn<QuoteItem, String> maximumthickness_column;
     @FXML
-    private TableColumn<?, ?> weight_column;
+    private TableColumn<QuoteItem, String> volume_column;
     @FXML
-    private TableColumn<?, ?> estimatedprice_column;
+    private TableColumn<QuoteItem, String> weight_column;
+    @FXML
+    private TableColumn<QuoteItem, Double> estimatedprice_column;
     @FXML
     private TextField specificationnumber_field;
     @FXML
