@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -107,10 +108,32 @@ public class QuoteFX implements Initializable {
         status_combo.setItems(FXCollections.observableArrayList(status_items));
         status_combo.getSelectionModel().selectFirst();
         
-        setQuoteTable();
+        setQuoteTableView();
+        
+        part_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
+            setPartRevisionItems(newValue);
+            partrev_combo.setDisable(partrev_combo.getItems().isEmpty());
+        });
+        
+        partrev_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
+           setQuoteItems();
+        });
+        
+        status_combo.setOnAction((ActionEvent) -> {
+            setQuoteItems();
+        });
+        
+        status_checkbox.setOnAction((ActionEvent) -> {
+            setQuoteItems();
+            status_combo.setDisable(!status_checkbox.isSelected());
+        });
     }
     
-    public void setQuoteTableItems(){
+    public void setPartRevisionItems(ProductPart product_part){
+        partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(product_part)));
+    }
+    
+    public void setQuoteItems(){
         if(partrev_combo.getSelectionModel().getSelectedItem() == null){
             quote_tableview.getItems().clear();
         }else{
@@ -122,7 +145,7 @@ public class QuoteFX implements Initializable {
         }
     }
     
-    public void setQuoteTable(){
+    public void setQuoteTableView(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         contact_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getQuoteDAO().findCompanyContact(c.getValue()).getName()));
         quotedate_column.setCellValueFactory(new PropertyValueFactory<>("quote_date"));
@@ -132,7 +155,7 @@ public class QuoteFX implements Initializable {
         status_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setApproved(t.getNewValue());
             msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-             setQuoteTableItems();
+             setQuoteItems();
         });
     }
 
