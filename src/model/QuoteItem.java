@@ -46,6 +46,9 @@ public class QuoteItem implements Serializable {
     }
     //Converts specification maximum_thickness from in to mm
     public Double getThickness(){
+        if(this.id == null){
+            return 0.0;
+        }
         return getThickness(msabase.getQuoteItemDAO().findSpecificationItem(this));
     }
     
@@ -55,6 +58,9 @@ public class QuoteItem implements Serializable {
     
     //calculates the volume using the area(mm2) and the thickness(mm)
     public Double getVolume(){
+        if(this.id == null){
+            return 0.0;
+        }
         return getVolume(msabase.getQuoteDAO().findPartRevision(msabase.getQuoteItemDAO().findQuote(this)), msabase.getQuoteItemDAO().findSpecificationItem(this));
     }
     
@@ -64,6 +70,9 @@ public class QuoteItem implements Serializable {
     
     //Converts the metal density from (g/cm3) to (g/mm3)
     public Double getDensity(){
+        if(this.id == null){
+            return 0.0;
+        }
         return getDensity(msabase.getQuoteItemDAO().findSpecificationItem(this));
     }
     
@@ -73,6 +82,9 @@ public class QuoteItem implements Serializable {
     
     //Calculates the weight using the Volume and the Density
     public Double getWeight(){
+        if(this.id == null){
+            return 0.0;
+        }
         return getWeight(msabase.getQuoteDAO().findPartRevision(msabase.getQuoteItemDAO().findQuote(this)), msabase.getQuoteItemDAO().findSpecificationItem(this));
     }
     
@@ -82,6 +94,9 @@ public class QuoteItem implements Serializable {
     
     //Calculates the estimated price using the Weight, Unit Price and Margin
     public Double getEstimatedPrice(){
+        if(this.id == null){
+            return 0.0;
+        }
         return getEstimatedPrice(msabase.getQuoteDAO().findPartRevision(msabase.getQuoteItemDAO().findQuote(this)), msabase.getQuoteItemDAO().findSpecificationItem(this), msabase.getQuoteItemDAO().findQuote(this));
     }
     
