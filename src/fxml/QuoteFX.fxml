@@ -23,7 +23,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <VBox>
+                              <VBox fx:id="filter_vbox">
                                  <children>
                                     <Label text="Número de Parte:">
                                        <VBox.margin>
@@ -140,11 +140,11 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="specificationnumber_field">
+                                    <ComboBox fx:id="specification_combo" disable="true" prefWidth="150.0">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
-                                    </TextField>
+                                    </ComboBox>
                                  </children>
                               </VBox>
                               <VBox>
@@ -154,7 +154,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="specificationprocess_field">
+                                    <TextField fx:id="specificationprocess_field" disable="true">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -168,7 +168,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="revisionarea_field">
+                                    <TextField fx:id="revisionarea_field" disable="true">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -182,7 +182,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="quotemargin_field">
+                                    <TextField fx:id="quotemargin_field" disable="true">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -196,7 +196,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="estimatedtotal_field">
+                                    <TextField fx:id="estimatedtotal_field" disable="true">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
