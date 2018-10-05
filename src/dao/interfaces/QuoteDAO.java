@@ -19,9 +19,9 @@ public interface QuoteDAO {
     // Actions ------------------------------------------------------------------------------------
     
     /**
-     * Returns the InvoiceItem from the database matching the given ID, otherwise null.
-     * @param id The ID of the InvoiceItem to be returned.
-     * @return The InvoiceItem from the database matching the given ID, otherwise null.
+     * Returns the Quote from the database matching the given ID, otherwise null.
+     * @param id The ID of the Quote to be returned.
+     * @return The Quote from the database matching the given ID, otherwise null.
      * @throws DAOException If something fails at database level.
      */
     public Quote find(Integer id) throws DAOException;
@@ -47,35 +47,45 @@ public interface QuoteDAO {
     public CompanyContact findCompanyContact(Quote quote) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all InvoiceItem from the database ordered by InvoiceItem ID. The list is never null and
-     * is empty when the database does not contain any InvoiceItem.
-     * @return A list of all InvoiceItem from the database ordered by InvoiceItem ID.
+     * Returns a list of all Quote from the database ordered by Quote ID. The list is never null and
+     * is empty when the database does not contain any Quote.
+     * @return A list of all Quote from the database ordered by Quote ID.
      * @throws DAOException If something fails at database level.
      */        
     public List<Quote> list() throws DAOException;
     
     /**
-     * Returns a list of all InvoiceItem matching Invoice ID from the database ordered by InvoiceItem ID. 
-     * The Invoice ID must not be null, otherwise it will throw IllegalArgumentException.
+     * Returns a list of all Quote matching PartRevision ID and String approved from the database ordered by Quote ID. 
+     * PartRevision ID must not be null, otherwise it will throw IllegalArgumentException.
      * The list is never null and is empty when the database does not 
-     * contain any InvoiceItem matching Invoice ID.
-     * @param part_revision The Invoice ID to be searched for.
-     * @param approved The status of the item to be searched for
-     * @return A list of all InvoiceItem matching Invoice ID from the database ordered by InvoiceItem ID.
-     * @throws IllegalArgumentException If Invoice ID is null.
+     * contain any Quote matching PartRevision ID and String approved.
+     * @param part_revision The PartRevision ID to be searched for.
+     * @param approved The status of the Quote to be searched for
+     * @return A list of all Quote matching PartRevision ID and String approved from the database ordered by Quote ID.
+     * @throws IllegalArgumentException If PartRevision ID is null.
      * @throws DAOException If something fails at database level.
      */    
     public List<Quote> list(PartRevision part_revision, String approved) throws IllegalArgumentException, DAOException;
     
-    public List<Quote> list(PartRevision part_revision) throws IllegalArgumentException, DAOException;
     /**
-     * Create the given InvoiceItem in the database.
-     * The Company ID must not be null, The BillingAddress must not be null,
-     * The ShippingAddress must not be null and The InvoiceItem ID must be null,
+     * Returns a list of all Quote matching PartRevision ID from the database ordered by Quote ID. 
+     * PartRevision ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not 
+     * contain any Quote matching PartRevision ID.
+     * @param part_revision The PartRevision ID to be searched for.
+     * @return A list of all Quote matching PartRevision ID from the database ordered by Quote ID.
+     * @throws IllegalArgumentException If PartRevision ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<Quote> list(PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Create the given Quote in the database. The PartRevision ID must not be null,
+     * The CompanyContact must not be null, and The Quote ID must be null,
      * otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given InvoiceItem.
-     * @param part_revision The Invoice to be assigned to this InvoiceItem.
-     * @param company_contact The DepartLot to be assigned to this InvoiceItem.
+     * After creating, the DAO will set the obtained ID in the given Quote.
+     * @param part_revision The PartRevision to be assigned to this Quote.
+     * @param company_contact The CompanyContact to be assigned to this Quote.
      * @param quote The Quote to be created.
      * @throws IllegalArgumentException If the PartRevision ID is null.
      * @throws IllegalArgumentException If the CompanyContact ID is null.

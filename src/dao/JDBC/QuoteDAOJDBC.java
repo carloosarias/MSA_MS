@@ -69,10 +69,10 @@ public class QuoteDAOJDBC implements QuoteDAO {
     }
     
     /**
-     * Returns the Invoice from the database matching the given SQL query with the given values.
+     * Returns the Quote from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The Invoice from the database matching the given SQL query with the given values.
+     * @return The Quote from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */    
     private Quote find(String sql, Object... values) throws DAOException {

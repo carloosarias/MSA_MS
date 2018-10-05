@@ -24,6 +24,7 @@ import dao.interfaces.ProcessReportDAO;
 import dao.interfaces.ProductPartDAO;
 import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.QuoteDAO;
+import dao.interfaces.QuoteItemDAO;
 import dao.interfaces.ScrapReportDAO;
 import dao.interfaces.SpecificationDAO;
 import dao.interfaces.SpecificationItemDAO;
@@ -303,6 +304,14 @@ public abstract class DAOFactory {
      */   
     public QuoteDAO getQuoteDAO(){
         return new QuoteDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the QuoteItem DAO associated with the current DAOFactory.
+     * @return The QuoteItem DAO associated with the current DAOFactory.
+     */   
+    public QuoteItemDAO getQuoteItemDAO(){
+        return new QuoteItemDAOJDBC(this);
     }
     
     /**
