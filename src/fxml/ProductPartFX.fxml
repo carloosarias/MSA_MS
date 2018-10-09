@@ -48,7 +48,7 @@
                                           <TableColumn fx:id="basemetal_column" prefWidth="100.0" text="Metal Base" />
                                           <TableColumn fx:id="finalprocess_column" prefWidth="100.0" text="Proceso Final" />
                                           <TableColumn fx:id="revspecnumber_column" prefWidth="125.0" text="# de Specificación" />
-                                          <TableColumn fx:id="area_column" prefWidth="75.0" text="Área" />
+                                          <TableColumn fx:id="area_column" prefWidth="75.0" text="Área (cm²)" />
                                           <TableColumn prefWidth="75.0" text="Peso">
                                              <columns>
                                                 <TableColumn fx:id="baseweight_column" prefWidth="75.0" text="Base" />

@@ -51,6 +51,11 @@ public class PartRevision implements Serializable{
     public double getArea() {
         return area;
     }
+    
+    //1 cm² == 100 mm²
+    public double getAreaSquareMillimiters(){
+        return area * 100;
+    }
 
     public void setArea(double area) {
         this.area = area;

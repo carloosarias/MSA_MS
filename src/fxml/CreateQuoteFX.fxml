@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -75,7 +76,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="part_combo" prefWidth="150.0">
+                        <ComboBox fx:id="part_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -89,7 +90,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="partrev_combo" prefWidth="150.0">
+                        <ComboBox fx:id="partrev_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -107,7 +108,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="area_field">
+                        <TextField fx:id="area_field" disable="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -139,7 +140,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="specificationnumber_combo" prefWidth="150.0">
+                        <ComboBox fx:id="specificationnumber_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -153,7 +154,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="process_field">
+                        <TextField fx:id="process_field" disable="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -184,7 +185,7 @@
       </VBox>
       <VBox>
          <children>
-            <TableView prefHeight="382.0" prefWidth="847.0">
+            <TableView fx:id="quoteitem_tableview" prefHeight="382.0" prefWidth="847.0">
               <columns>
                 <TableColumn fx:id="listnumber_column" prefWidth="75.0" text="#" />
                 <TableColumn prefWidth="75.0" text="Metal">
@@ -207,16 +208,12 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="Factor Agregado %:">
+                        <Label text="Margen de ganancia %:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="margin_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
+                        <Slider fx:id="margin_slider" majorTickUnit="10.0" max="200.0" min="100.0" minorTickCount="1" prefHeight="38.0" prefWidth="295.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                      </children>
                   </VBox>
                   <VBox>
@@ -226,7 +223,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="estimatedtotal_field">
+                        <TextField fx:id="estimatedtotal_field" disable="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>

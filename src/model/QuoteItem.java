@@ -53,7 +53,7 @@ public class QuoteItem implements Serializable {
     }
     
     public Double getThickness(SpecificationItem temp_specificationitem){
-        return temp_specificationitem.getMaximum_thickness()/24.5;
+        return temp_specificationitem.getMaximum_thickness() * 25.4;
     }
     
     //calculates the volume using the area(mm2) and the thickness(mm)
@@ -65,7 +65,7 @@ public class QuoteItem implements Serializable {
     }
     
     public Double getVolume(PartRevision temp_partrevision, SpecificationItem temp_specificationitem){
-        return temp_partrevision.getArea()*getThickness(temp_specificationitem);
+        return temp_partrevision.getAreaSquareMillimiters() * getThickness(temp_specificationitem);
     }
     
     //Converts the metal density from (g/cm3) to (g/mm3)
@@ -97,11 +97,11 @@ public class QuoteItem implements Serializable {
         if(this.id == null){
             return 0.0;
         }
-        return getEstimatedPrice(msabase.getQuoteDAO().findPartRevision(msabase.getQuoteItemDAO().findQuote(this)), msabase.getQuoteItemDAO().findSpecificationItem(this), msabase.getQuoteItemDAO().findQuote(this));
+        return getEstimatedPrice(msabase.getQuoteDAO().findPartRevision(msabase.getQuoteItemDAO().findQuote(this)), msabase.getQuoteItemDAO().findSpecificationItem(this), msabase.getQuoteItemDAO().findQuote(this).getMargin());
     }
     
-    public Double getEstimatedPrice(PartRevision temp_partrevision, SpecificationItem temp_specificationitem, Quote temp_quote){
-        return getWeight(temp_partrevision, temp_specificationitem) * unit_price * temp_quote.getMargin();
+    public Double getEstimatedPrice(PartRevision temp_partrevision, SpecificationItem temp_specificationitem, Double temp_margin){
+        return getWeight(temp_partrevision, temp_specificationitem) * unit_price * temp_margin;
     }
     
     // Object overrides ---------------------------------------------------------------------------

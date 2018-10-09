@@ -107,6 +107,8 @@ public class QuoteFX implements Initializable {
     @FXML
     private Button pdf_button;
     
+    private static PartRevision partrevision_selection;
+    
     private Stage add_stage = new Stage();
     
     private List<String> status_items = Arrays.asList("Aprovado", "Descartado", "Pendiente");
@@ -128,6 +130,7 @@ public class QuoteFX implements Initializable {
         partrev_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
            setQuoteItems();
            add_button.setDisable(partrev_combo.getSelectionModel().isEmpty());
+           partrevision_selection = partrev_combo.getSelectionModel().getSelectedItem();
         });
         
         status_combo.setOnAction((ActionEvent) -> {
@@ -245,5 +248,8 @@ public class QuoteFX implements Initializable {
              setQuoteItems();
         });
     }
-
+    
+    public static PartRevision getPartrevision_selection(){
+        return partrevision_selection;
+    }
 }
