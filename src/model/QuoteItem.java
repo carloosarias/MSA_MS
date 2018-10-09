@@ -101,7 +101,7 @@ public class QuoteItem implements Serializable {
     }
     
     public Double getEstimatedPrice(PartRevision temp_partrevision, SpecificationItem temp_specificationitem, Double temp_margin){
-        return getWeight(temp_partrevision, temp_specificationitem) * unit_price * temp_margin;
+        return (getWeight(temp_partrevision, temp_specificationitem) * unit_price * (temp_margin/100));
     }
     
     // Object overrides ---------------------------------------------------------------------------

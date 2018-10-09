@@ -185,20 +185,20 @@
       </VBox>
       <VBox>
          <children>
-            <TableView fx:id="quoteitem_tableview" prefHeight="382.0" prefWidth="847.0">
+            <TableView fx:id="quoteitem_tableview" editable="true" prefHeight="382.0">
               <columns>
-                <TableColumn fx:id="listnumber_column" prefWidth="75.0" text="#" />
-                <TableColumn prefWidth="75.0" text="Metal">
+                <TableColumn fx:id="listnumber_column" editable="false" prefWidth="75.0" resizable="false" text="#" />
+                <TableColumn prefWidth="75.0" resizable="false" text="Metal">
                      <columns>
-                        <TableColumn fx:id="metalname_column" prefWidth="100.0" text="Nombre" />
-                        <TableColumn fx:id="density_column" prefWidth="120.0" text="Densidad (g/mm³)" />
-                        <TableColumn fx:id="unitprice_column" prefWidth="125.0" text="Precio Unitario ($/g)" />
+                        <TableColumn fx:id="metalname_column" editable="false" prefWidth="100.0" resizable="false" text="Nombre" />
+                        <TableColumn fx:id="density_column" editable="false" prefWidth="120.0" resizable="false" text="Densidad (g/mm³)" />
+                        <TableColumn fx:id="unitprice_column" prefWidth="125.0" resizable="false" text="Precio Unitario ($/g)" />
                      </columns>
                   </TableColumn>
-                  <TableColumn fx:id="maximumthickness_column" prefWidth="150.0" text="Espesor Máximo (mm)" />
-                  <TableColumn fx:id="volume_column" prefWidth="100.0" text="Volumen (mm³)" />
-                  <TableColumn fx:id="weight_column" prefWidth="75.0" text="Peso (g)" />
-                  <TableColumn fx:id="estimatedprice_column" prefWidth="100.0" text="Precio Estimado" />
+                  <TableColumn fx:id="maximumthickness_column" editable="false" prefWidth="150.0" resizable="false" text="Espesor Máximo (mm)" />
+                  <TableColumn fx:id="volume_column" editable="false" prefWidth="100.0" resizable="false" text="Volumen (mm³)" />
+                  <TableColumn fx:id="weight_column" editable="false" prefWidth="75.0" resizable="false" text="Peso (g)" />
+                  <TableColumn fx:id="estimatedprice_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Estimado" />
               </columns>
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

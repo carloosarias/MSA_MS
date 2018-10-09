@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +26,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import model.Company;
 import model.CompanyContact;
@@ -71,7 +74,7 @@ public class CreateQuoteFX implements Initializable {
     @FXML
     private TableColumn<QuoteItem, String> density_column;
     @FXML
-    private TableColumn<QuoteItem, Double> unitprice_column;
+    private TableColumn<QuoteItem, String> unitprice_column;
     @FXML
     private TableColumn<QuoteItem, String> maximumthickness_column;
     @FXML
@@ -106,19 +109,34 @@ public class CreateQuoteFX implements Initializable {
         area_field.setText(""+QuoteFX.getPartrevision_selection().getAreaSquareMillimiters());
         process_field.setText(specificationnumber_combo.getSelectionModel().getSelectedItem().getProcess());
         margin_slider.setValue(120);
+        setQuoteItemList();
         setQuoteItemTable();
         setQuoteItemItems();
+        
+        margin_slider.setOnMouseReleased((ActionEvent) -> {
+            setQuoteItemItems();
+            quoteitem_tableview.refresh();
+        });
+        /*
+        valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+            setQuoteItemItems();
+            quoteitem_tableview.refresh();
+        });*/
     }
-    
-    public void setQuoteItemItems(){
+    public void setQuoteItemList(){
+        quoteitem_list.clear();
         for(SpecificationItem specification_item : msabase.getSpecificationItemDAO().list(specificationnumber_combo.getSelectionModel().getSelectedItem())){
             QuoteItem item = new QuoteItem();
             item.setTemp_specificationitem(specification_item);
             item.setUnit_price(0.0);
             quoteitem_list.add(item);
         }
-        
+    }
+    public void setQuoteItemItems(){
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(6);
         quoteitem_tableview.setItems(FXCollections.observableArrayList(quoteitem_list));
+        estimatedtotal_field.setText(""+df.format(getTotal()));
     }
     
     public void setQuoteItemTable(){
@@ -127,17 +145,32 @@ public class CreateQuoteFX implements Initializable {
         listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(quoteitem_tableview.getItems().indexOf(c.getValue())+1)));
         metalname_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getSpecificationItemDAO().findMetal(c.getValue().getTemp_specificationitem())));
         density_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getDensity(c.getValue().getTemp_specificationitem())));
-        unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
-        unitprice_column.setOnEditCommit(
-                (TableColumn.CellEditEvent<QuoteItem, Double> t) ->
-                    ( t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                    ).setUnit_price(t.getNewValue())
-                );
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getUnit_price()));
+        unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<QuoteItem, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnit_price(getUnit_priceValue(t.getNewValue()));
+            quoteitem_tableview.refresh();
+            setQuoteItemItems();
+        });
         maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getThickness(c.getValue().getTemp_specificationitem()))));
         volume_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getVolume(partrev_combo.getSelectionModel().getSelectedItem(), c.getValue().getTemp_specificationitem()))));
         weight_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getWeight(partrev_combo.getSelectionModel().getSelectedItem(), c.getValue().getTemp_specificationitem()))));
         estimatedprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getEstimatedPrice(partrev_combo.getSelectionModel().getSelectedItem(), c.getValue().getTemp_specificationitem(), margin_slider.getValue()))));
     }
     
+    public Double getUnit_priceValue(String unit_price){
+        try{
+            return Double.parseDouble(unit_price);
+        }catch(Exception e){
+            return 0.0;
+        }
+    }
+    
+    public Double getTotal(){
+        Double total = 0.0;
+        for(QuoteItem item : quoteitem_list){
+            total += item.getEstimatedPrice(partrev_combo.getSelectionModel().getSelectedItem(), item.getTemp_specificationitem(), margin_slider.getValue());
+        }
+        return total;
+    }
 }
