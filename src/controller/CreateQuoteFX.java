@@ -7,6 +7,7 @@ package controller;
 
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,10 +29,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import model.Company;
 import model.CompanyContact;
 import model.PartRevision;
 import model.ProductPart;
+import model.Quote;
 import model.QuoteItem;
 import model.Specification;
 import model.SpecificationItem;
@@ -117,12 +120,76 @@ public class CreateQuoteFX implements Initializable {
             setQuoteItemItems();
             quoteitem_tableview.refresh();
         });
-        /*
-        valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
-            setQuoteItemItems();
-            quoteitem_tableview.refresh();
-        });*/
+        
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }else{
+                saveQuote();
+                Stage stage = (Stage) root_hbox.getScene().getWindow();
+                stage.close();
+            }
+        });
     }
+    
+    public void saveQuote(){
+        Quote quote = new Quote();
+        quote.setQuote_date(Date.valueOf(quotedate_picker.getValue()));
+        quote.setEstimated_annual_usage(Integer.parseInt(eau_field.getText()));
+        quote.setComments(comments_area.getText());
+        quote.setMargin(margin_slider.getValue());
+        quote.setEstimated_total(Double.parseDouble(estimatedtotal_field.getText()));
+        msabase.getQuoteDAO().create(partrev_combo.getSelectionModel().getSelectedItem(), contact_combo.getSelectionModel().getSelectedItem(), quote);
+        
+        saveQuoteItems(quote);
+    }
+    
+    public void saveQuoteItems(Quote quote){
+        for(QuoteItem item : quoteitem_list){
+            msabase.getQuoteItemDAO().create(item.getTemp_specificationitem(), quote, item);
+        }
+    }
+    
+    public boolean testFields(){
+        boolean b = true;
+        clearStyle();
+        if(quotedate_picker.getValue() == null){
+            quotedate_picker.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(comments_area.getText().replace(" ", "").equals("")){
+            comments_area.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(contact_combo.getSelectionModel().isEmpty()){
+            contact_combo.setStyle("-fx-background-color: lightpink ;");
+            b = false;
+        }
+        try{
+            Integer.parseInt(eau_field.getText());
+        } catch(Exception e){
+            eau_field.setText("0.0");
+            eau_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        try{
+            Double.parseDouble(area_field.getText());
+        } catch(Exception e){
+            area_field.setText("0.0");
+            area_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        return b;
+    }
+    
+    public void clearStyle(){
+        quotedate_picker.setStyle(null);
+        eau_field.setStyle(null);
+        comments_area.setStyle(null);
+        contact_combo.setStyle(null);
+        area_field.setStyle(null);
+    }
+    
     public void setQuoteItemList(){
         quoteitem_list.clear();
         for(SpecificationItem specification_item : msabase.getSpecificationItemDAO().list(specificationnumber_combo.getSelectionModel().getSelectedItem())){
