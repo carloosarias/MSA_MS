@@ -52,9 +52,9 @@ public class PartRevision implements Serializable{
         return area;
     }
     
-    //1 cm² == 100 mm²
+    //1 in² == 645.16 mm²
     public double getAreaSquareMillimiters(){
-        return area * 100;
+        return area * 645.16;
     }
 
     public void setArea(double area) {
