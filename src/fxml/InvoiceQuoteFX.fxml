@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -15,6 +15,20 @@
          <children>
             <HBox>
                <children>
+                  <VBox>
+                     <children>
+                        <Label text="Proceso:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="process_combo" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
                   <VBox>
                      <children>
                         <Label text="Desde:">
@@ -43,14 +57,6 @@
                         </DatePicker>
                      </children>
                   </VBox>
-                  <VBox alignment="BOTTOM_LEFT">
-                     <children>
-                        <Button fx:id="update_button" mnemonicParsing="false" text="Actualizar" />
-                     </children>
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </VBox>
                </children>
             </HBox>
             <HBox>
@@ -70,14 +76,13 @@
                                  <columns>
                                     <TableColumn fx:id="quoteid_column" prefWidth="75.0" text="ID" />
                                     <TableColumn fx:id="quotedate_column" prefWidth="120.0" text="Fecha" />
-                                    <TableColumn fx:id="unitprice_column" prefWidth="100.0" text="Precio por Pieza" />
-                                    <TableColumn fx:id="margin_column" prefWidth="75.0" text="Margen" />
+                                    <TableColumn fx:id="unitprice_column" prefWidth="120.0" text="Precio por Pieza" />
                                  </columns>
                               </TableColumn>
                               <TableColumn prefWidth="139.0" text="Facturación">
                                  <columns>
                                     <TableColumn fx:id="totalinvoiced_column" prefWidth="120.0" text="Piezas Facturadas" />
-                                    <TableColumn fx:id="totalvalue_column" prefWidth="150.0" text="Valor Total De Venta" />
+                                    <TableColumn fx:id="totalvalue_column" prefWidth="150.0" text="Valor Total De Ventas" />
                                  </columns>
                               </TableColumn>
                            </columns>

@@ -16,7 +16,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -24,6 +23,7 @@ import javafx.scene.control.TableView;
 import model.Invoice;
 import model.InvoiceItem;
 import model.Quote;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -31,13 +31,13 @@ import model.Quote;
  * @author Pavilion Mini
  */
 public class InvoiceQuoteFX implements Initializable {
-
+    
+    @FXML
+    private ComboBox<String> process_combo;
     @FXML
     private DatePicker startdate_picker;
     @FXML
     private DatePicker enddate_picker;
-    @FXML
-    private Button update_button;
     @FXML
     private TableView<InvoiceQuote> invoicequote_tableview;
     @FXML
@@ -53,8 +53,6 @@ public class InvoiceQuoteFX implements Initializable {
     @FXML
     private TableColumn<InvoiceQuote, String> unitprice_column;
     @FXML
-    private TableColumn<InvoiceQuote, String> margin_column;
-    @FXML
     private TableColumn<InvoiceQuote, String> totalinvoiced_column;
     @FXML
     private TableColumn<InvoiceQuote, String> totalvalue_column;
@@ -69,8 +67,16 @@ public class InvoiceQuoteFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setInvoiceQuoteTableView();
+        process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
+        process_combo.getSelectionModel().selectFirst();
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
+        setInvoiceQuoteItems();
+        
+        process_combo.setOnAction((ActionEvent) -> {
+            setInvoiceQuoteItems();
+        });
+        
         startdate_picker.setOnAction((ActionEvent) ->{
             setInvoiceQuoteItems();
         });
@@ -92,12 +98,13 @@ public class InvoiceQuoteFX implements Initializable {
         quoteid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuote().getId()));
         quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getQuote().getQuote_date().toString()));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuote().getEstimated_total()));
-        margin_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuote().getMargin()));
         totalinvoiced_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTotal_invoiced()));
         totalvalue_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTotal_value()));
     }
+    
     public void setInvoiceQuoteItems(){
         invoicequote_list.clear();
+        invoicequote_tableview.getItems().clear();
         for(Invoice item : msabase.getInvoiceDAO().listDateRange(Date.valueOf(startdate_picker.getValue()), Date.valueOf(enddate_picker.getValue()))){
             for(InvoiceItem invoiceitem : msabase.getInvoiceItemDAO().list(item)){
                 InvoiceQuote invquote = new InvoiceQuote();
@@ -115,6 +122,13 @@ public class InvoiceQuoteFX implements Initializable {
                 }
             }
         }
+        
+        for(int i = 0; i < invoicequote_list.size(); i++){
+            if(!process_combo.getSelectionModel().getSelectedItem().equals(msabase.getPartRevisionDAO().findSpecification(msabase.getQuoteDAO().findPartRevision(invoicequote_list.get(i).getQuote())))){
+                invoicequote_list.remove(i);
+            }
+        }
+        
         invoicequote_tableview.setItems(FXCollections.observableArrayList(invoicequote_list));
     }
     
