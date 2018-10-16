@@ -11,7 +11,9 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -143,6 +145,8 @@ public class CreateQuoteFX implements Initializable {
         quote.setComments(comments_area.getText());
         quote.setMargin(margin_slider.getValue());
         quote.setEstimated_total(Double.parseDouble(estimatedtotal_field.getText()));
+        quote.setApproved("Pendiente");
+        
         msabase.getQuoteDAO().create(partrev_combo.getSelectionModel().getSelectedItem(), contact_combo.getSelectionModel().getSelectedItem(), quote);
         
         saveQuoteItems(quote);

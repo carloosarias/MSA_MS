@@ -201,7 +201,7 @@ public class QuoteItemDAOJDBC implements QuoteItemDAO {
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    quote.setId(generatedKeys.getInt(1));
+                    quote_item.setId(generatedKeys.getInt(1));
                 } else {
                     throw new DAOException("Creating QuoteItem failed, no generated key obtained.");
                 }

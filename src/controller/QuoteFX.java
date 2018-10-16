@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -190,6 +191,8 @@ public class QuoteFX implements Initializable {
     }
     
     public void setQuoteFields(){
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(6);
         if(quote_tableview.getSelectionModel().getSelectedItem() == null){
             specification_combo.getItems().clear();
             specificationprocess_field.clear();
@@ -206,9 +209,9 @@ public class QuoteFX implements Initializable {
             ));
             specification_combo.getSelectionModel().selectFirst();
             specificationprocess_field.setText(specification_combo.getSelectionModel().getSelectedItem().getProcess());
-            revisionarea_field.setText(""+msabase.getQuoteDAO().findPartRevision(quote_tableview.getSelectionModel().getSelectedItem()).getArea());
+            revisionarea_field.setText(""+df.format(msabase.getQuoteDAO().findPartRevision(quote_tableview.getSelectionModel().getSelectedItem()).getArea()));
             quotemargin_field.setText(""+quote_tableview.getSelectionModel().getSelectedItem().getMargin());
-            estimatedtotal_field.setText(""+quote_tableview.getSelectionModel().getSelectedItem().getEstimated_total());
+            estimatedtotal_field.setText(""+df.format(quote_tableview.getSelectionModel().getSelectedItem().getEstimated_total()));
         }
     }
     
@@ -233,6 +236,8 @@ public class QuoteFX implements Initializable {
     }
     
     public void setQuoteItemTableView(){
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(6);
         listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+quoteitem_tableview.getItems().indexOf(c.getValue())+1));
         metal_name_column.setCellValueFactory(c -> new SimpleStringProperty(
                 msabase.getSpecificationItemDAO().findMetal(
@@ -240,12 +245,12 @@ public class QuoteFX implements Initializable {
                                 c.getValue()
                     )
                 ).getMetal_name()));
-        density_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getDensity()));
+        density_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getDensity())));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
-        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getThickness()));
-        volume_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getVolume()));
-        weight_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getWeight()));
-        estimatedprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getEstimatedPrice()));
+        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getThickness())));
+        volume_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getVolume())));
+        weight_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getWeight())));
+        estimatedprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getEstimatedPrice())));
     }
     
     public void setQuoteTableView(){
