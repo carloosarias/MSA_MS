@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Company;
 import model.CompanyAddress;
@@ -38,6 +39,8 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
             "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE COMPANY_ID = ? ORDER BY id";
     private static final String SQL_LIST_OF_PENDING_ORDER_BY_ID = 
             "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE pending = ? ORDER BY id";
+    private static final String SQL_LIST_OF_DATE_ORDER_BY_ID = 
+            "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE invoice_date BETWEEN ? AND ?";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE (COMPANY_ID, BILLING_ADDRESS_ID, SHIPPING_ADDRESS_ID, invoice_date, terms, shipping_method, fob, pending) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -242,6 +245,29 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         }
         
         return invoice; 
+    }
+    @Override
+    public List<Invoice> listDateRange(Date start_date, Date end_date) throws DAOException {
+        List<Invoice> invoice = new ArrayList<>();
+        
+        Object[] values = {
+            start_date,
+            end_date
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_DATE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while (resultSet.next()){
+                invoice.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return invoice;
     }
     
     @Override

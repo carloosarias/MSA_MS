@@ -121,6 +121,10 @@ public class CreateQuoteFX implements Initializable {
             quoteitem_tableview.refresh();
         });
         
+        client_combo.setOnAction((ActionEvent) -> {
+            contact_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyContactDAO().list(client_combo.getSelectionModel().getSelectedItem())));
+        });
+        
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){
                 return;

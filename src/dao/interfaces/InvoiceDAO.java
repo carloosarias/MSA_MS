@@ -6,6 +6,7 @@
 package dao.interfaces;
 
 import dao.DAOException;
+import java.util.Date;
 import java.util.List;
 import model.Company;
 import model.CompanyAddress;
@@ -75,6 +76,7 @@ public interface InvoiceDAO {
      */    
     public List<Invoice> listCompany(Company company) throws IllegalArgumentException, DAOException;
     public List<Invoice> listPending(boolean pending) throws DAOException;
+    public List<Invoice> listDateRange(Date start_date, Date end_date) throws DAOException;
     public List<Invoice> filterListByCompany(List<Invoice> list, Company company);
     /**
      * Create the given Invoice in the database.

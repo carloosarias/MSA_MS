@@ -30,7 +30,7 @@ public class QuoteItemDAOJDBC implements QuoteItemDAO {
             "SELECT id, unit_price FROM QUOTE_ITEM WHERE id = ?";
     private static final String SQL_FIND_QUOTE_BY_ID = 
             "SELECT QUOTE_ID FROM QUOTE_ITEM WHERE id = ?";
-    private static final String SQL_FIND_COMPANY_CONTACT_BY_ID = 
+    private static final String SQL_FIND_SPECIFICATION_ITEM_BY_ID = 
             "SELECT SPECIFICATION_ITEM_ID FROM QUOTE_ITEM WHERE id = ?";
     private static final String SQL_LIST_OF_QUOTE_ORDER_BY_ID = 
             "SELECT id, unit_price FROM QUOTE_ITEM WHERE QUOTE_ID = ? ORDER BY ID";
@@ -38,9 +38,9 @@ public class QuoteItemDAOJDBC implements QuoteItemDAO {
             "INSERT INTO QUOTE_ITEM (SPECIFICATION_ITEM_ID, QUOTE_ID, unit_price) "
             + "VALUES (?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE QUOTE SET unit_price = ? WHERE id = ?";
+            "UPDATE QUOTE_ITEM SET unit_price = ? WHERE id = ?";
     private static final String SQL_DELETE =
-            "DELETE FROM QUOTE WHERE id = ?";
+            "DELETE FROM QUOTE_ITEM WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -130,7 +130,7 @@ public class QuoteItemDAOJDBC implements QuoteItemDAO {
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_QUOTE_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_SPECIFICATION_ITEM_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {

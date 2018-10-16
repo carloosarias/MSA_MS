@@ -24,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -106,6 +107,8 @@ public class QuoteFX implements Initializable {
     private Button add_button;
     @FXML
     private Button pdf_button;
+    @FXML
+    private Tab invoicequote_tab;
     
     private static PartRevision partrevision_selection;
     
@@ -116,6 +119,8 @@ public class QuoteFX implements Initializable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setInvoiceQuoteTab();
+        
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         status_combo.setItems(FXCollections.observableArrayList(status_items));
         status_combo.getSelectionModel().selectFirst();
@@ -152,6 +157,14 @@ public class QuoteFX implements Initializable {
             showAddStage();
             setQuoteItems();
         });
+    }
+    
+    public void setInvoiceQuoteTab(){
+        try {
+            invoicequote_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceQuoteFX.fxml")));
+        } catch (IOException ex) {
+            Logger.getLogger(QuoteFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void showAddStage(){

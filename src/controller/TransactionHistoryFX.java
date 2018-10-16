@@ -182,6 +182,7 @@ public class TransactionHistoryFX implements Initializable {
         enddate_picker.setOnAction((ActionEvent) -> {
             partnumber_combo.fireEvent(new ActionEvent());
         });
+        
         update_button.setOnAction((ActionEvent) -> {
            partnumber_combo.fireEvent(new ActionEvent()); 
         });
