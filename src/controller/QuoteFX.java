@@ -259,6 +259,7 @@ public class QuoteFX implements Initializable {
         quotedate_column.setCellValueFactory(new PropertyValueFactory<>("quote_date"));
         eau_column.setCellValueFactory(new PropertyValueFactory<>("estimated_annual_usage"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        status_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getApproved()));
         status_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
         status_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setApproved(t.getNewValue());

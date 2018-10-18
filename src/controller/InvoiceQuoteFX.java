@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -32,6 +33,8 @@ import msa_ms.MainApp;
  */
 public class InvoiceQuoteFX implements Initializable {
     
+    @FXML
+    private CheckBox processfilter_checkbox;
     @FXML
     private ComboBox<String> process_combo;
     @FXML
@@ -60,6 +63,7 @@ public class InvoiceQuoteFX implements Initializable {
     private List<InvoiceQuote> invoicequote_list = new ArrayList();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+
     
     /**
      * Initializes the controller class.
@@ -72,13 +76,19 @@ public class InvoiceQuoteFX implements Initializable {
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         setInvoiceQuoteItems();
         
+        processfilter_checkbox.setOnAction((ActionEvent) -> {
+            startdate_picker.fireEvent(ActionEvent);
+        });
+        
         process_combo.setOnAction((ActionEvent) -> {
-            filter_list();
+            if(processfilter_checkbox.isSelected()){
+                filter_list();
+            }
         });
         
         startdate_picker.setOnAction((ActionEvent) ->{
             setInvoiceQuoteItems();
-            if(!process_combo.getSelectionModel().isEmpty()){
+            if(processfilter_checkbox.isSelected()){
                 filter_list();
             }
         });
@@ -105,6 +115,9 @@ public class InvoiceQuoteFX implements Initializable {
     }
     
     public void filter_list(){
+        if(process_combo.getSelectionModel().isEmpty()){
+            return;
+        }
         List<InvoiceQuote> filtered_list = new ArrayList();
         for(InvoiceQuote item : invoicequote_list){
             if(msabase.getPartRevisionDAO().findSpecification(msabase.getQuoteDAO().findPartRevision(item.getQuote())).getProcess().equalsIgnoreCase(process_combo.getSelectionModel().getSelectedItem())){
