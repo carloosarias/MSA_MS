@@ -68,21 +68,23 @@ public class InvoiceQuoteFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setInvoiceQuoteTableView();
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
-        process_combo.getSelectionModel().selectFirst();
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         setInvoiceQuoteItems();
         
         process_combo.setOnAction((ActionEvent) -> {
-            setInvoiceQuoteItems();
+            filter_list();
         });
         
         startdate_picker.setOnAction((ActionEvent) ->{
             setInvoiceQuoteItems();
+            if(!process_combo.getSelectionModel().isEmpty()){
+                filter_list();
+            }
         });
         
         enddate_picker.setOnAction((ActionEvent) -> {
-            setInvoiceQuoteItems();
+            startdate_picker.fireEvent(ActionEvent);
         });
     }    
     
@@ -102,9 +104,19 @@ public class InvoiceQuoteFX implements Initializable {
         totalvalue_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTotal_value()));
     }
     
+    public void filter_list(){
+        List<InvoiceQuote> filtered_list = new ArrayList();
+        for(InvoiceQuote item : invoicequote_list){
+            if(msabase.getPartRevisionDAO().findSpecification(msabase.getQuoteDAO().findPartRevision(item.getQuote())).getProcess().equalsIgnoreCase(process_combo.getSelectionModel().getSelectedItem())){
+                filtered_list.add(item);
+            }
+        }
+        
+        invoicequote_tableview.setItems(FXCollections.observableArrayList(filtered_list));
+    }
+    
     public void setInvoiceQuoteItems(){
         invoicequote_list.clear();
-        invoicequote_tableview.getItems().clear();
         for(Invoice item : msabase.getInvoiceDAO().listDateRange(Date.valueOf(startdate_picker.getValue()), Date.valueOf(enddate_picker.getValue()))){
             for(InvoiceItem invoiceitem : msabase.getInvoiceItemDAO().list(item)){
                 InvoiceQuote invquote = new InvoiceQuote();
@@ -120,12 +132,6 @@ public class InvoiceQuoteFX implements Initializable {
                     invoicequote_list.get(i).setTotal_invoiced(invoicequote_list.get(i).getTotal_invoiced() + invoicequote_list.get(j).getTotal_invoiced());
                     invoicequote_list.remove(j);
                 }
-            }
-        }
-        
-        for(int i = 0; i < invoicequote_list.size(); i++){
-            if(!process_combo.getSelectionModel().getSelectedItem().equals(msabase.getPartRevisionDAO().findSpecification(msabase.getQuoteDAO().findPartRevision(invoicequote_list.get(i).getQuote())))){
-                invoicequote_list.remove(i);
             }
         }
         
