@@ -112,6 +112,7 @@ public class InvoiceFX implements Initializable {
         invoice_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> observable, Invoice oldValue, Invoice newValue) -> {
             setInvoiceDetails(newValue);
             setTotal();
+            pdf_button.setDisable(invoice_tableview.getSelectionModel().isEmpty());
         });
         
         add_button.setOnAction((ActionEvent) -> {

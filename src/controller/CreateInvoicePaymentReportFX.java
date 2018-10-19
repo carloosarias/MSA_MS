@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -85,6 +86,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        reportdate_picker.setValue(LocalDate.now());
         clientcombo_selection = new Company();
         invoice_list = new ArrayList<Invoice>();
         invoicepaymentitem_queue = new ArrayList<InvoicePaymentItem>();
