@@ -5,13 +5,20 @@
  */
 package controller;
 
+import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.fields.PdfFormField;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,11 +42,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.CompanyAddress;
 import model.PartRevision;
 import model.ProductPart;
 import model.Quote;
 import model.QuoteItem;
 import model.Specification;
+import msa_ms.MainApp;
 
 
 
@@ -151,6 +160,17 @@ public class QuoteFX implements Initializable {
         quote_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Quote> observable, Quote oldValue, Quote newValue) -> {
             setQuoteItemItems();
             setQuoteFields();
+            pdf_button.setDisable(quote_tableview.getSelectionModel().isEmpty());
+        });
+        
+        pdf_button.setOnAction((ActionEvent) -> {
+            try{
+                buildPDF(quote_tableview.getSelectionModel().getSelectedItem());
+                MainApp.openPDF("./src/pdf/QuotePDF.pdf");
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -266,6 +286,36 @@ public class QuoteFX implements Initializable {
             msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
              setQuoteItems();
         });
+    }
+    
+    private void buildPDF(Quote quote) throws IOException {
+            PdfDocument pdf = new PdfDocument(
+                new PdfReader(new File("./src/template/QuoteTemplate.pdf")),
+                new PdfWriter(new File("./src/pdf/QuotePDF.pdf"))
+            );
+            PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
+            Map<String, PdfFormField> fields = form.getFormFields();
+            fields.get("quote_id").setValue(""+quote.getId());
+            fields.get("date").setValue(quote.getQuote_date().toString());
+            fields.get("client").setValue(msabase.getCompanyContactDAO().findCompany(msabase.getQuoteDAO().findCompanyContact(quote)).getName());
+            fields.get("contact").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getName());
+            fields.get("contact_email").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getEmail());
+            fields.get("contact_number").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getPhone_number());
+            List<CompanyAddress> company_address = msabase.getCompanyAddressDAO().listActive(msabase.getCompanyContactDAO().findCompany(msabase.getQuoteDAO().findCompanyContact(quote)), true);
+            if(company_address.isEmpty()){
+                fields.get("client_address").setValue("n/a");
+            }else{
+                fields.get("client_address").setValue(company_address.get(0).getAddress());
+            }
+            fields.get("part_number").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getPart_number());
+            fields.get("revision").setValue(msabase.getQuoteDAO().findPartRevision(quote).getRev());
+            fields.get("description").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getDescription());
+            fields.get("process").setValue(msabase.getPartRevisionDAO().findSpecification(partrevision_selection).getProcess());
+            fields.get("eau").setValue(""+quote.getEstimated_annual_usage());
+            fields.get("unit_price").setValue(""+quote.getEstimated_total());
+            fields.get("comments").setValue(quote.getComments());
+            form.flattenFields();
+            pdf.close();
     }
     
     public static PartRevision getPartrevision_selection(){
