@@ -74,21 +74,21 @@ public class MainFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
+        employee_tab.setDisable(true);
+        company_tab.setDisable(true);
+        productpart_tab.setDisable(true);
+        orderpurchase_tab.setDisable(true);
+        incoming_tab.setDisable(true);
+        depart_tab.setDisable(true);
+        quote_tab.setDisable(true);
+        invoice_payment_tab.setDisable(true);
+        container_tab.setDisable(true);
+        process_tab.setDisable(true);
+        scrap_tab.setDisable(true);
         
         for(Module module : modules){
             switch(module.getName()){
                 default:
-                    employee_tab.setDisable(true);
-                    company_tab.setDisable(true);
-                    productpart_tab.setDisable(true);
-                    orderpurchase_tab.setDisable(true);
-                    incoming_tab.setDisable(true);
-                    depart_tab.setDisable(true);
-                    quote_tab.setDisable(true);
-                    invoice_payment_tab.setDisable(true);
-                    container_tab.setDisable(true);
-                    process_tab.setDisable(true);
-                    scrap_tab.setDisable(true);
                     break;
                 case "Recursos Humanos":
                     employee_tab.setDisable(false);
