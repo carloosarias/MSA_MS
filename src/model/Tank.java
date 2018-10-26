@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Pavilion Mini
  */
-public class Tank {
+public class Tank implements Serializable{
     // Properties ---------------------------------------------------------------------------------
 
     private Integer id;
