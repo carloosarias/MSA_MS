@@ -16,8 +16,9 @@ public class Container implements Serializable{
 
     private Integer id;
     private String type;
-    private String process;
-    private String details;
+    private String container_name;
+    private String description;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -36,20 +37,20 @@ public class Container implements Serializable{
         this.type = type;
     }
     
-    public String getProcess() {
-        return process;
+    public String getContainer_name() {
+        return container_name;
     }
 
-    public void setProcess(String process) {
-        this.process = process;
+    public void setContainer_name(String container_name) {
+        this.container_name = container_name;
     }
 
-    public String getDetails() {
-        return details;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setDescription(String description) {
+        this.description = description;
     }
     
     // Object overrides ---------------------------------------------------------------------------

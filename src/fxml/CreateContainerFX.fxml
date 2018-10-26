@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -14,34 +15,34 @@
          <children>
             <HBox>
                <children>
-                  <VBox>
+                  <VBox fillWidth="false">
                      <children>
-                        <Label text="Tipo de Contenedor">
+                        <Label text="Tipo de Contenedor:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="type_combo" prefWidth="150.0" promptText="Tipo de Contenedor">
+                        <ComboBox fx:id="type_combo" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <Label text="Proceso">
+                        <Label text="Nombre:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="process_combo" prefWidth="150.0" promptText="Proceso">
+                        <TextField fx:id="containername_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </ComboBox>
-                        <Label text="Detalles:">
+                        </TextField>
+                        <Label text="Descripción:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea fx:id="details_area" prefHeight="100.0" prefWidth="200.0" wrapText="true">
+                        <TextArea fx:id="description_area" prefHeight="100.0" prefWidth="200.0" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>

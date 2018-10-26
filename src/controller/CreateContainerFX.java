@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Container;
@@ -31,9 +32,9 @@ public class CreateContainerFX implements Initializable {
     @FXML
     private ComboBox<String> type_combo;
     @FXML
-    private ComboBox<String> process_combo;
+    private TextField containername_field;
     @FXML
-    private TextArea details_area;
+    private TextArea description_area;
     @FXML
     private Button save_button;
     
@@ -44,7 +45,6 @@ public class CreateContainerFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         type_combo.setItems(FXCollections.observableArrayList(MainApp.container_type_list));
-        process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){
@@ -62,31 +62,31 @@ public class CreateContainerFX implements Initializable {
     public boolean testFields(){
         boolean b = true;
         clearStyle();
-        if(process_combo.getSelectionModel().isEmpty()){
-            process_combo.setStyle("-fx-background-color: lightpink;");
+        if(containername_field.getText().replace(" ", "").equals("")){
+            containername_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(type_combo.getSelectionModel().isEmpty()){
             type_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
-        if(details_area.getText().replace(" ", "").equals("")){
-            details_area.setText("n/a");
+        if(description_area.getText().replace(" ", "").equals("")){
+            description_area.setText("n/a");
         }
         return b;
     }
     
     public void clearStyle(){
-        process_combo.setStyle(null);
+        containername_field.setStyle(null);
         type_combo.setStyle(null);
-        details_area.setStyle(null);
+        description_area.setStyle(null);
     }
     
     public void saveContainer(){
         Container container = new Container();
         container.setType(type_combo.getSelectionModel().getSelectedItem());
-        container.setProcess(process_combo.getSelectionModel().getSelectedItem());
-        container.setDetails(details_area.getText());
+        container.setContainer_name(containername_field.getText());
+        container.setDescription(description_area.getText());
         msabase.getContainerDAO().create(container);
     }
 }

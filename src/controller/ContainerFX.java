@@ -43,9 +43,9 @@ public class ContainerFX implements Initializable {
     @FXML
     private TableColumn<Container, String> type_column;
     @FXML
-    private TableColumn<Container, String> process_column;
+    private TableColumn<Container, String> containername_column;
     @FXML
-    private TextArea details_area;
+    private TableColumn<Container, String> description_column;
     @FXML
     private Button add_button;
     
@@ -59,22 +59,10 @@ public class ContainerFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setContainerTable();        
-        container_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Container> observable, Container oldValue, Container newValue) -> {
-            setContainerDetails(newValue);
-        });
         
         add_button.setOnAction((ActionEvent) -> {
             showAdd_stage();
         });
-    }
-   
-    public void setContainerDetails(Container container){
-        if(container == null){
-            details_area.setText(null);
-        }
-        else{
-            details_area.setText(container.getDetails());
-        }
     }
     
     public void updateContainerTable(){
@@ -103,7 +91,8 @@ public class ContainerFX implements Initializable {
     public void setContainerTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         type_column.setCellValueFactory(new PropertyValueFactory<>("type"));
-        process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
+        containername_column.setCellValueFactory(new PropertyValueFactory<>("container_name"));
+        description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
     }
     
 }

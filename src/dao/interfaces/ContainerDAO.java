@@ -40,16 +40,6 @@ public interface ContainerDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<Container> listType(String type) throws DAOException;
-    /**
-     * Returns a list of all Container matching process from the database ordered by Container ID. 
-     * The list is never null and is empty when the database does not contain any Container matching process.
-     * @param process The process to be searched for.
-     * @return A list of all Container matching process from the database ordered by Container ID.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<Container> listProcess(String process) throws DAOException;
-    
-    public List<Container> listTypeProcess(String type, String process) throws DAOException;
     
     /**
      * Create the given Container in the database.

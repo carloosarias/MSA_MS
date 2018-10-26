@@ -23,20 +23,16 @@ import model.Container;
 public class ContainerDAOJDBC implements ContainerDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, type, process, details FROM CONTAINER WHERE id = ?";
+            "SELECT id, type, container_name, description FROM CONTAINER WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, type, process, details FROM CONTAINER ORDER BY id";
+            "SELECT id, type, container_name, description FROM CONTAINER ORDER BY id";
     private static final String SQL_LIST_OF_TYPE_ORDER_BY_ID = 
-            "SELECT id, type, process, details FROM CONTAINER WHERE type = ? ORDER BY id";
-    private static final String SQL_LIST_OF_PROCESS_ORDER_BY_ID = 
-            "SELECT id, type, process, details FROM CONTAINER WHERE process = ? ORDER BY id";
-    private static final String SQL_LIST_OF_TYPE_PROCESS_ORDER_BY_ID = 
-            "SELECT id, type, process, details FROM CONTAINER WHERE type = ? AND process = ? ORDER BY id";
+            "SELECT id, type, container_name, description FROM CONTAINER WHERE type = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO CONTAINER (type, process, details) "
+            "INSERT INTO CONTAINER (type, container_name, description) "
             + "VALUES (?,?,?)";
     private static final String SQL_UPDATE = 
-            "UPDATE CONTAINER SET type = ?, process = ?, details = ? WHERE id = ?";
+            "UPDATE CONTAINER SET type = ?, container_name = ?, description = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM CONTAINER WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -129,53 +125,6 @@ public class ContainerDAOJDBC implements ContainerDAO{
     }
     
     @Override
-    public List<Container> listProcess(String process) throws DAOException {
-        List<Container> container = new ArrayList<>();
-        
-        Object[] values = {
-            process
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PROCESS_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                container.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return container;
-    }
-
-    @Override
-    public List<Container> listTypeProcess(String type, String process) throws DAOException {
-        List<Container> container = new ArrayList<>();
-        
-        Object[] values = {
-            type,
-            process
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_TYPE_PROCESS_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                container.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return container;
-    }
-    
-    @Override
     public void create(Container container) throws IllegalArgumentException, DAOException {
 
         if(container.getId() != null){
@@ -184,8 +133,8 @@ public class ContainerDAOJDBC implements ContainerDAO{
 
         Object[] values = {
             container.getType(),
-            container.getProcess(),
-            container.getDetails()
+            container.getContainer_name(),
+            container.getDescription()
         };
         
         try(
@@ -218,8 +167,8 @@ public class ContainerDAOJDBC implements ContainerDAO{
         
         Object[] values = {
             container.getType(),
-            container.getProcess(),
-            container.getDetails(),
+            container.getContainer_name(),
+            container.getDescription(),
             container.getId()
         };
         
@@ -269,8 +218,8 @@ public class ContainerDAOJDBC implements ContainerDAO{
         Container container = new Container();
         container.setId(resultSet.getInt("id"));
         container.setType(resultSet.getString("type"));
-        container.setProcess(resultSet.getString("process"));
-        container.setDetails(resultSet.getString("details"));
+        container.setContainer_name(resultSet.getString("container_name"));
+        container.setDescription(resultSet.getString("description"));
         return container;
     }
     

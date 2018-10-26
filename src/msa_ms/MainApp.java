@@ -36,9 +36,9 @@ public class MainApp extends Application{
             "Rechazo"
             );
     public static List<String> container_type_list = Arrays.asList(
-            "Tanque",
             "Barril",
             "Rack");
+    
     public static void openPDF(String path) throws IOException{
         File file = new File(path);
         Desktop.getDesktop().open(file);
