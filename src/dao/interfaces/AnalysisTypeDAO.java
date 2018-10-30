@@ -36,26 +36,26 @@ public interface AnalysisTypeDAO {
      * Create the given AnalysisType in the database.
      * The AnalysisType ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given AnalysisType.
-     * @param analysisType The AnalysisType to be created.
+     * @param analysis_type The AnalysisType to be created.
      * @throws IllegalArgumentException If the AnalysisType ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(AnalysisType analysisType) throws IllegalArgumentException, DAOException;
+    public void create(AnalysisType analysis_type) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given AnalysisType in the database. The AnalysisType ID must not be null, 
      * otherwise it will throw IllegalArgumentException.
-     * @param analysisType The AnalysisType to be updated.
+     * @param analysis_type The AnalysisType to be updated.
      * @throws IllegalArgumentException If the AnalysisType ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public void update(AnalysisType analysisType) throws IllegalArgumentException, DAOException;
+    public void update(AnalysisType analysis_type) throws IllegalArgumentException, DAOException;
     
     /**
      * Delete the given AnalysisType from the database. After deleting, the DAO will set the ID of the given
      * AnalysisType to null.
-     * @param analysisType The AnalysisType to be deleted from the database.
+     * @param analysis_type The AnalysisType to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
-    public void delete(AnalysisType analysisType) throws DAOException;
+    public void delete(AnalysisType analysis_type) throws DAOException;
 }

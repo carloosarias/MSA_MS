@@ -28,6 +28,7 @@ import dao.interfaces.QuoteItemDAO;
 import dao.interfaces.ScrapReportDAO;
 import dao.interfaces.SpecificationDAO;
 import dao.interfaces.SpecificationItemDAO;
+import dao.interfaces.TankDAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -354,6 +355,13 @@ public abstract class DAOFactory {
         return new ScrapReportDAOJDBC(this);
     }
     
+    /**
+     * Returns the Tank DAO associated with the current DAOFactory.
+     * @return The Tank DAO associated with the current DAOFactory.
+     */   
+    public TankDAO getTankDAO(){
+        return new TankDAOJDBC(this);
+    }
     // You can add more DAO implementation getters here.
 }
 

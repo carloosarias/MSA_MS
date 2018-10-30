@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -15,6 +16,7 @@ public class AnalysisReport implements Serializable{
     // Properties ---------------------------------------------------------------------------------
 
     private Integer id;
+    private Date report_date;
     private double quantity_used;
     private double result;
     private double estimated_adjust;
@@ -28,6 +30,13 @@ public class AnalysisReport implements Serializable{
 
     public void setId(Integer id) {
         this.id = id;
+    }
+    public Date getReport_date() {
+        return report_date;
+    }
+
+    public void setReport_date(Date report_date) {
+        this.report_date = report_date;
     }
 
     public double getQuantity_used() {

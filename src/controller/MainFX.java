@@ -56,6 +56,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab container_tab;
     @FXML
+    private Tab tank_tab;
+    @FXML
     private Tab process_tab;
     @FXML
     private Tab transaction_history_tab;
@@ -83,6 +85,7 @@ public class MainFX implements Initializable {
         quote_tab.setDisable(true);
         invoice_payment_tab.setDisable(true);
         container_tab.setDisable(true);
+        tank_tab.setDisable(true);
         process_tab.setDisable(true);
         scrap_tab.setDisable(true);
         
@@ -102,11 +105,13 @@ public class MainFX implements Initializable {
                     company_tab.setDisable(false);
                     productpart_tab.setDisable(false);
                     container_tab.setDisable(false);
+                    tank_tab.setDisable(false);
                     orderpurchase_tab.setDisable(false);
                     try {
                         company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
                         productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
                         container_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ContainerFX.fxml")));
+                        tank_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TankFX.fxml")));
                         orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
                     } catch (IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);

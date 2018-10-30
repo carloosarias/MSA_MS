@@ -98,6 +98,7 @@ public interface ProcessReportDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<ProcessReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException;
+    
     /**
      * Returns a list of all ProcessReport matching Employee ID from the database ordered by ProcessReport ID. 
      * The Employee ID must not be null, otherwise it will throw IllegalArgumentException.
