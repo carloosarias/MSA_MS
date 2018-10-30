@@ -6,9 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.IncomingReportDAOJDBC.map;
 import dao.interfaces.AnalysisTypeDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.AnalysisType;
-import model.IncomingReport;
 
 /**
  *

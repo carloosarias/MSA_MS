@@ -13,6 +13,7 @@ import model.Employee;
 import model.PartRevision;
 import model.ProcessReport;
 import model.ProductPart;
+import model.Tank;
 
 /**
  *
@@ -50,14 +51,14 @@ public interface ProcessReportDAO {
     public PartRevision findPartRevision(ProcessReport process_report) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns the Container from the database matching the given ProcessReport ID, otherwise null.
+     * Returns the Tank from the database matching the given ProcessReport ID, otherwise null.
      * ProcessReport ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param process_report The ProcessReport to get the Container from.
-     * @return The Container from the database matching the given ProcessReport ID, otherwise null.
+     * @param process_report The ProcessReport to get the Tank from.
+     * @return The Tank from the database matching the given ProcessReport ID, otherwise null.
      * @throws IllegalArgumentException If ProcessReport ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public Container findTank(ProcessReport process_report) throws IllegalArgumentException, DAOException;
+    public Tank findTank(ProcessReport process_report) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns the Container from the database matching the given ProcessReport ID, otherwise null.

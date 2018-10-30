@@ -21,6 +21,7 @@ import model.Employee;
 import model.PartRevision;
 import model.ProcessReport;
 import model.ProductPart;
+import model.Tank;
 
 /**
  *
@@ -34,8 +35,10 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             "SELECT EMPLOYEE_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM PROCESS_REPORT WHERE id = ?";
+    private static final String SQL_FIND_TANK_BY_ID = 
+            "SELECT TANK_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_CONTAINER_BY_ID = 
-            "SELECT TANK_ID, CONTAINER_ID FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT CONTAINER_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
@@ -159,12 +162,12 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     }
     
     @Override
-    public Container findTank(ProcessReport process_report) throws IllegalArgumentException, DAOException {
+    public Tank findTank(ProcessReport process_report) throws IllegalArgumentException, DAOException {
         if(process_report.getId() == null) {
             throw new IllegalArgumentException("ProcessReport is not created yet, the ProcessReport ID is null.");
         }
         
-        Container container = null;
+        Tank tank = null;
         
         Object[] values = {
             process_report.getId()
@@ -172,17 +175,17 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_CONTAINER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_TANK_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                container = daoFactory.getContainerDAO().find(resultSet.getInt("TANK_ID"));
+                tank = daoFactory.getTankDAO().find(resultSet.getInt("TANK_ID"));
             }
         } catch (SQLException e) {
             throw new DAOException(e);
         }        
         
-        return container;
+        return tank;
     }
     @Override
     public Container findContainer(ProcessReport process_report) throws IllegalArgumentException, DAOException {
