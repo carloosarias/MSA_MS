@@ -131,6 +131,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     public void delete(AnalysisReport analysis_report) throws DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
     // Helpers ------------------------------------------------------------------------------------
 
     /**
