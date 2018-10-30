@@ -2,6 +2,7 @@ package dao.JDBC;
 
 import dao.DAOConfigurationException;
 import dao.DAOProperties;
+import dao.interfaces.AnalysisTypeDAO;
 import dao.interfaces.EmployeeDAO;
 import dao.interfaces.CompanyDAO;
 import dao.interfaces.ModuleEmployeeDAO;
@@ -361,6 +362,14 @@ public abstract class DAOFactory {
      */   
     public TankDAO getTankDAO(){
         return new TankDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the AnalysisType DAO associated with the current DAOFactory.
+     * @return The AnalysisType DAO associated with the current DAOFactory.
+     */   
+    public AnalysisTypeDAO getAnalysisTypeDAO(){
+        return new AnalysisTypeDAOJDBC(this);
     }
     // You can add more DAO implementation getters here.
 }
