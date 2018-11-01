@@ -7,12 +7,12 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.AnalysisTypeDAOJDBC.map;
 import dao.interfaces.AnalysisReportDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import model.AnalysisReport;
@@ -94,42 +94,232 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     
     @Override
     public Tank findTank(AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(analysis_report.getId() == null) {
+            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null.");
+        }
+        
+        Tank tank = null;
+        
+        Object[] values = {
+            analysis_report.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_TANK_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                tank = daoFactory.getTankDAO().find(resultSet.getInt("TANK_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return tank;
     }
 
     @Override
     public AnalysisType findAnalysisType(AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(analysis_report.getId() == null) {
+            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null.");
+        }
+        
+        AnalysisType analysis_type = null;
+        
+        Object[] values = {
+            analysis_report.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_ANALYSIS_TYPE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                analysis_type = daoFactory.getAnalysisTypeDAO().find(resultSet.getInt("ANALYSIS_TYPE_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return analysis_type;
     }
 
     @Override
     public Employee findEmployee(AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(analysis_report.getId() == null) {
+            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null.");
+        }
+        
+        Employee employee = null;
+        
+        Object[] values = {
+            analysis_report.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                employee = daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return employee;
     }
 
     @Override
     public List<AnalysisReport> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<AnalysisReport> analysis_report = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                analysis_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return analysis_report;
     }
 
     @Override
     public List<AnalysisReport> listTankDateRange(Tank tank, Date start, Date end) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(tank.getId() == null) {
+            throw new IllegalArgumentException("Tank is not created yet, the Tank ID is null.");
+        }
+        
+        List<AnalysisReport> analysis_report = new ArrayList<>();
+        
+        Object[] values = {
+            tank.getId(),
+            start,
+            end
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_TANK_DATE_RANGE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                analysis_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return analysis_report;
     }
 
     @Override
     public void create(Tank tank, AnalysisType analysis_type, Employee employee, AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(tank.getId() == null){
+            throw new IllegalArgumentException("Container is not created yet, the Container ID is null.");
+        }
+        
+        if(analysis_type.getId() == null){
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
+        }
+        
+        if (employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        
+        if(analysis_report.getId() != null){
+            throw new IllegalArgumentException("ProcessReport is already created, the ProcessReport ID is null.");
+        }
+        
+        Object[] values = {
+            tank.getId(),
+            analysis_type.getId(),
+            employee.getId(),
+            analysis_report.getId(),
+            analysis_report.getReport_date(),
+            analysis_report.getQuantity_used(),
+            analysis_report.getResult(),
+            analysis_report.getEstimated_adjust(),
+            analysis_report.getApplied_adjust(),
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating AnalysisReport failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    analysis_report.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating AnalysisReport failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (analysis_report.getId() == null) {
+            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null.");
+        }
+        
+        Object[] values = {
+            analysis_report.getReport_date(),
+            analysis_report.getQuantity_used(),
+            analysis_report.getResult(),
+            analysis_report.getEstimated_adjust(),
+            analysis_report.getApplied_adjust(),
+            analysis_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating AnalysisReport failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(AnalysisReport analysis_report) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            analysis_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting AnalysisReport failed, no rows affected.");
+            } else{
+                analysis_report.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------

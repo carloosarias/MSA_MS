@@ -64,6 +64,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab scrap_tab;
     @FXML
+    private Tab analysis_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -88,7 +90,7 @@ public class MainFX implements Initializable {
         tank_tab.setDisable(true);
         process_tab.setDisable(true);
         scrap_tab.setDisable(true);
-        
+        analysis_tab.setDisable(true);
         for(Module module : modules){
             switch(module.getName()){
                 default:
@@ -167,6 +169,14 @@ public class MainFX implements Initializable {
                     scrap_tab.setDisable(false);
                     try{
                         scrap_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
+                    } catch(IOException ex) {
+                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                case "Análisis":
+                    analysis_tab.setDisable(false);
+                    try{
+                        analysis_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/AnalysisReportFX.fxml")));
                     } catch(IOException ex) {
                         Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -26,6 +26,7 @@
           <Tab fx:id="process_tab" closable="false" disable="true" text="Producción" />
           <Tab fx:id="transaction_history_tab" closable="false" disable="true" text="Historial de Transacciones" />
           <Tab fx:id="scrap_tab" closable="false" disable="true" text="Scrap" />
+          <Tab fx:id="analysis_tab" closable="false" disable="true" text="Análisis" />
         </tabs>
          <BorderPane.margin>
             <Insets />
