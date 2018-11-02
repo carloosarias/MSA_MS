@@ -2,6 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -9,29 +13,97 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisReportFX">
+<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisReportFX">
    <children>
-      <VBox>
+      <VBox alignment="CENTER">
          <children>
             <TabPane tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Reportes De Análisis">
                      <content>
-                        <HBox prefHeight="100.0" prefWidth="200.0" />
-                     </content></Tab>
-                <Tab text="Tipos de Análisis">
-                     <content>
-                        <HBox>
+                        <HBox alignment="CENTER">
                            <children>
                               <VBox>
                                  <children>
-                                    <TableView fx:id="analysistype_tableview">
+                                    <HBox>
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <CheckBox fx:id="tankfilter_checkbox" mnemonicParsing="false" text="Filtrar por Tanque">
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
+                                                </CheckBox>
+                                                <ComboBox fx:id="tank_combo" prefWidth="150.0" promptText="Tanque">
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
+                                                </ComboBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox>
+                                             <children>
+                                                <Label text="Desde:">
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <DatePicker fx:id="startdate_picker" prefWidth="150.0">
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
+                                                </DatePicker>
+                                             </children>
+                                          </VBox>
+                                          <VBox>
+                                             <children>
+                                                <Label text="Hasta:">
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <DatePicker fx:id="enddate_picker" prefWidth="150.0">
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
+                                                </DatePicker>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                    <TableView fx:id="analysisreport_tableview" prefHeight="500.0" prefWidth="1000.0">
                                       <columns>
-                                        <TableColumn fx:id="analysistypeid_column" prefWidth="75.0" resizable="false" text="ID" />
+                                        <TableColumn fx:id="analysisreportid_column" prefWidth="100.0" text="No. de Reporte" />
+                                        <TableColumn fx:id="analysisreportdate_column" prefWidth="120.0" text="Fecha de Reporte" />
+                                          <TableColumn fx:id="analysisreportemployee_column" prefWidth="120.0" text="Empleado" />
+                                          <TableColumn fx:id="analysisreporttank_column" prefWidth="100.0" text="Tanque" />
+                                          <TableColumn fx:id="analysisreporttype_column" prefWidth="100.0" text="Tipo de Análisis" />
+                                          <TableColumn fx:id="analysisreportquantityused_column" prefWidth="120.0" text="Cantidad Gastada" />
+                                          <TableColumn fx:id="analysisreportresult_column" prefWidth="100.0" text="Resultado" />
+                                          <TableColumn fx:id="analysisreportestimatedadjust_column" prefWidth="120.0" text="Ajuste Estimado" />
+                                          <TableColumn fx:id="analysisreportappliedadjust_column" prefWidth="118.0" text="Ajuste Agregado" />
+                                      </columns>
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                           </children></HBox>
+                     </content></Tab>
+                <Tab text="Tipos de Análisis">
+                     <content>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <TableView fx:id="analysistype_tableview" prefHeight="500.0">
+                                      <columns>
+                                        <TableColumn fx:id="analysistypeid_column" prefWidth="100.0" resizable="false" text="No. de ID" />
                                         <TableColumn fx:id="analysistypename_column" prefWidth="120.0" resizable="false" text="Nombre" />
                                           <TableColumn fx:id="analysistypedescription_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                                          <TableColumn fx:id="analysistypefactor_column" prefWidth="100.0" resizable="false" text="Factor" />
-                                          <TableColumn fx:id="analysistypeoptimal_column" prefWidth="100.0" resizable="false" text="Óptimo" />
+                                          <TableColumn fx:id="analysistypefactor_column" prefWidth="120.0" resizable="false" text="Factor" />
+                                          <TableColumn fx:id="analysistypeoptimal_column" prefWidth="120.0" resizable="false" text="Óptimo" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -46,7 +118,7 @@
             </TabPane>
             <HBox>
                <children>
-                  <Button mnemonicParsing="false" text="Nuevo Reporte De Análisis">
+                  <Button fx:id="addanalysisreport_button" mnemonicParsing="false" text="Nuevo Reporte De Análisis">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>

@@ -83,7 +83,7 @@ public class Tank implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%d",
-                id);
+        return String.format("%d - %d",
+                id, tank_name);
     }
 }
