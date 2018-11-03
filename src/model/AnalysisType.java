@@ -92,7 +92,7 @@ public class AnalysisType implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%d",
-                id);
+        return String.format("%d - %s",
+                id, name);
     }
 }

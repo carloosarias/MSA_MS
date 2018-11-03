@@ -37,7 +37,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, report_date, quantity_used, result, estimated_adjust, applied_adjust FROM ANALYSIS_REPORT ORDER BY id";
     private static final String SQL_LIST_TANK_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date, quantity_used, result, estimated_adjust, applied_adjust FROM PROCESS_REPORT WHERE TANK_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, report_date, quantity_used, result, estimated_adjust, applied_adjust FROM ANALYSIS_REPORT WHERE TANK_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, quantity_used, result, estimated_adjust, applied_adjust) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

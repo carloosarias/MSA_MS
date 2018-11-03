@@ -8,6 +8,8 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +31,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.AnalysisReport;
 import model.AnalysisType;
+import model.Tank;
+
 
 /**
  * FXML Controller class
@@ -75,36 +79,43 @@ public class AnalysisReportFX implements Initializable {
     private TableColumn<AnalysisReport, Double> analysisreportappliedadjust_column;
     @FXML
     private Button addanalysisreport_button;
-    
-    private Stage addanalysistype_stage = new Stage();
-    
-    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     @FXML
-    private CheckBox tankfilter_checkbox;
-    @FXML
-    private ComboBox<?> tank_combo;
+    private ComboBox<Tank> tank_combo;
     @FXML
     private DatePicker startdate_picker;
     @FXML
     private DatePicker enddate_picker;
+    
+    private Stage addanalysistype_stage = new Stage();
+    private Stage addanalysisreport_stage = new Stage();
+    
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
+        tank_combo.getSelectionModel().selectFirst();
+        startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
+        enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
+        
         setAnalysisTypeTable();
         setAnalysisTypeItems();
         
         addanalysistype_button.setOnAction((ActionEvent) -> {
             addanalysistype_button.setDisable(true);
             showAddAnalysisTypeStage();
-            setAnalysisTypeItems();
         });
         
+        addanalysisreport_button.setOnAction((ActionEvent) -> {
+            addanalysisreport_button.setDisable(true);
+            showAddAnalysisReportStage();
+        });
         
         setAnalysisReportTable();
-        //setAnalysisReportItems();
+        setAnalysisReportItems();
     }
     
     public void setAnalysisReportTable(){
@@ -130,10 +141,13 @@ public class AnalysisReportFX implements Initializable {
     public void setAnalysisTypeItems(){
         analysistype_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisTypeDAO().list()));
     }
-    /*
-    public setAnalysisReportItems(){
-        analysisreport_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisReportDAO().listTankDateRange(tank, start, end)));
-    }*/
+    
+    public void setAnalysisReportItems(){
+        if(tank_combo.getSelectionModel().isEmpty()){
+            return;
+        }
+        analysisreport_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisReportDAO().listTankDateRange(tank_combo.getSelectionModel().getSelectedItem(), Date.valueOf(startdate_picker.getValue()), Date.valueOf(enddate_picker.getValue()))));
+    }
     
     public void showAddAnalysisTypeStage(){
         try {
@@ -149,6 +163,25 @@ public class AnalysisReportFX implements Initializable {
             addanalysistype_stage.showAndWait();
             addanalysistype_button.setDisable(false);
             setAnalysisTypeItems();
+        } catch (IOException ex) {
+            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void showAddAnalysisReportStage(){
+        try {
+            addanalysisreport_stage = new Stage();
+            addanalysisreport_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateAnalysisReportFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            addanalysisreport_stage.setTitle("Nuevo Reporte de Análisis");
+            addanalysisreport_stage.setResizable(false);
+            addanalysisreport_stage.initStyle(StageStyle.UTILITY);
+            addanalysisreport_stage.setScene(scene);
+            addanalysisreport_stage.showAndWait();
+            addanalysisreport_button.setDisable(false);
+            setAnalysisReportItems();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -23,18 +23,16 @@ import model.Tank;
 public class TankDAOJDBC implements TankDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, tank_name, description, volume FROM CONTAINER WHERE id = ?";
+            "SELECT id, tank_name, description, volume FROM TANK WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, tank_name, description, volume FROM CONTAINER ORDER BY id";
-    private static final String SQL_LIST_OF_TYPE_ORDER_BY_ID = 
-            "SELECT id, tank_name, description, volume FROM CONTAINER WHERE type = ? ORDER BY id";
+            "SELECT id, tank_name, description, volume FROM TANK ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO CONTAINER (tank_name, description, volume) "
+            "INSERT INTO TANK (tank_name, description, volume) "
             + "VALUES (?,?,?)";
     private static final String SQL_UPDATE = 
-            "UPDATE CONTAINER SET tank_name = ?, description = ?, volume = ? WHERE id = ?";
+            "UPDATE TANK SET tank_name = ?, description = ?, volume = ? WHERE id = ?";
     private static final String SQL_DELETE =
-            "DELETE FROM CONTAINER WHERE id = ?";
+            "DELETE FROM TANK WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -84,7 +82,7 @@ public class TankDAOJDBC implements TankDAO {
     
     @Override
     public List<Tank> list() throws DAOException {
-        List<Tank> container = new ArrayList<>();
+        List<Tank> tank = new ArrayList<>();
         
         try(
             Connection connection = daoFactory.getConnection();
@@ -92,13 +90,13 @@ public class TankDAOJDBC implements TankDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                container.add(map(resultSet));
+                tank.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return container;
+        return tank;
     }
     
     @Override
