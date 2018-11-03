@@ -243,7 +243,6 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             tank.getId(),
             analysis_type.getId(),
             employee.getId(),
-            analysis_report.getId(),
             analysis_report.getReport_date(),
             analysis_report.getQuantity_used(),
             analysis_report.getResult(),
