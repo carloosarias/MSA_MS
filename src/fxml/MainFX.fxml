@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -12,21 +13,21 @@
    <center>
       <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab fx:id="employee_tab" closable="false" disable="true" text="Empleados" />
-          <Tab fx:id="company_tab" closable="false" disable="true" text="Compañías" />
-          <Tab fx:id="productpart_tab" closable="false" disable="true" text="Partes y Revisiones" />
-          <Tab fx:id="container_tab" closable="false" disable="true" text="Contenedores" />
-          <Tab fx:id="tank_tab" closable="false" disable="true" text="Tanques" />
-          <Tab fx:id="orderpurchase_tab" closable="false" disable="true" text="Orden De Compra" />
-          <Tab fx:id="incoming_tab" closable="false" disable="true" text="Reciba" />
-          <Tab fx:id="depart_tab" closable="false" disable="true" text="Remisiones" />
-          <Tab fx:id="invoice_tab" closable="false" disable="true" text="Facturación" />
-          <Tab fx:id="quote_tab" closable="false" disable="true" text="Cotización" />
-          <Tab fx:id="invoice_payment_tab" closable="false" disable="true" text="Pago de Facturas" />
-          <Tab fx:id="process_tab" closable="false" disable="true" text="Producción" />
-          <Tab fx:id="transaction_history_tab" closable="false" disable="true" text="Historial de Transacciones" />
-          <Tab fx:id="scrap_tab" closable="false" disable="true" text="Scrap" />
-          <Tab fx:id="analysis_tab" closable="false" disable="true" text="Análisis" />
+          <Tab fx:id="employee_tab" closable="false" text="Empleados" />
+          <Tab fx:id="company_tab" closable="false" text="Compañías" />
+          <Tab fx:id="productpart_tab" closable="false" text="Partes y Revisiones" />
+          <Tab fx:id="container_tab" closable="false" text="Contenedores" />
+          <Tab fx:id="tank_tab" closable="false" text="Tanques" />
+          <Tab fx:id="orderpurchase_tab" closable="false" text="Orden De Compra" />
+          <Tab fx:id="incoming_tab" closable="false" text="Reciba" />
+          <Tab fx:id="depart_tab" closable="false" text="Remisiones" />
+          <Tab fx:id="invoice_tab" closable="false" text="Facturación" />
+          <Tab fx:id="quote_tab" closable="false" text="Cotización" />
+          <Tab fx:id="invoice_payment_tab" closable="false" text="Pago de Facturas" />
+          <Tab fx:id="process_tab" closable="false" text="Producción" />
+          <Tab fx:id="transaction_history_tab" closable="false" text="Historial de Transacciones" />
+          <Tab fx:id="scrap_tab" closable="false" text="Scrap" />
+          <Tab fx:id="analysis_tab" closable="false" text="Análisis" />
         </tabs>
          <BorderPane.margin>
             <Insets />
@@ -44,4 +45,11 @@
         </menus>
       </MenuBar>
    </top>
+   <left>
+      <ListView fx:id="menu_listview" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </BorderPane.margin>
+      </ListView>
+   </left>
 </BorderPane>

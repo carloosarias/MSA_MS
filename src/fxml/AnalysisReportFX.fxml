@@ -65,17 +65,17 @@
                                           </VBox>
                                        </children>
                                     </HBox>
-                                    <TableView fx:id="analysisreport_tableview" prefHeight="500.0" prefWidth="1000.0">
+                                    <TableView fx:id="analysisreport_tableview" prefHeight="500.0">
                                       <columns>
-                                        <TableColumn fx:id="analysisreportid_column" prefWidth="100.0" text="No. de Reporte" />
-                                        <TableColumn fx:id="analysisreportdate_column" prefWidth="120.0" text="Fecha de Reporte" />
-                                          <TableColumn fx:id="analysisreportemployee_column" prefWidth="120.0" text="Empleado" />
-                                          <TableColumn fx:id="analysisreporttank_column" prefWidth="100.0" text="Tanque" />
-                                          <TableColumn fx:id="analysisreporttype_column" prefWidth="100.0" text="Tipo de Análisis" />
-                                          <TableColumn fx:id="analysisreportquantityused_column" prefWidth="120.0" text="Cantidad Gastada" />
-                                          <TableColumn fx:id="analysisreportresult_column" prefWidth="100.0" text="Resultado" />
-                                          <TableColumn fx:id="analysisreportestimatedadjust_column" prefWidth="120.0" text="Ajuste Estimado" />
-                                          <TableColumn fx:id="analysisreportappliedadjust_column" prefWidth="118.0" text="Ajuste Agregado" />
+                                        <TableColumn fx:id="analysisreportid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
+                                        <TableColumn fx:id="analysisreportdate_column" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
+                                          <TableColumn fx:id="analysisreportemployee_column" prefWidth="120.0" resizable="false" text="Empleado" />
+                                          <TableColumn fx:id="analysisreporttank_column" prefWidth="100.0" resizable="false" text="Tanque" />
+                                          <TableColumn fx:id="analysisreporttype_column" prefWidth="120.0" resizable="false" text="Tipo de Análisis" />
+                                          <TableColumn fx:id="analysisreportquantityused_column" prefWidth="130.0" resizable="false" text="Cantidad Gastada (ml)" />
+                                          <TableColumn fx:id="analysisreportresult_column" prefWidth="100.0" resizable="false" text="Resultado (gr/lt)" />
+                                          <TableColumn fx:id="analysisreportestimatedadjust_column" prefWidth="130.0" resizable="false" text="Ajuste Estimado (kg)" />
+                                          <TableColumn fx:id="analysisreportappliedadjust_column" prefWidth="130.0" resizable="false" text="Ajuste Agregado (kg)" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -97,7 +97,7 @@
                                         <TableColumn fx:id="analysistypename_column" prefWidth="120.0" resizable="false" text="Nombre" />
                                           <TableColumn fx:id="analysistypedescription_column" prefWidth="200.0" resizable="false" text="Descripción" />
                                           <TableColumn fx:id="analysistypefactor_column" prefWidth="120.0" resizable="false" text="Factor" />
-                                          <TableColumn fx:id="analysistypeoptimal_column" prefWidth="120.0" resizable="false" text="Óptimo" />
+                                          <TableColumn fx:id="analysistypeoptimal_column" prefWidth="120.0" resizable="false" text="Óptimo (gr/lt)" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

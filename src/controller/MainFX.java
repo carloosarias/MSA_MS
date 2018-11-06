@@ -12,10 +12,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -23,6 +26,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.InvoicePaymentReport;
 import model.Module;
 import msa_ms.MainApp;
 
@@ -71,125 +75,93 @@ public class MainFX implements Initializable {
     private List<Module> modules;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    @FXML
+    private ListView<Module> menu_listview;
+    @FXML
+    private TabPane root_tabpane;
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        setModules();
         modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
-        employee_tab.setDisable(true);
-        company_tab.setDisable(true);
-        productpart_tab.setDisable(true);
-        orderpurchase_tab.setDisable(true);
-        incoming_tab.setDisable(true);
-        depart_tab.setDisable(true);
-        quote_tab.setDisable(true);
-        invoice_payment_tab.setDisable(true);
-        container_tab.setDisable(true);
-        tank_tab.setDisable(true);
-        process_tab.setDisable(true);
-        scrap_tab.setDisable(true);
-        analysis_tab.setDisable(true);
-        for(Module module : modules){
-            switch(module.getName()){
-                default:
-                    break;
-                case "Recursos Humanos":
-                    employee_tab.setDisable(false);
-                    try {
-                        employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
-                    } catch (IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case "Compras":
-                    company_tab.setDisable(false);
-                    productpart_tab.setDisable(false);
-                    container_tab.setDisable(false);
-                    tank_tab.setDisable(false);
-                    orderpurchase_tab.setDisable(false);
-                    try {
-                        company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
-                        productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
-                        container_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ContainerFX.fxml")));
-                        tank_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TankFX.fxml")));
-                        orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
-                    } catch (IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case "Reciba":
-                    incoming_tab.setDisable(false);
-                    depart_tab.setDisable(false);
-                    try {
-                        incoming_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
-                        depart_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX.fxml")));
-                    } catch (IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case "Facturación":
-                    invoice_tab.setDisable(false);
-                    invoice_payment_tab.setDisable(false);
-                    try {
-                        invoice_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
-                        invoice_payment_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoicePaymentReportFX.fxml")));
-                    } catch (IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case "Cotización":
-                    quote_tab.setDisable(false);
-                    try{
-                        quote_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));
-                    } catch(IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case "Producción":
-                    process_tab.setDisable(false);
-                    try{
-                        process_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ProcessReportFX.fxml")));
-                    } catch(IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case "Historial Producción":
-                    break;
-                case "Historial de Transacciones":
-                    transaction_history_tab.setDisable(false);
-                    try{
-                        transaction_history_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
-                    } catch(IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case "Scrap":
-                    scrap_tab.setDisable(false);
-                    try{
-                        scrap_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
-                    } catch(IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
-                case "Análisis":
-                    analysis_tab.setDisable(false);
-                    try{
-                        analysis_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/AnalysisReportFX.fxml")));
-                    } catch(IOException ex) {
-                        Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    break;
+        menu_listview.setItems(FXCollections.observableArrayList(modules));
+        Module delete = new Module();
+        for(Module module : menu_listview.getItems()){
+            if(module.getName().equals("Historial Producción")){
+                delete = module;
             }
         }
+        menu_listview.getItems().remove(delete);
+        menu_listview.getSelectionModel().clearAndSelect(0);
+        setTabs(menu_listview.getSelectionModel().getSelectedItem());
+        
+        menu_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
+            root_tabpane = new TabPane();
+            setTabs(newValue);
+            root_pane.setCenter(root_tabpane);
+            root_pane.getScene().getWindow().sizeToScene();
+        });
         
         logout.setOnAction((ActionEvent) ->{
             MainApp.employee_id = null;
             showLogin();
         });
     }
-    
+    public void setModules(){
+        try {
+            employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
+            company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
+            productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
+            container_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ContainerFX.fxml")));
+            tank_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TankFX.fxml")));
+            orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
+            incoming_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
+            depart_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX.fxml")));
+            invoice_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
+            invoice_payment_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoicePaymentReportFX.fxml")));
+            quote_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));
+            process_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ProcessReportFX.fxml")));
+            transaction_history_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
+            scrap_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
+            analysis_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/AnalysisReportFX.fxml")));
+        } catch (IOException ex) {
+            Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void setTabs(Module module){
+            switch(module.getName()){
+                case "Recursos Humanos":
+                    root_tabpane.getTabs().setAll(employee_tab);
+                    break;
+                case "Compras":
+                    root_tabpane.getTabs().setAll(company_tab, productpart_tab, container_tab, tank_tab, orderpurchase_tab);
+                    break;
+                case "Reciba":
+                    root_tabpane.getTabs().setAll(incoming_tab, depart_tab);
+                    break;
+                case "Facturación":
+                    root_tabpane.getTabs().setAll(invoice_tab, invoice_payment_tab);
+                    break;
+                case "Cotización":
+                    root_tabpane.getTabs().setAll(quote_tab);
+                    break;
+                case "Historial Producción":
+                case "Producción":
+                    root_tabpane.getTabs().setAll(process_tab);
+                    break;
+                case "Historial de Transacciones":
+                    root_tabpane.getTabs().setAll(transaction_history_tab);
+                    break;
+                case "Scrap":
+                    root_tabpane.getTabs().setAll(scrap_tab);
+                    break;
+                case "Análisis":
+                    root_tabpane.getTabs().setAll(analysis_tab);
+            }
+    }
     public void showLogin(){
         try {
             Stage stage = (Stage) root_pane.getScene().getWindow();
