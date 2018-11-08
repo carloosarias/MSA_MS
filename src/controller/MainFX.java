@@ -26,7 +26,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.InvoicePaymentReport;
 import model.Module;
 import msa_ms.MainApp;
 
@@ -57,8 +56,6 @@ public class MainFX implements Initializable {
     private Tab quote_tab;
     @FXML
     private Tab invoice_payment_tab;
-    @FXML
-    private Tab container_tab;
     @FXML
     private Tab tank_tab;
     @FXML
@@ -115,7 +112,6 @@ public class MainFX implements Initializable {
             employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
             company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
             productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
-            container_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ContainerFX.fxml")));
             tank_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TankFX.fxml")));
             orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
             incoming_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
@@ -137,7 +133,7 @@ public class MainFX implements Initializable {
                     root_tabpane.getTabs().setAll(employee_tab);
                     break;
                 case "Compras":
-                    root_tabpane.getTabs().setAll(company_tab, productpart_tab, container_tab, tank_tab, orderpurchase_tab);
+                    root_tabpane.getTabs().setAll(company_tab, productpart_tab, tank_tab, orderpurchase_tab);
                     break;
                 case "Reciba":
                     root_tabpane.getTabs().setAll(incoming_tab, depart_tab);

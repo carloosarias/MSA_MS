@@ -81,7 +81,7 @@ public class TankFX implements Initializable {
             add_button.setDisable(false);
             updateContainerTable();
         } catch (IOException ex) {
-            Logger.getLogger(ContainerFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TankFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
         

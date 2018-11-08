@@ -8,10 +8,8 @@ package dao.interfaces;
 import dao.DAOException;
 import java.util.Date;
 import java.util.List;
-import model.Container;
 import model.Employee;
 import model.PartRevision;
-import model.ProcessReport;
 import model.ProductPart;
 import model.ScrapReport;
 

@@ -5,18 +5,16 @@
  */
 package model;
 
-import java.io.Serializable;
-
 /**
  *
  * @author Pavilion Mini
  */
-public class Container implements Serializable{
+public class EquipmentTypeCheck {
+    
     // Properties ---------------------------------------------------------------------------------
 
     private Integer id;
-    private String type;
-    private String container_name;
+    private String name;
     private String description;
     
     // Getters/setters ----------------------------------------------------------------------------
@@ -28,23 +26,15 @@ public class Container implements Serializable{
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public String getType(){
-        return type;
+    
+    public String getName(){
+        return name;
     }
     
-    public void setType(String type){
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
     
-    public String getContainer_name() {
-        return container_name;
-    }
-
-    public void setContainer_name(String container_name) {
-        this.container_name = container_name;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -56,18 +46,18 @@ public class Container implements Serializable{
     // Object overrides ---------------------------------------------------------------------------
     
     /**
-     * This should compare Container by ID only.
+     * This should compare EquipmentTypeCheck by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof Container) && (id != null)
-            ? id.equals(((Container) other).id)
+        return (other instanceof EquipmentTypeCheck) && (id != null)
+            ? id.equals(((EquipmentTypeCheck) other).id)
             : (other == this);
     }
 
     /**
-     * Container with same ID should return same hashcode.
+     * EquipmentTypeCheck with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -78,12 +68,13 @@ public class Container implements Serializable{
     }
 
     /**
-     * Returns the String representation of this Container. Not required, it just pleases reading logs.
+     * Returns the String representation of this EquipmentTypeCheck. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return String.format("%d",
-                id);
+        return String.format("%d - %s",
+                id, name);
     }
+    
 }
