@@ -27,11 +27,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import model.Container;
 import model.Employee;
+import model.Equipment;
+import model.EquipmentType;
 import model.PartRevision;
 import model.ProcessReport;
 import model.ProductPart;
+import model.Tank;
 import msa_ms.MainApp;
 
 /**
@@ -50,11 +52,11 @@ public class CreateProcessReportFX implements Initializable {
     @FXML
     private ComboBox<String> process_combo;
     @FXML
-    private ComboBox<Container> tank_combo;
+    private ComboBox<Tank> tank_combo;
     @FXML
-    private ComboBox<String> containertype_combo;
+    private ComboBox<EquipmentType> equipmenttype_combo;
     @FXML
-    private ComboBox<Container> container_combo;
+    private ComboBox<Equipment> equipment_combo;
     @FXML
     private ComboBox<ProductPart> partnumber_combo;
     @FXML
@@ -101,16 +103,16 @@ public class CreateProcessReportFX implements Initializable {
         setSpinnerValues();
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
-        tank_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType("Tanque")));
-        containertype_combo.setItems(FXCollections.observableArrayList("Barril", "Rack"));
+        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
+        equipmenttype_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list()));
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         employee_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
         
-        containertype_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            container_combo.getSelectionModel().clearSelection();
-            container_combo.setItems(FXCollections.observableArrayList(msabase.getContainerDAO().listType(newValue)));
-            container_combo.setDisable(container_combo.getItems().isEmpty());
+        equipmenttype_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EquipmentType> observable, EquipmentType oldValue, EquipmentType newValue) -> {
+            equipment_combo.getSelectionModel().clearSelection();
+            equipment_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().list(newValue)));
+            equipment_combo.setDisable(equipment_combo.getItems().isEmpty());
         });
         
         partnumber_combo.setOnAction((ActionEvent) -> {
@@ -170,7 +172,7 @@ public class CreateProcessReportFX implements Initializable {
             employee_combo.getSelectionModel().getSelectedItem(),
             revisioncombo_selection,
             tank_combo.getSelectionModel().getSelectedItem(),
-            container_combo.getSelectionModel().getSelectedItem(),
+            equipment_combo.getSelectionModel().getSelectedItem(),
             process_report);
     }
     
@@ -178,8 +180,8 @@ public class CreateProcessReportFX implements Initializable {
         reportdate_picker.setStyle(null);
         process_combo.setStyle(null);
         tank_combo.setStyle(null);   
-        containertype_combo.setStyle(null);
-        container_combo.setStyle(null);
+        equipmenttype_combo.setStyle(null);
+        equipment_combo.setStyle(null);
         lotnumber_field.setStyle(null);        
         quantity_field.setStyle(null);        
         partnumber_combo.setStyle(null);        
@@ -208,13 +210,13 @@ public class CreateProcessReportFX implements Initializable {
             tank_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
-        if(containertype_combo.getSelectionModel().isEmpty()){
-            containertype_combo.setStyle("-fx-background-color: lightpink;");
+        if(equipmenttype_combo.getSelectionModel().isEmpty()){
+            equipmenttype_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         
-        if(container_combo.getSelectionModel().isEmpty()){
-            container_combo.setStyle("-fx-background-color: lightpink;");
+        if(equipment_combo.getSelectionModel().isEmpty()){
+            equipment_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         

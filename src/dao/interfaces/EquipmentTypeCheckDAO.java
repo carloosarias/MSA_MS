@@ -34,53 +34,54 @@ public interface EquipmentTypeCheckDAO {
      * @throws DAOException If something fails at database level.
      */
     public EquipmentType findEquipmentType(EquipmentTypeCheck equipment_type_check) throws IllegalArgumentException, DAOException;
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    //-------------------------------------------------------------------------------------------------------------------------------
-    
-    
-    
-    
+
     /**
-     * Returns a list of all EquipmentType from the database ordered by EquipmentType ID. The list is never null and
-     * is empty when the database does not contain any EquipmentType.
-     * @return A list of all EquipmentType from the database ordered by EquipmentType ID.
+     * Returns a list of all EquipmentTypeCheck from the database ordered by EquipmentTypeCheck ID. The list is never null and
+     * is empty when the database does not contain any EquipmentTypeCheck.
+     * @return A list of all EquipmentTypeCheck from the database ordered by EquipmentTypeCheck ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<EquipmentType> list() throws DAOException;
+    public List<EquipmentTypeCheck> list() throws DAOException;
     
     /**
-     * Create the given EquipmentType in the database.
-     * The EquipmentType ID must not be null otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given Metal.
-     * @param equipment_type The EquipmentType to be created.
-     * @throws IllegalArgumentException If the Metal ID is not null.
+     * Returns a list of all EquipmentTypeCheck matching Invoice ID from the database ordered by EquipmentType ID. 
+     * The EquipmentType ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not 
+     * contain any EquipmentTypeCheck matching EquipmentType ID.
+     * @param equipment_type The EquipmentType ID to be searched for.
+     * @return A list of all EquipmentTypeCheck matching EquipmentType ID from the database ordered by EquipmentTypeCheck ID.
+     * @throws IllegalArgumentException If EquipmentType ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(EquipmentType equipment_type) throws IllegalArgumentException, DAOException;
+    public List<EquipmentTypeCheck> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given EquipmentType in the database. The EquipmentType ID must not be null, 
+     * Create the given EquipmentTypeCheck in the database.
+     * The EquipmentType ID must not be null and the EquipmentTypeCheck ID must be null,
      * otherwise it will throw IllegalArgumentException.
-     * @param equipment_type The EquipmentType to be updated.
+     * After creating, the DAO will set the obtained ID in the given EquipmentTypeCheck.
+     * @param equipment_type The EquipmentType to be assigned to this EquipmentTypeCheck.
+     * @param equipment_type_check The EquipmentTypeCheck to be created.
      * @throws IllegalArgumentException If the EquipmentType ID is null.
+     * @throws IllegalArgumentException If the EquipmentTypeCheck ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void update(EquipmentType equipment_type) throws IllegalArgumentException, DAOException;
+    public void create(EquipmentType equipment_type, EquipmentTypeCheck equipment_type_check) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given EquipmentType from the database. After deleting, the DAO will set the ID of the given
-     * EquipmentType to null.
-     * @param equipment_type The EquipmentType to be deleted from the database.
+     * Update the given EquipmentTypeCheck in the database. The EquipmentTypeCheck ID must not be null, 
+     * otherwise it will throw IllegalArgumentException.
+     * @param equipment_type_check The EquipmentTypeCheck to be updated.
+     * @throws IllegalArgumentException If the EquipmentTypeCheck ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public void update(EquipmentTypeCheck equipment_type_check) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Delete the given EquipmentTypeCheck from the database. After deleting, the DAO will set the ID of the given
+     * EquipmentTypeCheck to null.
+     * @param equipment_type_check The EquipmentTypeCheck to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
-    public void delete(EquipmentType equipment_type) throws DAOException;
+    public void delete(EquipmentTypeCheck equipment_type_check) throws DAOException;
 }

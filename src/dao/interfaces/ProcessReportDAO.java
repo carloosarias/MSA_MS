@@ -8,8 +8,8 @@ package dao.interfaces;
 import dao.DAOException;
 import java.util.Date;
 import java.util.List;
-import model.Container;
 import model.Employee;
+import model.Equipment;
 import model.PartRevision;
 import model.ProcessReport;
 import model.ProductPart;
@@ -61,14 +61,14 @@ public interface ProcessReportDAO {
     public Tank findTank(ProcessReport process_report) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns the Container from the database matching the given ProcessReport ID, otherwise null.
+     * Returns the Equipment from the database matching the given ProcessReport ID, otherwise null.
      * ProcessReport ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param process_report The ProcessReport to get the Container from.
-     * @return The Container from the database matching the given ProcessReport ID, otherwise null.
+     * @param process_report The ProcessReport to get the Equipment from.
+     * @return The Equipment from the database matching the given ProcessReport ID, otherwise null.
      * @throws IllegalArgumentException If ProcessReport ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public Container findContainer(ProcessReport process_report) throws IllegalArgumentException, DAOException;
+    public Equipment findEquipment(ProcessReport process_report) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all ProcessReport from the database ordered by ProcessReport ID. The list is never null and
@@ -114,24 +114,36 @@ public interface ProcessReportDAO {
     public List<ProcessReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException;
     
     /**
+     * Returns a list of all ProcessReport matching ProductPart ID from the database ordered by ProcessReport ID. 
+     * The ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not contain any ProcessReport matching ProductPart ID.
+     * @param product_part The Employee ID to be searched for.
+     * @param start The start date of the range.
+     * @param end the end date of the range.
+     * @return A list of all ProcessReport matching ProductPart ID from the database ordered by ProcessReport ID.
+     * @throws IllegalArgumentException If ProductPart ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<ProcessReport> listProductPartDateRange(ProductPart product_part, Date start, Date end) throws IllegalArgumentException, DAOException;
+    /**
      * Create the given ProcessReport in the database.
      * The Employee ID must not be null, The PartRevision ID must not be null,
-     * The Container ID must not be null, The Container ID must not be null, and
+     * The Tank ID must not be null, The Equipment ID must not be null, and
      * The ProcessReport ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given ProcessReport.
      * @param employee The Employee to be assigned to this ProcessReport.
      * @param part_revision The PartRevision to be assigned to this ProcessReport.
-     * @param tank The Container to be assigned to this ProcessReport.
-     * @param container The Container to be assigned to this ProcessReport.
+     * @param tank The Tank to be assigned to this ProcessReport.
+     * @param equipment The Equipment to be assigned to this ProcessReport.
      * @param process_report The ProcessReport to be created.
      * @throws IllegalArgumentException If the Employee ID is null.
      * @throws IllegalArgumentException If the PartRevision ID is null.
-     * @throws IllegalArgumentException If the Container ID is null.
-     * @throws IllegalArgumentException If the Container ID is null.
+     * @throws IllegalArgumentException If the Tank ID is null.
+     * @throws IllegalArgumentException If the Equipment ID is null.
      * @throws IllegalArgumentException If the ProcessReport ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Employee employee, PartRevision part_revision, Container tank, Container container, ProcessReport process_report) throws IllegalArgumentException, DAOException;
+    public void create(Employee employee, PartRevision part_revision, Tank tank, Equipment equipment, ProcessReport process_report) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given ProcessReport in the database. The ProcessReport ID must not be null, 
@@ -150,6 +162,5 @@ public interface ProcessReportDAO {
      */
     public void delete(ProcessReport process_report) throws DAOException;
     
-    public List<ProcessReport> listDateRange(ProductPart product_part, Date start, Date end);
 
 }

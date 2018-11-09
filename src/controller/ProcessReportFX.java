@@ -28,7 +28,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -37,7 +36,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 import model.Employee;
 import model.Module;
 import model.ProcessReport;
@@ -83,7 +81,7 @@ public class ProcessReportFX implements Initializable {
     @FXML
     private TableColumn<ProcessReport, String> tankid_column;
     @FXML
-    private TableColumn<ProcessReport, String> containerid_column;
+    private TableColumn<ProcessReport, String> equipmentid_column;
     @FXML
     private TableColumn<ProcessReport, String> process_column;
     @FXML
@@ -213,7 +211,7 @@ public class ProcessReportFX implements Initializable {
         revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findPartRevision(c.getValue()).getRev()));
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         tankid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findTank(c.getValue()).toString()));
-        containerid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findContainer(c.getValue()).toString()));
+        equipmentid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findEquipment(c.getValue()).toString()));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quality_column.setCellFactory(column -> new CheckBoxTableCell<>());

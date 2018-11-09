@@ -77,7 +77,31 @@ public interface InvoiceItemDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<InvoiceItem> list(Invoice invoice) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns a list of all InvoiceItem matching Invoice ID and PartRevision ID from the database ordered by InvoiceItem ID. 
+     * The Invoice ID and PartRevision ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not 
+     * contain any InvoiceItem matching Invoice ID and PartRevision ID.
+     * @param invoice The Invoice ID to be searched for.
+     * @param part_revision The PartRevision ID to be searched for.
+     * @return A list of all InvoiceItem matching Invoice ID and PartRevision ID from the database ordered by InvoiceItem ID.
+     * @throws IllegalArgumentException If Invoice ID is null.
+     * @throws IllegalArgumentException If PartRevision ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
     public List<InvoiceItem> list(Invoice invoice, PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns a list of all unique PartRevision matching Invoice ID from the database ordered by PartRevision ID. 
+     * The Invoice ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not 
+     * contain any PartRevision matching Invoice ID.
+     * @param invoice The Invoice ID to be searched for.
+     * @return A list of all unique PartRevision matching Invoice ID from the database ordered by PartRevision ID.
+     * @throws IllegalArgumentException If Invoice ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
     public List<PartRevision> listPartRevision(Invoice invoice) throws IllegalArgumentException, DAOException;
     
     /**

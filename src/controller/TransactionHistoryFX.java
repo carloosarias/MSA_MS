@@ -191,7 +191,7 @@ public class TransactionHistoryFX implements Initializable {
     public void updateList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
         try{
             depart_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
-            process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
+            process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listProductPartDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
             incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
         }catch(Exception e){
             System.out.println("test");
@@ -356,7 +356,7 @@ public class TransactionHistoryFX implements Initializable {
         public weekly_summary(ProductPart product_part, Date start_date, Date end_date){
             List<IncomingLot> incoming_list = msabase.getIncomingLotDAO().listDateRange(product_part, start_date, end_date);
             List<DepartLot> depart_list = msabase.getDepartLotDAO().listDateRange(product_part, start_date, end_date);
-            List<ProcessReport> process_list = msabase.getProcessReportDAO().listDateRange(product_part, start_date, end_date);
+            List<ProcessReport> process_list = msabase.getProcessReportDAO().listProductPartDateRange(product_part, start_date, end_date);
             this.start_date = start_date;
             this.end_date = end_date;
             incoming_total = getIncomingQuantity(incoming_list);

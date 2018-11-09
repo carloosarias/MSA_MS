@@ -16,8 +16,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import model.Container;
 import model.Employee;
+import model.Equipment;
 import model.PartRevision;
 import model.ProcessReport;
 import model.ProductPart;
@@ -37,8 +37,8 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             "SELECT PART_REVISION_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_TANK_BY_ID = 
             "SELECT TANK_ID FROM PROCESS_REPORT WHERE id = ?";
-    private static final String SQL_FIND_CONTAINER_BY_ID = 
-            "SELECT CONTAINER_ID FROM PROCESS_REPORT WHERE id = ?";
+    private static final String SQL_FIND_EQUIPMENT_BY_ID = 
+            "SELECT EQUIPMENT_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
@@ -47,19 +47,19 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
             "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+    private static final String SQL_LIST_PRODUCT_PART_DATE_RANGE = 
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PROCESS_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY PROCESS_REPORT.report_date, PROCESS_REPORT.id";    
     private static final String SQL_INSERT = 
-            "INSERT INTO PROCESS_REPORT (EMPLOYEE_ID, PART_REVISION_ID, TANK_ID, CONTAINER_ID, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed) "
+            "INSERT INTO PROCESS_REPORT (EMPLOYEE_ID, PART_REVISION_ID, TANK_ID, EQUIPMENT_ID, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE PROCESS_REPORT SET process = ?, report_date = ?, lot_number = ?, quantity = ?, amperage = ?, voltage = ?, start_time = ?, end_time = ?, comments = ?, quality_passed = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM PROCESS_REPORT WHERE id = ?";
-    private static final String LIST_PROCESS_REPORT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed "
-            + "FROM PROCESS_REPORT "
-            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PROCESS_REPORT.report_date BETWEEN ? AND ? "
-            + "ORDER BY PROCESS_REPORT.report_date, PROCESS_REPORT.id";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -188,12 +188,12 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         return tank;
     }
     @Override
-    public Container findContainer(ProcessReport process_report) throws IllegalArgumentException, DAOException {
+    public Equipment findEquipment(ProcessReport process_report) throws IllegalArgumentException, DAOException {
         if(process_report.getId() == null) {
             throw new IllegalArgumentException("ProcessReport is not created yet, the ProcessReport ID is null.");
         }
         
-        Container container = null;
+        Equipment equipment = null;
         
         Object[] values = {
             process_report.getId()
@@ -201,17 +201,17 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_CONTAINER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_EQUIPMENT_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                container = daoFactory.getContainerDAO().find(resultSet.getInt("CONTAINER_ID"));
+                equipment = daoFactory.getEquipmentDAO().find(resultSet.getInt("EQUIPMENT_ID"));
             }
         } catch (SQLException e) {
             throw new DAOException(e);
         }        
         
-        return container;
+        return equipment;
     }
     
     @Override
@@ -312,9 +312,38 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         
         return process_report;        
     }
-
+    
     @Override
-    public void create(Employee employee, PartRevision part_revision, Container tank, Container container, ProcessReport process_report) throws IllegalArgumentException, DAOException {
+    public List<ProcessReport> listProductPartDateRange(ProductPart product_part, Date start, Date end){
+        if(product_part.getId() == null) {
+            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
+        }    
+        
+        List<ProcessReport> processreport_list = new ArrayList();
+        
+        Object[] values = {
+            product_part.getId(),
+            start,
+            end
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PRODUCT_PART_DATE_RANGE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                processreport_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return processreport_list;
+    }
+    
+    @Override
+    public void create(Employee employee, PartRevision part_revision, Tank tank, Equipment equipment, ProcessReport process_report) throws IllegalArgumentException, DAOException {
         if (employee.getId() == null) {
             throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
         }
@@ -324,11 +353,11 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         }
         
         if(tank.getId() == null){
-            throw new IllegalArgumentException("Container is not created yet, the Container ID is null.");
+            throw new IllegalArgumentException("Tank is not created yet, the Tank ID is null.");
         }
         
-        if(container.getId() == null){
-            throw new IllegalArgumentException("Container is not created yet, the Container ID is null.");
+        if(equipment.getId() == null){
+            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
         }
         if(process_report.getId() != null){
             throw new IllegalArgumentException("ProcessReport is already created, the ProcessReport ID is null.");
@@ -338,7 +367,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             employee.getId(),
             part_revision.getId(),
             tank.getId(),
-            container.getId(),
+            equipment.getId(),
             process_report.getProcess(),
             DAOUtil.toSqlDate(process_report.getReport_date()),
             process_report.getLot_number(),
@@ -425,30 +454,6 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         } catch(SQLException e){
             throw new DAOException(e);
         }
-    }
-    
-    @Override
-    public List<ProcessReport> listDateRange(ProductPart product_part, Date start, Date end){
-        List<ProcessReport> processreport_list = new ArrayList<ProcessReport>();
-        Object[] values = {
-            product_part.getId(),
-            start,
-            end
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, LIST_PROCESS_REPORT_BY_PRODUCT_PART_DATE_RANGE, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                processreport_list.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return processreport_list;
     }
     
     // Helpers ------------------------------------------------------------------------------------

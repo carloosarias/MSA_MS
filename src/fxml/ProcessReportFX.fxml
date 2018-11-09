@@ -91,7 +91,7 @@
                               <TableColumn fx:id="revision_column" prefWidth="84.0" text="Revisión" />
                               <TableColumn fx:id="lotnumber_column" prefWidth="78.0" text="No. de Lote" />
                               <TableColumn fx:id="tankid_column" prefWidth="103.0" text="No. Tanque" />
-                              <TableColumn fx:id="containerid_column" prefWidth="103.0" text="No. Contenendor" />
+                              <TableColumn fx:id="equipmentid_column" prefWidth="103.0" text="No. Contenendor" />
                               <TableColumn fx:id="process_column" prefWidth="85.0" text="Proceso" />
                               <TableColumn fx:id="quantity_column" prefWidth="77.0" text="Cantidad" />
                               <TableColumn fx:id="quality_column" prefWidth="100.0" text="Bueno ✓ Malo □" />
