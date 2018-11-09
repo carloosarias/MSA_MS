@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Equipment;
 import model.EquipmentType;
@@ -85,17 +86,74 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
 
     @Override
     public EquipmentType findEquipmentType(Equipment equipment) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(equipment.getId() == null) {
+            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
+        }
+        
+        EquipmentType equipment_type = null;
+        
+        Object[] values = {
+            equipment.getId()
+        };
+        
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_EQUIPMENT_TYPE_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                equipment_type = daoFactory.getEquipmentTypeDAO().find(resultSet.getInt("EQUIPMENT_TYPE_ID"));
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }        
+        
+        return equipment_type;
     }
 
     @Override
     public List<Equipment> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        List<Equipment> equipment_list = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                equipment_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return equipment_list;}
 
     @Override
     public List<Equipment> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    if(equipment_type.getId() == null) {
+            throw new IllegalArgumentException("EquipmentType is not created yet, the EquipmentType ID is null.");
+        }    
+        
+        List<Equipment> equipment = new ArrayList<>();
+        
+        Object[] values = {
+            equipment_type.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                equipment.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return equipment;
     }
 
     @Override

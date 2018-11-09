@@ -187,6 +187,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         
         return tank;
     }
+    
     @Override
     public Equipment findEquipment(ProcessReport process_report) throws IllegalArgumentException, DAOException {
         if(process_report.getId() == null) {
