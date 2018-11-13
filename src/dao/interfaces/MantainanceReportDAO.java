@@ -78,64 +78,59 @@ public interface MantainanceReportDAO {
     public List<MantainanceReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all ProcessReport matching Employee ID from the database ordered by ProcessReport ID. 
+     * Returns a list of all MantainanceReport matching Employee ID from the database ordered by MantainanceReport ID. 
      * The Employee ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any ProcessReport matching Employee ID.
+     * The list is never null and is empty when the database does not contain any MantainanceReport matching Employee ID.
      * @param employee The Employee ID to be searched for.
      * @param start The start date of the range.
      * @param end the end date of the range.
-     * @return A list of all ProcessReport matching Employee ID from the database ordered by ProcessReport ID.
+     * @return A list of all MantainanceReport matching Employee ID from the database ordered by MantainanceReport ID.
      * @throws IllegalArgumentException If Employee ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<ProcessReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException;
+    public List<MantainanceReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all ProcessReport matching ProductPart ID from the database ordered by ProcessReport ID. 
-     * The ProductPart ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any ProcessReport matching ProductPart ID.
-     * @param product_part The Employee ID to be searched for.
+     * Returns a list of all MantainanceReport matching Equipment ID from the database ordered by MantainanceReport ID. 
+     * The Equipment ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not contain any MantainanceReport matching Equipment ID.
+     * @param equipment The Equipment ID to be searched for.
      * @param start The start date of the range.
      * @param end the end date of the range.
-     * @return A list of all ProcessReport matching ProductPart ID from the database ordered by ProcessReport ID.
-     * @throws IllegalArgumentException If ProductPart ID is null.
+     * @return A list of all MantainanceReport matching Equipment ID from the database ordered by MantainanceReport ID.
+     * @throws IllegalArgumentException If Equipment ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<ProcessReport> listProductPartDateRange(ProductPart product_part, Date start, Date end) throws IllegalArgumentException, DAOException;
+    public List<MantainanceReport> listEquipmentDateRange(Equipment equipment, Date start, Date end) throws IllegalArgumentException, DAOException;
     /**
-     * Create the given ProcessReport in the database.
-     * The Employee ID must not be null, The PartRevision ID must not be null,
-     * The Tank ID must not be null, The Equipment ID must not be null, and
-     * The ProcessReport ID must be null, otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given ProcessReport.
-     * @param employee The Employee to be assigned to this ProcessReport.
-     * @param part_revision The PartRevision to be assigned to this ProcessReport.
-     * @param tank The Tank to be assigned to this ProcessReport.
-     * @param equipment The Equipment to be assigned to this ProcessReport.
-     * @param process_report The ProcessReport to be created.
+     * Create the given MantainanceReport in the database.
+     * The Employee ID must not be null, The Equipment ID must not be null, and
+     * The MantainanceReport ID must be null, otherwise it will throw IllegalArgumentException.
+     * After creating, the DAO will set the obtained ID in the given MantainanceReport.
+     * @param employee The Employee to be assigned to this MantainanceReport.
+     * @param equipment The Equipment to be assigned to this MantainanceReport.
+     * @param mantainance_report The MantainanceReport to be created.
      * @throws IllegalArgumentException If the Employee ID is null.
-     * @throws IllegalArgumentException If the PartRevision ID is null.
-     * @throws IllegalArgumentException If the Tank ID is null.
      * @throws IllegalArgumentException If the Equipment ID is null.
-     * @throws IllegalArgumentException If the ProcessReport ID is not null.
+     * @throws IllegalArgumentException If the MantainanceReport ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Employee employee, PartRevision part_revision, Tank tank, Equipment equipment, ProcessReport process_report) throws IllegalArgumentException, DAOException;
+    public void create(Employee employee, Equipment equipment, MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given ProcessReport in the database. The ProcessReport ID must not be null, 
+     * Update the given MantainanceReport in the database. The MantainanceReport ID must not be null, 
      * otherwise it will throw IllegalArgumentException.
-     * @param process_report The ProcessReport to be updated.
-     * @throws IllegalArgumentException If the ProcessReport ID is null.
+     * @param mantainance_report The MantainanceReport to be updated.
+     * @throws IllegalArgumentException If the MantainanceReport ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public void update(ProcessReport process_report) throws IllegalArgumentException, DAOException;
+    public void update(MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given ProcessReport from the database. After deleting, the DAO will set the ID of the given
-     * ProcessReport to null.
-     * @param process_report The ProcessReport to be deleted from the database.
+     * Delete the given MantainanceReport from the database. After deleting, the DAO will set the ID of the given
+     * MantainanceReport to null.
+     * @param mantainanance_report The MantainanceReport to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
-    public void delete(ProcessReport process_report) throws DAOException;
+    public void delete(MantainanceReport mantainanance_report) throws DAOException;
 }
