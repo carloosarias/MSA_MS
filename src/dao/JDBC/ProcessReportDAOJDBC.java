@@ -361,7 +361,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
         }
         if(process_report.getId() != null){
-            throw new IllegalArgumentException("ProcessReport is already created, the ProcessReport ID is null.");
+            throw new IllegalArgumentException("ProcessReport is already created, the ProcessReport ID is not null.");
         }
         
         Object[] values = {
@@ -460,9 +460,9 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an PartRevision.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an PartRevision.
-     * @return The mapped PartRevision from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an ProcessReport.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an ProcessReport.
+     * @return The mapped ProcessReport from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     public static ProcessReport map(ResultSet resultSet) throws SQLException{

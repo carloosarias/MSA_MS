@@ -13,6 +13,7 @@ import dao.interfaces.CompanyContactDAO;
 import dao.interfaces.DepartLotDAO;
 import dao.interfaces.DepartReportDAO;
 import dao.interfaces.EquipmentDAO;
+import dao.interfaces.EquipmentTypeCheckDAO;
 import dao.interfaces.EquipmentTypeDAO;
 import dao.interfaces.IncomingLotDAO;
 import dao.interfaces.IncomingReportDAO;
@@ -388,6 +389,14 @@ public abstract class DAOFactory {
      */   
     public EquipmentDAO getEquipmentDAO(){
         return new EquipmentDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the EquipmentTypeCheck DAO associated with the current DAOFactory.
+     * @return The EquipmentTypeCheck DAO associated with the current DAOFactory.
+     */   
+    public EquipmentTypeCheckDAO getEquipmentTypeCheckDAO(){
+        return new EquipmentTypeCheckDAOJDBC(this);
     }
     // You can add more DAO implementation getters here.
 }

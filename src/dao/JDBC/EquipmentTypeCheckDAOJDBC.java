@@ -7,37 +7,37 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import dao.interfaces.EquipmentDAO;
+import dao.interfaces.EquipmentTypeCheckDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.Equipment;
 import model.EquipmentType;
+import model.EquipmentTypeCheck;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class EquipmentDAOJDBC implements EquipmentDAO {
+public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT WHERE id = ?";
+            "SELECT id, name, description FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_TYPE_BY_ID = 
-            "SELECT EQUIPMENT_TYPE_ID FROM EQUIPMENT WHERE id = ?";
+            "SELECT EQUIPMENT_TYPE_ID FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT ORDER BY id";
+            "SELECT id, name, description FROM EQUIPMENT_TYPE_CHECK ORDER BY id";
     private static final String SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
+            "SELECT id, name, description FROM EQUIPMENT_TYPE_CHECK WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO EQUIPMENT (name, description) "
+            "INSERT INTO EQUIPMENT_TYPE_CHECK (name, description) "
             + "VALUES(?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EQUIPMENT SET name = ?, description = ? WHERE id = ?";
+            "UPDATE EQUIPMENT_TYPE_CHECK SET name = ?, description = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM EQUIPMENT WHERE id = ?";
+            "DELETE FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -45,29 +45,29 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
     // Constructors -------------------------------------------------------------------------------
 
     /**
-     * Construct a EquipmentType DAO for the given DAOFactory. Package private so that it can be constructed
+     * Construct a EquipmentTypeCheck DAO for the given DAOFactory. Package private so that it can be constructed
      * inside the DAO package only.
-     * @param daoFactory The DAOFactory to construct this EquipmentType DAO for.
+     * @param daoFactory The DAOFactory to construct this EquipmentTypeCheck DAO for.
      */
-    EquipmentDAOJDBC(DAOFactory daoFactory) {
+    EquipmentTypeCheckDAOJDBC(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
     }
-
+    
     // Actions ------------------------------------------------------------------------------------
-@Override
-    public Equipment find(Integer id) throws DAOException {
+    @Override
+    public EquipmentTypeCheck find(Integer id) throws DAOException {
         return find(SQL_FIND_BY_ID, id);
     }
     
     /**
-     * Returns the Equipment from the database matching the given SQL query with the given values.
+     * Returns the EquipmentTypeCheck from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The Equipment from the database matching the given SQL query with the given values.
+     * @return The EquipmentTypeCheck from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
-    private Equipment find(String sql, Object... values) throws DAOException {
-        Equipment equipment = null;
+    private EquipmentTypeCheck find(String sql, Object... values) throws DAOException {
+        EquipmentTypeCheck process_report = null;
 
         try (
             Connection connection = daoFactory.getConnection();
@@ -75,25 +75,25 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                equipment = map(resultSet);
+                process_report = map(resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
         }
 
-        return equipment;
+        return process_report;
     }
-
+    
     @Override
-    public EquipmentType findEquipmentType(Equipment equipment) throws IllegalArgumentException, DAOException {
-        if(equipment.getId() == null) {
-            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
+    public EquipmentType findEquipmentType(EquipmentTypeCheck equipment_type_check) throws IllegalArgumentException, DAOException {
+    if(equipment_type_check.getId() == null) {
+            throw new IllegalArgumentException("EquipmentTypeCheck is not created yet, the EquipmentTypeCheck ID is null.");
         }
         
         EquipmentType equipment_type = null;
         
         Object[] values = {
-            equipment.getId()
+            equipment_type_check.getId()
         };
         
         try (
@@ -112,8 +112,8 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
     }
 
     @Override
-    public List<Equipment> list() throws DAOException {
-        List<Equipment> equipment_list = new ArrayList<>();
+    public List<EquipmentTypeCheck> list() throws DAOException {
+       List<EquipmentTypeCheck> equipment_type_list = new ArrayList<>();
 
         try(
             Connection connection = daoFactory.getConnection();
@@ -121,22 +121,22 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                equipment_list.add(map(resultSet));
+                equipment_type_list.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return equipment_list;
+        return equipment_type_list;
     }
 
     @Override
-    public List<Equipment> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException {
+    public List<EquipmentTypeCheck> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException {
     if(equipment_type.getId() == null) {
             throw new IllegalArgumentException("EquipmentType is not created yet, the EquipmentType ID is null.");
         }    
         
-        List<Equipment> equipment = new ArrayList<>();
+        List<EquipmentTypeCheck> equipment_type_check = new ArrayList<>();
         
         Object[] values = {
             equipment_type.getId()
@@ -148,27 +148,27 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                equipment.add(map(resultSet));
+                equipment_type_check.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return equipment;
+        return equipment_type_check;
     }
 
     @Override
-    public void create(EquipmentType equipment_type, Equipment equipment) throws IllegalArgumentException, DAOException {
+    public void create(EquipmentType equipment_type, EquipmentTypeCheck equipment_type_check) throws IllegalArgumentException, DAOException {
         if(equipment_type.getId() == null) {
             throw new IllegalArgumentException("EquipmentType is not created yet, the EquipmentType ID is null.");
         }
-        if(equipment.getId() != null){
-            throw new IllegalArgumentException("Equipment is already created, the Equipment ID is not null.");
+        if(equipment_type_check.getId() != null){
+            throw new IllegalArgumentException("EquipmentTypeCheck is already created, the EquipmentTypeCheck ID is not null.");
         }
         Object[] values = {
             equipment_type.getId(),
-            equipment.getName(),
-            equipment.getDescription()
+            equipment_type_check.getName(),
+            equipment_type_check.getDescription()
         };
         
         try(
@@ -177,14 +177,14 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
-                throw new DAOException("Creating Equipment failed, no rows affected.");
+                throw new DAOException("Creating EquipmentTypeCheck failed, no rows affected.");
             }
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    equipment.setId(generatedKeys.getInt(1));
+                    equipment_type_check.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new DAOException("Creating Equipment failed, no generated key obtained.");
+                    throw new DAOException("Creating EquipmentTypeCheck failed, no generated key obtained.");
                 }
             }
             
@@ -194,15 +194,15 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
     }
 
     @Override
-    public void update(Equipment equipment) throws IllegalArgumentException, DAOException {
-        if (equipment.getId() == null) {
-            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
+    public void update(EquipmentTypeCheck equipment_type_check) throws IllegalArgumentException, DAOException {
+        if (equipment_type_check.getId() == null) {
+            throw new IllegalArgumentException("EquipmentTypeCheck is not created yet, the EquipmentTypeCheck ID is null.");
         }
         
         Object[] values = {
-            equipment.getName(),
-            equipment.getDescription(),
-            equipment.getId()
+            equipment_type_check.getName(),
+            equipment_type_check.getDescription(),
+            equipment_type_check.getId()
         };
         
         try(
@@ -211,7 +211,7 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Updating Equipment failed, no rows affected.");
+                throw new DAOException("Updating EquipmentTypeCheck failed, no rows affected.");
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -219,9 +219,9 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
     }
 
     @Override
-    public void delete(Equipment equipment) throws DAOException {
+    public void delete(EquipmentTypeCheck equipment_type_check) throws DAOException {
         Object[] values = {
-            equipment.getId()
+            equipment_type_check.getId()
         };
         
         try(
@@ -230,28 +230,27 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Deleting Equipment failed, no rows affected.");
+                throw new DAOException("Deleting EquipmentTypeCheck failed, no rows affected.");
             } else{
-                equipment.setId(null);
+                equipment_type_check.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
     }
-    
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an Equipment.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an Equipment.
-     * @return The mapped Equipment from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an EquipmentTypeCheck.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an EquipmentTypeCheck.
+     * @return The mapped EquipmentTypeCheck from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static Equipment map(ResultSet resultSet) throws SQLException{
-        Equipment equipment = new Equipment();
-        equipment.setId(resultSet.getInt("id"));
-        equipment.setName(resultSet.getString("name"));
-        equipment.setDescription(resultSet.getString("description"));
-        return equipment;
+    public static EquipmentTypeCheck map(ResultSet resultSet) throws SQLException{
+        EquipmentTypeCheck equipment_type_check = new EquipmentTypeCheck();
+        equipment_type_check.setId(resultSet.getInt("id"));
+        equipment_type_check.getName();
+        equipment_type_check.getDescription();
+        return equipment_type_check;
     }  
 }
