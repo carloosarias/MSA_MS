@@ -171,7 +171,7 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
 
     @Override
     public List<MantainanceReport> listEmployee(Employee employee) throws IllegalArgumentException, DAOException {
-    if(employee.getId() == null) {
+        if(employee.getId() == null) {
             throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
         }    
         

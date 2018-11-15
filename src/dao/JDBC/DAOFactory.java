@@ -21,6 +21,7 @@ import dao.interfaces.InvoiceDAO;
 import dao.interfaces.InvoiceItemDAO;
 import dao.interfaces.InvoicePaymentItemDAO;
 import dao.interfaces.InvoicePaymentReportDAO;
+import dao.interfaces.MantainanceReportDAO;
 import dao.interfaces.MetalDAO;
 import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.PartRevisionDAO;
@@ -397,6 +398,14 @@ public abstract class DAOFactory {
      */   
     public EquipmentTypeCheckDAO getEquipmentTypeCheckDAO(){
         return new EquipmentTypeCheckDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the MantainanceReport DAO associated with the current DAOFactory.
+     * @return The MantainanceReport DAO associated with the current DAOFactory.
+     */   
+    public MantainanceReportDAO getMantainanceReportDAO(){
+        return new MantainanceReportDAOJDBC(this);
     }
     // You can add more DAO implementation getters here.
 }
