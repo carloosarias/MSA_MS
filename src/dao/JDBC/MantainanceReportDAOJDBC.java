@@ -8,7 +8,6 @@ package dao.JDBC;
 import dao.DAOException;
 import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.ProcessReportDAOJDBC.map;
 import dao.interfaces.MantainanceReportDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +19,6 @@ import java.util.List;
 import model.Employee;
 import model.Equipment;
 import model.MantainanceReport;
-import model.ProcessReport;
 
 /**
  *
@@ -29,32 +27,28 @@ import model.ProcessReport;
 public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_BY_ID = 
-            "SELECT EQUIPMENT_ID FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT ORDER BY id";
+            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
     private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
+            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
-    private static final String SQL_LIST_PRODUCT_PART_DATE_RANGE = 
-            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed "
-            + "FROM PROCESS_REPORT "
-            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PROCESS_REPORT.report_date BETWEEN ? AND ? "
-            + "ORDER BY PROCESS_REPORT.report_date, PROCESS_REPORT.id";    
+            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+    private static final String SQL_LIST_EQUIPMENT_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO PROCESS_REPORT (EMPLOYEE_ID, PART_REVISION_ID, TANK_ID, EQUIPMENT_ID, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date, comments) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PROCESS_REPORT SET process = ?, report_date = ?, lot_number = ?, quantity = ?, amperage = ?, voltage = ?, start_time = ?, end_time = ?, comments = ?, quality_passed = ? WHERE id = ?";
+            "UPDATE MANTAINANCE_REPORT SET report_date = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM PROCESS_REPORT WHERE id = ?";
+            "DELETE FROM MANTAINANCE_REPORT WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -271,7 +265,7 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PRODUCT_PART_DATE_RANGE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EQUIPMENT_DATE_RANGE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
