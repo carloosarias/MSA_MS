@@ -6,6 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import static dao.JDBC.ProcessReportDAOJDBC.map;
 import dao.interfaces.MantainanceReportDAO;
@@ -285,17 +286,89 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
 
     @Override
     public void create(Employee employee, Equipment equipment, MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        if(equipment.getId() == null){
+            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
+        }
+        if(mantainance_report.getId() != null){
+            throw new IllegalArgumentException("MantainanceReport is already created, the MantainanceReport ID is not null.");
+        }
+        
+        Object[] values = {
+            employee.getId(),
+            equipment.getId(),
+            DAOUtil.toSqlDate(mantainance_report.getReport_date()),
+            mantainance_report.getComments()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating MantainanceReport failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    mantainance_report.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating MantainanceReport failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (mantainance_report.getId() == null) {
+            throw new IllegalArgumentException("MantainanceReport is not created yet, the MantainanceReport ID is null.");
+        }
+        
+        Object[] values = {
+            DAOUtil.toSqlDate(mantainance_report.getReport_date()),
+            mantainance_report.getComments(),
+            mantainance_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating MantainanceReport failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(MantainanceReport mantainanance_report) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            mantainanance_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting MantainanceReport failed, no rows affected.");
+            } else{
+                mantainanance_report.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
