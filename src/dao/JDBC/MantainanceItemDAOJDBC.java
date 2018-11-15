@@ -6,6 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.MantainanceItemDAO;
 import java.sql.Connection;
@@ -142,7 +143,7 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
 
     @Override
     public List<MantainanceItem> list(MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
-    if(mantainance_report.getId() == null) {
+        if(mantainance_report.getId() == null) {
             throw new IllegalArgumentException("MantainanceReport is not created yet, the MantainanceReport ID is null.");
         }    
         
@@ -164,21 +165,92 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
             throw new DAOException(e);
         }
         
-        return mantainanceitem_list;    }
+        return mantainanceitem_list;
+    }
 
     @Override
     public void create(MantainanceReport mantainance_report, EquipmentTypeCheck equipment_type_check, MantainanceItem mantainance_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (mantainance_report.getId() == null) {
+            throw new IllegalArgumentException("MantainanceReport is not created yet, the MantainanceReport ID is null.");
+        }
+        if(equipment_type_check.getId() == null){
+            throw new IllegalArgumentException("EquipmentTypeCheck is not created yet, the EquipmentTypeCheck ID is null.");
+        }
+        if(mantainance_item.getId() != null){
+            throw new IllegalArgumentException("MantainanceItem is already created, the MantainanceItem ID is not null.");
+        }
+        
+        Object[] values = {
+            mantainance_report.getId(),
+            equipment_type_check.getId(),
+            mantainance_item.isCheck_value()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating MantainanceItem failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    mantainance_report.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating MantainanceItem failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(MantainanceItem mantainance_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (mantainance_item.getId() == null) {
+            throw new IllegalArgumentException("MantainanceItem is not created yet, the MantainanceItem ID is null.");
+        }
+        
+        Object[] values = {
+            mantainance_item.isCheck_value(),
+            mantainance_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating MantainanceItem failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(MantainanceItem mantainance_item) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            mantainance_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting MantainanceItem failed, no rows affected.");
+            } else{
+                mantainance_item.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     // Helpers ------------------------------------------------------------------------------------
 
