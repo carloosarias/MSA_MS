@@ -1,0 +1,316 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package dao.JDBC;
+
+import dao.DAOException;
+import static dao.DAOUtil.prepareStatement;
+import static dao.JDBC.ProcessReportDAOJDBC.map;
+import dao.interfaces.MantainanceReportDAO;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import model.Employee;
+import model.Equipment;
+import model.MantainanceReport;
+import model.ProcessReport;
+
+/**
+ *
+ * @author Pavilion Mini
+ */
+public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
+    // Constants ----------------------------------------------------------------------------------
+    private static final String SQL_FIND_BY_ID = 
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE id = ?";
+    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
+            "SELECT EMPLOYEE_ID FROM PROCESS_REPORT WHERE id = ?";
+    private static final String SQL_FIND_EQUIPMENT_BY_ID = 
+            "SELECT EQUIPMENT_ID FROM PROCESS_REPORT WHERE id = ?";
+    private static final String SQL_LIST_ORDER_BY_ID = 
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT ORDER BY id";
+    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
+    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+    private static final String SQL_LIST_PRODUCT_PART_DATE_RANGE = 
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PROCESS_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY PROCESS_REPORT.report_date, PROCESS_REPORT.id";    
+    private static final String SQL_INSERT = 
+            "INSERT INTO PROCESS_REPORT (EMPLOYEE_ID, PART_REVISION_ID, TANK_ID, EQUIPMENT_ID, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE = 
+            "UPDATE PROCESS_REPORT SET process = ?, report_date = ?, lot_number = ?, quantity = ?, amperage = ?, voltage = ?, start_time = ?, end_time = ?, comments = ?, quality_passed = ? WHERE id = ?";
+    private static final String SQL_DELETE = 
+            "DELETE FROM PROCESS_REPORT WHERE id = ?";
+    
+    // Vars ---------------------------------------------------------------------------------------
+
+    private DAOFactory daoFactory;
+
+    // Constructors -------------------------------------------------------------------------------
+
+    /**
+     * Construct a MantainanceReport DAO for the given DAOFactory. Package private so that it can be constructed
+     * inside the DAO package only.
+     * @param daoFactory The DAOFactory to construct this MantainanceReport DAO for.
+     */
+    MantainanceReportDAOJDBC(DAOFactory daoFactory) {
+        this.daoFactory = daoFactory;
+    }
+
+    // Actions ------------------------------------------------------------------------------------
+    @Override
+    public MantainanceReport find(Integer id) throws DAOException {
+        return find(SQL_FIND_BY_ID, id);
+    }
+    
+    /**
+     * Returns the MantainanceReport from the database matching the given SQL query with the given values.
+     * @param sql The SQL query to be executed in the database.
+     * @param values The PreparedStatement values to be set.
+     * @return The MantainanceReport from the database matching the given SQL query with the given values.
+     * @throws DAOException If something fails at database level.
+     */
+    private MantainanceReport find(String sql, Object... values) throws DAOException {
+        MantainanceReport mantainance_report = null;
+
+        try (
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, sql, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            if (resultSet.next()) {
+                mantainance_report = map(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e);
+        }
+
+        return mantainance_report;
+    }
+
+    @Override
+    public Employee findEmployee(MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
+        if(mantainance_report.getId() == null) {
+                throw new IllegalArgumentException("MantainanceReport is not created yet, the MantainanceReport ID is null.");
+            }
+
+            Employee employee = null;
+
+            Object[] values = {
+                mantainance_report.getId()
+            };
+
+            try (
+                Connection connection = daoFactory.getConnection();
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
+                ResultSet resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    employee = daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID"));
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }        
+
+            return employee;
+    }
+
+    @Override
+    public Equipment findEquipment(MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
+        if(mantainance_report.getId() == null) {
+                throw new IllegalArgumentException("MantainanceReport is not created yet, the MantainanceReport ID is null.");
+            }
+
+            Equipment equipment = null;
+
+            Object[] values = {
+                mantainance_report.getId()
+            };
+
+            try (
+                Connection connection = daoFactory.getConnection();
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_EQUIPMENT_BY_ID, false, values);
+                ResultSet resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    equipment = daoFactory.getEquipmentDAO().find(resultSet.getInt("EQUIPMENT_ID"));
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }        
+
+            return equipment;
+    }
+
+    @Override
+    public List<MantainanceReport> list() throws DAOException {
+        List<MantainanceReport> mantainancereport_list = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                mantainancereport_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return mantainancereport_list;
+    }
+
+    @Override
+    public List<MantainanceReport> listEmployee(Employee employee) throws IllegalArgumentException, DAOException {
+    if(employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }    
+        
+        List<MantainanceReport> mantainancereport_list = new ArrayList<>();
+        
+        Object[] values = {
+            employee.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                mantainancereport_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return mantainancereport_list;
+    }
+
+    @Override
+    public List<MantainanceReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException {
+        List<MantainanceReport> mantainancereport_list = new ArrayList<>();
+        
+        Object[] values = {
+            start,
+            end
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_DATE_RANGE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                mantainancereport_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return mantainancereport_list;
+    }
+
+    @Override
+    public List<MantainanceReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException {
+        if(employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }    
+        
+        List<MantainanceReport> mantainancereport_list = new ArrayList<>();
+        
+        Object[] values = {
+            employee.getId(),
+            start,
+            end
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                mantainancereport_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return mantainancereport_list;
+    }
+
+    @Override
+    public List<MantainanceReport> listEquipmentDateRange(Equipment equipment, Date start, Date end) throws IllegalArgumentException, DAOException {
+        if(equipment.getId() == null) {
+            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
+        }    
+        
+        List<MantainanceReport> mantainancereport_list = new ArrayList();
+        
+        Object[] values = {
+            equipment.getId(),
+            start,
+            end
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PRODUCT_PART_DATE_RANGE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                mantainancereport_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return mantainancereport_list;
+    }
+
+    @Override
+    public void create(Employee employee, Equipment equipment, MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(MantainanceReport mantainanance_report) throws DAOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    // Helpers ------------------------------------------------------------------------------------
+
+    /**
+     * Map the current row of the given ResultSet to an MantainanceReport.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an MantainanceReport.
+     * @return The mapped MantainanceReport from the current row of the given ResultSet.
+     * @throws SQLException If something fails at database level.
+     */
+    public static MantainanceReport map(ResultSet resultSet) throws SQLException{
+        MantainanceReport mantainance_report = new MantainanceReport();
+        mantainance_report.setId(resultSet.getInt("id"));
+        mantainance_report.setReport_date(resultSet.getDate("report_date"));
+        mantainance_report.setComments(resultSet.getString("comments"));
+        return mantainance_report;
+    }
+}

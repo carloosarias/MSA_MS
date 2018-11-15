@@ -262,7 +262,6 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     }
     @Override
     public List<ProcessReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException {
-   
         List<ProcessReport> process_report = new ArrayList<>();
         
         Object[] values = {

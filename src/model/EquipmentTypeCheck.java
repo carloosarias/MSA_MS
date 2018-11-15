@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Pavilion Mini
  */
-public class EquipmentTypeCheck {
+public class EquipmentTypeCheck implements Serializable{
     
     // Properties ---------------------------------------------------------------------------------
 
