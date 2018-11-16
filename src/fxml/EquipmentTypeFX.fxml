@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EquipmentTypeFX">
+   <children>
+      <VBox>
+         <children>
+            <TableView fx:id="equipmenttype_tableview">
+              <columns>
+                  <TableColumn prefWidth="75.0" resizable="false" text="Tipos de Equipo">
+                     <columns>
+                      <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
+                      <TableColumn fx:id="equipmenttypename_column" prefWidth="100.0" text="Nombre" />
+                        <TableColumn fx:id="equipmenttypedescription_column" prefWidth="200.0" text="Descripción" />
+                        <TableColumn fx:id="frequency_column" prefWidth="200.0" resizable="false" text="Freq. de Mantenimiento (Días)" />
+                     </columns>
+                  </TableColumn>
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TableView>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
+                        <Button fx:id="add_button" mnemonicParsing="false" text="Registrar Tipo de Equipo">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox>
+         <children>
+            <TableView fx:id="equipmenttypecheck_tableview">
+              <columns>
+                  <TableColumn prefWidth="75.0" text="Checklist  de Mantenimiento">
+                     <columns>
+                      <TableColumn fx:id="equipmenttypecheckname_column" prefWidth="100.0" resizable="false" text="Nombre" />
+                      <TableColumn fx:id="equipmenttypecheckdescription_column" prefWidth="200.0" resizable="false" text="Descripción" />
+                     </columns>
+                  </TableColumn>
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TableView>
+         </children>
+      </VBox>
+   </children>
+</HBox>

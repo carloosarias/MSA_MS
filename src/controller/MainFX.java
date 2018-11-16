@@ -67,6 +67,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab analysis_tab;
     @FXML
+    private Tab equipment_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -123,6 +125,7 @@ public class MainFX implements Initializable {
             transaction_history_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
             scrap_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
             analysis_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/AnalysisReportFX.fxml")));
+            equipment_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
         } catch (IOException ex) {
             Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -156,6 +159,10 @@ public class MainFX implements Initializable {
                     break;
                 case "Análisis":
                     root_tabpane.getTabs().setAll(analysis_tab);
+                    break;
+                case "Equipo":
+                    root_tabpane.getTabs().setAll(equipment_tab);
+                    break;
             }
     }
     public void showLogin(){
