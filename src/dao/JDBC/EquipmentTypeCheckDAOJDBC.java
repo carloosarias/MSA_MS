@@ -32,8 +32,8 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
     private static final String SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID = 
             "SELECT id, name, description FROM EQUIPMENT_TYPE_CHECK WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO EQUIPMENT_TYPE_CHECK (name, description) "
-            + "VALUES(?, ?)";
+            "INSERT INTO EQUIPMENT_TYPE_CHECK (EQUIPMENT_TYPE_ID, name, description) "
+            + "VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE EQUIPMENT_TYPE_CHECK SET name = ?, description = ? WHERE id = ?";
     private static final String SQL_DELETE = 
@@ -249,8 +249,8 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
     public static EquipmentTypeCheck map(ResultSet resultSet) throws SQLException{
         EquipmentTypeCheck equipment_type_check = new EquipmentTypeCheck();
         equipment_type_check.setId(resultSet.getInt("id"));
-        equipment_type_check.getName();
-        equipment_type_check.getDescription();
+        equipment_type_check.setName(resultSet.getString("name"));
+        equipment_type_check.setDescription(resultSet.getString("description"));
         return equipment_type_check;
     }  
 }

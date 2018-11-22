@@ -6,11 +6,12 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateEquipmentTypeFX">
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateEquipmentTypeFX">
    <children>
       <VBox fillWidth="false">
          <children>
@@ -23,21 +24,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                     </children>
-                  </VBox>
-                  <VBox fillWidth="false">
-                     <children>
-                        <Label text="Descripción:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField prefWidth="150.0">
+                        <TextField fx:id="name_field" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -46,22 +33,32 @@
                   </VBox>
                </children>
             </HBox>
-            <Label text="Frecuencia de Mantenimiento (Días)">
+            <Label text="Frecuencia de Mantenimiento (Días):">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <Spinner prefWidth="100.0">
+            <Spinner fx:id="frequency_spinner" prefHeight="25.0" prefWidth="75.0">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Spinner>
-            <TableView>
+            <Label text="Descripción:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <TextArea fx:id="description_area" prefHeight="100.0" prefWidth="322.0" wrapText="true">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TextArea>
+            <TableView fx:id="equipmenttypecheck_tableview">
               <columns>
                   <TableColumn prefWidth="75.0" text="Checks de Mantenimiento">
                      <columns>
-                      <TableColumn prefWidth="120.0" text="Nombre" />
-                      <TableColumn prefWidth="200.0" text="Descripción" />
+                      <TableColumn fx:id="name_column" prefWidth="120.0" text="Nombre" />
+                      <TableColumn fx:id="description_column" prefWidth="200.0" text="Descripción" />
                      </columns>
                   </TableColumn>
               </columns>
@@ -69,14 +66,19 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </TableView>
+            <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Button>
             <HBox>
                <children>
-                  <Button mnemonicParsing="false" text="Agregar Check de Mantenimiento">
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Agregar Check de Mantenimiento">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Guardar">
+                  <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>

@@ -79,7 +79,7 @@ public class CreateSpecificationFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         item_list.clear();
-        setSpecificationItemTable();
+        setSpecificationItemTableview();
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         setSpecificationItemItems();
         
@@ -165,7 +165,7 @@ public class CreateSpecificationFX implements Initializable {
         }
     }
     
-    public void setSpecificationItemTable(){
+    public void setSpecificationItemTableview(){
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(6);
         listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(specificationitem_tableview.getItems().indexOf(c.getValue())+1)));
