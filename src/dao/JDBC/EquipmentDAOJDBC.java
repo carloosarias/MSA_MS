@@ -24,18 +24,18 @@ import model.EquipmentType;
 public class EquipmentDAOJDBC implements EquipmentDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT WHERE id = ?";
+            "SELECT id, name, description, next_mantainance FROM EQUIPMENT WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_TYPE_BY_ID = 
             "SELECT EQUIPMENT_TYPE_ID FROM EQUIPMENT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT ORDER BY id";
+            "SELECT id, name, description, next_mantainance FROM EQUIPMENT ORDER BY id";
     private static final String SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
+            "SELECT id, name, description, next_mantainance FROM EQUIPMENT WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO EQUIPMENT (name, description) "
-            + "VALUES(?, ?)";
+            "INSERT INTO EQUIPMENT (EQUIPMENT_TYPE_ID, name, description, next_mantainance) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EQUIPMENT SET name = ?, description = ? WHERE id = ?";
+            "UPDATE EQUIPMENT SET name = ?, description = ?, next_mantainance = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM EQUIPMENT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -168,7 +168,8 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         Object[] values = {
             equipment_type.getId(),
             equipment.getName(),
-            equipment.getDescription()
+            equipment.getDescription(),
+            equipment.getNext_mantainance()
         };
         
         try(
@@ -202,6 +203,7 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         Object[] values = {
             equipment.getName(),
             equipment.getDescription(),
+            equipment.getNext_mantainance(),
             equipment.getId()
         };
         
@@ -252,6 +254,7 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         equipment.setId(resultSet.getInt("id"));
         equipment.setName(resultSet.getString("name"));
         equipment.setDescription(resultSet.getString("description"));
+        equipment.setNext_mantainance(resultSet.getDate("next_mantainance"));
         return equipment;
     }  
 }

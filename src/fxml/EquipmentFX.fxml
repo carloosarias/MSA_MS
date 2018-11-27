@@ -27,6 +27,7 @@
                                         <TableColumn fx:id="equipmenttype_column" prefWidth="120.0" resizable="false" text="Tipo de Equipo" />
                                           <TableColumn fx:id="name_column" prefWidth="120.0" resizable="false" text="Nombre" />
                                           <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
+                                          <TableColumn fx:id="nextmantainance_column" prefWidth="175.0" resizable="false" text="Próximo Mantenimiento" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

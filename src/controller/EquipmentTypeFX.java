@@ -95,6 +95,7 @@ public class EquipmentTypeFX implements Initializable {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
     public void setEquipmentTypeTableview(){
         id_column.setCellValueFactory(new PropertyValueFactory("id"));
         equipmenttypename_column.setCellValueFactory(new PropertyValueFactory("name"));

@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -18,6 +19,7 @@ public class Equipment implements Serializable{
     private Integer id;
     private String name;
     private String description;
+    private Date next_mantainance;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -43,6 +45,14 @@ public class Equipment implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public Date getNext_mantainance() {
+        return next_mantainance;
+    }
+
+    public void setNext_mantainance(Date next_mantainance) {
+        this.next_mantainance = next_mantainance;
     }
     
     // Object overrides ---------------------------------------------------------------------------
