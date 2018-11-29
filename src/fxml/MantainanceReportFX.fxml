@@ -10,26 +10,27 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MantainanceReportFX">
    <children>
       <TabPane tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Agenda de Actividades">
                <content>
-                  <HBox>
+                  <HBox alignment="CENTER">
                      <children>
                         <VBox>
                            <children>
                               <TableView>
                                 <columns>
-                                  <TableColumn prefWidth="92.0" text="Equipo">
+                                  <TableColumn prefWidth="92.0" resizable="false" text="Equipo">
                                        <columns>
-                                          <TableColumn prefWidth="75.0" text="ID" />
-                                          <TableColumn prefWidth="134.0" text="Nombre" />
-                                        <TableColumn prefWidth="112.0" text="Tipo" />
+                                          <TableColumn prefWidth="75.0" resizable="false" text="ID" />
+                                          <TableColumn prefWidth="150.0" resizable="false" text="Nombre" />
+                                          <TableColumn prefWidth="200.0" resizable="false" text="Descripción" />
+                                        <TableColumn prefWidth="125.0" resizable="false" text="Tipo" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn prefWidth="150.0" text="Fecha de Mantenimiento" />
+                                    <TableColumn prefWidth="150.0" resizable="false" text="Fecha de Mantenimiento" />
                                 </columns>
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -52,11 +53,45 @@
                      <children>
                         <VBox>
                            <children>
-                              <TableView prefHeight="200.0" prefWidth="200.0">
+                              <TableView>
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="ID" />
-                                  <TableColumn prefWidth="109.0" text="Fecha de Reporte" />
+                                  <TableColumn prefWidth="75.0" resizable="false" text="No. de Folio" />
+                                  <TableColumn prefWidth="109.0" resizable="false" text="Fecha de Reporte" />
+                                    <TableColumn prefWidth="75.0" resizable="false" text="Empleado">
+                                       <columns>
+                                          <TableColumn prefWidth="75.0" resizable="false" text="ID" />
+                                          <TableColumn prefWidth="75.0" resizable="false" text="Nombre" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn prefWidth="75.0" resizable="false" text="Equipo">
+                                       <columns>
+                                          <TableColumn prefWidth="75.0" resizable="false" text="ID" />
+                                          <TableColumn prefWidth="75.0" resizable="false" text="Nombre" />
+                                          <TableColumn prefWidth="75.0" resizable="false" text="Tipo" />
+                                       </columns>
+                                    </TableColumn>
                                 </columns>
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TableView>
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <TableView>
+                                <columns>
+                                  <TableColumn prefWidth="75.0" resizable="false" text="Check de Mantenimiento">
+                                       <columns>
+                                        <TableColumn prefWidth="150.0" text="Descripción" />
+                                          <TableColumn prefWidth="200.0" text="Detalles/Comentarios" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn prefWidth="75.0" resizable="false" text="Aprovado" />
+                                </columns>
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
                               </TableView>
                            </children>
                         </VBox>
