@@ -18,7 +18,6 @@ public class MantainanceReport implements Serializable {
 
     private Integer id;
     private Date report_date;
-    private String comments;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -36,14 +35,6 @@ public class MantainanceReport implements Serializable {
     
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
-    }
-    
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
     }
     
     // Object overrides ---------------------------------------------------------------------------

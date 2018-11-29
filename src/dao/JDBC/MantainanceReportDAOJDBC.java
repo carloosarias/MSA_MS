@@ -27,26 +27,26 @@ import model.MantainanceReport;
 public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_BY_ID = 
             "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT ORDER BY id";
+            "SELECT id, report_date FROM MANTAINANCE_REPORT ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
     private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
+            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
     private static final String SQL_LIST_EQUIPMENT_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date, comments FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date, comments) "
-            + "VALUES(?, ?, ?, ?)";
+            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
+            + "VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MANTAINANCE_REPORT SET report_date = ?, comments = ? WHERE id = ?";
+            "UPDATE MANTAINANCE_REPORT SET report_date = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM MANTAINANCE_REPORT WHERE id = ?";
     
@@ -294,7 +294,6 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
             employee.getId(),
             equipment.getId(),
             DAOUtil.toSqlDate(mantainance_report.getReport_date()),
-            mantainance_report.getComments()
         };
         
         try(
@@ -327,7 +326,6 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         
         Object[] values = {
             DAOUtil.toSqlDate(mantainance_report.getReport_date()),
-            mantainance_report.getComments(),
             mantainance_report.getId()
         };
         
@@ -377,7 +375,6 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         MantainanceReport mantainance_report = new MantainanceReport();
         mantainance_report.setId(resultSet.getInt("id"));
         mantainance_report.setReport_date(resultSet.getDate("report_date"));
-        mantainance_report.setComments(resultSet.getString("comments"));
         return mantainance_report;
     }
 }

@@ -16,6 +16,8 @@ public class MantainanceItem implements Serializable {
 
     private Integer id;
     private boolean check_value;
+    private String details;
+    private Integer temp_typecheck_id;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -35,6 +37,21 @@ public class MantainanceItem implements Serializable {
         this.check_value = check_value;
     }
     
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public Integer getTemp_typecheck_id() {
+        return temp_typecheck_id;
+    }
+
+    public void setTemp_typecheck_id(Integer temp_typecheck_id) {
+        this.temp_typecheck_id = temp_typecheck_id;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**

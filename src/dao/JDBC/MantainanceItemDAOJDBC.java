@@ -6,7 +6,6 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.MantainanceItemDAO;
 import java.sql.Connection;
@@ -26,18 +25,18 @@ import model.MantainanceReport;
 public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, check_value FROM MANTAINANCE_ITEM WHERE id = ?";
+            "SELECT id, check_value, details FROM MANTAINANCE_ITEM WHERE id = ?";
     private static final String SQL_FIND_MANTAINANCE_REPORT_BY_ID = 
             "SELECT MANTAINANCE_REPORT_ID FROM MANTAINANCE_ITEM WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_TYPE_CHECK_BY_ID = 
             "SELECT EQUIPMENT_TYPE_CHECK_ID FROM MANTAINANCE_ITEM WHERE id = ?";
     private static final String SQL_LIST_MANTAINANCE_REPORT_ORDER_BY_ID = 
-            "SELECT id, check_value FROM MANTAINANCE_ITEM WHERE MANTAINANCE_REPORT_ID = ? ORDER BY id";
+            "SELECT id, check_value, details FROM MANTAINANCE_ITEM WHERE MANTAINANCE_REPORT_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_ITEM (MANTAINANCE_REPORT_ID, EQUIPMENT_TYPE_CHECK_ID, check_value) "
-            + "VALUES(?, ?, ?)";
+            "INSERT INTO MANTAINANCE_ITEM (MANTAINANCE_REPORT_ID, EQUIPMENT_TYPE_CHECK_ID, check_value, details) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MANTAINANCE_ITEM SET check_value = ? WHERE id = ?";
+            "UPDATE MANTAINANCE_ITEM SET check_value = ?, details = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM MANTAINANCE_ITEM WHERE id = ?";
     
@@ -183,7 +182,8 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
         Object[] values = {
             mantainance_report.getId(),
             equipment_type_check.getId(),
-            mantainance_item.isCheck_value()
+            mantainance_item.isCheck_value(),
+            mantainance_item.getDetails()
         };
         
         try(
@@ -216,6 +216,7 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
         
         Object[] values = {
             mantainance_item.isCheck_value(),
+            mantainance_item.getDetails(),
             mantainance_item.getId()
         };
         
@@ -264,6 +265,7 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
         MantainanceItem mantainance_item = new MantainanceItem();
         mantainance_item.setId(resultSet.getInt("id"));
         mantainance_item.setCheck_value(resultSet.getBoolean("check_value"));
+        mantainance_item.setDetails(resultSet.getString("details"));
         return mantainance_item;
     }
 }
