@@ -9,34 +9,35 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MantainanceReportFX">
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MantainanceReportFX">
    <children>
       <TabPane tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Agenda de Actividades">
+          <Tab text="Equipos Pendientes de Mantenimiento">
                <content>
                   <HBox alignment="CENTER">
                      <children>
                         <VBox>
                            <children>
-                              <TableView>
+                              <TableView fx:id="equipment_tableview">
                                 <columns>
                                   <TableColumn prefWidth="92.0" resizable="false" text="Equipo">
                                        <columns>
-                                          <TableColumn prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn prefWidth="150.0" resizable="false" text="Nombre" />
-                                          <TableColumn prefWidth="200.0" resizable="false" text="Descripción" />
-                                        <TableColumn prefWidth="125.0" resizable="false" text="Tipo" />
+                                          <TableColumn fx:id="id_column" prefWidth="75.0" resizable="false" text="ID" />
+                                          <TableColumn fx:id="name_column" prefWidth="150.0" resizable="false" text="Nombre" />
+                                          <TableColumn fx:id="serialnumber_column" prefWidth="100.0" resizable="false" text="No. de Serie" />
+                                          <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
+                                        <TableColumn fx:id="type_column" prefWidth="125.0" resizable="false" text="Tipo" />
+                                          <TableColumn fx:id="physicallocation_column" minWidth="100.0" prefWidth="75.0" resizable="false" text="Ubicación" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn prefWidth="150.0" resizable="false" text="Fecha de Mantenimiento" />
+                                    <TableColumn fx:id="nextmantainance_column" prefWidth="150.0" resizable="false" text="Proximo Mantenimiento" />
                                 </columns>
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </TableView>
-                              <Button mnemonicParsing="false" text="Generar Reporte de Mantenimiento">
+                              <Button fx:id="add_button" mnemonicParsing="false" text="Generar Reporte de Mantenimiento">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -53,21 +54,21 @@
                      <children>
                         <VBox>
                            <children>
-                              <TableView>
+                              <TableView fx:id="mantainancereport_tableview">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" resizable="false" text="No. de Folio" />
-                                  <TableColumn prefWidth="109.0" resizable="false" text="Fecha de Reporte" />
+                                  <TableColumn fx:id="reportid_column" prefWidth="75.0" resizable="false" text="No. de Folio" />
+                                  <TableColumn fx:id="reportdate_column" prefWidth="109.0" resizable="false" text="Fecha de Reporte" />
                                     <TableColumn prefWidth="75.0" resizable="false" text="Empleado">
                                        <columns>
-                                          <TableColumn prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn prefWidth="75.0" resizable="false" text="Nombre" />
+                                          <TableColumn fx:id="employeeid_column" prefWidth="75.0" resizable="false" text="ID" />
+                                          <TableColumn fx:id="employeename_column" prefWidth="75.0" resizable="false" text="Nombre" />
                                        </columns>
                                     </TableColumn>
                                     <TableColumn prefWidth="75.0" resizable="false" text="Equipo">
                                        <columns>
-                                          <TableColumn prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn prefWidth="75.0" resizable="false" text="Nombre" />
-                                          <TableColumn prefWidth="75.0" resizable="false" text="Tipo" />
+                                          <TableColumn fx:id="equipmentid_column" prefWidth="75.0" resizable="false" text="ID" />
+                                          <TableColumn fx:id="equipmentname_column" prefWidth="75.0" resizable="false" text="Nombre" />
+                                          <TableColumn fx:id="equipmenttype_column" prefWidth="75.0" resizable="false" text="Tipo" />
                                        </columns>
                                     </TableColumn>
                                 </columns>
@@ -79,15 +80,15 @@
                         </VBox>
                         <VBox>
                            <children>
-                              <TableView>
+                              <TableView fx:id="mantainanceitem_tableview">
                                 <columns>
                                   <TableColumn prefWidth="75.0" resizable="false" text="Check de Mantenimiento">
                                        <columns>
-                                        <TableColumn prefWidth="150.0" text="Descripción" />
-                                          <TableColumn prefWidth="200.0" text="Detalles/Comentarios" />
+                                        <TableColumn fx:id="checkdescription_column" prefWidth="150.0" text="Descripción" />
+                                          <TableColumn fx:id="details_column" prefWidth="200.0" text="Detalles/Comentarios" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn prefWidth="75.0" resizable="false" text="Aprovado" />
+                                    <TableColumn fx:id="checkvalue_column" prefWidth="75.0" resizable="false" text="Aprovado" />
                                 </columns>
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

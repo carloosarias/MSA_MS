@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateMantainanceReportFX">
    <children>
       <VBox>
          <children>
@@ -16,12 +18,22 @@
                <children>
                   <VBox>
                      <children>
+                        <Label text="Fecha:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <DatePicker fx:id="date_picker" disable="true" editable="false" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </DatePicker>
                         <Label text="Empleado:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <ComboBox fx:id="employee_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -31,21 +43,43 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <ComboBox fx:id="equipment_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </ComboBox>
-                        <Label text="Fecha:">
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <TableView fx:id="mantainancecheck_tableview" editable="true">
+                          <columns>
+                            <TableColumn prefWidth="203.0" resizable="false" text="Checklist de Mantenimiento">
+                                 <columns>
+                                    <TableColumn fx:id="name_column" prefWidth="100.0" resizable="false" text="Nombre" />
+                                  <TableColumn fx:id="description_column" prefWidth="150.0" resizable="false" text="Descripción" />
+                                    <TableColumn fx:id="details_column" prefWidth="200.0" resizable="false" text="Detalles/Comentarios" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="checkvalue_column" prefWidth="75.0" resizable="false" text="Aprovado" />
+                          </columns>
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </Label>
-                        <DatePicker prefWidth="150.0">
+                        </TableView>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_RIGHT">
+               <children>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Button fx:id="submit_button" mnemonicParsing="false" text="Guardar">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </DatePicker>
+                        </Button>
                      </children>
                   </VBox>
                </children>

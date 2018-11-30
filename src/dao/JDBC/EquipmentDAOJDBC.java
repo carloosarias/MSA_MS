@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Equipment;
 import model.EquipmentType;
@@ -24,18 +25,20 @@ import model.EquipmentType;
 public class EquipmentDAOJDBC implements EquipmentDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, name, description, next_mantainance FROM EQUIPMENT WHERE id = ?";
+            "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_TYPE_BY_ID = 
             "SELECT EQUIPMENT_TYPE_ID FROM EQUIPMENT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, description, next_mantainance FROM EQUIPMENT ORDER BY id";
+            "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT ORDER BY id";
     private static final String SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID = 
-            "SELECT id, name, description, next_mantainance FROM EQUIPMENT WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
+            "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
+    private static final String SQL_LIST_NEXT_MANTAINANCE_PENDING_ORDER_BY_ID = 
+            "SELECT id, name, descrption, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE next_mantainance <= ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO EQUIPMENT (EQUIPMENT_TYPE_ID, name, description, next_mantainance) "
-            + "VALUES(?, ?, ?, ?)";
+            "INSERT INTO EQUIPMENT (EQUIPMENT_TYPE_ID, name, description, physical_location, serial_number, next_mantainance) "
+            + "VALUES(?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EQUIPMENT SET name = ?, description = ?, next_mantainance = ? WHERE id = ?";
+            "UPDATE EQUIPMENT SET name = ?, description = ?, physical_location = ?, serial_number = ?, next_mantainance = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM EQUIPMENT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -156,7 +159,30 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         
         return equipment;
     }
-
+    
+    @Override
+    public List<Equipment> listPending(Date date) throws IllegalArgumentException, DAOException {
+        List<Equipment> equipment = new ArrayList<>();
+        
+        Object[] values = {
+            date
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_NEXT_MANTAINANCE_PENDING_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                equipment.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return equipment;
+    }
+    
     @Override
     public void create(EquipmentType equipment_type, Equipment equipment) throws IllegalArgumentException, DAOException {
         if(equipment_type.getId() == null) {
@@ -169,6 +195,8 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
             equipment_type.getId(),
             equipment.getName(),
             equipment.getDescription(),
+            equipment.getPhysical_location(),
+            equipment.getSerial_number(),
             equipment.getNext_mantainance()
         };
         
@@ -203,6 +231,8 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         Object[] values = {
             equipment.getName(),
             equipment.getDescription(),
+            equipment.getPhysical_location(),
+            equipment.getSerial_number(),
             equipment.getNext_mantainance(),
             equipment.getId()
         };
@@ -254,6 +284,8 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         equipment.setId(resultSet.getInt("id"));
         equipment.setName(resultSet.getString("name"));
         equipment.setDescription(resultSet.getString("description"));
+        equipment.setPhysical_location(resultSet.getString("physical_location"));
+        equipment.setSerial_number(resultSet.getString("serial_number"));
         equipment.setNext_mantainance(resultSet.getDate("next_mantainance"));
         return equipment;
     }  

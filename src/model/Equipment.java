@@ -19,6 +19,8 @@ public class Equipment implements Serializable{
     private Integer id;
     private String name;
     private String description;
+    private String physical_location;
+    private String serial_number;
     private Date next_mantainance;
     
     // Getters/setters ----------------------------------------------------------------------------
@@ -45,6 +47,20 @@ public class Equipment implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    public String getPhysical_location() {
+        return physical_location;
+    }
+
+    public void setPhysical_location(String physical_location) {
+        this.physical_location = physical_location;
+    }
+    public String getSerial_number() {
+        return serial_number;
+    }
+
+    public void setSerial_number(String serial_number) {
+        this.serial_number = serial_number;
     }
     
     public Date getNext_mantainance() {

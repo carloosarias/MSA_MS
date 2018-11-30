@@ -48,6 +48,10 @@ public class EquipmentFX implements Initializable {
     @FXML
     private TableColumn<Equipment, String> description_column;
     @FXML
+    private TableColumn<Equipment, String> serialnumber_column;
+    @FXML
+    private TableColumn<Equipment, String> physicallocation_column;
+    @FXML
     private TableColumn<Equipment, Date> nextmantainance_column;
     @FXML
     private Button add_button;
@@ -56,6 +60,7 @@ public class EquipmentFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     private Stage add_stage = new Stage();
+
     /**
      * Initializes the controller class.
      */
@@ -101,8 +106,10 @@ public class EquipmentFX implements Initializable {
     public void setEquipmentTableview(){
         id_column.setCellValueFactory(new PropertyValueFactory("id"));
         name_column.setCellValueFactory(new PropertyValueFactory("name"));
+        serialnumber_column.setCellValueFactory(new PropertyValueFactory("serial_number"));
         equipmenttype_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getEquipmentDAO().findEquipmentType(c.getValue()).getName()));
         description_column.setCellValueFactory(new PropertyValueFactory("description"));
+        physicallocation_column.setCellValueFactory(new PropertyValueFactory("physical_location"));
         nextmantainance_column.setCellValueFactory(new PropertyValueFactory("next_mantainance"));
     }
     

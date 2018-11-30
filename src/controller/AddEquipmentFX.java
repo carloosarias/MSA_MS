@@ -36,11 +36,16 @@ public class AddEquipmentFX implements Initializable {
     @FXML
     private TextField name_field;
     @FXML
+    private TextField serialnumber_field;
+    @FXML
+    private TextField physicallocation_field;
+    @FXML
     private TextArea description_area;
     @FXML
     private Button save_button;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+
     
     /**
      * Initializes the controller class.
@@ -66,6 +71,14 @@ public class AddEquipmentFX implements Initializable {
             name_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
+        if(serialnumber_field.getText().replace(" ", "").equals("")){
+            serialnumber_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(physicallocation_field.getText().replace(" ", "").equals("")){
+            physicallocation_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
         if(description_area.getText().replace(" ", "").equals("")){
             description_area.setStyle("-fx-background-color: lightpink;");
             b = false;
@@ -81,14 +94,17 @@ public class AddEquipmentFX implements Initializable {
         name_field.setStyle(null);
         description_area.setStyle(null);
         equipmenttype_combobox.setStyle(null);
+        physicallocation_field.setStyle(null);
+        serialnumber_field.setStyle(null);
     }
-    
+        
     public void saveEquipment(){
         Equipment equipment = new Equipment();
         equipment.setName(name_field.getText());
         equipment.setDescription(description_area.getText());
         equipment.setNext_mantainance(Date.valueOf(LocalDate.now().plusDays(equipmenttype_combobox.getSelectionModel().getSelectedItem().getFrequency())));
-        
+        equipment.setPhysical_location(physicallocation_field.getText());
+        equipment.setSerial_number(serialnumber_field.getText());
         msabase.getEquipmentDAO().create(equipmenttype_combobox.getSelectionModel().getSelectedItem(), equipment);
     }
 }

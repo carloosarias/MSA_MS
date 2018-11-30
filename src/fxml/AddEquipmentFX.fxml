@@ -33,6 +33,16 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </TextField>
+            <Label text="Número de Serie:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="serialnumber_field">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TextField>
             <Label text="Descripción:">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -43,6 +53,16 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </TextArea>
+            <Label text="Ubicación:">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="physicallocation_field">
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TextField>
             <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
