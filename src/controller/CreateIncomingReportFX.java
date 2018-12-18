@@ -297,6 +297,7 @@ public class CreateIncomingReportFX implements Initializable {
         }
         return b;
     }
+    
     public void updatePartrev_combo(){
         try{
             partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection)));

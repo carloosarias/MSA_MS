@@ -10,6 +10,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -47,8 +48,6 @@ public class MantainanceReportFX implements Initializable {
     @FXML
     private TableColumn<Equipment, Date> nextmantainance_column;
     @FXML
-    private Button add_button;
-    @FXML
     private TableView<MantainanceReport> mantainancereport_tableview;
     @FXML
     private TableColumn<MantainanceReport, Integer> reportid_column;
@@ -72,17 +71,29 @@ public class MantainanceReportFX implements Initializable {
     private TableColumn<MantainanceItem, String> details_column;
     @FXML
     private TableColumn<MantainanceItem, Boolean> checkvalue_column;
-
+    
+    @FXML
+    private Button add_button;
+    
+    private static Equipment equipment_selection;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        equipment_selection = new Equipment();
         setEquipmentTableview();
         setMantainanceReportTableview();
         setMantainanceItemTableview();
-    }    
+        
+        equipment_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Equipment> observable, Equipment oldValue, Equipment newValue) -> {
+            equipment_selection = equipment_tableview.getSelectionModel().getSelectedItem();
+            add_button.setDisable(equipment_tableview.getSelectionModel().isEmpty());
+        });
+    }
     
     public void setEquipmentTableview(){
         id_column.setCellValueFactory(new PropertyValueFactory("id"));
@@ -105,8 +116,12 @@ public class MantainanceReportFX implements Initializable {
     }
     
     public void setMantainanceItemTableview(){
-    checkdescription_column.setCellValueFactory(new PropertyValueFactory("description"));
+    checkdescription_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceItemDAO().findEquipmentTypeCheck(c.getValue()).getDescription()));
     details_column.setCellValueFactory(new PropertyValueFactory("details"));
     checkvalue_column.setCellValueFactory(new PropertyValueFactory("check_value"));
+    }
+    
+    public static Equipment getEquipment_selection(){
+        return equipment_selection;
     }
 }
