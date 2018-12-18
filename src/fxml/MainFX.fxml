@@ -28,6 +28,7 @@
           <Tab fx:id="scrap_tab" closable="false" text="Scrap" />
           <Tab fx:id="analysis_tab" closable="false" text="Análisis" />
           <Tab fx:id="equipment_tab" closable="false" text="Equipo" />
+          <Tab fx:id="mantainance_tab" closable="false" text="Mantenimiento" />
         </tabs>
          <BorderPane.margin>
             <Insets />

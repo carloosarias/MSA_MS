@@ -6,18 +6,27 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Equipment;
 import model.MantainanceItem;
 import model.MantainanceReport;
@@ -71,9 +80,10 @@ public class MantainanceReportFX implements Initializable {
     private TableColumn<MantainanceItem, String> details_column;
     @FXML
     private TableColumn<MantainanceItem, Boolean> checkvalue_column;
-    
     @FXML
     private Button add_button;
+    
+    private Stage add_stage = new Stage();
     
     private static Equipment equipment_selection;
     
@@ -89,10 +99,41 @@ public class MantainanceReportFX implements Initializable {
         setMantainanceReportTableview();
         setMantainanceItemTableview();
         
+        setEquipmentItems();
+        
         equipment_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Equipment> observable, Equipment oldValue, Equipment newValue) -> {
             equipment_selection = equipment_tableview.getSelectionModel().getSelectedItem();
             add_button.setDisable(equipment_tableview.getSelectionModel().isEmpty());
         });
+        
+        add_button.setOnAction((ActionEvent) -> {
+            equipment_tableview.setDisable(true);
+            add_button.setDisable(true);
+            showAdd_stage();
+        });
+    }
+    
+    public void setEquipmentItems(){
+        equipment_tableview.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().listPending(Date.valueOf(LocalDate.now()))));
+    }
+    
+    public void showAdd_stage(){
+        try {
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateMantainanceReportFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            add_stage.setTitle("Nuevo Reporte de Mantenimiento");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
+            equipment_tableview.setDisable(true);
+            setEquipmentItems();
+        } catch (IOException ex) {
+            Logger.getLogger(ProcessReportFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void setEquipmentTableview(){

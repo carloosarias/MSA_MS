@@ -72,6 +72,7 @@ public class CreateMantainanceReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        fillComboBoxValues();
         setMantainanceItemTableView();
         setMantainanceitem_list();
         mantainancecheck_tableview.setItems(FXCollections.observableArrayList(mantainanceitem_list));
@@ -92,12 +93,21 @@ public class CreateMantainanceReportFX implements Initializable {
     }
     
     public void saveMantainanceItems(MantainanceReport report){
+
         for(MantainanceItem item : mantainancecheck_tableview.getItems()){
-            if(item.getDetails().replace(" ","").equals("")){
+            if(item.getDetails() == null){
                 item.setDetails("N/A");
             }
+            System.out.println(report.getId() +" test");
             msabase.getMantainanceItemDAO().create(report, item.getTemp_typecheck(), item);
         }
+        
+        setNextMantainance();
+    }
+    
+    public void setNextMantainance(){
+        MantainanceReportFX.getEquipment_selection().setNext_mantainance(Date.valueOf(LocalDate.now().plusDays(msabase.getEquipmentDAO().findEquipmentType(MantainanceReportFX.getEquipment_selection()).getFrequency())));
+        msabase.getEquipmentDAO().update(MantainanceReportFX.getEquipment_selection());
     }
     
     public void setMantainanceItemTableView(){

@@ -197,7 +197,7 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    mantainance_report.setId(generatedKeys.getInt(1));
+                    mantainance_item.setId(generatedKeys.getInt(1));
                 } else {
                     throw new DAOException("Creating MantainanceItem failed, no generated key obtained.");
                 }

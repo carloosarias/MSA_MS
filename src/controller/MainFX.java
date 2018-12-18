@@ -69,6 +69,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab equipment_tab;
     @FXML
+    private Tab mantainance_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -102,6 +104,7 @@ public class MainFX implements Initializable {
             setTabs(newValue);
             root_pane.setCenter(root_tabpane);
             root_pane.getScene().getWindow().sizeToScene();
+            updateTabOnChange(newValue);
         });
         
         logout.setOnAction((ActionEvent) ->{
@@ -126,10 +129,55 @@ public class MainFX implements Initializable {
             scrap_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
             analysis_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/AnalysisReportFX.fxml")));
             equipment_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
+            mantainance_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/MantainanceReportFX.fxml")));
         } catch (IOException ex) {
             Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void updateTabOnChange(Module module){
+                try {
+            switch(module.getName()){
+                case "Recursos Humanos":
+                    employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
+                    break;
+                case "Compras":
+                    company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
+                    break;
+                case "Reciba":
+                    root_tabpane.getTabs().setAll(incoming_tab, depart_tab);
+                    break;
+                case "Facturación":
+                    root_tabpane.getTabs().setAll(invoice_tab, invoice_payment_tab);
+                    break;
+                case "Cotización":
+                    root_tabpane.getTabs().setAll(quote_tab);
+                    break;
+                case "Historial Producción":
+                case "Producción":
+                    root_tabpane.getTabs().setAll(process_tab);
+                    break;
+                case "Historial de Transacciones":
+                    root_tabpane.getTabs().setAll(transaction_history_tab);
+                    break;
+                case "Scrap":
+                    root_tabpane.getTabs().setAll(scrap_tab);
+                    break;
+                case "Análisis":
+                    root_tabpane.getTabs().setAll(analysis_tab);
+                    break;
+                case "Equipo":
+                    equipment_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
+                    break;
+                case "Mantenimiento":
+                    mantainance_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/MantainanceReportFX.fxml")));
+                    break;
+            }
+                    } catch (IOException ex) {
+            Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void setTabs(Module module){
             switch(module.getName()){
                 case "Recursos Humanos":
@@ -162,6 +210,9 @@ public class MainFX implements Initializable {
                     break;
                 case "Equipo":
                     root_tabpane.getTabs().setAll(equipment_tab);
+                    break;
+                case "Mantenimiento":
+                    root_tabpane.getTabs().setAll(mantainance_tab);
                     break;
             }
     }

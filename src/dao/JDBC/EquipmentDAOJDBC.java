@@ -33,7 +33,7 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
     private static final String SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID = 
             "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
     private static final String SQL_LIST_NEXT_MANTAINANCE_PENDING_ORDER_BY_ID = 
-            "SELECT id, name, descrption, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE next_mantainance <= ? ORDER BY id";
+            "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE next_mantainance <= ? ORDER BY id";
     private static final String SQL_INSERT = 
             "INSERT INTO EQUIPMENT (EQUIPMENT_TYPE_ID, name, description, physical_location, serial_number, next_mantainance) "
             + "VALUES(?, ?, ?, ?, ?, ?)";
