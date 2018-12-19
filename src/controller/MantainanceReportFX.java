@@ -100,6 +100,7 @@ public class MantainanceReportFX implements Initializable {
         setMantainanceItemTableview();
         
         setEquipmentItems();
+        setMantainanceReportItems();
         
         equipment_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Equipment> observable, Equipment oldValue, Equipment newValue) -> {
             equipment_selection = equipment_tableview.getSelectionModel().getSelectedItem();
@@ -111,6 +112,19 @@ public class MantainanceReportFX implements Initializable {
             add_button.setDisable(true);
             showAdd_stage();
         });
+        
+        mantainancereport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue <? extends MantainanceReport> observable, MantainanceReport oldValue, MantainanceReport newValue) -> {
+            setMantainanceItemItems();
+        });
+    }
+    
+    
+    public void setMantainanceItemItems(){
+        mantainanceitem_tableview.setItems(FXCollections.observableArrayList(msabase.getMantainanceItemDAO().list(mantainancereport_tableview.getSelectionModel().getSelectedItem())));
+    }
+    
+    public void setMantainanceReportItems(){
+        mantainancereport_tableview.setItems(FXCollections.observableArrayList(msabase.getMantainanceReportDAO().list()));
     }
     
     public void setEquipmentItems(){
@@ -131,6 +145,8 @@ public class MantainanceReportFX implements Initializable {
             add_stage.showAndWait();
             equipment_tableview.setDisable(true);
             setEquipmentItems();
+            setMantainanceReportItems();
+            setMantainanceItemItems();
         } catch (IOException ex) {
             Logger.getLogger(ProcessReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -147,19 +163,19 @@ public class MantainanceReportFX implements Initializable {
     }
     
     public void setMantainanceReportTableview(){
-    reportid_column.setCellValueFactory(new PropertyValueFactory("id"));
-    reportdate_column.setCellValueFactory(new PropertyValueFactory("report_date"));
-    employeeid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceReportDAO().findEmployee(c.getValue()).getId()));
-    employeename_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getMantainanceReportDAO().findEmployee(c.getValue()).toString()));
-    equipmentid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceReportDAO().findEquipment(c.getValue()).getId()));
-    equipmentname_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getMantainanceReportDAO().findEquipment(c.getValue()).getName()));
-    equipmenttype_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getEquipmentDAO().findEquipmentType(msabase.getMantainanceReportDAO().findEquipment(c.getValue())).getName()));
+        reportid_column.setCellValueFactory(new PropertyValueFactory("id"));
+        reportdate_column.setCellValueFactory(new PropertyValueFactory("report_date"));
+        employeeid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceReportDAO().findEmployee(c.getValue()).getId()));
+        employeename_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getMantainanceReportDAO().findEmployee(c.getValue()).toString()));
+        equipmentid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceReportDAO().findEquipment(c.getValue()).getId()));
+        equipmentname_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getMantainanceReportDAO().findEquipment(c.getValue()).getName()));
+        equipmenttype_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getEquipmentDAO().findEquipmentType(msabase.getMantainanceReportDAO().findEquipment(c.getValue())).getName()));
     }
     
     public void setMantainanceItemTableview(){
-    checkdescription_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceItemDAO().findEquipmentTypeCheck(c.getValue()).getDescription()));
-    details_column.setCellValueFactory(new PropertyValueFactory("details"));
-    checkvalue_column.setCellValueFactory(new PropertyValueFactory("check_value"));
+        checkdescription_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceItemDAO().findEquipmentTypeCheck(c.getValue()).getDescription()));
+        details_column.setCellValueFactory(new PropertyValueFactory("details"));
+        checkvalue_column.setCellValueFactory(new PropertyValueFactory("check_value"));
     }
     
     public static Equipment getEquipment_selection(){
