@@ -23,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -56,6 +57,8 @@ public class CreateIncomingReportFX implements Initializable {
 
     @FXML
     private HBox root_hbox;
+    @FXML
+    private CheckBox discrepancy_checkbox;
     @FXML
     private ComboBox<Employee> employee_combo;
     @FXML
@@ -106,6 +109,7 @@ public class CreateIncomingReportFX implements Initializable {
     private Button lot_delete_button;
     @FXML
     private Button save_button;
+
     
     private ProductPart partcombo_selection;
     private String partcombo_text;
@@ -127,6 +131,7 @@ public class CreateIncomingReportFX implements Initializable {
     private ObservableList<Employee> employee = FXCollections.observableArrayList(
         msabase.getEmployeeDAO().find(MainApp.employee_id)
     );
+
     
     /**
      * Initializes the controller class.
@@ -312,6 +317,7 @@ public class CreateIncomingReportFX implements Initializable {
         incoming_report.setReport_date(java.sql.Date.valueOf(reportdate_picker.getValue()));
         incoming_report.setPo_number(ponumber_field.getText());
         incoming_report.setPacking_list(packinglist_field.getText());
+        incoming_report.setDiscrepancy(discrepancy_checkbox.isSelected());
         msabase.getIncomingReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), company_combo.getSelectionModel().getSelectedItem(), incoming_report);
         saveIncomingLots(incoming_report);
     }

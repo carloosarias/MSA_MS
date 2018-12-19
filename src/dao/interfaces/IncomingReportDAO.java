@@ -55,6 +55,15 @@ public interface IncomingReportDAO {
     public List<IncomingReport> list() throws DAOException;
     
     /**
+     * Returns a list of all IncomingReport matching discrepancy from the database ordered by IncomingReport ID. The list is never null and
+     * is empty when the database does not contain any IncomingReport matching discrepancy.
+     * @param discrepancy The discrepancy to be searched for.
+     * @return A list of all IncomingReport matching discrepancy from the database ordered by IncomingReport ID.
+     * @throws DAOException If something fails at database level.
+     */        
+    public List<IncomingReport> list(boolean discrepancy) throws DAOException;
+    
+    /**
      * Returns a list of all IncomingReport matching Company ID from the database ordered by IncomingReport ID. 
      * The Company ID must not be null, otherwise it will throw IllegalArgumentException.
      * The list is never null and is empty when the database does not contain any IncomingReport.

@@ -26,20 +26,22 @@ import model.IncomingReport;
 public class IncomingReportDAOJDBC implements IncomingReportDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, report_date, po_number, packing_list FROM INCOMING_REPORT WHERE id = ?";
+            "SELECT id, report_date, po_number, packing_list, discrepancy FROM INCOMING_REPORT WHERE id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM INCOMING_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM INCOMING_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, po_number, packing_list FROM INCOMING_REPORT ORDER BY id";
+            "SELECT id, report_date, po_number, packing_list, discrepancy FROM INCOMING_REPORT ORDER BY id";
+    private static final String SQL_LIST_OF_DISCREPANCY_ORDER_BY_ID = 
+        "SELECT id, report_date, po_number, packing_list, discrepancy FROM INCOMING_REPORT ORDER BY id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, report_date, po_number, packing_list FROM INCOMING_REPORT WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT id, report_date, po_number, packing_list, discrepancy FROM INCOMING_REPORT WHERE COMPANY_ID = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO INCOMING_REPORT (COMPANY_ID, EMPLOYEE_ID, report_date, po_number, packing_list) "
-            + "VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO INCOMING_REPORT (COMPANY_ID, EMPLOYEE_ID, report_date, po_number, packing_list, discrepancy) "
+            + "VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE INCOMING_REPORT SET report_date = ?, po_number = ?, packing_list = ? WHERE id = ?";
+            "UPDATE INCOMING_REPORT SET report_date = ?, po_number = ?, packing_list = ?, discrepancy = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM INCOMING_REPORT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -163,6 +165,30 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
     }
 
     @Override
+    public List<IncomingReport> list(boolean discrepancy) throws DAOException {
+        
+        List<IncomingReport> incoming_report = new ArrayList<>();
+        
+        Object[] values = {
+            discrepancy,
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_DISCREPANCY_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                incoming_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return incoming_report; 
+    }
+    
+    @Override
     public List<IncomingReport> listCompany(Company company) throws IllegalArgumentException, DAOException {
         if(company.getId() == null) {
             throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
@@ -208,7 +234,8 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
             employee.getId(),
             DAOUtil.toSqlDate(incoming_report.getReport_date()),
             incoming_report.getPo_number(),
-            incoming_report.getPacking_list()
+            incoming_report.getPacking_list(),
+            incoming_report.getDiscrepancy()
         };
         
         try(
@@ -243,7 +270,8 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
             DAOUtil.toSqlDate(incoming_report.getReport_date()),
             incoming_report.getPo_number(),
             incoming_report.getPacking_list(),
-            incoming_report.getId()
+            incoming_report.getId(),
+            incoming_report.getDiscrepancy()
         };
         
         try(
@@ -294,6 +322,7 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
         incoming_report.setReport_date(resultSet.getDate("report_date"));
         incoming_report.setPo_number(resultSet.getString("po_number"));
         incoming_report.setPacking_list(resultSet.getString("packing_list"));
+        incoming_report.setDiscrepancy(resultSet.getBoolean("discrepancy"));
         return incoming_report;
     }
 }

@@ -18,6 +18,7 @@ public class IncomingReport implements Serializable{
     private Date report_date;
     private String po_number;
     private String packing_list;
+    private boolean discrepancy;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -50,6 +51,14 @@ public class IncomingReport implements Serializable{
 
     public void setPacking_list(String packing_list) {
         this.packing_list = packing_list;
+    }
+    
+    public boolean getDiscrepancy(){
+        return discrepancy;
+    }
+    
+    public void setDiscrepancy(boolean discrepancy){
+        this.discrepancy = discrepancy;
     }
     // Object overrides ---------------------------------------------------------------------------
     
