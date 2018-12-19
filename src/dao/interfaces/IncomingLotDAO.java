@@ -145,5 +145,5 @@ public interface IncomingLotDAO {
     
     public Integer getPartRevisionBoxQuantity(IncomingReport incoming_report, PartRevision part_revision);
     
-    public List<IncomingLot> listDateRange(ProductPart product_part, Date start, Date end);
+    public List<IncomingLot> listDateRange(ProductPart product_part, boolean discrepancy, Date start, Date end);
 }

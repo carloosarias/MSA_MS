@@ -54,7 +54,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             + "FROM INCOMING_LOT "
             + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN INCOMING_REPORT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND INCOMING_REPORT.report_date BETWEEN ? AND ? "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ?, INCOMING_REPORT.discrepancy = ? AND INCOMING_REPORT.report_date BETWEEN ? AND ? "
             + "ORDER BY INCOMING_REPORT.report_date, INCOMING_LOT.INCOMING_REPORT_ID, INCOMING_LOT.id";
     
     // Vars ---------------------------------------------------------------------------------------
@@ -437,12 +437,13 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     }
     
     @Override
-    public List<IncomingLot> listDateRange(ProductPart product_part, Date start, Date end){
+    public List<IncomingLot> listDateRange(ProductPart product_part, boolean discrepancy, Date start, Date end){
         
         List<IncomingLot> incominglot_list = new ArrayList<>();
         
         Object[] values = {
             product_part.getId(),
+            discrepancy,
             start,
             end
         };
