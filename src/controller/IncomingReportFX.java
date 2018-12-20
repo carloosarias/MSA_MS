@@ -54,6 +54,8 @@ public class IncomingReportFX implements Initializable {
     @FXML
     private TableColumn<IncomingReport, String> report_packinglist_column;
     @FXML
+    private TableColumn<IncomingReport, String> discrepancy_column;
+    @FXML
     private TableView<PartRevision> partrevision_tableview;
     @FXML
     private TableColumn<PartRevision, String> part_column;
@@ -81,6 +83,7 @@ public class IncomingReportFX implements Initializable {
     private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+
     
     /**
      * Initializes the controller class.
@@ -133,6 +136,7 @@ public class IncomingReportFX implements Initializable {
         report_client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingReportDAO().findCompany(c.getValue()).toString()));
         report_ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
         report_packinglist_column.setCellValueFactory(new PropertyValueFactory<>("packing_list"));
+        discrepancy_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDiscrepancyString()));
     }
     
     public void setItemTable(){

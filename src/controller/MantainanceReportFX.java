@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,6 +25,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -176,6 +179,12 @@ public class MantainanceReportFX implements Initializable {
         checkdescription_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceItemDAO().findEquipmentTypeCheck(c.getValue()).getDescription()));
         details_column.setCellValueFactory(new PropertyValueFactory("details"));
         checkvalue_column.setCellValueFactory(new PropertyValueFactory("check_value"));
+        checkvalue_column.setCellFactory(column -> new CheckBoxTableCell<>());
+        checkvalue_column.setCellValueFactory(cellData -> {
+            MantainanceItem cellValue = cellData.getValue();
+            BooleanProperty property = new SimpleBooleanProperty(cellValue.isCheck_value());
+            return property;
+        });
     }
     
     public static Equipment getEquipment_selection(){

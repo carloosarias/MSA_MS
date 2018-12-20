@@ -19,6 +19,7 @@ public class IncomingReport implements Serializable{
     private String po_number;
     private String packing_list;
     private boolean discrepancy;
+    private String[] discrepancy_string = new String[]{"Recibido","Discrepancia"};
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -59,6 +60,14 @@ public class IncomingReport implements Serializable{
     
     public void setDiscrepancy(boolean discrepancy){
         this.discrepancy = discrepancy;
+    }
+    
+    public String getDiscrepancyString(){
+        if(discrepancy){
+            return discrepancy_string[1];
+        }
+        
+        return discrepancy_string[0];
     }
     // Object overrides ---------------------------------------------------------------------------
     
