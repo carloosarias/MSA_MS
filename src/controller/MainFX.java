@@ -101,10 +101,10 @@ public class MainFX implements Initializable {
         
         menu_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
             root_tabpane = new TabPane();
+            updateTabOnChange(newValue);
             setTabs(newValue);
             root_pane.setCenter(root_tabpane);
             root_pane.getScene().getWindow().sizeToScene();
-            updateTabOnChange(newValue);
         });
         
         logout.setOnAction((ActionEvent) ->{
@@ -118,7 +118,6 @@ public class MainFX implements Initializable {
             company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
             productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
             tank_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TankFX.fxml")));
-            orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
             incoming_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
             depart_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX.fxml")));
             invoice_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));

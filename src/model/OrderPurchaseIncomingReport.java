@@ -12,16 +12,14 @@ import java.util.Date;
  *
  * @author Pavilion Mini
  */
-public class OrderPurchase implements Serializable {
+public class OrderPurchaseIncomingReport implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date report_date;
     private String comments;
-    private String status;
-    private Double exchange_rate;
-    private Double iva_rate;
     
     // Getters/setters ----------------------------------------------------------------------------
+
     public Integer getId() {
         return id;
     }
@@ -29,7 +27,7 @@ public class OrderPurchase implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public Date getReport_date() {
         return report_date;
     }
@@ -38,53 +36,29 @@ public class OrderPurchase implements Serializable {
         this.report_date = report_date;
     }
 
-    public String getDescription() {
+    public String getComments() {
         return comments;
     }
 
     public void setComments(String comments) {
         this.comments = comments;
     }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    
-    public Double getExchange_rate(){
-        return exchange_rate;
-    }
-    
-    public void setExchange_rate(Double exchange_rate){
-        this.exchange_rate = exchange_rate;
-    }
-    
-    public Double getIva_rate(){
-        return iva_rate;
-    }
-    
-    public void setIva_rate(Double iva_rate){
-        this.iva_rate = iva_rate;
-    }
     
     // Object overrides ---------------------------------------------------------------------------
-
+    
     /**
-     * This should compare OrderPurchase by ID only.
+     * This should compare OrderPurchaseIncomingReport by ID only.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof OrderPurchase) && (id != null)
-            ? id.equals(((OrderPurchase) other).id)
+        return (other instanceof OrderPurchaseIncomingReport) && (id != null)
+            ? id.equals(((OrderPurchaseIncomingReport) other).id)
             : (other == this);
     }
 
     /**
-     * OrderPurchase with same ID should return same hashcode.
+     * OrderPurchaseIncomingReport with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -95,12 +69,11 @@ public class OrderPurchase implements Serializable {
     }
 
     /**
-     * Returns the String representation of this OrderPurchase. Not required, it just pleases reading logs.
+     * Returns the String representation of this OrderPurchaseIncomingReport. Not required, it just pleases reading logs.
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
         return String.format("%f", id);
-    }    
-
+    }
 }

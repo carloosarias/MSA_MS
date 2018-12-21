@@ -24,11 +24,9 @@ import dao.interfaces.InvoicePaymentReportDAO;
 import dao.interfaces.MantainanceItemDAO;
 import dao.interfaces.MantainanceReportDAO;
 import dao.interfaces.MetalDAO;
-import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProcessReportDAO;
 import dao.interfaces.ProductPartDAO;
-import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.QuoteDAO;
 import dao.interfaces.QuoteItemDAO;
 import dao.interfaces.ScrapReportDAO;
@@ -239,22 +237,6 @@ public abstract class DAOFactory {
      */   
     public PartRevisionDAO getPartRevisionDAO(){
         return new PartRevisionDAOJDBC(this);
-    }
-
-    /**
-     * Returns the OrderPurchase DAO associated with the current DAOFactory.
-     * @return The OrderPurchase DAO associated with the current DAOFactory.
-     */   
-    public OrderPurchaseDAO getOrderPurchaseDAO(){
-        return new OrderPurchaseDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the PurchaseItem DAO associated with the current DAOFactory.
-     * @return The PurchaseItem DAO associated with the current DAOFactory.
-     */   
-    public PurchaseItemDAO getPurchaseItemDAO(){
-        return new PurchaseItemDAOJDBC(this);
     }
     
     /**

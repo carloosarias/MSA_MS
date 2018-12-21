@@ -15,10 +15,11 @@ import java.util.Date;
 public class PurchaseItem implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Date delivery_date;
-    public String description;
-    private Double unit_price;
-    private Integer quantity;
+    private Integer units_ordered;
+    private double price_timestamp;
+    private double price_updated;
+    private Date date_modified;
+    private boolean modified;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -29,36 +30,44 @@ public class PurchaseItem implements Serializable{
         this.id = id;
     }
     
-    public Date getDelivery_date(){
-        return delivery_date;
-    }
-    
-    public void setDelivery_date(Date delivery_date){
-        this.delivery_date = delivery_date;
-    }
-    
-    public String getDescription() {
-        return description;
+    public Integer getUnits_ordered() {
+        return units_ordered;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    public Double getUnit_price(){
-        return unit_price;
-    }
-    
-    public void setUnit_price(Double unit_price){
-        this.unit_price = unit_price;
+    public void setUnits_ordered(Integer units_ordered) {
+        this.units_ordered = units_ordered;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public double getPrice_timestamp() {
+        return price_timestamp;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setPrice_timestamp(double price_timestamp) {
+        this.price_timestamp = price_timestamp;
+    }
+
+    public double getPrice_updated() {
+        return price_updated;
+    }
+
+    public void setPrice_updated(double price_updated) {
+        this.price_updated = price_updated;
+    }
+
+    public Date getDate_modified() {
+        return date_modified;
+    }
+
+    public void setDate_modified(Date date_modified) {
+        this.date_modified = date_modified;
+    }
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public void setModified(boolean modified) {
+        this.modified = modified;
     }
     
     // Object overrides ---------------------------------------------------------------------------
@@ -91,7 +100,6 @@ public class PurchaseItem implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%s",
-                description);
+        return String.format("%f", id);
     }
 }
