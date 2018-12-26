@@ -7,8 +7,9 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
-import model.AnalysisReport;
+import model.Company;
 import model.Employee;
+import model.Product;
 import model.ProductSupplier;
 
 /**
@@ -64,14 +65,34 @@ public interface ProductSupplierDAO {
     public List<ProductSupplier> list(boolean active) throws DAOException;
     
     /**
+     * Returns a list of all ProductSupplier matching Product from the database ordered by ProductSupplier ID. The list is never null and
+     * is empty when the database does not contain any ProductSupplier matching Product.
+     * @param product The Product of the ProductSupplier to be returned.
+     * @return A list of all ProductSupplier matching Product from the database ordered by ProductSupplier ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<ProductSupplier> listOfProduct(Product product) throws DAOException;
+    
+    /**
+     * Returns a list of all ProductSupplier matching Company from the database ordered by ProductSupplier ID. The list is never null and
+     * is empty when the database does not contain any ProductSupplier matching Company.
+     * @param company The Company of the ProductSupplier to be returned.
+     * @return A list of all ProductSupplier matching Company from the database ordered by ProductSupplier ID.
+     * @throws DAOException If something fails at database level.
+     */
+    public List<ProductSupplier> listOfCompany(Company company) throws DAOException;    
+    
+    /**
      * Create the given ProductSupplier in the database.
      * The ProductSupplier ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given ProductSupplier.
+     * @param product The Product to be assigned to this ProductSupplier.
+     * @param company The Company to be assigned to this ProductSupplier.
      * @param product_supplier The ProductSupplier to be created.
      * @throws IllegalArgumentException If the ProductSupplier ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
+    public void create(Product product, Company company, ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given ProductSupplier in the database. The ProductSupplier ID must not be null, 
@@ -88,5 +109,5 @@ public interface ProductSupplierDAO {
      * @param product_supplier The ProductSupplier to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
-    public void delete(AnalysisReport product_supplier) throws DAOException;
+    public void delete(ProductSupplier product_supplier) throws DAOException;
 }
