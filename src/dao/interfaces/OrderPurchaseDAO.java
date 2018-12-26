@@ -18,7 +18,7 @@ import model.OrderPurchase;
 public interface OrderPurchaseDAO {
     // Actions ------------------------------------------------------------------------------------
 
-    /**
+   /**
      * Returns the OrderPurchase from the database matching the given ID, otherwise null.
      * @param id The ID of the OrderPurchase to be returned.
      * @return The OrderPurchase from the database matching the given ID, otherwise null.
@@ -99,6 +99,6 @@ public interface OrderPurchaseDAO {
      * @param order_purchase The OrderPurchase to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
-    public void delete(OrderPurchase order_purchase) throws DAOException;
+    public void delete(OrderPurchase order_purchase) throws DAOException; 
 
 }
