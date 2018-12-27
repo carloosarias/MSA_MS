@@ -26,6 +26,7 @@ import dao.interfaces.MantainanceReportDAO;
 import dao.interfaces.MetalDAO;
 import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProcessReportDAO;
+import dao.interfaces.ProductDAO;
 import dao.interfaces.ProductPartDAO;
 import dao.interfaces.QuoteDAO;
 import dao.interfaces.QuoteItemDAO;
@@ -397,6 +398,14 @@ public abstract class DAOFactory {
      */   
     public MantainanceItemDAO getMantainanceItemDAO(){
         return new MantainanceItemDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the Product DAO associated with the current DAOFactory.
+     * @return The Product DAO associated with the current DAOFactory.
+     */   
+    public ProductDAO getProductDAO(){
+        return new ProductDAOJDBC(this);
     }
     // You can add more DAO implementation getters here.
 }

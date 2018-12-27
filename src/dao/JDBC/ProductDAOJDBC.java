@@ -7,7 +7,6 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.MantainanceReportDAOJDBC.map;
 import dao.interfaces.ProductDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import model.MantainanceReport;
 import model.Product;
 
 /**
@@ -26,28 +24,18 @@ public class ProductDAOJDBC implements ProductDAO {
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EQUIPMENT_BY_ID = 
-            "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT id, description, unit_measure, active FROM PRODUCT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT ORDER BY id";
+            "SELECT id, description, unit_measure, active FROM PRODUCT ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
-    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
-    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
-    private static final String SQL_LIST_EQUIPMENT_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, description, unit_measure, active FROM PRODUCT WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
+            "INSERT INTO MANTAINANCE_REPORT (description, unit_measure, active) "
             + "VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MANTAINANCE_REPORT SET report_date = ? WHERE id = ?";
+            "UPDATE PRODUCT SET description = ?, unit_measure = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM MANTAINANCE_REPORT WHERE id = ?";
+            "DELETE FROM PRODUCT WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 

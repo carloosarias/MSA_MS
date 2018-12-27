@@ -35,7 +35,7 @@ public interface ProductSupplierDAO {
      * @throws IllegalArgumentException If ProductSupplier ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public Employee findProduct(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
+    public Product findProduct(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns the Company from the database matching the given ProductSupplier ID, otherwise null.
@@ -45,7 +45,7 @@ public interface ProductSupplierDAO {
      * @throws IllegalArgumentException If ProductSupplier ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public Employee findCompany(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
+    public Company findCompany(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all ProductSupplier from the database ordered by ProductSupplier ID. The list is never null and
