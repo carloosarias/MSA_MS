@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Company;
 import model.CompanyAddress;
@@ -25,15 +26,15 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
             "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
+    private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EQUIPMENT_BY_ID = 
+    private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
             "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, report_date FROM MANTAINANCE_REPORT ORDER BY id";
-    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
+    private static final String SQL_LIST_COMPANY_ORDER_BY_ID = 
             "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
-    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
+    private static final String SQL_LIST_STATUS_ORDER_BY_ID = 
             "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
             "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
@@ -65,7 +66,7 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
     // Actions ------------------------------------------------------------------------------------
     @Override
     public OrderPurchase find(Integer id) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return find(SQL_FIND_BY_ID, id);
     }
     
     /**
@@ -95,27 +96,125 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
     
     @Override
     public Company findCompany(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(order_purchase.getId() == null) {
+                throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
+            }
+
+            Company company = null;
+
+            Object[] values = {
+                order_purchase.getId()
+            };
+
+            try (
+                Connection connection = daoFactory.getConnection();
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_BY_ID, false, values);
+                ResultSet resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    company = daoFactory.getCompanyDAO().find(resultSet.getInt("COMPANY_ID"));
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }        
+
+            return company;
     }
 
     @Override
     public CompanyAddress findCompanyAddress(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(order_purchase.getId() == null) {
+                throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
+            }
+
+            CompanyAddress company_address = null;
+
+            Object[] values = {
+                order_purchase.getId()
+            };
+
+            try (
+                Connection connection = daoFactory.getConnection();
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_ADDRESS_BY_ID, false, values);
+                ResultSet resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    company_address = daoFactory.getCompanyAddressDAO().find(resultSet.getInt("COMPANY_ADDRESS_ID"));
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }        
+
+            return company_address;
     }
 
     @Override
     public List<OrderPurchase> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<OrderPurchase> orderpurchase_list = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                orderpurchase_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return orderpurchase_list;
     }
 
     @Override
     public List<OrderPurchase> listOfCompany(Company company) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(company.getId() == null) {
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        }    
+        
+        List<OrderPurchase> orderpurchase_list = new ArrayList<>();
+        
+        Object[] values = {
+            company.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_COMPANY_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                orderpurchase_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return orderpurchase_list;
     }
 
     @Override
     public List<OrderPurchase> listOfStatus(String status) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<OrderPurchase> orderpurchase_list = new ArrayList<>();
+        
+        Object[] values = {
+            status
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_STATUS_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                orderpurchase_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return orderpurchase_list;
     }
 
     @Override
