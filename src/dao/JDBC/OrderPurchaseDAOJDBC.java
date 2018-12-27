@@ -26,28 +26,24 @@ import model.OrderPurchase;
 public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT COMPANY_ID FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
-            "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT ORDER BY id";
+            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE ORDER BY id";
     private static final String SQL_LIST_COMPANY_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE COMPANY_ID = ? ORDER BY id";
     private static final String SQL_LIST_STATUS_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
-    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
-    private static final String SQL_LIST_EQUIPMENT_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE status = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
-            + "VALUES(?, ?, ?)";
+            "INSERT INTO ORDER_PURCHASE (EMPLOYEE_ID, EQUIPMENT_ID, report_date, comments, status, exchange_rate, iva_rate) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MANTAINANCE_REPORT SET report_date = ? WHERE id = ?";
+            "UPDATE ORDER_PURCHASE SET report_date = ?, comments = ?, status = ?, exchange_rate = ?, iva_rate = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM MANTAINANCE_REPORT WHERE id = ?";
+            "DELETE FROM ORDER_PURCHASE WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -71,10 +67,10 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
     }
     
     /**
-     * Returns the MantainanceReport from the database matching the given SQL query with the given values.
+     * Returns the OrderPurchase from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The MantainanceReport from the database matching the given SQL query with the given values.
+     * @return The OrderPurchase from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
     private OrderPurchase find(String sql, Object... values) throws DAOException {

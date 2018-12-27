@@ -59,10 +59,10 @@ public class ProductDAOJDBC implements ProductDAO {
     }
     
     /**
-     * Returns the MantainanceReport from the database matching the given SQL query with the given values.
+     * Returns the Product from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
      * @param values The PreparedStatement values to be set.
-     * @return The MantainanceReport from the database matching the given SQL query with the given values.
+     * @return The Product from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
     private Product find(String sql, Object... values) throws DAOException {

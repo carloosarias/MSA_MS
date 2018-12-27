@@ -24,10 +24,12 @@ import dao.interfaces.InvoicePaymentReportDAO;
 import dao.interfaces.MantainanceItemDAO;
 import dao.interfaces.MantainanceReportDAO;
 import dao.interfaces.MetalDAO;
+import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProcessReportDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.ProductPartDAO;
+import dao.interfaces.ProductSupplierDAO;
 import dao.interfaces.QuoteDAO;
 import dao.interfaces.QuoteItemDAO;
 import dao.interfaces.ScrapReportDAO;
@@ -406,6 +408,22 @@ public abstract class DAOFactory {
      */   
     public ProductDAO getProductDAO(){
         return new ProductDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the ProductSupplier DAO associated with the current DAOFactory.
+     * @return The ProductSupplier DAO associated with the current DAOFactory.
+     */   
+    public ProductSupplierDAO getProductSupplierDAO(){
+        return new ProductSupplierDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the OrderPurchase DAO associated with the current DAOFactory.
+     * @return The OrderPurchase DAO associated with the current DAOFactory.
+     */   
+    public OrderPurchaseDAO getOrderPurchaseDAO(){
+        return new OrderPurchaseDAOJDBC(this);
     }
     // You can add more DAO implementation getters here.
 }
