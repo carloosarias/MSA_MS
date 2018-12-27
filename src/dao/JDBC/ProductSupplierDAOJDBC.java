@@ -26,26 +26,24 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EQUIPMENT_BY_ID = 
-            "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT id, unit_price, quantity FROM PRODUCT_SUPPLIER WHERE id = ?";
+    private static final String SQL_FIND_PRODUCT_BY_ID = 
+            "SELECT PRODUCT_ID FROM PRODUCT_SUPPLIER WHERE id = ?";
+    private static final String SQL_FIND_COMPANY_BY_ID = 
+            "SELECT COMPANY_ID FROM PRODUCT_SUPPLIER WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT id, unit_price, quantity FROM PRODUCT_SUPPLIER ORDER BY id";
     private static final String SQL_LIST_PRODUCT_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
+            "SELECT id, unit_price, quantity FROM PRODUCT_SUPPLIER WHERE PRODUCT_ID = ? ORDER BY id";
     private static final String SQL_LIST_COMPANY_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, unit_price, quantity FROM PRODUCT_SUPPLIER WHERE COMPANY_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
-            + "VALUES(?, ?, ?)";
+            "INSERT INTO PRODUCT_SUPPLIER (PRODUCT_ID, COMPANY_ID, unit_price, quantity) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MANTAINANCE_REPORT SET report_date = ? WHERE id = ?";
+            "UPDATE PRODUCT_SUPPLIER SET unit_price = ?, quantity = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM MANTAINANCE_REPORT WHERE id = ?";
+            "DELETE FROM PRODUCT_SUPPLIER WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -107,7 +105,7 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
 
             try (
                 Connection connection = daoFactory.getConnection();
-                PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_PRODUCT_BY_ID, false, values);
                 ResultSet resultSet = statement.executeQuery();
             ) {
                 if (resultSet.next()) {
@@ -134,7 +132,7 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
 
             try (
                 Connection connection = daoFactory.getConnection();
-                PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_BY_ID, false, values);
                 ResultSet resultSet = statement.executeQuery();
             ) {
                 if (resultSet.next()) {
@@ -164,30 +162,6 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
         }
         
         return productsupplier_list;
-    }
-
-    @Override
-    public List<ProductSupplier> list(boolean active) throws DAOException {
-        List<ProductSupplier> productsupplier_list = new ArrayList<>();
-        
-        Object[] values = {
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                productsupplier_list.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return productsupplier_list;
-
     }
 
     @Override

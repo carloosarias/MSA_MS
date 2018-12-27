@@ -56,15 +56,6 @@ public interface ProductSupplierDAO {
     public List<ProductSupplier> list() throws DAOException;
     
     /**
-     * Returns a list of all ProductSupplier matching active from the database ordered by ProductSupplier ID. The list is never null and
-     * is empty when the database does not contain any ProductSupplier matching active.
-     * @param active The active of the ProductSupplier to be returned.
-     * @return A list of all ProductSupplier matching active from the database ordered by ProductSupplier ID.
-     * @throws DAOException If something fails at database level.
-     */
-    public List<ProductSupplier> list(boolean active) throws DAOException;
-    
-    /**
      * Returns a list of all ProductSupplier matching Product from the database ordered by ProductSupplier ID. The list is never null and
      * is empty when the database does not contain any ProductSupplier matching Product.
      * @param product The Product of the ProductSupplier to be returned.
