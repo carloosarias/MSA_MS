@@ -38,7 +38,7 @@ public class OrderPurchase implements Serializable {
         this.report_date = report_date;
     }
 
-    public String getDescription() {
+    public String getComments() {
         return comments;
     }
 

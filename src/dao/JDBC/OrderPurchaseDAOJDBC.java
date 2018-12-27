@@ -6,6 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.OrderPurchaseDAO;
 import java.sql.Connection;
@@ -219,17 +220,95 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
 
     @Override
     public void create(Company company, CompanyAddress company_address, OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (company.getId() == null) {
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        }
+        if(company_address.getId() == null){
+            throw new IllegalArgumentException("CompanyAddress is not created yet, the CompanyAddress ID is null.");
+        }
+        if(order_purchase.getId() != null){
+            throw new IllegalArgumentException("OrderPurchase is already created, the OrderPurchase ID is not null.");
+        }
+        
+        Object[] values = {
+            company.getId(),
+            company_address.getId(),
+            DAOUtil.toSqlDate(order_purchase.getReport_date()),
+            order_purchase.getComments(),
+            order_purchase.getStatus(),
+            order_purchase.getExchange_rate(),
+            order_purchase.getIva_rate()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating OrderPurchase failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    order_purchase.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating OrderPurchase failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(OrderPurchase order_purchase) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (order_purchase.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the MantainanceReport ID is null.");
+        }
+        
+        Object[] values = {
+            DAOUtil.toSqlDate(order_purchase.getReport_date()),
+            order_purchase.getComments(),
+            order_purchase.getStatus(),
+            order_purchase.getExchange_rate(),
+            order_purchase.getIva_rate(),
+            order_purchase.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating OrderPurchase failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(OrderPurchase order_purchase) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            order_purchase.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting OrderPurchase failed, no rows affected.");
+            } else{
+                order_purchase.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
