@@ -27,22 +27,22 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE id = ?";
+            "SELECT id, units_ordered, price_timestamp, price_updated, date_modified, modified FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_FIND_ORDER_PURCHASE_BY_ID = 
-            "SELECT COMPANY_ID FROM ORDER_PURCHASE WHERE id = ?";
+            "SELECT ORDER_PURCHASE_ID FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_FIND_PRODUCT_SUPPLIER_BY_ID = 
-            "SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE WHERE id = ?";
+            "SELECT PRODUCT_SUPPLIER FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_PURCHASE_ORDER_BY_ID = 
-            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT id, units_ordered, price_timestamp, price_updated, date_modified, modified FROM PURCHASE_ITEM WHERE COMPANY_ID = ? ORDER BY id";
     private static final String SQL_LIST_STATUS_ORDER_BY_ID = 
-            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE status = ? ORDER BY id";
+            "SELECT id, units_ordered, price_timestamp, price_updated, date_modified, modified FROM PURCHASE_ITEM WHERE status = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO ORDER_PURCHASE (EMPLOYEE_ID, EQUIPMENT_ID, report_date, comments, status, exchange_rate, iva_rate) "
+            "INSERT INTO PURCHASE_ITEM (ORDER_PURCHASE_ID, PRODUCT_SUPPLIER, units_ordered, price_timestamp, price_updated, date_modified, modified) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ORDER_PURCHASE SET report_date = ?, comments = ?, status = ?, exchange_rate = ?, iva_rate = ? WHERE id = ?";
+            "UPDATE PURCHASE_ITEM SET units_ordered = ?, price_timestamp = ?, price_updated = ?, date_modified = ?, modified = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM ORDER_PURCHASE WHERE id = ?";
+            "DELETE FROM PURCHASE_ITEM WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 

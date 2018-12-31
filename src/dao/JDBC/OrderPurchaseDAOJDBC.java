@@ -38,7 +38,7 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
     private static final String SQL_LIST_STATUS_ORDER_BY_ID = 
             "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE status = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO ORDER_PURCHASE (EMPLOYEE_ID, EQUIPMENT_ID, report_date, comments, status, exchange_rate, iva_rate) "
+            "INSERT INTO ORDER_PURCHASE (COMPANY_ID, COMPANY_ADDRESS_ID, report_date, comments, status, exchange_rate, iva_rate) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE ORDER_PURCHASE SET report_date = ?, comments = ?, status = ?, exchange_rate = ?, iva_rate = ? WHERE id = ?";
