@@ -6,6 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.PurchaseItemDAO;
 import java.sql.Connection;
@@ -172,24 +173,25 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
 
     @Override
     public void create(OrderPurchase order_purchase, ProductSupplier product_supplier, PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
-        if (company.getId() == null) {
-            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        if (order_purchase.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
         }
-        if(company_address.getId() == null){
-            throw new IllegalArgumentException("CompanyAddress is not created yet, the CompanyAddress ID is null.");
+        if(product_supplier.getId() == null){
+            throw new IllegalArgumentException("ProductSupplier is not created yet, the ProductSupplier ID is null.");
         }
-        if(order_purchase.getId() != null){
-            throw new IllegalArgumentException("OrderPurchase is already created, the OrderPurchase ID is not null.");
+        if(purchase_item.getId() != null){
+            throw new IllegalArgumentException("PurchaseItem is already created, the PurchaseItem ID is not null.");
         }
         
         Object[] values = {
-            company.getId(),
-            company_address.getId(),
-            DAOUtil.toSqlDate(order_purchase.getReport_date()),
-            order_purchase.getComments(),
-            order_purchase.getStatus(),
-            order_purchase.getExchange_rate(),
-            order_purchase.getIva_rate()
+            order_purchase.getId(),
+            product_supplier.getId(),
+            purchase_item.getUnits_ordered(),
+            purchase_item.getPrice_timestamp(),
+            purchase_item.getPrice_updated(),
+            DAOUtil.toSqlDate(purchase_item.getDate_modified()),
+            purchase_item.isModified()
+                
         };
         
         try(
@@ -216,12 +218,50 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
 
     @Override
     public void update(PurchaseItem purchase_item) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (purchase_item.getId() == null) {
+            throw new IllegalArgumentException("PurchaseItem is not created yet, the PurchaseItem ID is null.");
+        }
+        
+        Object[] values = {
+            purchase_item.getUnits_ordered(),
+            purchase_item.getPrice_timestamp(),
+            purchase_item.getPrice_updated(),
+            DAOUtil.toSqlDate(purchase_item.getDate_modified()),
+            purchase_item.isModified()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating PurchaseItem failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(PurchaseItem purchase_item) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            purchase_item.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting PurchaseItem failed, no rows affected.");
+            } else{
+                purchase_item.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------

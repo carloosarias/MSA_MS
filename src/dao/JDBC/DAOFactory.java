@@ -30,6 +30,7 @@ import dao.interfaces.ProcessReportDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.ProductPartDAO;
 import dao.interfaces.ProductSupplierDAO;
+import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.QuoteDAO;
 import dao.interfaces.QuoteItemDAO;
 import dao.interfaces.ScrapReportDAO;
@@ -424,6 +425,14 @@ public abstract class DAOFactory {
      */   
     public OrderPurchaseDAO getOrderPurchaseDAO(){
         return new OrderPurchaseDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the PurchaseItem DAO associated with the current DAOFactory.
+     * @return The PurchaseItem DAO associated with the current DAOFactory.
+     */   
+    public PurchaseItemDAO getPurchaseItemDAO(){
+        return new PurchaseItemDAOJDBC(this);
     }
     // You can add more DAO implementation getters here.
 }
