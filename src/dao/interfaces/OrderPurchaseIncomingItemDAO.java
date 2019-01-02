@@ -35,7 +35,7 @@ public interface OrderPurchaseIncomingItemDAO {
      * @throws IllegalArgumentException If OrderPurchaseIncomingItem ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public OrderPurchaseIncomingReport findOrderPurchase(OrderPurchaseIncomingItem order_purchase_incoming_item) throws IllegalArgumentException, DAOException;
+    public OrderPurchaseIncomingReport findOrderPurchaseIncomingReport(OrderPurchaseIncomingItem order_purchase_incoming_item) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns the PurchaseItem from the database matching the given OrderPurchaseIncomingItem ID, otherwise null.
@@ -45,7 +45,7 @@ public interface OrderPurchaseIncomingItemDAO {
      * @throws IllegalArgumentException If OrderPurchaseIncomingItem ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public PurchaseItem findProductSupplier(OrderPurchaseIncomingItem order_purchase_incoming_item) throws IllegalArgumentException, DAOException;
+    public PurchaseItem findPurchaseItem(OrderPurchaseIncomingItem order_purchase_incoming_item) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all OrderPurchaseIncomingItem matching OrderPurchaseIncomingReport from the database ordered by OrderPurchaseIncomingItem ID. The list is never null and
