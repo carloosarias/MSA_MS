@@ -6,16 +6,16 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.MantainanceReportDAOJDBC.map;
 import dao.interfaces.OrderPurchaseIncomingReportDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.Employee;
-import model.MantainanceReport;
 import model.OrderPurchase;
 import model.OrderPurchaseIncomingReport;
 
@@ -26,28 +26,24 @@ import model.OrderPurchaseIncomingReport;
 public class OrderPurchaseIncomingReportDAOJDBC implements OrderPurchaseIncomingReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EQUIPMENT_BY_ID = 
-            "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT EMPLOYEE_ID FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
+    private static final String SQL_FIND_ORDER_PURCHASE_BY_ID = 
+            "SELECT ORDER_PURCHASE_ID FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT ORDER BY id";
+            "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
-    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
-    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
-    private static final String SQL_LIST_EQUIPMENT_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+            "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+    private static final String SQL_LIST_ORDER_PURCHASE_ORDER_BY_ID = 
+            "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
-            + "VALUES(?, ?, ?)";
+            "INSERT INTO ORDER_PURCHASE_INCOMING_REPORT (EMPLOYEE_ID, ORDER_PURCHASE_ID, report_date, comments) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MANTAINANCE_REPORT SET report_date = ? WHERE id = ?";
+            "UPDATE ORDER_PURCHASE_INCOMING_REPORT SET report_date = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM MANTAINANCE_REPORT WHERE id = ?";
+            "DELETE FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -108,7 +104,7 @@ public class OrderPurchaseIncomingReportDAOJDBC implements OrderPurchaseIncoming
 
             try (
                 Connection connection = daoFactory.getConnection();
-                PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_ORDER_PURCHASE_BY_ID, false, values);
                 ResultSet resultSet = statement.executeQuery();
             ) {
                 if (resultSet.next()) {
@@ -123,44 +119,196 @@ public class OrderPurchaseIncomingReportDAOJDBC implements OrderPurchaseIncoming
 
     @Override
     public Employee findEmployee(OrderPurchaseIncomingReport order_purchase_incoming_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(order_purchase_incoming_report.getId() == null) {
+                throw new IllegalArgumentException("OrderPurchaseIncomingReport is not created yet, the OrderPurchaseIncomingReport ID is null.");
+            }
+
+            Employee employee = null;
+
+            Object[] values = {
+                order_purchase_incoming_report.getId()
+            };
+
+            try (
+                Connection connection = daoFactory.getConnection();
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
+                ResultSet resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    employee = daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID"));
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }        
+
+            return employee;
     }
 
     @Override
     public List<OrderPurchaseIncomingReport> list() throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<OrderPurchaseIncomingReport> order_purchase_incoming_report = new ArrayList<>();
+
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                order_purchase_incoming_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return order_purchase_incoming_report;
     }
 
     @Override
     public List<OrderPurchaseIncomingReport> listOfOrderPurchase(OrderPurchase order_purchase) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(order_purchase.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
+        }    
+        
+        List<OrderPurchaseIncomingReport> order_purchase_incoming_report = new ArrayList<>();
+        
+        Object[] values = {
+            order_purchase.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ORDER_PURCHASE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                order_purchase_incoming_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return order_purchase_incoming_report;
     }
 
     @Override
     public List<OrderPurchaseIncomingReport> listOfEmployee(Employee employee) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }    
+        
+        List<OrderPurchaseIncomingReport> order_purchase_incoming_report = new ArrayList<>();
+        
+        Object[] values = {
+            employee.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                order_purchase_incoming_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return order_purchase_incoming_report;
     }
 
     @Override
     public void create(OrderPurchase order_purchase, Employee employee, OrderPurchaseIncomingReport order_purchase_incoming_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (order_purchase.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchase is not created yet, the OrderPurchase ID is null.");
+        }
+        if(employee.getId() == null){
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        if(order_purchase_incoming_report.getId() != null){
+            throw new IllegalArgumentException("OrderPurchaseIncomingReport is already created, the OrderPurchaseIncomingReport ID is not null.");
+        }
+        
+        Object[] values = {
+            order_purchase.getId(),
+            employee.getId(),
+            DAOUtil.toSqlDate(order_purchase_incoming_report.getReport_date()),
+            order_purchase_incoming_report.getComments()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating OrderPurchaseIncomingReport failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    order_purchase_incoming_report.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating OrderPurchaseIncomingReport failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(OrderPurchaseIncomingReport order_purchase_incoming_report) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (order_purchase_incoming_report.getId() == null) {
+            throw new IllegalArgumentException("OrderPurchaseIncomingReport is not created yet, the OrderPurchaseIncomingReport ID is null.");
+        }
+        
+        Object[] values = {
+            DAOUtil.toSqlDate(order_purchase_incoming_report.getReport_date()),
+            order_purchase_incoming_report.getComments(),
+            order_purchase_incoming_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating OrderPurchaseIncomingReport failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(OrderPurchaseIncomingReport order_purchase_incoming_report) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            order_purchase_incoming_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting OrderPurchaseIncomingReport failed, no rows affected.");
+            } else{
+                order_purchase_incoming_report.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     // Helpers ------------------------------------------------------------------------------------
 
     /**
-     * Map the current row of the given ResultSet to an MantainanceReport.
-     * @param resultSet The ResultSet of which the current row is to be mapped to an MantainanceReport.
-     * @return The mapped MantainanceReport from the current row of the given ResultSet.
+     * Map the current row of the given ResultSet to an OrderPurchaseIncomingReport.
+     * @param resultSet The ResultSet of which the current row is to be mapped to an OrderPurchaseIncomingReport.
+     * @return The mapped OrderPurchaseIncomingReport from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     public static OrderPurchaseIncomingReport map(ResultSet resultSet) throws SQLException{

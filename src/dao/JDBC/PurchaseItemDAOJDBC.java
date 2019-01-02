@@ -34,8 +34,6 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
             "SELECT PRODUCT_SUPPLIER FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_PURCHASE_ORDER_BY_ID = 
             "SELECT id, units_ordered, price_timestamp, price_updated, date_modified, modified FROM PURCHASE_ITEM WHERE COMPANY_ID = ? ORDER BY id";
-    private static final String SQL_LIST_STATUS_ORDER_BY_ID = 
-            "SELECT id, units_ordered, price_timestamp, price_updated, date_modified, modified FROM PURCHASE_ITEM WHERE status = ? ORDER BY id";
     private static final String SQL_INSERT = 
             "INSERT INTO PURCHASE_ITEM (ORDER_PURCHASE_ID, PRODUCT_SUPPLIER, units_ordered, price_timestamp, price_updated, date_modified, modified) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?)";
