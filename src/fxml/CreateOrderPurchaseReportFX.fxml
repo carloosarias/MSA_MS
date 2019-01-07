@@ -83,7 +83,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <HBox>
+                        <HBox alignment="CENTER_LEFT">
                            <children>
                               <Label text="\$">
                                  <HBox.margin>
@@ -116,7 +116,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <HBox>
+                        <HBox alignment="CENTER_LEFT">
                            <children>
                               <TextField prefWidth="75.0">
                                  <HBox.margin>
@@ -148,8 +148,8 @@
                               </TableColumn>
                               <TableColumn prefWidth="75.0" resizable="false" text="Presentación">
                                  <columns>
-                                    <TableColumn prefWidth="100.0" text="Cantidad" />
-                                    <TableColumn prefWidth="120.0" text="Unidad de Medida" />
+                                    <TableColumn prefWidth="100.0" resizable="false" text="Cantidad" />
+                                    <TableColumn prefWidth="120.0" resizable="false" text="Unidad de Medida" />
                                  </columns>
                               </TableColumn>
                               <TableColumn prefWidth="100.0" resizable="false" text="Precio Unitario" />
@@ -169,7 +169,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <HBox>
+                                    <HBox alignment="CENTER_LEFT">
                                        <children>
                                           <Label text="\$">
                                              <HBox.margin>
@@ -198,7 +198,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <HBox>
+                                    <HBox alignment="CENTER_LEFT">
                                        <children>
                                           <Label text="\$">
                                              <HBox.margin>
@@ -222,12 +222,12 @@
                               <Separator orientation="VERTICAL" />
                               <VBox>
                                  <children>
-                                    <Label text="Total a pagar:">
+                                    <Label text="Total:">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <HBox>
+                                    <HBox alignment="CENTER_LEFT">
                                        <children>
                                           <Label text="\$">
                                              <HBox.margin>

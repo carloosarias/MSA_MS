@@ -1,11 +1,278 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1">
-    
-</AnchorPane>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox>
+         <children>
+            <TableView prefHeight="512.0">
+              <columns>
+                <TableColumn prefWidth="75.0" resizable="false" text="# de Orden" />
+                <TableColumn prefWidth="100.0" resizable="false" text="Fecha de orden" />
+                  <TableColumn prefWidth="75.0" text="Estado" />
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TableView>
+            <HBox alignment="TOP_CENTER">
+               <children>
+                  <Button mnemonicParsing="false" text="Cambiar Estado">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="Ver PDF">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <TabPane tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Detalles de Orden">
+               <content>
+                  <VBox>
+                     <children>
+                        <HBox alignment="TOP_CENTER">
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <Label text="Proveedor">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <ComboBox prefWidth="150.0">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </ComboBox>
+                                 </children>
+                              </VBox>
+                              <Separator orientation="VERTICAL">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Separator>
+                              <VBox>
+                                 <children>
+                                    <Label text="Dirección:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <ComboBox prefWidth="150.0">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </ComboBox>
+                                 </children>
+                              </VBox>
+                              <Separator orientation="VERTICAL">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Separator>
+                              <VBox>
+                                 <children>
+                                    <Label text="Valor del dólar:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="MXN">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <Separator orientation="VERTICAL">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Separator>
+                              <VBox>
+                                 <children>
+                                    <Label text="IVA:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <TextField prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="\%">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <TableView>
+                           <columns>
+                              <TableColumn prefWidth="75.0" resizable="false" text="Producto">
+                                 <columns>
+                                    <TableColumn prefWidth="75.0" resizable="false" text="ID" />
+                                    <TableColumn prefWidth="200.0" resizable="false" text="Descripción" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn prefWidth="75.0" resizable="false" text="Presentación">
+                                 <columns>
+                                    <TableColumn prefWidth="100.0" resizable="false" text="Cantidad" />
+                                    <TableColumn prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn prefWidth="100.0" resizable="false" text="Precio Unitario" />
+                              <TableColumn prefWidth="150.0" resizable="false" text="Cantidad Ordenada" />
+                              <TableColumn prefWidth="100.0" resizable="false" text="Precio Final" />
+                           </columns>
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TableView>
+                        <HBox alignment="TOP_CENTER">
+                           <children>
+                              <VBox>
+                                 <children>
+                                    <Label text="Subtotal:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="USD">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <Separator orientation="VERTICAL">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Separator>
+                              <VBox>
+                                 <children>
+                                    <Label text="IVA Total:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="USD">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <Separator orientation="VERTICAL">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Separator>
+                              <VBox>
+                                 <children>
+                                    <Label text="Total:">
+                                       <VBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="USD">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</HBox>
