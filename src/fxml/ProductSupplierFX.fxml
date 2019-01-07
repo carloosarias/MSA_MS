@@ -17,17 +17,17 @@
                 <TableColumn prefWidth="-1.0" resizable="false" text="Producto">
                      <columns>
                         <TableColumn prefWidth="75.0" resizable="false" text="ID" />
-                        <TableColumn prefWidth="75.0" resizable="false" text="Descripción" />
+                        <TableColumn prefWidth="200.0" resizable="false" text="Descripción" />
+                     </columns>
+                  </TableColumn>
+                  <TableColumn prefWidth="100.0" resizable="false" text="Proveedor" />
+                <TableColumn prefWidth="-1.0" resizable="false" text="Cotización">
+                     <columns>
+                        <TableColumn prefWidth="100.0" resizable="false" text="Cantidad" />
                         <TableColumn prefWidth="120.0" resizable="false" text="Unidad de Medida" />
                      </columns>
                   </TableColumn>
-                <TableColumn prefWidth="-1.0" resizable="false" text="Cotización">
-                     <columns>
-                        <TableColumn prefWidth="100.0" resizable="false" text="Proveedor" />
-                        <TableColumn prefWidth="100.0" resizable="false" text="Precio unitario" />
-                        <TableColumn prefWidth="100.0" resizable="false" text="Cantidad" />
-                     </columns>
-                  </TableColumn>
+                  <TableColumn prefWidth="100.0" resizable="false" text="Precio unitario" />
               </columns>
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
