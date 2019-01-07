@@ -71,10 +71,11 @@
                         </ComboBox>
                      </children>
                   </VBox>
-               </children>
-            </HBox>
-            <HBox alignment="TOP_CENTER">
-               <children>
+                  <Separator orientation="VERTICAL">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Separator>
                   <VBox alignment="TOP_CENTER">
                      <children>
                         <Label text="Comentarios:">
@@ -82,7 +83,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextArea prefHeight="50.0" prefWidth="400.0">
+                        <TextArea prefHeight="50.0" prefWidth="250.0" wrapText="true">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -90,6 +91,8 @@
                      </children>
                   </VBox>
                </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
