@@ -77,6 +77,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab orderpurchaseincomingreport_tab;
     @FXML
+    private Tab orderpurchasecart_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -93,7 +95,6 @@ public class MainFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //setModules();
         modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
         menu_listview.setItems(FXCollections.observableArrayList(modules));
         Module delete = new Module();
@@ -150,7 +151,11 @@ public class MainFX implements Initializable {
                         break;
                     case "Compras":
                         company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
-                        root_tabpane.getTabs().setAll(company_tab, product_tab, productsupplier_tab, orderpurchase_tab);
+                        product_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
+                        productsupplier_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
+                        orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
+                        orderpurchasecart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
+                        root_tabpane.getTabs().setAll(company_tab, product_tab, productsupplier_tab, orderpurchase_tab, orderpurchasecart_tab);
                         break;
                     case "Partes y Revisiones":
                         productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
