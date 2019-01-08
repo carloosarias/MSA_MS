@@ -10,8 +10,10 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import model.Product;
 
 /**
  * FXML Controller class
@@ -23,18 +25,25 @@ public class ProductFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private TableView<?> product_tableview;
+    private TableView<Product> product_tableview;
     @FXML
     private Button add_button;
     @FXML
     private Button delete_button;
+    @FXML
+    private TableColumn<Product, Integer> id_column;
+    @FXML
+    private TableColumn<Product, String> description_column;
+    @FXML
+    private TableColumn<Product, String> unitmeasure_column;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
+        
     }    
     
 }

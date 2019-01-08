@@ -13,9 +13,9 @@
          <children>
             <TableView fx:id="product_tableview">
               <columns>
-                <TableColumn prefWidth="106.0" text="ID de Producto" />
-                <TableColumn prefWidth="200.0" text="Descripción" />
-                  <TableColumn prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                <TableColumn fx:id="id_column" prefWidth="106.0" text="ID de Producto" />
+                <TableColumn fx:id="description_column" prefWidth="200.0" text="Descripción" />
+                  <TableColumn fx:id="unitmeasure_column" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
               </columns>
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -28,7 +28,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="delete_button" mnemonicParsing="false" text="Eliminar Producto">
+                  <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Producto">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
