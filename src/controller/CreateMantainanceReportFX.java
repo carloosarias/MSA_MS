@@ -95,10 +95,9 @@ public class CreateMantainanceReportFX implements Initializable {
     public void saveMantainanceItems(MantainanceReport report){
 
         for(MantainanceItem item : mantainancecheck_tableview.getItems()){
-            if(item.getDetails() == null){
+            if(item.getDetails().equalsIgnoreCase("")){
                 item.setDetails("N/A");
             }
-            System.out.println(report.getId() +" test");
             msabase.getMantainanceItemDAO().create(report, item.getTemp_typecheck(), item);
         }
         

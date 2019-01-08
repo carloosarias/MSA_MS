@@ -16,15 +16,18 @@
           <Tab fx:id="employee_tab" closable="false" text="Empleados" />
           <Tab fx:id="company_tab" closable="false" text="Compañías" />
           <Tab fx:id="productpart_tab" closable="false" text="Partes y Revisiones" />
+            <Tab fx:id="product_tab" text="Productos" />
+            <Tab fx:id="productsupplier_tab" text="Cotizaciones de Productos" />
           <Tab fx:id="tank_tab" closable="false" text="Tanques" />
           <Tab fx:id="orderpurchase_tab" closable="false" text="Orden De Compra" />
           <Tab fx:id="incoming_tab" closable="false" text="Reciba" />
+            <Tab fx:id="orderpurchaseincomingreport_tab" text="Reciba de Orden de Compra" />
           <Tab fx:id="depart_tab" closable="false" text="Remisiones" />
           <Tab fx:id="invoice_tab" closable="false" text="Facturación" />
           <Tab fx:id="quote_tab" closable="false" text="Cotización" />
-          <Tab fx:id="invoice_payment_tab" closable="false" text="Pago de Facturas" />
+          <Tab fx:id="invoicepayment_tab" closable="false" text="Pago de Facturas" />
           <Tab fx:id="process_tab" closable="false" text="Producción" />
-          <Tab fx:id="transaction_history_tab" closable="false" text="Historial de Transacciones" />
+          <Tab fx:id="transactionhistory_tab" closable="false" text="Historial de Transacciones" />
           <Tab fx:id="scrap_tab" closable="false" text="Scrap" />
           <Tab fx:id="analysis_tab" closable="false" text="Análisis" />
           <Tab fx:id="equipment_tab" closable="false" text="Equipo" />
