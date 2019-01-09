@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -28,6 +29,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Equipment;
@@ -102,8 +104,8 @@ public class MantainanceReportFX implements Initializable {
         setMantainanceReportTableview();
         setMantainanceItemTableview();
         
-        setEquipmentItems();
-        setMantainanceReportItems();
+        updateEquipmentTable();
+        updateMantainanceReportTable();
         
         equipment_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Equipment> observable, Equipment oldValue, Equipment newValue) -> {
             equipment_selection = equipment_tableview.getSelectionModel().getSelectedItem();
@@ -111,33 +113,34 @@ public class MantainanceReportFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            equipment_tableview.setDisable(true);
-            add_button.setDisable(true);
             showAdd_stage();
+            updateEquipmentTable();
+            updateMantainanceReportTable();
         });
         
         mantainancereport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue <? extends MantainanceReport> observable, MantainanceReport oldValue, MantainanceReport newValue) -> {
-            setMantainanceItemItems();
+            updateMantainanceItemTable();
         });
     }
     
     
-    public void setMantainanceItemItems(){
+    public void updateMantainanceItemTable(){
         mantainanceitem_tableview.setItems(FXCollections.observableArrayList(msabase.getMantainanceItemDAO().list(mantainancereport_tableview.getSelectionModel().getSelectedItem())));
     }
     
-    public void setMantainanceReportItems(){
+    public void updateMantainanceReportTable(){
         mantainancereport_tableview.setItems(FXCollections.observableArrayList(msabase.getMantainanceReportDAO().list()));
     }
     
-    public void setEquipmentItems(){
-        equipment_tableview.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().listPending(Date.valueOf(LocalDate.now()))));
+    public void updateEquipmentTable(){
+        equipment_tableview.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().listPending(DAOUtil.toUtilDate(LocalDate.now()))));
     }
     
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateMantainanceReportFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -147,9 +150,6 @@ public class MantainanceReportFX implements Initializable {
             add_stage.setScene(scene);
             add_stage.showAndWait();
             equipment_tableview.setDisable(true);
-            setEquipmentItems();
-            setMantainanceReportItems();
-            setMantainanceItemItems();
         } catch (IOException ex) {
             Logger.getLogger(ProcessReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }

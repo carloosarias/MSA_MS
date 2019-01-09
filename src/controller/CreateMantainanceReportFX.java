@@ -5,10 +5,13 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
+import java.time.Instant;
+import java.util.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -85,8 +88,15 @@ public class CreateMantainanceReportFX implements Initializable {
     }
     
     public void saveMantainanceReport(){
+        
+        for(MantainanceItem item: mantainancecheck_tableview.getItems()){
+            if(item.getDetails() == null){
+                item.setDetails("N/A");
+            }
+        }
+        
         MantainanceReport report = new MantainanceReport();
-        report.setReport_date(Date.valueOf(date_picker.getValue()));
+        report.setReport_date(DAOUtil.toUtilDate(date_picker.getValue()));
         msabase.getMantainanceReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), equipment_combo.getSelectionModel().getSelectedItem(), report);
         
         saveMantainanceItems(report);
@@ -95,9 +105,6 @@ public class CreateMantainanceReportFX implements Initializable {
     public void saveMantainanceItems(MantainanceReport report){
 
         for(MantainanceItem item : mantainancecheck_tableview.getItems()){
-            if(item.getDetails().equalsIgnoreCase("")){
-                item.setDetails("N/A");
-            }
             msabase.getMantainanceItemDAO().create(report, item.getTemp_typecheck(), item);
         }
         
@@ -105,7 +112,7 @@ public class CreateMantainanceReportFX implements Initializable {
     }
     
     public void setNextMantainance(){
-        MantainanceReportFX.getEquipment_selection().setNext_mantainance(Date.valueOf(LocalDate.now().plusDays(msabase.getEquipmentDAO().findEquipmentType(MantainanceReportFX.getEquipment_selection()).getFrequency())));
+        MantainanceReportFX.getEquipment_selection().setNext_mantainance(DAOUtil.toUtilDate(LocalDate.now().plusDays(msabase.getEquipmentDAO().findEquipmentType(MantainanceReportFX.getEquipment_selection()).getFrequency())));
         msabase.getEquipmentDAO().update(MantainanceReportFX.getEquipment_selection());
     }
     

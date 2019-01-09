@@ -14,7 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Properties;
 
 /**
@@ -83,6 +85,10 @@ public final class DAOUtil {
     
     public static LocalTime toLocalTime(java.sql.Time time) {
         return time.toLocalTime();
+    }
+    
+    public static java.util.Date toUtilDate(LocalDate date){
+        return java.util.Date.from(date.atStartOfDay().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
     }
     
     public static void setProperty(String file, String key, String value){
