@@ -30,7 +30,7 @@ public class ProductDAOJDBC implements ProductDAO {
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
             "SELECT id, description, unit_measure, active FROM PRODUCT WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_REPORT (description, unit_measure, active) "
+            "INSERT INTO PRODUCT (description, unit_measure, active) "
             + "VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE PRODUCT SET description = ?, unit_measure = ?, active = ? WHERE id = ?";
@@ -127,8 +127,8 @@ public class ProductDAOJDBC implements ProductDAO {
 
     @Override
     public void create(Product product) throws IllegalArgumentException, DAOException {
-        if (product.getId() == null) {
-            throw new IllegalArgumentException("Product is not created yet, the Product ID is null.");
+        if (product.getId() != null) {
+            throw new IllegalArgumentException("Product is alredy created, the Product ID is not null.");
         }
         
         Object[] values = {

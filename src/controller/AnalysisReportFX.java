@@ -20,13 +20,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.AnalysisReport;
@@ -86,8 +86,7 @@ public class AnalysisReportFX implements Initializable {
     @FXML
     private DatePicker enddate_picker;
     
-    private Stage addanalysistype_stage = new Stage();
-    private Stage addanalysisreport_stage = new Stage();
+    private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -102,20 +101,20 @@ public class AnalysisReportFX implements Initializable {
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         
         setAnalysisTypeTable();
-        setAnalysisTypeItems();
+        updateAnalysisTypeTable();
         
         addanalysistype_button.setOnAction((ActionEvent) -> {
-            addanalysistype_button.setDisable(true);
             showAddAnalysisTypeStage();
-        });
-        
-        addanalysisreport_button.setOnAction((ActionEvent) -> {
-            addanalysisreport_button.setDisable(true);
-            showAddAnalysisReportStage();
+            updateAnalysisTypeTable();
         });
         
         setAnalysisReportTable();
-        setAnalysisReportItems();
+        updateAnalysisReportTable();
+        
+        addanalysisreport_button.setOnAction((ActionEvent) -> {
+            showAddAnalysisReportStage();
+            updateAnalysisReportTable();
+        });
     }
     
     public void setAnalysisReportTable(){
@@ -138,11 +137,11 @@ public class AnalysisReportFX implements Initializable {
         analysistypeoptimal_column.setCellValueFactory(new PropertyValueFactory<>("optimal"));
     }
     
-    public void setAnalysisTypeItems(){
+    public void updateAnalysisTypeTable(){
         analysistype_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisTypeDAO().list()));
     }
     
-    public void setAnalysisReportItems(){
+    public void updateAnalysisReportTable(){
         if(tank_combo.getSelectionModel().isEmpty()){
             return;
         }
@@ -151,18 +150,17 @@ public class AnalysisReportFX implements Initializable {
     
     public void showAddAnalysisTypeStage(){
         try {
-            addanalysistype_stage = new Stage();
-            addanalysistype_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddAnalysisTypeFX.fxml"));
             Scene scene = new Scene(root);
             
-            addanalysistype_stage.setTitle("Nuevo Tipo de Análisis");
-            addanalysistype_stage.setResizable(false);
-            addanalysistype_stage.initStyle(StageStyle.UTILITY);
-            addanalysistype_stage.setScene(scene);
-            addanalysistype_stage.showAndWait();
-            addanalysistype_button.setDisable(false);
-            setAnalysisTypeItems();
+            add_stage.setTitle("Nuevo Tipo de Análisis");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -170,18 +168,17 @@ public class AnalysisReportFX implements Initializable {
     
     public void showAddAnalysisReportStage(){
         try {
-            addanalysisreport_stage = new Stage();
-            addanalysisreport_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateAnalysisReportFX.fxml"));
             Scene scene = new Scene(root);
             
-            addanalysisreport_stage.setTitle("Nuevo Reporte de Análisis");
-            addanalysisreport_stage.setResizable(false);
-            addanalysisreport_stage.initStyle(StageStyle.UTILITY);
-            addanalysisreport_stage.setScene(scene);
-            addanalysisreport_stage.showAndWait();
-            addanalysisreport_button.setDisable(false);
-            setAnalysisReportItems();
+            add_stage.setTitle("Nuevo Reporte de Análisis");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
