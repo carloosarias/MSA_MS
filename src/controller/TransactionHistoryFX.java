@@ -195,7 +195,7 @@ public class TransactionHistoryFX implements Initializable {
             process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listProductPartDateRange(product_part, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
             incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, false, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
         }catch(Exception e){
-            System.out.println("test");
+            System.out.println("Failed to update transaction history list");
         }
     }
     
