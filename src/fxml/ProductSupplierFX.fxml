@@ -8,26 +8,26 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductSupplierFX">
+<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductSupplierFX">
    <children>
       <VBox alignment="CENTER">
          <children>
-            <TableView>
+            <TableView fx:id="productsupplier_tableview">
               <columns>
                 <TableColumn prefWidth="-1.0" resizable="false" text="Producto">
                      <columns>
-                        <TableColumn prefWidth="75.0" resizable="false" text="ID" />
-                        <TableColumn prefWidth="200.0" resizable="false" text="Descripción" />
+                        <TableColumn fx:id="id_column" prefWidth="75.0" resizable="false" text="ID" />
+                        <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
                      </columns>
                   </TableColumn>
-                  <TableColumn prefWidth="100.0" resizable="false" text="Proveedor" />
+                  <TableColumn fx:id="supplier_column" prefWidth="100.0" resizable="false" text="Proveedor" />
                 <TableColumn prefWidth="-1.0" resizable="false" text="Cotización">
                      <columns>
-                        <TableColumn prefWidth="100.0" resizable="false" text="Cantidad" />
-                        <TableColumn prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                        <TableColumn fx:id="quantity_column" prefWidth="100.0" resizable="false" text="Cantidad" />
+                        <TableColumn fx:id="unitmeasure_column" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
                      </columns>
                   </TableColumn>
-                  <TableColumn prefWidth="100.0" resizable="false" text="Precio unitario" />
+                  <TableColumn fx:id="unitprice_column" prefWidth="100.0" resizable="false" sortable="false" text="Precio unitario" />
               </columns>
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -35,17 +35,17 @@
             </TableView>
             <HBox alignment="TOP_CENTER">
                <children>
-                  <Button disable="true" mnemonicParsing="false" text="Eliminar Selección">
+                  <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button disable="true" mnemonicParsing="false" text="Editar Selección">
+                  <Button fx:id="edit_button" disable="true" mnemonicParsing="false" text="Editar Selección">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Nueva Cotización">
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Nueva Cotización">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
@@ -55,7 +55,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Separator>
-                  <Button disable="true" mnemonicParsing="false" text="Agregar a Orden de Compra">
+                  <Button fx:id="addtocart_button" disable="true" mnemonicParsing="false" text="Agregar a Orden de Compra">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>

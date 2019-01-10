@@ -7,7 +7,6 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.DepartLotDAOJDBC.map;
 import dao.interfaces.IncomingLotDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -54,7 +53,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             + "FROM INCOMING_LOT "
             + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN INCOMING_REPORT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ?, INCOMING_REPORT.discrepancy = ? AND INCOMING_REPORT.report_date BETWEEN ? AND ? "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND INCOMING_REPORT.discrepancy = ? AND INCOMING_REPORT.report_date BETWEEN ? AND ? "
             + "ORDER BY INCOMING_REPORT.report_date, INCOMING_LOT.INCOMING_REPORT_ID, INCOMING_LOT.id";
     
     // Vars ---------------------------------------------------------------------------------------

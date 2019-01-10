@@ -232,7 +232,7 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
         Object[] values = {
             company.getId(),
             employee.getId(),
-            DAOUtil.toSqlDate(incoming_report.getReport_date()),
+            incoming_report.getReport_date(),
             incoming_report.getPo_number(),
             incoming_report.getPacking_list(),
             incoming_report.getDiscrepancy()
