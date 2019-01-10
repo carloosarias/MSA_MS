@@ -5,10 +5,10 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -145,7 +145,7 @@ public class AnalysisReportFX implements Initializable {
         if(tank_combo.getSelectionModel().isEmpty()){
             return;
         }
-        analysisreport_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisReportDAO().listTankDateRange(tank_combo.getSelectionModel().getSelectedItem(), Date.valueOf(startdate_picker.getValue()), Date.valueOf(enddate_picker.getValue()))));
+        analysisreport_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisReportDAO().listTankDateRange(tank_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()))));
     }
     
     public void showAddAnalysisTypeStage(){

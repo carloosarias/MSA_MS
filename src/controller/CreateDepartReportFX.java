@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
@@ -240,7 +241,7 @@ public class CreateDepartReportFX implements Initializable {
     
     public void saveDepartReport(){
         DepartReport depart_report = new DepartReport();
-        depart_report.setReport_date(java.sql.Date.valueOf(reportdate_picker.getValue()));
+        depart_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
         msabase.getDepartReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), company_combo.getSelectionModel().getSelectedItem(), address_combo.getSelectionModel().getSelectedItem(), depart_report);
         saveDepartLots(depart_report);
     }

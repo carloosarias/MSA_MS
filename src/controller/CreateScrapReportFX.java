@@ -5,10 +5,9 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -111,7 +110,7 @@ public class CreateScrapReportFX implements Initializable {
     }
     public void saveScrapReport(){
         ScrapReport scrap_report = new ScrapReport();
-        scrap_report.setReport_date(Date.valueOf(reportdate_picker.getValue()));
+        scrap_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
         scrap_report.setLot_number(lotnumber_field.getText());
         scrap_report.setQuantity(Integer.parseInt(quantity_field.getText()));
         scrap_report.setComments(comments_area.getText());

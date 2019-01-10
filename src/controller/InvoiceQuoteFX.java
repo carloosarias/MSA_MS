@@ -5,9 +5,9 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +130,7 @@ public class InvoiceQuoteFX implements Initializable {
     
     public void setInvoiceQuoteItems(){
         invoicequote_list.clear();
-        for(Invoice item : msabase.getInvoiceDAO().listDateRange(Date.valueOf(startdate_picker.getValue()), Date.valueOf(enddate_picker.getValue()))){
+        for(Invoice item : msabase.getInvoiceDAO().listDateRange(DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()))){
             for(InvoiceItem invoiceitem : msabase.getInvoiceItemDAO().list(item)){
                 InvoiceQuote invquote = new InvoiceQuote();
                 invquote.setQuote(msabase.getInvoiceItemDAO().findQuote(invoiceitem));

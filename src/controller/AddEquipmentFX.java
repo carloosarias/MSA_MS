@@ -5,9 +5,9 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -102,7 +102,7 @@ public class AddEquipmentFX implements Initializable {
         Equipment equipment = new Equipment();
         equipment.setName(name_field.getText());
         equipment.setDescription(description_area.getText());
-        equipment.setNext_mantainance(Date.valueOf(LocalDate.now().plusDays(equipmenttype_combobox.getSelectionModel().getSelectedItem().getFrequency())));
+        equipment.setNext_mantainance(DAOUtil.toUtilDate(LocalDate.now().plusDays(equipmenttype_combobox.getSelectionModel().getSelectedItem().getFrequency())));
         equipment.setPhysical_location(physicallocation_field.getText());
         equipment.setSerial_number(serialnumber_field.getText());
         msabase.getEquipmentDAO().create(equipmenttype_combobox.getSelectionModel().getSelectedItem(), equipment);

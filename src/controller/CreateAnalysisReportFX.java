@@ -5,9 +5,9 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -173,7 +173,7 @@ public class CreateAnalysisReportFX implements Initializable {
         
     public void saveAnalysisReport(){
         AnalysisReport item = new AnalysisReport();
-        item.setReport_date(Date.valueOf(reportdate_picker.getValue()));
+        item.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
         item.setQuantity_used(Double.parseDouble(quantityused_field.getText()));
         item.setResult(Double.parseDouble(result_field.getText()));
         item.setEstimated_adjust(Double.parseDouble(estimatedadjust_field.getText()));

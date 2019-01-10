@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -13,7 +14,7 @@
    <children>
       <TabPane tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Equipos Pendientes de Mantenimiento">
+          <Tab text="Actividades Pendientes">
                <content>
                   <HBox alignment="CENTER">
                      <children>
@@ -24,10 +25,10 @@
                                   <TableColumn prefWidth="92.0" resizable="false" text="Equipo">
                                        <columns>
                                           <TableColumn fx:id="id_column" prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn fx:id="name_column" prefWidth="150.0" resizable="false" text="Nombre" />
+                                          <TableColumn fx:id="name_column" prefWidth="100.0" resizable="false" text="Nombre" />
                                           <TableColumn fx:id="serialnumber_column" prefWidth="100.0" resizable="false" text="No. de Serie" />
                                           <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                                        <TableColumn fx:id="type_column" prefWidth="125.0" resizable="false" text="Tipo" />
+                                        <TableColumn fx:id="type_column" prefWidth="100.0" resizable="false" text="Tipo" />
                                           <TableColumn fx:id="physicallocation_column" minWidth="100.0" prefWidth="75.0" resizable="false" text="Ubicación" />
                                        </columns>
                                     </TableColumn>
@@ -50,50 +51,74 @@
           </Tab>
           <Tab text="Historial de Mantenimiento">
                <content>
-                  <HBox>
+                  <HBox alignment="CENTER">
                      <children>
                         <VBox>
                            <children>
-                              <TableView fx:id="mantainancereport_tableview">
-                                <columns>
-                                  <TableColumn fx:id="reportid_column" prefWidth="75.0" resizable="false" text="No. de Folio" />
-                                  <TableColumn fx:id="reportdate_column" prefWidth="109.0" resizable="false" text="Fecha de Reporte" />
-                                    <TableColumn prefWidth="75.0" resizable="false" text="Empleado">
-                                       <columns>
-                                          <TableColumn fx:id="employeeid_column" prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn fx:id="employeename_column" prefWidth="75.0" resizable="false" text="Nombre" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn prefWidth="75.0" resizable="false" text="Equipo">
-                                       <columns>
-                                          <TableColumn fx:id="equipmentid_column" prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn fx:id="equipmentname_column" prefWidth="75.0" resizable="false" text="Nombre" />
-                                          <TableColumn fx:id="equipmenttype_column" prefWidth="75.0" resizable="false" text="Tipo" />
-                                       </columns>
-                                    </TableColumn>
-                                </columns>
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TableView>
-                           </children>
-                        </VBox>
-                        <VBox>
-                           <children>
-                              <TableView fx:id="mantainanceitem_tableview">
-                                <columns>
-                                  <TableColumn prefWidth="75.0" resizable="false" text="Check de Mantenimiento">
-                                       <columns>
-                                        <TableColumn fx:id="checkdescription_column" prefWidth="150.0" text="Descripción" />
-                                          <TableColumn fx:id="details_column" prefWidth="200.0" text="Detalles/Comentarios" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn fx:id="checkvalue_column" prefWidth="75.0" resizable="false" text="Aprovado" />
-                                </columns>
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TableView>
+                              <HBox>
+                                 <children>
+                                    <VBox>
+                                       <children>
+                                          <ComboBox fx:id="equipmenttype_combo" prefWidth="150.0" promptText="Tipo de Equipo">
+                                             <VBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </VBox.margin>
+                                          </ComboBox>
+                                       </children>
+                                    </VBox>
+                                    <ComboBox fx:id="equipment_combo" disable="true" prefWidth="150.0" promptText="Equipo">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </ComboBox>
+                                    <Button fx:id="search_button" disable="true" mnemonicParsing="false" text="Ver Historial">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <VBox>
+                                       <children>
+                                          <TableView fx:id="mantainancereport_tableview">
+                                            <columns>
+                                              <TableColumn fx:id="reportid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
+                                              <TableColumn fx:id="reportdate_column" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
+                                                <TableColumn prefWidth="75.0" resizable="false" text="Empleado">
+                                                   <columns>
+                                                      <TableColumn fx:id="employeeid_column" prefWidth="75.0" resizable="false" text="ID" />
+                                                      <TableColumn fx:id="employeename_column" prefWidth="100.0" resizable="false" text="Nombre" />
+                                                   </columns>
+                                                </TableColumn>
+                                            </columns>
+                                             <VBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </VBox.margin>
+                                          </TableView>
+                                       </children>
+                                    </VBox>
+                                    <VBox>
+                                       <children>
+                                          <TableView fx:id="mantainanceitem_tableview">
+                                            <columns>
+                                              <TableColumn prefWidth="75.0" resizable="false" text="Detalles de Mantenimiento">
+                                                   <columns>
+                                                    <TableColumn fx:id="checkdescription_column" prefWidth="150.0" text="Descripción" />
+                                                      <TableColumn fx:id="details_column" prefWidth="200.0" text="Detalles/Comentarios" />
+                                                   </columns>
+                                                </TableColumn>
+                                                <TableColumn fx:id="checkvalue_column" prefWidth="75.0" resizable="false" text="Aprovado" />
+                                            </columns>
+                                             <VBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </VBox.margin>
+                                          </TableView>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
                      </children>

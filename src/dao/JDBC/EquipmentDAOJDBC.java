@@ -6,6 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.EquipmentDAO;
 import java.sql.Connection;
@@ -191,6 +192,7 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         if(equipment.getId() != null){
             throw new IllegalArgumentException("Equipment is already created, the Equipment ID is not null.");
         }
+        
         Object[] values = {
             equipment_type.getId(),
             equipment.getName(),
@@ -227,7 +229,7 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         if (equipment.getId() == null) {
             throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
         }
-        
+
         Object[] values = {
             equipment.getName(),
             equipment.getDescription(),

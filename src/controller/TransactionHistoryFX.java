@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
@@ -190,9 +191,9 @@ public class TransactionHistoryFX implements Initializable {
     
     public void updateList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
         try{
-            depart_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
-            process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listProductPartDateRange(product_part, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
-            incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, false, java.sql.Date.valueOf(start_date), java.sql.Date.valueOf(end_date))));
+            depart_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDateRange(product_part, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
+            process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listProductPartDateRange(product_part, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
+            incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, false, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
         }catch(Exception e){
             System.out.println("test");
         }
@@ -247,14 +248,14 @@ public class TransactionHistoryFX implements Initializable {
         incomingqty_field.setText(""+getIncomingQuantity(incoming_tableview.getItems()));
         incomingnew_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Virgen"));
         incomingrework_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Rechazo"));
-        scrapqty_field.setText(""+getScrapReportQuantity(msabase.getScrapReportDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()))));
+        scrapqty_field.setText(""+getScrapReportQuantity(msabase.getScrapReportDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))));
         processqty_field.setText(""+getProcessQuantity(process_tableview.getItems()));
         processgood_field.setText(""+getProcessStatus(process_tableview.getItems(), "Bueno"));
         processbad_field.setText(""+getProcessStatus(process_tableview.getItems(), "Malo"));
         departqty_field.setText(""+getDepartQuantity(depart_tableview.getItems()));
         departrejected_field.setText(""+getDepartStatus(depart_tableview.getItems(), "Rechazado"));
         departaccepted_field.setText(""+(getDepartQuantity(depart_tableview.getItems()) - getDepartStatus(depart_tableview.getItems(), "Rechazado")));
-        onhand_field.setText(""+(getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), false, java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()))) - getDepartQuantity(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), java.sql.Date.valueOf(LocalDate.MIN), java.sql.Date.valueOf(LocalDate.now()))) - getScrapReportQuantity(msabase.getScrapReportDAO().listProductPart(partnumber_combo.getSelectionModel().getSelectedItem()))));
+        onhand_field.setText(""+(getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), false, DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))) - getDepartQuantity(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))) - getScrapReportQuantity(msabase.getScrapReportDAO().listProductPart(partnumber_combo.getSelectionModel().getSelectedItem()))));
         balance_field.setText(""+((getIncomingQuantity(incoming_tableview.getItems()))-(getDepartQuantity(depart_tableview.getItems())) - Integer.parseInt(scrapqty_field.getText())));
     }
     
@@ -335,7 +336,7 @@ public class TransactionHistoryFX implements Initializable {
     public List<weekly_summary> getWeeklySummaryList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
         List<weekly_summary> weekly_summary_list = new ArrayList<>();
         for(LocalDate current_date = start_date; current_date.isBefore(end_date); current_date = current_date.plusWeeks(1).plusDays(1)){
-            weekly_summary_list.add(new weekly_summary(product_part, java.sql.Date.valueOf(current_date), java.sql.Date.valueOf(current_date.plusWeeks(1))));
+            weekly_summary_list.add(new weekly_summary(product_part, DAOUtil.toUtilDate(current_date), DAOUtil.toUtilDate(current_date.plusWeeks(1))));
         }
         return weekly_summary_list;
     }

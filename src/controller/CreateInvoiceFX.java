@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -186,7 +187,7 @@ public class CreateInvoiceFX implements Initializable {
     
     public void saveInvoice(){
         Invoice invoice = new Invoice();
-        invoice.setInvoice_date(java.sql.Date.valueOf(invoicedate_picker.getValue()));
+        invoice.setInvoice_date(DAOUtil.toUtilDate(invoicedate_picker.getValue()));
         invoice.setTerms(terms_field.getText());
         invoice.setShipping_method(shippingmethod_field.getText());
         invoice.setFob(fob_field.getText());

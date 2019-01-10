@@ -6,7 +6,6 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.MantainanceReportDAO;
 import java.sql.Connection;
@@ -40,8 +39,8 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
             "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
             "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
-    private static final String SQL_LIST_EQUIPMENT_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+    private static final String SQL_LIST_EQUIPMENT_ORDER_BY_ID = 
+            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
             "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
             + "VALUES(?, ?, ?)";
@@ -250,7 +249,7 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
     }
 
     @Override
-    public List<MantainanceReport> listEquipmentDateRange(Equipment equipment, Date start, Date end) throws IllegalArgumentException, DAOException {
+    public List<MantainanceReport> listEquipment(Equipment equipment) throws IllegalArgumentException, DAOException {
         if(equipment.getId() == null) {
             throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
         }    
@@ -259,13 +258,11 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         
         Object[] values = {
             equipment.getId(),
-            start,
-            end
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EQUIPMENT_DATE_RANGE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EQUIPMENT_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -293,7 +290,7 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         Object[] values = {
             employee.getId(),
             equipment.getId(),
-            DAOUtil.toSqlDate(mantainance_report.getReport_date()),
+            mantainance_report.getReport_date(),
         };
         
         try(
@@ -323,9 +320,9 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         if (mantainance_report.getId() == null) {
             throw new IllegalArgumentException("MantainanceReport is not created yet, the MantainanceReport ID is null.");
         }
-        
+
         Object[] values = {
-            DAOUtil.toSqlDate(mantainance_report.getReport_date()),
+            mantainance_report.getReport_date(),
             mantainance_report.getId()
         };
         

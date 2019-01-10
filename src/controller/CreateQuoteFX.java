@@ -5,18 +5,14 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,7 +24,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -140,7 +135,7 @@ public class CreateQuoteFX implements Initializable {
     
     public void saveQuote(){
         Quote quote = new Quote();
-        quote.setQuote_date(Date.valueOf(quotedate_picker.getValue()));
+        quote.setQuote_date(DAOUtil.toUtilDate(quotedate_picker.getValue()));
         quote.setEstimated_annual_usage(Integer.parseInt(eau_field.getText()));
         quote.setComments(comments_area.getText());
         quote.setMargin(margin_slider.getValue());

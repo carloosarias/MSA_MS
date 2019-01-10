@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -159,7 +160,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     
     public void saveInvoicePaymentReport(){
         InvoicePaymentReport invoice_payment_report = new InvoicePaymentReport();
-        invoice_payment_report.setReport_date(java.sql.Date.valueOf(reportdate_picker.getValue()));
+        invoice_payment_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
         invoice_payment_report.setAmmount_paid(Double.parseDouble(ammountpaid_field.getText()));
         invoice_payment_report.setCheck_number(checknumber_field.getText());
         invoice_payment_report.setComments(comments_field.getText());

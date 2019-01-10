@@ -5,14 +5,12 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -155,7 +153,7 @@ public class CreateProcessReportFX implements Initializable {
     public void saveProcessReport(){
         ProcessReport process_report = new ProcessReport();
         process_report.setProcess(process_combo.getSelectionModel().getSelectedItem());
-        process_report.setReport_date(Date.valueOf(reportdate_picker.getValue()));
+        process_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
         process_report.setLot_number(lotnumber_field.getText());
         process_report.setQuantity(Integer.parseInt(quantity_field.getText()));
         process_report.setAmperage(Double.parseDouble(amperage_field.getText()));

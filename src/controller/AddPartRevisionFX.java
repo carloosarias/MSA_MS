@@ -5,9 +5,9 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -84,7 +84,7 @@ public class AddPartRevisionFX implements Initializable {
         PartRevision part_revision = new PartRevision();
         
         part_revision.setActive(true);
-        part_revision.setRev_date(Date.valueOf(revdate_picker.getValue()));
+        part_revision.setRev_date(DAOUtil.toUtilDate(revdate_picker.getValue()));
         part_revision.setRev(rev_field.getText());
         part_revision.setArea(Double.parseDouble(area_field.getText()));
         part_revision.setBase_weight(Double.parseDouble(baseweight_field.getText()));

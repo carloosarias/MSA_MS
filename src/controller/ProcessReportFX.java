@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -165,8 +166,8 @@ public class ProcessReportFX implements Initializable {
             if(datefilter_checkbox.isSelected()){
                 processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listEmployeeDateRange(
                     employee_combo.getSelectionModel().getSelectedItem(), 
-                    java.sql.Date.valueOf(startdate_picker.getValue()), 
-                    java.sql.Date.valueOf(enddate_picker.getValue())))
+                    DAOUtil.toUtilDate(startdate_picker.getValue()), 
+                    DAOUtil.toUtilDate(enddate_picker.getValue())))
                 );
             }
             else{
@@ -177,8 +178,8 @@ public class ProcessReportFX implements Initializable {
         }
         else if(datefilter_checkbox.isSelected()){
             processreport_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listDateRange(
-                    java.sql.Date.valueOf(startdate_picker.getValue()), 
-                    java.sql.Date.valueOf(enddate_picker.getValue())))
+                    DAOUtil.toUtilDate(startdate_picker.getValue()), 
+                    DAOUtil.toUtilDate(enddate_picker.getValue())))
             );            
         }
         else{

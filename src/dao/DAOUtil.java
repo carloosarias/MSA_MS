@@ -14,10 +14,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import static java.time.temporal.TemporalQueries.localDate;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utility class for DAO's. This class contains commonly used DAO logic which is been refactored in
@@ -88,7 +94,12 @@ public final class DAOUtil {
     }
     
     public static java.util.Date toUtilDate(LocalDate date){
-        return java.util.Date.from(date.atStartOfDay().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
+        java.sql.Date sqlDate = java.sql.Date.valueOf(date); 
+        java.util.Date utilDate = new java.util.Date();
+        utilDate.setDate(sqlDate.getDate());
+        utilDate.setHours(17);
+        utilDate.setMinutes(0);
+        return utilDate;
     }
     
     public static void setProperty(String file, String key, String value){

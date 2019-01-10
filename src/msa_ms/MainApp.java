@@ -5,7 +5,9 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -52,6 +54,7 @@ public class MainApp extends Application{
     
     @Override
     public void start(Stage primaryStage) throws Exception {
+        TimeZone.setDefault(TimeZone.getTimeZone("CST"));
         BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setTitle("MSA Manager");

@@ -95,13 +95,11 @@ public interface MantainanceReportDAO {
      * The Equipment ID must not be null, otherwise it will throw IllegalArgumentException.
      * The list is never null and is empty when the database does not contain any MantainanceReport matching Equipment ID.
      * @param equipment The Equipment ID to be searched for.
-     * @param start The start date of the range.
-     * @param end the end date of the range.
      * @return A list of all MantainanceReport matching Equipment ID from the database ordered by MantainanceReport ID.
      * @throws IllegalArgumentException If Equipment ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<MantainanceReport> listEquipmentDateRange(Equipment equipment, Date start, Date end) throws IllegalArgumentException, DAOException;
+    public List<MantainanceReport> listEquipment(Equipment equipment) throws IllegalArgumentException, DAOException;
     /**
      * Create the given MantainanceReport in the database.
      * The Employee ID must not be null, The Equipment ID must not be null, and

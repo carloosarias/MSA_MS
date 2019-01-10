@@ -9,8 +9,8 @@ import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -33,6 +34,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Equipment;
+import model.EquipmentType;
 import model.MantainanceItem;
 import model.MantainanceReport;
 
@@ -62,6 +64,12 @@ public class MantainanceReportFX implements Initializable {
     @FXML
     private TableColumn<Equipment, Date> nextmantainance_column;
     @FXML
+    private ComboBox<EquipmentType> equipmenttype_combo;
+    @FXML
+    private ComboBox<Equipment> equipment_combo;
+    @FXML
+    private Button search_button;
+    @FXML
     private TableView<MantainanceReport> mantainancereport_tableview;
     @FXML
     private TableColumn<MantainanceReport, Integer> reportid_column;
@@ -71,12 +79,6 @@ public class MantainanceReportFX implements Initializable {
     private TableColumn<MantainanceReport, String> employeeid_column;
     @FXML
     private TableColumn<MantainanceReport, String> employeename_column;
-    @FXML
-    private TableColumn<MantainanceReport, String> equipmentid_column;
-    @FXML
-    private TableColumn<MantainanceReport, String> equipmentname_column;
-    @FXML
-    private TableColumn<MantainanceReport, String> equipmenttype_column;
     @FXML
     private TableView<MantainanceItem> mantainanceitem_tableview;
     @FXML
@@ -100,22 +102,34 @@ public class MantainanceReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         equipment_selection = new Equipment();
+        equipmenttype_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list()));
         setEquipmentTableview();
         setMantainanceReportTableview();
         setMantainanceItemTableview();
         
         updateEquipmentTable();
-        updateMantainanceReportTable();
         
         equipment_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Equipment> observable, Equipment oldValue, Equipment newValue) -> {
             equipment_selection = equipment_tableview.getSelectionModel().getSelectedItem();
             add_button.setDisable(equipment_tableview.getSelectionModel().isEmpty());
         });
         
+        equipmenttype_combo.setOnAction((ActionEvent) -> {
+            equipment_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().list(equipmenttype_combo.getSelectionModel().getSelectedItem())));
+            equipment_combo.setDisable(equipment_combo.getItems().isEmpty());
+        });
+        
+        equipment_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Equipment> observable, Equipment oldValue, Equipment newValue) -> {
+            search_button.setDisable(equipment_combo.getSelectionModel().isEmpty());
+        });
+        
+        search_button.setOnAction((ActionEvent) -> {
+            updateMantainanceReportTable();
+        });
+        
         add_button.setOnAction((ActionEvent) -> {
             showAdd_stage();
             updateEquipmentTable();
-            updateMantainanceReportTable();
         });
         
         mantainancereport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue <? extends MantainanceReport> observable, MantainanceReport oldValue, MantainanceReport newValue) -> {
@@ -129,7 +143,7 @@ public class MantainanceReportFX implements Initializable {
     }
     
     public void updateMantainanceReportTable(){
-        mantainancereport_tableview.setItems(FXCollections.observableArrayList(msabase.getMantainanceReportDAO().list()));
+        mantainancereport_tableview.setItems(FXCollections.observableArrayList(msabase.getMantainanceReportDAO().listEquipment(equipment_combo.getSelectionModel().getSelectedItem())));
     }
     
     public void updateEquipmentTable(){
@@ -149,7 +163,6 @@ public class MantainanceReportFX implements Initializable {
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
-            equipment_tableview.setDisable(true);
         } catch (IOException ex) {
             Logger.getLogger(ProcessReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -170,9 +183,6 @@ public class MantainanceReportFX implements Initializable {
         reportdate_column.setCellValueFactory(new PropertyValueFactory("report_date"));
         employeeid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceReportDAO().findEmployee(c.getValue()).getId()));
         employeename_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getMantainanceReportDAO().findEmployee(c.getValue()).toString()));
-        equipmentid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceReportDAO().findEquipment(c.getValue()).getId()));
-        equipmentname_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getMantainanceReportDAO().findEquipment(c.getValue()).getName()));
-        equipmenttype_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getEquipmentDAO().findEquipmentType(msabase.getMantainanceReportDAO().findEquipment(c.getValue())).getName()));
     }
     
     public void setMantainanceItemTableview(){

@@ -5,9 +5,9 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -180,10 +180,10 @@ public class HrFX implements Initializable {
     public Employee mapEmployee(Employee employee){
         employee.setFirst_name(fname_field.getText());
         employee.setLast_name(lname_field.getText());
-        employee.setBirth_date(Date.valueOf(dob_picker.getValue()));
+        employee.setBirth_date(DAOUtil.toUtilDate(dob_picker.getValue()));
         employee.setEnd_time(LocalTime.of(end_hour.getValueFactory().getValue(), end_min.getValueFactory().getValue()));
         employee.setEntry_time(LocalTime.of(entry_hour.getValueFactory().getValue(),entry_min.getValueFactory().getValue()));
-        employee.setHire_date(Date.valueOf(hire_picker.getValue()));
+        employee.setHire_date(DAOUtil.toUtilDate(hire_picker.getValue()));
         employee.setUser(user_field.getText());
         employee.setPassword(pass_field.getText());
         employee.setCurp(curp_field.getText());

@@ -6,6 +6,7 @@
 package controller;
 
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
@@ -314,7 +315,7 @@ public class CreateIncomingReportFX implements Initializable {
     
     public void saveIncomingReport(){
         IncomingReport incoming_report = new IncomingReport();
-        incoming_report.setReport_date(java.sql.Date.valueOf(reportdate_picker.getValue()));
+        incoming_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
         incoming_report.setPo_number(ponumber_field.getText());
         incoming_report.setPacking_list(packinglist_field.getText());
         incoming_report.setDiscrepancy(discrepancy_checkbox.isSelected());
