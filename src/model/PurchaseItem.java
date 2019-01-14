@@ -21,6 +21,8 @@ public class PurchaseItem implements Serializable{
     private Date date_modified;
     private boolean modified;
     
+    private ProductSupplier temp_productsupplier;
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -68,6 +70,14 @@ public class PurchaseItem implements Serializable{
 
     public void setModified(boolean modified) {
         this.modified = modified;
+    }
+    
+    public ProductSupplier getTemp_productsupplier(){
+        return temp_productsupplier;
+    }
+        
+    public void setTemp_productsupplier(ProductSupplier temp_productsupplier){
+        this.temp_productsupplier = temp_productsupplier;
     }
     
     // Object overrides ---------------------------------------------------------------------------

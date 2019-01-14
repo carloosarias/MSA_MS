@@ -28,32 +28,13 @@ public interface ProductSupplierDAO {
     public ProductSupplier find(Integer id) throws DAOException;
     
     /**
-     * Returns the Product from the database matching the given ProductSupplier ID, otherwise null.
-     * ProductSupplier ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param product_supplier The ProductSupplier to get the Product from.
-     * @return The Product from the database matching the given ProductSupplier ID, otherwise null.
-     * @throws IllegalArgumentException If ProductSupplier ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public Product findProduct(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns the Company from the database matching the given ProductSupplier ID, otherwise null.
-     * ProductSupplier ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param product_supplier The ProductSupplier to get the Company from.
-     * @return The Company from the database matching the given ProductSupplier ID, otherwise null.
-     * @throws IllegalArgumentException If ProductSupplier ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public Company findCompany(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
-    
-    /**
      * Returns a list of all ProductSupplier from the database ordered by ProductSupplier ID. The list is never null and
+     * @param active the status of items to be listed
      * is empty when the database does not contain any ProductSupplier.
      * @return A list of all ProductSupplier from the database ordered by ProductSupplier ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<ProductSupplier> list() throws DAOException;
+    public List<ProductSupplier> list(boolean active) throws DAOException;
     
     /**
      * Returns a list of all ProductSupplier matching Product from the database ordered by ProductSupplier ID. The list is never null and

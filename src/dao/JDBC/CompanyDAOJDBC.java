@@ -27,9 +27,9 @@ public class CompanyDAOJDBC implements CompanyDAO{
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY ORDER BY id";
     private static final String SQL_LIST_SUPPLIER_ORDER_BY_ID =
-            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE supplier = ? ORDER BY id";
+            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE supplier = TRUE AND active = ? ORDER BY id";
     private static final String SQL_LIST_CLIENT_ORDER_BY_ID = 
-            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE client = ? ORDER BY id";
+            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE client = TRUE AND active = ? ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
             "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT = 
@@ -107,11 +107,11 @@ public class CompanyDAOJDBC implements CompanyDAO{
     }
 
     @Override
-    public List<Company> listSupplier(boolean supplier) throws DAOException {
+    public List<Company> listSupplier(boolean active) throws DAOException {
         List<Company> company = new ArrayList<>();
         
         Object[] values = {
-            supplier
+            active
         };
         
         try(
@@ -130,11 +130,11 @@ public class CompanyDAOJDBC implements CompanyDAO{
     }
 
     @Override
-    public List<Company> listClient(boolean client) throws DAOException {
+    public List<Company> listClient(boolean active) throws DAOException {
         List<Company> company = new ArrayList<>();
         
         Object[] values = {
-            client
+            active
         };
         
         try(

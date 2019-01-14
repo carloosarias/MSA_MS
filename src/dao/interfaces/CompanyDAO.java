@@ -35,20 +35,20 @@ public interface CompanyDAO {
     /**
      * Returns a list of all Companies that are suppliers from the database ordered by Company ID. The list is never null and
      * is empty when the database does not contain any Company supplier.
-     * @param supplier The state of the company if false then return companies that are NOT suppliers
+     * @param active The state of the company if false then return companies that are NOT active
      * @return A list of all Companies that are suppliers from the database ordered by Company ID.
      * @throws DAOException If something fails at database level.
      */
-    public List<Company> listSupplier(boolean supplier) throws DAOException;
+    public List<Company> listSupplier(boolean active) throws DAOException;
     
     /**
      * Returns a list of all Companies that are clients from the database ordered by Company ID. The list is never null and
      * is empty when the database does not contain any Company client.
-     * @param client The state of the company if false then return companies that are NOT clients
+     * @param active The state of the company if false then return companies that are NOT active
      * @return A list of all Companies that are clients from the database ordered by Company ID.
      * @throws DAOException If something fails at database level.
      */
-    public List<Company> listClient(boolean client) throws DAOException;
+    public List<Company> listClient(boolean active) throws DAOException;
     
     /**
      * Returns a list of all Companies that are active from the database ordered by Company ID. The list is never null and
