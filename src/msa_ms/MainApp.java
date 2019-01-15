@@ -1,11 +1,9 @@
 package msa_ms;
 
-import dao.JDBC.DAOFactory;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import javafx.application.Application;
@@ -20,7 +18,14 @@ import javafx.stage.StageStyle;
  * @author Pavilion Mini
  */
 public class MainApp extends Application{
+    //CONTROLLER LISTENER SETUP VARIABLES
+    public static boolean OrderPurchaseCartFX_setup = true;
+    public static boolean CreateEquipmentTypeFX_setup = true;
+    
+    //EMPLOYEE INDEX
     public static Integer employee_id;
+    
+    //CONSTANT LISTS
     public static List<String> process_list = Arrays.asList(
             "Nickel Sulfato",
             "Nickel Woods",
@@ -47,6 +52,7 @@ public class MainApp extends Application{
             "Kilogramos",
             "Litros"
     );
+
     public static void openPDF(String path) throws IOException{
         File file = new File(path);
         Desktop.getDesktop().open(file);

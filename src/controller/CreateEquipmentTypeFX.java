@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,10 +29,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.EquipmentType;
 import model.EquipmentTypeCheck;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -63,7 +67,7 @@ public class CreateEquipmentTypeFX implements Initializable {
     private Stage add_stage = new Stage();
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
-    private static ArrayList<EquipmentTypeCheck> equipmenttypecheck_list = new ArrayList<EquipmentTypeCheck>();
+    public static ObservableList<EquipmentTypeCheck> equipmenttypecheck_list = FXCollections.observableArrayList();
     
     
     /**
@@ -71,22 +75,25 @@ public class CreateEquipmentTypeFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //CLEAN LIST WHEN STARTING
         equipmenttypecheck_list.clear();
-        setEquipmentTypeCheckTableview();
-        frequency_spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,100,0));
-        setEquipmentTypeCheckItems();
         
-        equipmenttypecheck_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EquipmentTypeCheck> observable, EquipmentTypeCheck oldValue, EquipmentTypeCheck newValue) -> {
-            delete_button.setDisable(equipmenttypecheck_tableview.getSelectionModel().isEmpty());
-        });
+        setEquipmentTypeCheckTable();
+        equipmenttypecheck_tableview.setItems(equipmenttypecheck_list);
+        frequency_spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,100,0));
+        delete_button.disableProperty().bind(equipmenttypecheck_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
+        //EQUIPMENTTYPECHECK_LIST LISTENER SETUP
+        if(MainApp.CreateEquipmentTypeFX_setup){
+            //NOT IMPLEMENTED
+            MainApp.CreateEquipmentTypeFX_setup = false;
+        }
         
         delete_button.setOnAction((ActionEvent) -> {
-            deleteFromQueue(equipmenttypecheck_tableview.getSelectionModel().getSelectedItem());
-            setEquipmentTypeCheckItems();
+            equipmenttypecheck_list.remove(equipmenttypecheck_tableview.getSelectionModel().getSelectedItem());
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            add_button.setDisable(true);
             showAddStage();
         });
         
@@ -94,6 +101,7 @@ public class CreateEquipmentTypeFX implements Initializable {
             if(!testFields()){
                 return;
             }
+            
             saveEquipmentType();
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
@@ -104,6 +112,7 @@ public class CreateEquipmentTypeFX implements Initializable {
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddEquipmentTypeCheckFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -112,8 +121,6 @@ public class CreateEquipmentTypeFX implements Initializable {
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
-            add_button.setDisable(false);
-            setEquipmentTypeCheckItems();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -158,20 +165,9 @@ public class CreateEquipmentTypeFX implements Initializable {
         }
     }
     
-    public void setEquipmentTypeCheckItems(){
-        equipmenttypecheck_tableview.setItems(FXCollections.observableArrayList(equipmenttypecheck_list));
-    }
-    
-    public void setEquipmentTypeCheckTableview(){
+    public void setEquipmentTypeCheckTable(){
         name_column.setCellValueFactory(new PropertyValueFactory("name"));
         description_column.setCellValueFactory(new PropertyValueFactory("description"));
     }
     
-    public static void addToQueue(EquipmentTypeCheck item){
-        equipmenttypecheck_list.add(item);
-    }
-    
-    public static void deleteFromQueue(EquipmentTypeCheck item){
-        equipmenttypecheck_list.remove(item);
-    }
 }

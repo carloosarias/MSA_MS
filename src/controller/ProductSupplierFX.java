@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.ProductSupplier;
 import model.PurchaseItem;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -91,7 +92,7 @@ public class ProductSupplierFX implements Initializable {
             item.setTemp_productsupplier(productsupplier_tableview.getSelectionModel().getSelectedItem());
             item.setPrice_timestamp(productsupplier_tableview.getSelectionModel().getSelectedItem().getUnit_price());
             item.setUnits_ordered(1);
-            OrderPurchaseCartFX.getCart_list().add(item);
+            OrderPurchaseCartFX.cart_list.add(item);
         });
     }
     

@@ -132,7 +132,7 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
 
     @Override
     public List<EquipmentTypeCheck> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException {
-    if(equipment_type.getId() == null) {
+        if(equipment_type.getId() == null) {
             throw new IllegalArgumentException("EquipmentType is not created yet, the EquipmentType ID is null.");
         }    
         

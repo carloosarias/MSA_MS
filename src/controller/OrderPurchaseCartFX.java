@@ -8,10 +8,13 @@ package controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,6 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import model.Company;
 import model.PurchaseItem;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -55,7 +59,8 @@ public class OrderPurchaseCartFX implements Initializable {
     @FXML
     private Button create_button;
     
-    private static ObservableList cart_list = FXCollections.observableArrayList(new ArrayList<PurchaseItem>());
+    public static ObservableList<PurchaseItem> cart_list = FXCollections.observableArrayList();
+    private ObservableList<Company> company_list = FXCollections.observableArrayList();
     
     /**
      * Initializes the controller class.
@@ -64,11 +69,33 @@ public class OrderPurchaseCartFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setPurchaseItemTable();
         purchaseitem_tableview.setItems(cart_list);
+        company_combo.setItems(company_list);
         
-        cart_list.addListener((ListChangeListener) c -> {
-
-            System.out.println("testing");
+        delete_button.disableProperty().bind(purchaseitem_tableview.getSelectionModel().selectedItemProperty().isNull());
+        company_combo.disableProperty().bind(Bindings.size(company_combo.getItems()).isEqualTo(0));
+        create_button.disableProperty().bind(company_combo.getSelectionModel().selectedItemProperty().isNull());
+        
+        //CART_LIST LISTENER SETUP
+        if(MainApp.OrderPurchaseCartFX_setup){
+            cart_list.addListener((ListChangeListener) c -> {
+                updateCompanyList();
+            });
+            MainApp.OrderPurchaseCartFX_setup = false;
+        }
+        
+        
+        delete_button.setOnAction((ActionEvent) -> {
+            cart_list.remove(purchaseitem_tableview.getSelectionModel().getSelectedItem());
         });
+    }
+    
+    public void updateCompanyList(){
+        ObservableSet<Company> company_set = FXCollections.observableSet();
+        for(PurchaseItem item : cart_list){
+            company_set.add(item.getTemp_productsupplier().getCompany());
+        }
+        
+        company_list.setAll(FXCollections.observableArrayList(company_set));
     }
     
     public void setPurchaseItemTable(){
@@ -81,8 +108,5 @@ public class OrderPurchaseCartFX implements Initializable {
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
     }
     
-    public static ObservableList getCart_list(){
-        return cart_list;
-    }
     
 }

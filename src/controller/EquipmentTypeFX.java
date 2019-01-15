@@ -22,6 +22,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.EquipmentType;
@@ -56,6 +57,7 @@ public class EquipmentTypeFX implements Initializable {
     private TableColumn<EquipmentTypeCheck, String> equipmenttypecheckdescription_column;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
     private Stage add_stage = new Stage();
     
     /**
@@ -63,16 +65,15 @@ public class EquipmentTypeFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setEquipmentTypeTableview();
+        setEquipmentTypeTable();
+        setEquipmentTypeCheckTable();
         setEquipmentTypeItems();
-        setEquipmentTypeCheckTableview();
         
         equipmenttype_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EquipmentType> observable, EquipmentType oldValue, EquipmentType newValue) -> {
-            setEquipmentTypeCheckItems(equipmenttype_tableview.getSelectionModel().getSelectedItem());
+            setEquipmentTypeCheckItems(newValue);
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            add_button.setDisable(true);
             showAddStage();
         });
     }
@@ -81,6 +82,7 @@ public class EquipmentTypeFX implements Initializable {
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateEquipmentTypeFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -89,21 +91,19 @@ public class EquipmentTypeFX implements Initializable {
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
-            add_button.setDisable(false);
-            setEquipmentTypeItems();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void setEquipmentTypeTableview(){
+    public void setEquipmentTypeTable(){
         id_column.setCellValueFactory(new PropertyValueFactory("id"));
         equipmenttypename_column.setCellValueFactory(new PropertyValueFactory("name"));
         equipmenttypedescription_column.setCellValueFactory(new PropertyValueFactory("description"));
         frequency_column.setCellValueFactory(new PropertyValueFactory("frequency"));
     }
     
-    public void setEquipmentTypeCheckTableview(){
+    public void setEquipmentTypeCheckTable(){
         equipmenttypecheckname_column.setCellValueFactory(new PropertyValueFactory("name"));
         equipmenttypecheckdescription_column.setCellValueFactory(new PropertyValueFactory("description"));
     }
@@ -113,6 +113,10 @@ public class EquipmentTypeFX implements Initializable {
     }
     
     public void setEquipmentTypeCheckItems(EquipmentType equipment_type){
-        equipmenttypecheck_tableview.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeCheckDAO().list(equipment_type)));
+        if(equipmenttype_tableview.getSelectionModel().selectedItemProperty().isNotNull().get()){
+            equipmenttypecheck_tableview.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeCheckDAO().list(equipment_type)));
+        } else{
+            equipmenttypecheck_tableview.getItems().clear();
+        }
     }
 }

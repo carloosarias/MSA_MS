@@ -41,13 +41,14 @@ public class AddEquipmentTypeCheckFX implements Initializable {
             if(!testFields()){
                 return;
             }
-            CreateEquipmentTypeFX.addToQueue(getEquipmentTypeCheck());
+            
+            CreateEquipmentTypeFX.equipmenttypecheck_list.add(mapEquipmentTypeCheck());
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
         });
     }
     
-    public EquipmentTypeCheck getEquipmentTypeCheck(){
+    public EquipmentTypeCheck mapEquipmentTypeCheck(){
         EquipmentTypeCheck item = new EquipmentTypeCheck();
         
         item.setName(name_field.getText());

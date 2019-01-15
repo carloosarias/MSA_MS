@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Module;
+import model.PurchaseItem;
 import msa_ms.MainApp;
 
 /**
@@ -97,21 +98,25 @@ public class MainFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
         menu_listview.setItems(FXCollections.observableArrayList(modules));
+        
         Module delete = new Module();
         for(Module module : menu_listview.getItems()){
             if(module.getName().equals("Historial Producción")){
                 delete = module;
             }
         }
+        
         menu_listview.getItems().remove(delete);
         menu_listview.getSelectionModel().clearAndSelect(0);
         setTabs(menu_listview.getSelectionModel().getSelectedItem());
         
         menu_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
+            root_tabpane.getTabs().clear();
             root_tabpane = new TabPane();
             setTabs(newValue);
             root_pane.setCenter(root_tabpane);
             root_pane.getScene().getWindow().sizeToScene();
+            System.out.println("testing");
         });
         
         logout.setOnAction((ActionEvent) ->{
