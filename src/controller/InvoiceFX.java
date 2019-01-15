@@ -33,6 +33,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.CompanyContact;
@@ -116,8 +117,8 @@ public class InvoiceFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            add_button.setDisable(true);
             showAdd_stage();
+            updateInvoiceTable();
         });
         
         pdf_button.setOnAction((ActionEvent) -> {
@@ -143,6 +144,7 @@ public class InvoiceFX implements Initializable {
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateInvoiceFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -151,8 +153,6 @@ public class InvoiceFX implements Initializable {
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
-            add_button.setDisable(false);
-            updateInvoiceTable();
         } catch (IOException ex) {
             Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
         }

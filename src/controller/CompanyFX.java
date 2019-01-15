@@ -25,6 +25,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Company;
@@ -76,10 +77,9 @@ public class CompanyFX implements Initializable {
     private static Integer company_id;
     
     private ObservableList<String> filter_list = FXCollections.observableArrayList(
-        "Compañías Activas",
-        "Compañías Inactivas",
-        "Compañías Clientes",
-        "Compañías Proveedoras"
+        "Compañías Registradas",
+        "Solo Clientes",
+        "Solo Proveedores"
     );
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -141,12 +141,10 @@ public class CompanyFX implements Initializable {
         });
         
         address_button.setOnAction((ActionEvent) -> {
-            address_button.setDisable(true);
             showAddress();
         });
         
         contact_button.setOnAction((ActionEvent) -> {
-            contact_button.setDisable(true);
             showContact();
         });
     }
@@ -164,6 +162,7 @@ public class CompanyFX implements Initializable {
         try {
             addressStage = new Stage();
             addressStage.initOwner((Stage) root_hbox.getScene().getWindow());
+            addressStage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddressFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -172,7 +171,6 @@ public class CompanyFX implements Initializable {
             addressStage.initStyle(StageStyle.UTILITY);
             addressStage.setScene(scene);
             addressStage.showAndWait();
-            address_button.setDisable(id_field.getText().equals(""));
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -182,6 +180,7 @@ public class CompanyFX implements Initializable {
         try {
             contactStage = new Stage();
             contactStage.initOwner((Stage) root_hbox.getScene().getWindow());
+            contactStage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/ContactFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -190,7 +189,6 @@ public class CompanyFX implements Initializable {
             contactStage.initStyle(StageStyle.UTILITY);
             contactStage.setScene(scene);
             contactStage.showAndWait();
-            contact_button.setDisable(id_field.getText().equals(""));
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -294,16 +292,13 @@ public class CompanyFX implements Initializable {
     public void updateList(){
         comp_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){
-            case "Compañías Activas":
+            case "Compañías Registradas":
                 comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listActive(true)));
                 break;
-            case "Compañías Inactivas":
-                comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listActive(false)));
-                break;
-            case "Compañías Clientes":
+            case "Solo Clientes":
                 comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
                 break;
-            case "Compañías Proveedoras":
+            case "Solo Proveedores":
                 comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listSupplier(true)));
                 break;
         }

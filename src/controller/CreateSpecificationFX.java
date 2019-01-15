@@ -28,6 +28,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Metal;
@@ -93,8 +94,8 @@ public class CreateSpecificationFX implements Initializable {
         });
         
         addspecificationitem_button.setOnAction((ActionEvent) -> {
-            addspecificationitem_button.setDisable(true);
             showAddStage();
+            setSpecificationItemItems();
         });
         
         save_button.setOnAction((ActionEvent) -> {
@@ -150,6 +151,7 @@ public class CreateSpecificationFX implements Initializable {
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddSpecificationItemFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -158,8 +160,6 @@ public class CreateSpecificationFX implements Initializable {
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
-            addspecificationitem_button.setDisable(false);
-            setSpecificationItemItems();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -31,6 +31,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Company;
@@ -89,8 +90,8 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         reportdate_picker.setValue(LocalDate.now());
         clientcombo_selection = new Company();
-        invoice_list = new ArrayList<Invoice>();
-        invoicepaymentitem_queue = new ArrayList<InvoicePaymentItem>();
+        invoice_list = new ArrayList();
+        invoicepaymentitem_queue = new ArrayList();
         getInvoiceList();
         setInvoicePaymentItemTable();
         client_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
@@ -101,8 +102,6 @@ public class CreateInvoicePaymentReportFX implements Initializable {
         });
         
        add_button.setOnAction((ActionEvent) -> {
-           add_button.setDisable(true);
-           client_combo.setDisable(true);
            showAdd_stage();
            updateTableList();
        });
@@ -198,6 +197,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddInvoicePaymentItemFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -206,8 +206,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
-            add_button.setDisable(false);
-            client_combo.setDisable(false);
+
         } catch (IOException ex) {
             Logger.getLogger(CreateInvoicePaymentReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }

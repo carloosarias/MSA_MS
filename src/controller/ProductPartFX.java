@@ -28,6 +28,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Metal;
@@ -116,13 +117,7 @@ public class ProductPartFX implements Initializable {
     
     private static ProductPart productpart_selection;
     
-    private Stage addproductpart_stage = new Stage();
-    
-    private Stage addpartrevision_stage = new Stage();
-    
-    private Stage addspecification_stage = new Stage();
-    
-    private Stage addmetal_stage = new Stage();
+    private Stage add_stage = new Stage();
     
     private List<String> status_items = Arrays.asList("Activo", "Inactivo");
     
@@ -156,44 +151,40 @@ public class ProductPartFX implements Initializable {
         });
         
         addproductpart_button.setOnAction((ActionEvent) -> {
-            addproductpart_button.setDisable(true);
             showAddProductPartStage();
             setProductPartItems();
         });
         
         addpartrevision_button.setOnAction((ActionEvent) -> {
             productpart_selection = productpart_tableview.getSelectionModel().getSelectedItem();
-            productpart_tableview.setDisable(true);
-            addpartrevision_button.setDisable(true);
             showAddPartRevisionStage();
-            productpart_tableview.setDisable(false);
+            setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
         });
         
         addspecification_button.setOnAction((ActionEvent) -> {
-            addspecification_button.setDisable(true);
             showAddSpecificationStage();
+            setSpecificationItems();
         });
         
         addmetal_button.setOnAction((ActionEvent) -> {
-            addmetal_button.setDisable(true);
             showAddMetalStage();
+            setMetalItems();
         });
     }
     
     public void showAddProductPartStage(){
         try {
-            addproductpart_stage = new Stage();
-            addproductpart_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddProductPartFX.fxml"));
             Scene scene = new Scene(root);
             
-            addproductpart_stage.setTitle("Nuevo Número de Parte");
-            addproductpart_stage.setResizable(false);
-            addproductpart_stage.initStyle(StageStyle.UTILITY);
-            addproductpart_stage.setScene(scene);
-            addproductpart_stage.showAndWait();
-            addproductpart_button.setDisable(false);
-            setProductPartItems();
+            add_stage.setTitle("Nuevo Número de Parte");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -201,18 +192,17 @@ public class ProductPartFX implements Initializable {
     
     public void showAddPartRevisionStage(){
         try {
-            addpartrevision_stage = new Stage();
-            addpartrevision_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddPartRevisionFX.fxml"));
             Scene scene = new Scene(root);
             
-            addpartrevision_stage.setTitle("Nueva Revisión");
-            addpartrevision_stage.setResizable(false);
-            addpartrevision_stage.initStyle(StageStyle.UTILITY);
-            addpartrevision_stage.setScene(scene);
-            addpartrevision_stage.showAndWait();
-            addpartrevision_button.setDisable(false);
-            setPartRevisionItems(productpart_tableview.getSelectionModel().getSelectedItem());
+            add_stage.setTitle("Nueva Revisión");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -220,18 +210,17 @@ public class ProductPartFX implements Initializable {
     
     public void showAddSpecificationStage(){
         try {
-            addspecification_stage = new Stage();
-            addspecification_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateSpecificationFX.fxml"));
             Scene scene = new Scene(root);
             
-            addspecification_stage.setTitle("Nueva Especificación");
-            addspecification_stage.setResizable(false);
-            addspecification_stage.initStyle(StageStyle.UTILITY);
-            addspecification_stage.setScene(scene);
-            addspecification_stage.showAndWait();
-            addspecification_button.setDisable(false);
-            setSpecificationItems();
+            add_stage.setTitle("Nueva Especificación");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -239,18 +228,17 @@ public class ProductPartFX implements Initializable {
     
     public void showAddMetalStage(){
         try {
-            addmetal_stage = new Stage();
-            addmetal_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddMetalFX.fxml"));
             Scene scene = new Scene(root);
             
-            addmetal_stage.setTitle("Nueva Especificación");
-            addmetal_stage.setResizable(false);
-            addmetal_stage.initStyle(StageStyle.UTILITY);
-            addmetal_stage.setScene(scene);
-            addmetal_stage.showAndWait();
-            addmetal_button.setDisable(false);
-            setMetalItems();
+            add_stage.setTitle("Nueva Especificación");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
         }

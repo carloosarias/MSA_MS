@@ -40,6 +40,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.CompanyAddress;
@@ -174,7 +175,6 @@ public class QuoteFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            filter_vbox.setDisable(true);
             showAddStage();
             setQuoteItems();
         });
@@ -192,6 +192,7 @@ public class QuoteFX implements Initializable {
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateQuoteFX.fxml"));
             Scene scene = new Scene(root);
             
@@ -200,7 +201,6 @@ public class QuoteFX implements Initializable {
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
-            filter_vbox.setDisable(false);
         } catch (IOException ex) {
             Logger.getLogger(QuoteFX.class.getName()).log(Level.SEVERE, null, ex);
         }
