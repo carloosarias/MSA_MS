@@ -26,6 +26,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 import model.Company;
 import model.CompanyAddress;
@@ -88,6 +89,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         reportdate_picker.setValue(LocalDate.now());
         
         company_combo.getItems().setAll(company_selection);
@@ -100,6 +102,77 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         
         purchaseitem_tableview.setItems(filterCart_list(OrderPurchaseCartFX.cart_list, company_selection));
         
+        calculateTotals();
+        
+        ivarate_field.setOnAction((ActionEvent) -> {
+            calculateTotals();
+        });
+        
+        cancel_button.setOnAction((ActionEvent) -> {
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close();
+        });
+        
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
+            saveOrderPurchase();
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close();
+        });
+    }
+    
+    public void saveOrderPurchase(){
+        
+    }
+    
+    public void clearStyle(){
+        reportdate_picker.setStyle(null);
+        companyaddress_combo.setStyle(null);
+        exchangerate_field.setStyle(null);
+        ivarate_field.setStyle(null);
+        comments_area.setStyle(null);
+    }
+    
+    public boolean testFields(){
+        boolean b = true;
+        clearStyle();
+        
+        if(reportdate_picker.getValue() == null){
+            reportdate_picker.setStyle("-fx-background-color: lightpink;");
+            reportdate_picker.setValue(LocalDate.now());
+            b = false;
+        }
+        
+        if(companyaddress_combo.getSelectionModel().isEmpty()){
+            companyaddress_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        try{
+            Double.parseDouble(exchangerate_field.getText());
+        }catch(Exception e){
+            exchangerate_field.setStyle("-fx-background-color: lightpink;");
+            exchangerate_field.setText("0.0");
+            b = false;
+        }
+        
+        try {
+            Double.parseDouble(ivarate_field.getText());
+        }catch(Exception e){
+            ivarate_field.setStyle("-fx-background-color: lightpink;");
+            ivarate_field.setText("0");
+            b = false;
+        }
+        
+        if(comments_area.getText().replace(" ", "").equals("")){
+            comments_area.setStyle("-fx-background-color: lightpink;");
+            comments_area.setText("N/A");
+            b = false;
+        }
+        
+        return b;
     }
     
     public void setSubtotal(){
@@ -111,9 +184,22 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         
         subtotal_field.setText(""+subtotal);
     }
-    
+    public void calculateTotals(){
+        setSubtotal();
+        setIva();
+        setTotal();
+    }
     public void setIva(){
-        
+        try{
+            Integer.parseInt(ivarate_field.getText());
+        } catch(NumberFormatException e){
+            ivarate_field.setText("0");
+        }
+        iva_field.setText(""+(Double.parseDouble(subtotal_field.getText())*(Double.parseDouble(ivarate_field.getText())/100)));
+    }
+    
+    public void setTotal(){
+        total_field.setText(""+(Double.parseDouble(subtotal_field.getText())+Double.parseDouble(iva_field.getText())));
     }
     
     public ObservableList<PurchaseItem> filterCart_list(ObservableList<PurchaseItem> cart_list, Company company_selection){
@@ -139,8 +225,11 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         unitsordered_column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         unitsordered_column.setOnEditCommit((TableColumn.CellEditEvent<PurchaseItem, Integer> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setUnits_ordered(t.getNewValue());
+            if(t.getNewValue() < 1){
+                t.getTableView().getItems().get(t.getTablePosition().getRow()).setUnits_ordered(0);
+            }
             purchaseitem_tableview.refresh();
-            setSubtotal();
+            calculateTotals();
         });
     }
 }

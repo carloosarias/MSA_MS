@@ -101,6 +101,8 @@ public class OrderPurchaseCartFX implements Initializable {
         create_button.setOnAction((ActionEvent) -> {
             CreateOrderPurchaseReportFX.company_selection = company_combo.getSelectionModel().getSelectedItem();
             showAdd_stage();
+            company_combo.getSelectionModel().clearSelection();
+            updateCompanyList();
         });
         
         delete_button.setOnAction((ActionEvent) -> {
@@ -146,6 +148,9 @@ public class OrderPurchaseCartFX implements Initializable {
         unitsordered_column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         unitsordered_column.setOnEditCommit((TableColumn.CellEditEvent<PurchaseItem, Integer> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setUnits_ordered(t.getNewValue());
+            if(t.getNewValue() < 1){
+                t.getTableView().getItems().get(t.getTablePosition().getRow()).setUnits_ordered(0);
+            }
             purchaseitem_tableview.refresh();
         });
     }
