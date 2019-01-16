@@ -80,6 +80,21 @@ public class PurchaseItem implements Serializable{
         this.temp_productsupplier = temp_productsupplier;
     }
     
+    
+    public Double getPrice_unit(){
+        if(modified){
+            return price_updated;
+        }
+        return price_timestamp;
+    }
+    
+    public Double getPrice_total(){
+        if(modified){
+            return price_updated*units_ordered;
+        }
+        return price_timestamp*units_ordered;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**

@@ -8,12 +8,12 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateOrderPurchaseReportFX">
    <children>
       <VBox>
          <children>
@@ -26,7 +26,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <DatePicker prefWidth="150.0">
+                        <DatePicker fx:id="reportdate_picker" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -45,7 +45,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <ComboBox fx:id="company_combo" disable="true" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -64,7 +64,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox prefWidth="150.0">
+                        <ComboBox fx:id="companyaddress_combo" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -90,7 +90,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField prefWidth="75.0">
+                              <TextField fx:id="exchangerate_field" prefWidth="75.0" text="0.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -118,7 +118,7 @@
                         </Label>
                         <HBox alignment="CENTER_LEFT">
                            <children>
-                              <TextField prefWidth="75.0">
+                              <TextField fx:id="ivarate_field" prefWidth="75.0" text="0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -138,29 +138,29 @@
                <children>
                   <VBox>
                      <children>
-                        <TableView>
+                        <TableView fx:id="purchaseitem_tableview" editable="true" prefWidth="847.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" resizable="false" text="Producto">
+                            <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Producto">
                                  <columns>
-                                  <TableColumn prefWidth="75.0" resizable="false" text="ID" />
-                                    <TableColumn prefWidth="200.0" resizable="false" text="Descripción" />
+                                  <TableColumn fx:id="productid_column" editable="false" prefWidth="75.0" resizable="false" text="ID" />
+                                    <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn prefWidth="75.0" resizable="false" text="Presentación">
+                              <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Presentación">
                                  <columns>
-                                    <TableColumn prefWidth="100.0" resizable="false" text="Cantidad" />
-                                    <TableColumn prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                                    <TableColumn fx:id="quantity_column" editable="false" prefWidth="100.0" resizable="false" text="Cantidad" />
+                                    <TableColumn fx:id="unitmeasure_column" editable="false" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn prefWidth="100.0" resizable="false" text="Precio Unitario" />
-                              <TableColumn prefWidth="150.0" resizable="false" text="Cantidad a ordenar" />
-                              <TableColumn prefWidth="100.0" resizable="false" text="Precio Final" />
+                              <TableColumn fx:id="unitprice_column" editable="false" prefWidth="100.0" resizable="false" text="Precio Unitario" />
+                              <TableColumn fx:id="unitsordered_column" prefWidth="150.0" resizable="false" text="Cantidad a ordenar" />
+                              <TableColumn fx:id="price_column" editable="false" prefWidth="100.0" resizable="false" text="Precio Calculado" />
                           </columns>
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </TableView>
-                        <HBox alignment="TOP_CENTER">
+                        <HBox alignment="TOP_RIGHT">
                            <children>
                               <VBox>
                                  <children>
@@ -176,7 +176,7 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </HBox.margin>
                                           </Label>
-                                          <TextField prefWidth="75.0">
+                                          <TextField fx:id="subtotal_field" disable="true" prefWidth="75.0">
                                              <HBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </HBox.margin>
@@ -205,7 +205,7 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </HBox.margin>
                                           </Label>
-                                          <TextField prefWidth="75.0">
+                                          <TextField fx:id="iva_field" disable="true" prefWidth="75.0">
                                              <HBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </HBox.margin>
@@ -234,7 +234,7 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </HBox.margin>
                                           </Label>
-                                          <TextField prefWidth="75.0">
+                                          <TextField fx:id="total_field" disable="true" prefWidth="75.0">
                                              <HBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </HBox.margin>
@@ -248,6 +248,15 @@
                                     </HBox>
                                  </children>
                               </VBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="58.0" prefWidth="410.0">
+                                 <children>
+                                    <TextArea fx:id="comments_area" prefHeight="50.0" prefWidth="350.0" promptText="Comentarios" wrapText="true">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </TextArea>
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>
@@ -261,12 +270,12 @@
             </Separator>
             <HBox alignment="TOP_CENTER">
                <children>
-                  <Button mnemonicParsing="false" text="Cancelar">
+                  <Button fx:id="cancel_button" mnemonicParsing="false" text="Cancelar">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Generar Orden de Compra">
+                  <Button fx:id="save_button" mnemonicParsing="false" text="Generar Orden de Compra">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
