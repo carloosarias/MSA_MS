@@ -102,7 +102,7 @@ public class OrderPurchaseCartFX implements Initializable {
             CreateOrderPurchaseReportFX.company_selection = company_combo.getSelectionModel().getSelectedItem();
             showAdd_stage();
             company_combo.getSelectionModel().clearSelection();
-            updateCompanyList();
+            OrderPurchaseFX.updateOrderPurchaseList(msabase);
         });
         
         delete_button.setOnAction((ActionEvent) -> {
