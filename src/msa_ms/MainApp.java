@@ -39,7 +39,7 @@ public class MainApp extends Application{
             "Limpieza",
             "Bright Dip",
             "Cobrizado");
-    public static List<String> status_list = Arrays.asList(
+    public static List<String> materialstatus_list = Arrays.asList(
             "Virgen",
             "Rechazo"
             );
@@ -51,6 +51,13 @@ public class MainApp extends Application{
             "Piezas",
             "Kilogramos",
             "Litros"
+    );
+    
+    public static List<String> orderpurchase_status = Arrays.asList(
+            "Esperando reciba",
+            "Reciba parcial",
+            "Reciba completa",
+            "Cancelada"
     );
 
     public static void openPDF(String path) throws IOException{

@@ -5,14 +5,16 @@
  */
 package controller;
 
+import dao.DAOException;
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -24,13 +26,14 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 import model.Company;
 import model.CompanyAddress;
+import model.OrderPurchase;
 import model.PurchaseItem;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -96,6 +99,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         company_combo.getSelectionModel().selectFirst();
         
         companyaddress_combo.getItems().setAll(msabase.getCompanyAddressDAO().listActive(company_selection, true));
+        companyaddress_combo.getSelectionModel().selectFirst();
         companyaddress_combo.disableProperty().bind(companyaddress_combo.itemsProperty().isNull());
         
         setPurchaseItemTable();
@@ -117,6 +121,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
             if(!testFields()){
                 return;
             }
+            OrderPurchaseCartFX.cart_list.removeAll(purchaseitem_tableview.getItems());
             saveOrderPurchase();
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
@@ -124,6 +129,36 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     }
     
     public void saveOrderPurchase(){
+        OrderPurchase order_purchase = new OrderPurchase();
+        order_purchase.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
+        order_purchase.setComments(comments_area.getText());
+        order_purchase.setStatus(MainApp.orderpurchase_status.get(0));
+        order_purchase.setExchange_rate(Double.parseDouble(exchangerate_field.getText()));
+        order_purchase.setIva_rate(Double.parseDouble(ivarate_field.getText()));
+        try{
+            msabase.getOrderPurchaseDAO().create(company_selection, companyaddress_combo.getSelectionModel().getSelectedItem(), order_purchase);
+        }catch(DAOException e){
+            System.out.println("Failed to generate order purchase; DB Entries were not saved");
+            return;
+        }
+        savePurchaseItems(order_purchase);
+    }
+    
+    public void savePurchaseItems(OrderPurchase order_purchase){
+        try{
+            for(PurchaseItem item : purchaseitem_tableview.getItems()){
+                item.setPrice_updated(item.getPrice_timestamp());
+                item.setDate_modified(order_purchase.getReport_date());
+                item.setModified(false);
+                msabase.getPurchaseItemDAO().create(order_purchase, item.getTemp_productsupplier(), item);
+            }
+        }catch(DAOException e){
+            for(PurchaseItem item : msabase.getPurchaseItemDAO().list(order_purchase)){
+                msabase.getPurchaseItemDAO().delete(item);
+            }
+            msabase.getOrderPurchaseDAO().delete(order_purchase);
+            System.out.println("Failed to generate Purchase Items; DB Entries were deleted");
+        }
         
     }
     
@@ -132,7 +167,6 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         companyaddress_combo.setStyle(null);
         exchangerate_field.setStyle(null);
         ivarate_field.setStyle(null);
-        comments_area.setStyle(null);
     }
     
     public boolean testFields(){
@@ -167,9 +201,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         }
         
         if(comments_area.getText().replace(" ", "").equals("")){
-            comments_area.setStyle("-fx-background-color: lightpink;");
             comments_area.setText("N/A");
-            b = false;
         }
         
         return b;
