@@ -26,7 +26,8 @@ public interface ProductSupplierDAO {
      * @throws DAOException If something fails at database level.
      */
     public ProductSupplier find(Integer id) throws DAOException;
-    
+    public Product findProduct(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
+    public Company findCompany(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException;
     /**
      * Returns a list of all ProductSupplier from the database ordered by ProductSupplier ID. The list is never null and
      * @param active the status of items to be listed

@@ -121,9 +121,9 @@ public class ProductSupplierFX implements Initializable {
     
     public void setProductSupplierTable(){
         id_column.setCellValueFactory(new PropertyValueFactory("id"));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct().getDescription()));
-        supplier_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCompany().getName()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct().getUnit_measure()));
+        description_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(c.getValue()).getId()));
+        supplier_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findCompany(c.getValue()).getName()));
+        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue()).getUnit_measure()));
         quantity_column.setCellValueFactory(new PropertyValueFactory("quantity"));
         unitprice_column.setCellValueFactory(new PropertyValueFactory("unit_price"));
     }

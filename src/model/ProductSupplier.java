@@ -17,8 +17,6 @@ public class ProductSupplier implements Serializable {
     private double unit_price;
     private double quantity;
     private boolean active;
-    private Company company;
-    private Product product;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -53,22 +51,7 @@ public class ProductSupplier implements Serializable {
     public void setActive(boolean active){
         this.active = active;
     }
-    
-    public Company getCompany(){
-        return company;
-    }
-    
-    public void setCompany(Company company){
-        this.company = company;
-    }
-    
-    public Product getProduct(){
-        return product;
-    }
-    
-    public void setProduct(Product product){
-        this.product = product;
-    }
+   
     // Object overrides ---------------------------------------------------------------------------
     
     /**

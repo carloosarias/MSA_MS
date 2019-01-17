@@ -26,13 +26,17 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, unit_price, quantity, active, COMPANY_ID, PRODUCT_ID FROM PRODUCT_SUPPLIER WHERE id = ?";
+            "SELECT id, unit_price, quantity, active FROM PRODUCT_SUPPLIER WHERE id = ?";
+    private static final String SQL_FIND_PRODUCT_BY_ID = 
+            "SELECT PRODUCT_ID FROM PRODUCT_SUPPLIER WHERE id = ?";
+    private static final String SQL_FIND_COMPANY_BY_ID = 
+            "SELECT COMPANY_ID FROM PRODUCT_SUPPLIER WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, unit_price, quantity, active, COMPANY_ID, PRODUCT_ID FROM PRODUCT_SUPPLIER WHERE active = ? ORDER BY id";
+            "SELECT id, unit_price, quantity, active FROM PRODUCT_SUPPLIER WHERE active = ? ORDER BY id";
     private static final String SQL_LIST_PRODUCT_ORDER_BY_ID = 
-            "SELECT id, unit_price, quantity, active, COMPANY_ID, PRODUCT_ID FROM PRODUCT_SUPPLIER WHERE PRODUCT_ID = ? ORDER BY id";
+            "SELECT id, unit_price, quantity, active FROM PRODUCT_SUPPLIER WHERE PRODUCT_ID = ? ORDER BY id";
     private static final String SQL_LIST_COMPANY_ORDER_BY_ID = 
-            "SELECT id, unit_price, quantity, active, COMPANY_ID, PRODUCT_ID FROM PRODUCT_SUPPLIER WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT id, unit_price, quantity, active FROM PRODUCT_SUPPLIER WHERE COMPANY_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
             "INSERT INTO PRODUCT_SUPPLIER (PRODUCT_ID, COMPANY_ID, unit_price, quantity, active) "
             + "VALUES(?, ?, ?, ?, ?)";
@@ -86,7 +90,61 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
 
         return product_supplier;
     }
+    
+    @Override
+    public Product findProduct(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException {
+        if(product_supplier.getId() == null) {
+                throw new IllegalArgumentException("ProductSupplier is not created yet, the ProductSupplier ID is null.");
+            }
 
+            Product product = null;
+
+            Object[] values = {
+                product_supplier.getId()
+            };
+
+            try (
+                Connection connection = daoFactory.getConnection();
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_PRODUCT_BY_ID, false, values);
+                ResultSet resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    product = daoFactory.getProductDAO().find(resultSet.getInt("PRODUCT_ID"));
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }        
+
+            return product;
+    }
+    
+    @Override
+    public Company findCompany(ProductSupplier product_supplier) throws IllegalArgumentException, DAOException {
+        if(product_supplier.getId() == null) {
+                throw new IllegalArgumentException("ProductSupplier is not created yet, the ProductSupplier ID is null.");
+            }
+
+            Company company = null;
+
+            Object[] values = {
+                product_supplier.getId()
+            };
+
+            try (
+                Connection connection = daoFactory.getConnection();
+                PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_BY_ID, false, values);
+                ResultSet resultSet = statement.executeQuery();
+            ) {
+                if (resultSet.next()) {
+                    company = daoFactory.getCompanyDAO().find(resultSet.getInt("COMPANY_ID"));
+                }
+            } catch (SQLException e) {
+                throw new DAOException(e);
+            }        
+
+            return company;
+    }
+    
     @Override
     public List<ProductSupplier> list(boolean active) throws DAOException {
         List<ProductSupplier> productsupplier_list = new ArrayList<>();
@@ -261,14 +319,11 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
      * @throws SQLException If something fails at database level.
      */
     public static ProductSupplier map(ResultSet resultSet) throws SQLException{
-        DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
         ProductSupplier product_supplier = new ProductSupplier();
         product_supplier.setId(resultSet.getInt("id"));
         product_supplier.setUnit_price(resultSet.getDouble("unit_price"));
         product_supplier.setQuantity(resultSet.getDouble("quantity"));
         product_supplier.setActive(resultSet.getBoolean("active"));
-        product_supplier.setCompany(msabase.getCompanyDAO().find(resultSet.getInt("COMPANY_ID")));
-        product_supplier.setProduct(msabase.getProductDAO().find(resultSet.getInt("PRODUCT_ID")));
         return product_supplier;
     }
 }

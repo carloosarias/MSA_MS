@@ -54,7 +54,7 @@ public class MainApp extends Application{
     );
     
     public static List<String> orderpurchase_status = Arrays.asList(
-            "Pendiente",
+            "Esperando reciba",
             "Reciba parcial",
             "Reciba completa",
             "Cancelada"

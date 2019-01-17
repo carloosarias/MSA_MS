@@ -9,6 +9,8 @@ import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,7 +22,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import model.Company;
+import model.CompanyAddress;
+import model.IncomingReport;
 import model.OrderPurchase;
+import model.PurchaseItem;
 
 
 /**
@@ -42,25 +48,27 @@ public class OrderPurchaseFX implements Initializable {
     @FXML
     private Button pdf_button;
     @FXML
-    private ComboBox<?> company_combo;
+    private ComboBox<Company> company_combo;
     @FXML
-    private ComboBox<?> companyaddress_combo;
+    private ComboBox<CompanyAddress> companyaddress_combo;
     @FXML
     private TextField exchangerate_field;
     @FXML
-    private TableColumn<?, ?> productid_column;
+    private TableView<PurchaseItem> purchaseitem_tableview;
     @FXML
-    private TableColumn<?, ?> description_column;
+    private TableColumn<PurchaseItem, String> productid_column;
     @FXML
-    private TableColumn<?, ?> quantity_column;
+    private TableColumn<PurchaseItem, String> description_column;
     @FXML
-    private TableColumn<?, ?> unitmeasure_column;
+    private TableColumn<PurchaseItem, String> quantity_column;
     @FXML
-    private TableColumn<?, ?> unitprice_column;
+    private TableColumn<PurchaseItem, String> unitmeasure_column;
     @FXML
-    private TableColumn<?, ?> unitsordered_column;
+    private TableColumn<PurchaseItem, String> unitprice_column;
     @FXML
-    private TableColumn<?, ?> price_column;
+    private TableColumn<PurchaseItem, Integer> unitsordered_column;
+    @FXML
+    private TableColumn<PurchaseItem, String> price_column;
     @FXML
     private TextField subtotal_field;
     @FXML
@@ -82,12 +90,31 @@ public class OrderPurchaseFX implements Initializable {
         setOrderPurchaseTable();
         updateOrderPurchaseList(msabase);
         orderpurchase_tableview.setItems(orderpurchase_list);
+        
+        setPurchaseItemTable();
+        orderpurchase_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends OrderPurchase> observable, OrderPurchase oldValue, OrderPurchase newValue) -> {
+            purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
+            company_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompany(newValue)));
+            companyaddress_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompanyAddress(newValue)));
+            company_combo.getSelectionModel().selectFirst();
+            companyaddress_combo.getSelectionModel().selectFirst();
+        });
     }
     
     public void setOrderPurchaseTable(){
         orderid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         orderdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
+    }
+    
+    public void setPurchaseItemTable(){
+        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue())).getId()));
+        description_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue())).getDescription()));
+        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getPurchaseItemDAO().findProductSupplier(c.getValue()).getQuantity()));
+        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue())).getUnit_measure()));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
+        unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
+        price_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_total()+" USD"));
     }
     
     public static void updateOrderPurchaseList(DAOFactory msabase){

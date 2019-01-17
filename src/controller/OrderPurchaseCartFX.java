@@ -131,18 +131,19 @@ public class OrderPurchaseCartFX implements Initializable {
     public void updateCompanyList(){
         ObservableSet<Company> company_set = FXCollections.observableSet();
         for(PurchaseItem item : cart_list){
-            company_set.add(item.getTemp_productsupplier().getCompany());
+            company_set.add(msabase.getProductSupplierDAO().findCompany(item.getTemp_productsupplier()));
         }
         
         company_list.setAll(FXCollections.observableArrayList(company_set));
     }
     
     public void setPurchaseItemTable(){
-        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getProduct().getId()));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct().getDescription()));
-        supplier_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getCompany().getName()));
+             productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getId()));
+        description_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getDescription()));
+        supplier_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findCompany(c.getValue().getTemp_productsupplier()).getName()));
         quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getQuantity()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct().getUnit_measure()));
+        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getUnit_measure()));
+        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getUnit_measure()));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         unitsordered_column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
