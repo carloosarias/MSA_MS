@@ -32,12 +32,17 @@
             </TableView>
             <HBox alignment="TOP_CENTER">
                <children>
-                  <Button fx:id="changestatus_button" mnemonicParsing="false" text="Cambiar Estado">
+                  <ComboBox fx:id="status_combo" disable="true" prefWidth="120.0" promptText="Estado">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </ComboBox>
+                  <Button fx:id="changestatus_button" disable="true" mnemonicParsing="false" text="Cambiar Estado">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="pdf_button" mnemonicParsing="false" text="Ver PDF">
+                  <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
@@ -56,6 +61,7 @@
                            <children>
                               <HBox alignment="TOP_CENTER">
                                  <children>
+                                    <VBox />
                                     <VBox>
                                        <children>
                                           <Label text="Proveedor">
@@ -181,7 +187,7 @@
                                           </Label>
                                           <HBox alignment="CENTER_LEFT">
                                              <children>
-                                                <TextField disable="true" editable="false" prefWidth="75.0" text="0.0">
+                                                <TextField fx:id="ivarate_field" disable="true" editable="false" prefWidth="75.0" text="0.0">
                                                    <HBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>

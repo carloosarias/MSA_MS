@@ -27,6 +27,7 @@ import model.CompanyAddress;
 import model.IncomingReport;
 import model.OrderPurchase;
 import model.PurchaseItem;
+import msa_ms.MainApp;
 
 
 /**
@@ -44,6 +45,8 @@ public class OrderPurchaseFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchase, String> status_column;
     @FXML
+    private ComboBox<String> status_combo;
+    @FXML
     private Button changestatus_button;
     @FXML
     private Button pdf_button;
@@ -53,6 +56,8 @@ public class OrderPurchaseFX implements Initializable {
     private ComboBox<CompanyAddress> companyaddress_combo;
     @FXML
     private TextField exchangerate_field;
+    @FXML
+    private TextField ivarate_field;
     @FXML
     private TableView<PurchaseItem> purchaseitem_tableview;
     @FXML
@@ -82,6 +87,7 @@ public class OrderPurchaseFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
+
     /**
      * Initializes the controller class.
      */
@@ -90,15 +96,49 @@ public class OrderPurchaseFX implements Initializable {
         setOrderPurchaseTable();
         updateOrderPurchaseList(msabase);
         orderpurchase_tableview.setItems(orderpurchase_list);
+        status_combo.disableProperty().bind(orderpurchase_tableview.getSelectionModel().selectedItemProperty().isNull());
+        pdf_button.disableProperty().bind(orderpurchase_tableview.getSelectionModel().selectedItemProperty().isNull());
+        changestatus_button.disableProperty().bind(status_combo.getSelectionModel().selectedItemProperty().isNull());
+        
         
         setPurchaseItemTable();
+        
+        status_combo.setItems(FXCollections.observableArrayList(MainApp.orderpurchase_status));
+        
         orderpurchase_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends OrderPurchase> observable, OrderPurchase oldValue, OrderPurchase newValue) -> {
+            try{
             purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
             company_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompany(newValue)));
             companyaddress_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompanyAddress(newValue)));
             company_combo.getSelectionModel().selectFirst();
             companyaddress_combo.getSelectionModel().selectFirst();
+            exchangerate_field.setText(""+newValue.getExchange_rate());
+            ivarate_field.setText(""+newValue.getIva_rate());
+            calculateTotals();
+            comments_area.setText(newValue.getComments());
+            }catch(Exception e){
+                clearFields();
+            }
+            status_combo.getSelectionModel().clearSelection();
         });
+        
+        changestatus_button.setOnAction((ActionEvent) -> {
+            orderpurchase_tableview.getSelectionModel().getSelectedItem().setStatus(status_combo.getSelectionModel().getSelectedItem());
+            msabase.getOrderPurchaseDAO().update(orderpurchase_tableview.getSelectionModel().getSelectedItem());
+            updateOrderPurchaseList(msabase);
+        });
+    }
+    
+    public void clearFields(){
+        purchaseitem_tableview.getItems().clear();
+        company_combo.getItems().clear();
+        companyaddress_combo.getItems().clear();
+        exchangerate_field.setText("N/A");
+        ivarate_field.setText("N/A");
+        subtotal_field.setText("N/A");
+        iva_field.setText("N/A");
+        total_field.setText("N/A");
+        comments_area.setText("N/A");
     }
     
     public void setOrderPurchaseTable(){
@@ -119,6 +159,33 @@ public class OrderPurchaseFX implements Initializable {
     
     public static void updateOrderPurchaseList(DAOFactory msabase){
         orderpurchase_list.setAll(msabase.getOrderPurchaseDAO().list());
+    }
+    
+    public void setSubtotal(){
+        Double subtotal = 0.0;
+        
+        for(PurchaseItem item : purchaseitem_tableview.getItems()){
+            subtotal += item.getPrice_total();
+        }
+        
+        subtotal_field.setText(""+subtotal);
+    }
+    public void calculateTotals(){
+        setSubtotal();
+        setIva();
+        setTotal();
+    }
+    public void setIva(){
+        try{
+            Integer.parseInt(ivarate_field.getText());
+        } catch(NumberFormatException e){
+            ivarate_field.setText("0");
+        }
+        iva_field.setText(""+(Double.parseDouble(subtotal_field.getText())*(Double.parseDouble(ivarate_field.getText())/100)));
+    }
+    
+    public void setTotal(){
+        total_field.setText(""+(Double.parseDouble(subtotal_field.getText())+Double.parseDouble(iva_field.getText())));
     }
     
 }

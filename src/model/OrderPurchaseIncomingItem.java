@@ -14,6 +14,8 @@ public class OrderPurchaseIncomingItem {
     private Integer id;
     private Integer units_arrived;
     
+    private PurchaseItem temp_purchaseitem;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -30,6 +32,14 @@ public class OrderPurchaseIncomingItem {
 
     public void setUnits_arrived(Integer units_arrived) {
         this.units_arrived = units_arrived;
+    }
+    
+    public PurchaseItem getTemp_purchaseitem() {
+        return temp_purchaseitem;
+    }
+
+    public void setTemp_purchaseitem(PurchaseItem temp_purchaseitem) {
+        this.temp_purchaseitem = temp_purchaseitem;
     }
     
     // Object overrides ---------------------------------------------------------------------------

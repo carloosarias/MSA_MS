@@ -54,9 +54,9 @@ public class MainApp extends Application{
     );
     
     public static List<String> orderpurchase_status = Arrays.asList(
-            "Esperando reciba",
-            "Reciba parcial",
-            "Reciba completa",
+            "Pendiente",
+            "Incompleta",
+            "Completada",
             "Cancelada"
     );
 
