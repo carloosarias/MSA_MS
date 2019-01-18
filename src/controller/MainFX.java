@@ -24,10 +24,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Module;
-import model.PurchaseItem;
 import msa_ms.MainApp;
 
 /**
@@ -90,7 +90,7 @@ public class MainFX implements Initializable {
     @FXML
     private TabPane root_tabpane;
 
-    
+    private Stage wait_stage = new Stage();
     /**
      * Initializes the controller class.
      */
