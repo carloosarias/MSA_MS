@@ -116,7 +116,6 @@ public class MainFX implements Initializable {
             setTabs(newValue);
             root_pane.setCenter(root_tabpane);
             root_pane.getScene().getWindow().sizeToScene();
-            System.out.println("testing");
         });
         
         logout.setOnAction((ActionEvent) ->{

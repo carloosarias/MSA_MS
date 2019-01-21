@@ -25,7 +25,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="orderpurchase_combo" editable="true" prefWidth="150.0">
+                        <ComboBox fx:id="orderpurchase_combo" prefWidth="150.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -99,21 +99,21 @@
             <HBox>
                <children>
                   <VBox />
-                  <TableView fx:id="orderpurchaseincomingitem_tableview" disable="true">
+                  <TableView fx:id="orderpurchaseincomingitem_tableview" disable="true" editable="true">
                      <columns>
-                        <TableColumn prefWidth="75.0" resizable="false" text="Producto">
+                        <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Producto">
                            <columns>
-                              <TableColumn fx:id="productid_column" prefWidth="75.0" resizable="false" text="ID" />
-                              <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
+                              <TableColumn fx:id="productid_column" editable="false" prefWidth="75.0" resizable="false" text="ID" />
+                              <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción" />
                            </columns>
                         </TableColumn>
-                        <TableColumn prefWidth="100.0" resizable="false" text="Presentación">
+                        <TableColumn editable="false" prefWidth="100.0" resizable="false" text="Presentación">
                            <columns>
-                              <TableColumn fx:id="quantity_column" prefWidth="150.0" resizable="false" text="Cantidad" />
-                              <TableColumn fx:id="unitmeasure_column" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                              <TableColumn fx:id="quantity_column" editable="false" prefWidth="150.0" resizable="false" text="Cantidad" />
+                              <TableColumn fx:id="unitmeasure_column" editable="false" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
                            </columns>
                         </TableColumn>
-                        <TableColumn fx:id="unitsordered_column" prefWidth="120.0" resizable="false" text="Cantidad Ordenada" />
+                        <TableColumn fx:id="unitsordered_column" editable="false" prefWidth="120.0" resizable="false" text="Cantidad Ordenada" />
                         <TableColumn fx:id="unitsarrived_column" prefWidth="120.0" text="Cantidad Recibida" />
                      </columns>
                      <HBox.margin>

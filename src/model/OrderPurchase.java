@@ -100,7 +100,7 @@ public class OrderPurchase implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%f", id);
+        return String.format("%d", id);
     }    
 
 }
