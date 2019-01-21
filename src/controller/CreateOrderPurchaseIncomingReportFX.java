@@ -128,9 +128,10 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
         try{
             msabase.getOrderPurchaseIncomingReportDAO().create(orderpurchase_combo.getSelectionModel().getSelectedItem(), employee_combo.getSelectionModel().getSelectedItem(), report);
         }catch(DAOException e){
-            System.out.println("Failed to generate OrderPurchaseIncomingReport; DB Entries were not saved");
+            System.out.println("Failed to generate OrderPurchaseIncomingReport; DB Entries were not saved\n\n\n"+e.getStackTrace());
             return;
         }
+        System.out.println("Created report: "+report.getId());
         saveOrderPurchaseIncomingItems(report);
     }
     
@@ -144,8 +145,12 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
                 msabase.getOrderPurchaseIncomingItemDAO().delete(item);
             }
             msabase.getOrderPurchaseIncomingReportDAO().delete(report);
-            System.out.println("Failed to generate OrderPurchaseIncomingItem; DB Entries were deleted");
+            System.out.println("Failed to generate OrderPurchaseIncomingItem; DB Entries were deleted\n\n\n"+e.getMessage());
+            return;
         }
+        OrderPurchase order_purchase = msabase.getOrderPurchaseIncomingReportDAO().findOrderPurchase(report);
+        order_purchase.setStatus(status_combo.getSelectionModel().getSelectedItem());
+        msabase.getOrderPurchaseDAO().update(order_purchase);
     }
     
     public void clearStyle(){

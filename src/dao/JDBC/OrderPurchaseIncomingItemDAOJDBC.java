@@ -26,20 +26,20 @@ import model.PurchaseItem;
 public class OrderPurchaseIncomingItemDAOJDBC implements OrderPurchaseIncomingItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT id, units_arrived FROM ORDER_PURCHASE_INCOMING_ITEM WHERE id = ?";
     private static final String SQL_FIND_ORDER_PURCHASE_INCOMING_REPORT_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT ORDER_PURCHASE_INCOMING_REPORT_ID FROM ORDER_PURCHASE_INCOMING_ITEM WHERE id = ?";
     private static final String SQL_FIND_PURCHASE_ITEM_BY_ID = 
-            "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT PURCHASE_ITEM_ID FROM ORDER_PURCHASE_INCOMING_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_PURCHASE_INCOMING_REPORT_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT id, units_arrived FROM ORDER_PURCHASE_INCOMING_ITEM WHERE ORDER_PURCHASE_INCOMING_REPORT_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
+            "INSERT INTO ORDER_PURCHASE_INCOMING_ITEM (ORDER_PURCHASE_INCOMING_REPORT_ID, PURCHASE_ITEM_ID, units_arrived) "
             + "VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MANTAINANCE_REPORT SET report_date = ? WHERE id = ?";
+            "UPDATE ORDER_PURCHASE_INCOMING_ITEM SET units_arrived = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM MANTAINANCE_REPORT WHERE id = ?";
+            "DELETE FROM ORDER_PURCHASE_INCOMING_ITEM WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 

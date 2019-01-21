@@ -107,15 +107,15 @@ public class OrderPurchaseFX implements Initializable {
         
         orderpurchase_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends OrderPurchase> observable, OrderPurchase oldValue, OrderPurchase newValue) -> {
             try{
-            purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
-            company_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompany(newValue)));
-            companyaddress_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompanyAddress(newValue)));
-            company_combo.getSelectionModel().selectFirst();
-            companyaddress_combo.getSelectionModel().selectFirst();
-            exchangerate_field.setText(""+newValue.getExchange_rate());
-            ivarate_field.setText(""+newValue.getIva_rate());
-            calculateTotals();
-            comments_area.setText(newValue.getComments());
+                purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
+                company_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompany(newValue)));
+                companyaddress_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompanyAddress(newValue)));
+                company_combo.getSelectionModel().selectFirst();
+                companyaddress_combo.getSelectionModel().selectFirst();
+                exchangerate_field.setText(""+newValue.getExchange_rate());
+                ivarate_field.setText(""+newValue.getIva_rate());
+                calculateTotals();
+                comments_area.setText(newValue.getComments());
             }catch(Exception e){
                 clearFields();
             }

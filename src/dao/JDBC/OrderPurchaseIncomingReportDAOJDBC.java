@@ -27,10 +27,10 @@ public class OrderPurchaseIncomingReportDAOJDBC implements OrderPurchaseIncoming
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
             "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
     private static final String SQL_FIND_ORDER_PURCHASE_BY_ID = 
             "SELECT ORDER_PURCHASE_ID FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
+    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
+            "SELECT EMPLOYEE_ID FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT ORDER BY id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
@@ -38,7 +38,7 @@ public class OrderPurchaseIncomingReportDAOJDBC implements OrderPurchaseIncoming
     private static final String SQL_LIST_ORDER_PURCHASE_ORDER_BY_ID = 
             "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
     private static final String SQL_INSERT = 
-            "INSERT INTO ORDER_PURCHASE_INCOMING_REPORT (EMPLOYEE_ID, ORDER_PURCHASE_ID, report_date, comments) "
+            "INSERT INTO ORDER_PURCHASE_INCOMING_REPORT(ORDER_PURCHASE_ID, EMPLOYEE_ID, report_date, comments) "
             + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE ORDER_PURCHASE_INCOMING_REPORT SET report_date = ?, comments = ? WHERE id = ?";
