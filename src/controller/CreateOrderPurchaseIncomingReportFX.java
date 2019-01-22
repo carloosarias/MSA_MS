@@ -128,7 +128,7 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
         try{
             msabase.getOrderPurchaseIncomingReportDAO().create(orderpurchase_combo.getSelectionModel().getSelectedItem(), employee_combo.getSelectionModel().getSelectedItem(), report);
         }catch(DAOException e){
-            System.out.println("Failed to generate OrderPurchaseIncomingReport; DB Entries were not saved\n\n\n"+e.getStackTrace());
+            System.out.println("Failed to generate OrderPurchaseIncomingReport; DB Entries were not saved\n\n\n"+e.getMessage());
             return;
         }
         System.out.println("Created report: "+report.getId());

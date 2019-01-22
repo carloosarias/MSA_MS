@@ -138,7 +138,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         try{
             msabase.getOrderPurchaseDAO().create(company_selection, companyaddress_combo.getSelectionModel().getSelectedItem(), order_purchase);
         }catch(DAOException e){
-            System.out.println("Failed to generate order purchase; DB Entries were not saved");
+            System.out.println("Failed to generate order purchase; DB Entries were not saved"+e.getMessage());
             return;
         }
         savePurchaseItems(order_purchase);
@@ -157,7 +157,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
                 msabase.getPurchaseItemDAO().delete(item);
             }
             msabase.getOrderPurchaseDAO().delete(order_purchase);
-            System.out.println("Failed to generate Purchase Items; DB Entries were deleted");
+            System.out.println("Failed to generate Purchase Items; DB Entries were deleted"+e.getMessage());
         }
         
     }
