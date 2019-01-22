@@ -125,6 +125,7 @@ public interface ProcessReportDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<ProcessReport> listProductPartDateRange(ProductPart product_part, Date start, Date end) throws IllegalArgumentException, DAOException;
+    
     /**
      * Create the given ProcessReport in the database.
      * The Employee ID must not be null, The PartRevision ID must not be null,
