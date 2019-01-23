@@ -11,7 +11,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateProcessReportFX">
    <children>
@@ -235,22 +234,19 @@
                               </Spinner>
                            </children>
                         </HBox>
-                        <Label text="Tiempo estimado en proceso:">
+                        <Label text="Hora de salida estimada:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                           <font>
-                              <Font size="11.0" />
-                           </font>
                         </Label>
                         <HBox>
                            <children>
-                              <Spinner fx:id="timerhour_spinner" prefWidth="70.0">
+                              <Spinner fx:id="endhour_spinner" prefWidth="70.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Spinner>
-                              <Spinner fx:id="timerminute_spinner" prefWidth="70.0">
+                              <Spinner fx:id="endminute_spinner" prefWidth="70.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>

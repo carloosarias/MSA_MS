@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.sql.Time;
@@ -21,6 +22,9 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import model.ActivityReport;
 import model.Employee;
 
 /**
@@ -29,7 +33,9 @@ import model.Employee;
  * @author Pavilion Mini
  */
 public class CreateActivityReportFX implements Initializable {
-
+    
+    @FXML
+    private HBox root_hbox;
     @FXML
     private ComboBox<Employee> employee_combo;
     @FXML
@@ -59,8 +65,8 @@ public class CreateActivityReportFX implements Initializable {
     
     private SpinnerValueFactory starthour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour());
     private SpinnerValueFactory startminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, LocalTime.now().getMinute());
-    private SpinnerValueFactory endhour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour());
-    private SpinnerValueFactory endminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, LocalTime.now().getMinute());
+    private SpinnerValueFactory endhour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(LocalTime.now().getHour(), 23, LocalTime.now().getHour());
+    private SpinnerValueFactory endminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(LocalTime.now().getMinute(), 59, LocalTime.now().getMinute());
     
     /**
      * Initializes the controller class.
@@ -92,6 +98,85 @@ public class CreateActivityReportFX implements Initializable {
             setEndminute_spinner(startminute_spinner.getValueFactory().getValue()); 
         });
         
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
+            saveActivityReport();
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close();
+        });
+        
+        cancel_button.setOnAction((ActionEvent) -> {
+            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            stage.close();
+        });
+        
+    }
+    
+    public void saveActivityReport(){
+        ActivityReport report = new ActivityReport();
+        report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
+        report.setStart_time(new Time(starthour_spinner.getValue(), startminute_spinner.getValue(), 0));
+        report.setEnd_time(new Time(endhour_spinner.getValue(), endminute_spinner.getValue(), 0));
+        report.setPhysical_location(location_field.getText());
+        report.setJob_description(description_area.getText());
+        report.setAction_taken(actiontaken_area.getText());
+        report.setComments(comments_area.getText());
+        
+        msabase.getActivityReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), report);
+    }
+    
+    public void clearStyle(){
+        reportdate_picker.setStyle(null);  
+        employee_combo.setStyle(null);
+        location_field.setStyle(null);
+        description_area.setStyle(null);        
+        actiontaken_area.setStyle(null);        
+        comments_area.setStyle(null);
+    }
+    
+    public boolean testFields(){
+        boolean b = true;
+        clearStyle();
+        if(reportdate_picker.getValue() == null){
+            reportdate_picker.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        
+        try{
+            employee_combo.getId();
+        }
+        catch(Exception e){
+            employee_combo.setStyle("-fx-background-color: lightpink;");
+            employee_combo.getSelectionModel().clearSelection();
+            b = false;
+        }
+        
+        
+        if(location_field.getText().replace(" ", "").equals("")){
+            employee_combo.setStyle("-fx-background-color: lightpink;");
+            location_field.setText("");
+            b = false;
+        }
+        
+        if(description_area.getText().replace(" ", "").equals("")){
+            employee_combo.setStyle("-fx-background-color: lightpink;");
+            description_area.setText("");
+            b = false;
+        }
+        
+        if(actiontaken_area.getText().replace(" ", "").equals("")){
+            employee_combo.setStyle("-fx-background-color: lightpink;");
+            actiontaken_area.setText("");
+            b = false;
+        }
+        
+        if(comments_area.getText().replace(" ", "").equals("")){
+            comments_area.setText("N/A");
+        }
+        
+        return b;
     }
     
     public void setEndminute_spinner(Integer newValue){

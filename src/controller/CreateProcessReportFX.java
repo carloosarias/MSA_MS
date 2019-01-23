@@ -72,9 +72,9 @@ public class CreateProcessReportFX implements Initializable {
     @FXML
     private Spinner<Integer> startminute_spinner;
     @FXML
-    private Spinner<Integer> timerhour_spinner;
+    private Spinner<Integer> endhour_spinner;
     @FXML
-    private Spinner<Integer> timerminute_spinner;
+    private Spinner<Integer> endminute_spinner;
     @FXML
     private TextArea comments_area;
     @FXML
@@ -88,8 +88,8 @@ public class CreateProcessReportFX implements Initializable {
     
     private SpinnerValueFactory starthour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour());
     private SpinnerValueFactory startminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, LocalTime.now().getMinute());
-    private SpinnerValueFactory timerhour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0);
-    private SpinnerValueFactory timerminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0);
+    private SpinnerValueFactory endhour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(LocalTime.now().getHour(), 23, LocalTime.now().getHour());
+    private SpinnerValueFactory endminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(LocalTime.now().getMinute(), 59, LocalTime.now().getMinute());
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
@@ -149,7 +149,40 @@ public class CreateProcessReportFX implements Initializable {
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
         });
+        
+        starthour_spinner.valueProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+            endhour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(newValue, 23, endhour_spinner.getValueFactory().getValue());
+            endhour_spinner.setValueFactory(endhour_factory);
+            if(endhour_spinner.getValueFactory().getValue() < newValue){
+                endhour_spinner.getValueFactory().setValue(newValue);
+            }
+            setEndminute_spinner(startminute_spinner.getValueFactory().getValue());
+        });
+        
+        startminute_spinner.valueProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+            setEndminute_spinner(newValue);
+        });
+        
+        endhour_spinner.valueProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
+            setEndminute_spinner(startminute_spinner.getValueFactory().getValue()); 
+        });
+        
     }
+    
+    public void setEndminute_spinner(Integer newValue){
+        if(endhour_spinner.getValueFactory().getValue().equals(starthour_spinner.getValueFactory().getValue())){
+            endminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(newValue, 59, endminute_spinner.getValueFactory().getValue());
+            endminute_spinner.setValueFactory(endminute_factory);
+            if(endminute_spinner.getValueFactory().getValue() < newValue){
+                endminute_spinner.getValueFactory().setValue(newValue);
+            }
+        }
+        else{
+            endminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, endminute_spinner.getValueFactory().getValue());
+            endminute_spinner.setValueFactory(endminute_factory);
+        }
+    }
+    
     public void saveProcessReport(){
         ProcessReport process_report = new ProcessReport();
         process_report.setProcess(process_combo.getSelectionModel().getSelectedItem());
@@ -159,8 +192,7 @@ public class CreateProcessReportFX implements Initializable {
         process_report.setAmperage(Double.parseDouble(amperage_field.getText()));
         process_report.setVoltage(Double.parseDouble(voltage_field.getText()));
         Time start_time = new Time(starthour_spinner.getValue(), startminute_spinner.getValue(), 0);
-        Time end_time = Time.valueOf(start_time.toLocalTime().plusHours(timerhour_spinner.getValue()));
-        end_time = Time.valueOf(end_time.toLocalTime().plusMinutes(timerminute_spinner.getValue()));
+        Time end_time = new Time(endhour_spinner.getValue(), endminute_spinner.getValue(), 0);
         process_report.setStart_time(start_time);
         process_report.setEnd_time(end_time);
         process_report.setComments(comments_area.getText());
@@ -186,8 +218,6 @@ public class CreateProcessReportFX implements Initializable {
         revision_combo.setStyle(null);
         amperage_field.setStyle(null);        
         voltage_field.setStyle(null);
-        timerhour_spinner.setStyle(null);
-        timerminute_spinner.setStyle(null);
         comments_area.setStyle(null);
     }
     
@@ -263,12 +293,6 @@ public class CreateProcessReportFX implements Initializable {
             voltage_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
-
-        if(timerhour_spinner.getValue() == 0 && timerminute_spinner.getValue() == 0){
-            timerhour_spinner.setStyle("-fx-border-color: lightpink;");
-            timerminute_spinner.setStyle("-fx-border-color: lightpink;");
-            b = false;
-        }
         
         if(comments_area.getText().replace(" ", "").equals("")){
             comments_area.setText("n/a");
@@ -280,8 +304,8 @@ public class CreateProcessReportFX implements Initializable {
     public void setSpinnerValues(){
         starthour_spinner.setValueFactory(starthour_factory);
         startminute_spinner.setValueFactory(startminute_factory);
-        timerhour_spinner.setValueFactory(timerhour_factory);
-        timerminute_spinner.setValueFactory(timerminute_factory);
+        endhour_spinner.setValueFactory(endhour_factory);
+        endminute_spinner.setValueFactory(endminute_factory);
     }
     
     public void updatePartrev_combo(){
