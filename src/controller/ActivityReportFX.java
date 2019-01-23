@@ -10,6 +10,7 @@ import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -92,7 +93,10 @@ public class ActivityReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        startdate_picker.setValue(LocalDate.now().minusWeeks(1));
+        enddate_picker.setValue(LocalDate.now());
+        employee_combo.getItems().setAll(msabase.getModuleEmployeeDAO().list(msabase.getModuleDAO().find("Mantenimiento")));
+        employee_combo.getSelectionModel().selectFirst();
         setActivityReportTable();
         updateActivityReportTable();
         
@@ -115,7 +119,7 @@ public class ActivityReportFX implements Initializable {
         endtime_column.setCellValueFactory(new PropertyValueFactory<>("end_time"));
         jobdescription_column.setCellValueFactory(new PropertyValueFactory<>("job_description"));
         physicallocation_column.setCellValueFactory(new PropertyValueFactory<>("physical_location"));
-        actiontaken_column.setCellValueFactory(new PropertyValueFactory<>("action_event"));
+        actiontaken_column.setCellValueFactory(new PropertyValueFactory<>("action_taken"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
     
