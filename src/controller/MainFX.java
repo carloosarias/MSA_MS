@@ -80,6 +80,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab orderpurchasecart_tab;
     @FXML
+    private Tab activityreport_tab;
+    @FXML
     private MenuItem logout;
     
     private List<Module> modules;
@@ -204,7 +206,8 @@ public class MainFX implements Initializable {
                         break;
                     case "Mantenimiento":
                         mantainance_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/MantainanceReportFX.fxml")));
-                        root_tabpane.getTabs().setAll(mantainance_tab);
+                        activityreport_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ActivityReportFX.fxml")));
+                        root_tabpane.getTabs().setAll(mantainance_tab, activityreport_tab);
                         break;
                 }
             } catch (IOException ex) {
