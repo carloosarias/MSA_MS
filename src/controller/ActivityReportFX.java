@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -13,6 +14,8 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,6 +26,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -46,8 +50,6 @@ public class ActivityReportFX implements Initializable {
     @FXML
     private CheckBox datefilter_checkbox;
     @FXML
-    private HBox filter_hbox;
-    @FXML
     private ComboBox<Employee> employee_combo;
     @FXML
     private DatePicker startdate_picker;
@@ -56,7 +58,7 @@ public class ActivityReportFX implements Initializable {
     @FXML
     private TableView<ActivityReport> activityreport_tableview1;
     @FXML
-    private TableColumn<ActivityReport, Integer> reportid_column;
+    private TableColumn<ActivityReport, Integer> reportid_column1;
     @FXML
     private TableColumn<ActivityReport, String> employeeid_column;
     @FXML
@@ -69,6 +71,8 @@ public class ActivityReportFX implements Initializable {
     private TableColumn<ActivityReport, Time> endtime_column;
     @FXML
     private TableView<ActivityReport> activityreport_tableview2;
+    @FXML
+    private TableColumn<ActivityReport, Integer> reportid_column2;
     @FXML
     private TableColumn<ActivityReport, String> jobdescription_column;
     @FXML
@@ -88,9 +92,59 @@ public class ActivityReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        setActivityReportTable();
+        updateActivityReportTable();
+        
+        filter_button.setOnAction((ActionEvent) -> {
+            updateActivityReportTable();
+        });
+        
         add_button.setOnAction((ActionEvent) -> {
            showAdd_stage(); 
         });
+    }
+    
+    public void setActivityReportTable(){
+        reportid_column1.setCellValueFactory(new PropertyValueFactory<>("id"));
+        reportid_column2.setCellValueFactory(new PropertyValueFactory<>("id"));
+        employeeid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getActivityReportDAO().findEmployee(c.getValue()).getId()));
+        name_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getActivityReportDAO().findEmployee(c.getValue()).toString()));
+        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        starttime_column.setCellValueFactory(new PropertyValueFactory<>("start_time"));
+        endtime_column.setCellValueFactory(new PropertyValueFactory<>("end_time"));
+        jobdescription_column.setCellValueFactory(new PropertyValueFactory<>("job_description"));
+        physicallocation_column.setCellValueFactory(new PropertyValueFactory<>("physical_location"));
+        actiontaken_column.setCellValueFactory(new PropertyValueFactory<>("action_event"));
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+    }
+    
+    public void updateActivityReportTable(){
+        if(employeefilter_checkbox.isSelected()){
+            if(datefilter_checkbox.isSelected()){
+                activityreport_tableview1.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().listEmployeeDateRange(
+                    employee_combo.getSelectionModel().getSelectedItem(), 
+                    DAOUtil.toUtilDate(startdate_picker.getValue()), 
+                    DAOUtil.toUtilDate(enddate_picker.getValue())))
+                );
+            }
+            else{
+                activityreport_tableview1.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().listEmployee(
+                    employee_combo.getSelectionModel().getSelectedItem()))
+                );
+            }
+        }
+        else if(datefilter_checkbox.isSelected()){
+            activityreport_tableview1.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().listDateRange(
+                    DAOUtil.toUtilDate(startdate_picker.getValue()), 
+                    DAOUtil.toUtilDate(enddate_picker.getValue())))
+            );            
+        }
+        else{
+            activityreport_tableview1.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().list()));            
+        }
+        
+        activityreport_tableview2.setItems(activityreport_tableview1.getItems());
     }
     
     public void showAdd_stage(){

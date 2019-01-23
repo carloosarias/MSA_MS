@@ -36,7 +36,7 @@
                   </CheckBox>
                </children>
             </HBox>
-            <HBox fx:id="filter_hbox" alignment="CENTER">
+            <HBox alignment="CENTER">
                <children>
                   <VBox>
                      <children>
@@ -86,12 +86,12 @@
               <tabs>
                 <Tab text="Historial de Trabajos">
                      <content>
-                        <HBox>
+                        <HBox alignment="CENTER">
                            <children>
                               <VBox />
                               <TableView fx:id="activityreport_tableview1" prefHeight="400.0" prefWidth="602.0">
                                  <columns>
-                                    <TableColumn fx:id="reportid_column" prefWidth="100.0" resizable="false" text="# de Reporte" />
+                                    <TableColumn fx:id="reportid_column1" prefWidth="100.0" resizable="false" text="# de Reporte" />
                                     <TableColumn prefWidth="75.0" resizable="false" text="Empleado">
                                        <columns>
                                           <TableColumn fx:id="employeeid_column" prefWidth="75.0" resizable="false" text="ID" />
@@ -117,6 +117,7 @@
                               <VBox />
                               <TableView fx:id="activityreport_tableview2">
                                  <columns>
+                                    <TableColumn fx:id="reportid_column2" prefWidth="100.0" resizable="false" text="# de Reporte" />
                                     <TableColumn fx:id="jobdescription_column" prefWidth="150.0" resizable="false" text="Descripción" />
                                     <TableColumn fx:id="physicallocation_column" prefWidth="100.0" resizable="false" text="Ubicación" />
                                     <TableColumn fx:id="actiontaken_column" prefWidth="175.0" resizable="false" text="Acción Realizada" />
