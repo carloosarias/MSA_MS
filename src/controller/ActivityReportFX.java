@@ -106,6 +106,7 @@ public class ActivityReportFX implements Initializable {
         
         add_button.setOnAction((ActionEvent) -> {
            showAdd_stage(); 
+           updateActivityReportTable();
         });
     }
     
