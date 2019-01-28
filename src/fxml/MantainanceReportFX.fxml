@@ -38,11 +38,20 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </TableView>
-                              <Button fx:id="add_button" disable="true" mnemonicParsing="false" text="Generar Reporte de Mantenimiento">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </Button>
+                              <HBox>
+                                 <children>
+                                    <Button fx:id="add_button" disable="true" mnemonicParsing="false" text="Generar Reporte de Mantenimiento">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Button fx:id="pdf_button" mnemonicParsing="false" text="Ver PDF">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
                      </children>

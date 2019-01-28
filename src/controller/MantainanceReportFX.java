@@ -5,12 +5,20 @@
  */
 package controller;
 
+import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.fields.PdfFormField;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +45,7 @@ import model.Equipment;
 import model.EquipmentType;
 import model.MantainanceItem;
 import model.MantainanceReport;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -89,6 +98,8 @@ public class MantainanceReportFX implements Initializable {
     private TableColumn<MantainanceItem, Boolean> checkvalue_column;
     @FXML
     private Button add_button;
+    @FXML
+    private Button pdf_button;
     
     private Stage add_stage = new Stage();
     
@@ -109,9 +120,10 @@ public class MantainanceReportFX implements Initializable {
         
         updateEquipmentTable();
         
+        add_button.disableProperty().bind(equipment_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
         equipment_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Equipment> observable, Equipment oldValue, Equipment newValue) -> {
             equipment_selection = equipment_tableview.getSelectionModel().getSelectedItem();
-            add_button.setDisable(equipment_tableview.getSelectionModel().isEmpty());
         });
         
         equipmenttype_combo.setOnAction((ActionEvent) -> {
@@ -135,6 +147,16 @@ public class MantainanceReportFX implements Initializable {
         mantainancereport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue <? extends MantainanceReport> observable, MantainanceReport oldValue, MantainanceReport newValue) -> {
             updateMantainanceItemTable();
         });
+        
+        pdf_button.setOnAction((ActionEvent) -> {
+            try{
+                buildPDF(equipment_tableview.getItems());
+                MainApp.openPDF("./src/pdf/MantemientoPDF.pdf");
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        });
     }
     
     
@@ -147,7 +169,7 @@ public class MantainanceReportFX implements Initializable {
     }
     
     public void updateEquipmentTable(){
-        equipment_tableview.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().listPending(DAOUtil.toUtilDate(LocalDate.now()))));
+        equipment_tableview.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().listPending(DAOUtil.toUtilDate(LocalDate.now().plusWeeks(1)))));
     }
     
     public void showAdd_stage(){
@@ -199,5 +221,33 @@ public class MantainanceReportFX implements Initializable {
     
     public static Equipment getEquipment_selection(){
         return equipment_selection;
+    }
+    
+    public void buildPDF(List<Equipment> equipment_list) throws IOException{
+        PdfDocument pdf = new PdfDocument(
+            new PdfReader(new File("./src/template/MantainanceTemplate.pdf")),
+            new PdfWriter(new File("./src/pdf/MantemientoPDF.pdf"))
+        );
+
+        PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
+        Map<String, PdfFormField> fields = form.getFormFields();
+        fields.get("report_date").setValue(LocalDate.now().toString());
+        fields.get("employee").setValue(msabase.getEmployeeDAO().find(MainApp.employee_id).toString());
+
+        int i = 0;
+        for(Equipment equipment : equipment_list){
+            int current_row = i+1;
+            fields.get("id"+current_row).setValue(""+equipment.getId());
+            fields.get("name"+current_row).setValue(equipment.getName());
+            fields.get("serial_number"+current_row).setValue(equipment.getSerial_number());
+            fields.get("description"+current_row).setValue(equipment.getDescription());
+            fields.get("type"+current_row).setValue(msabase.getEquipmentDAO().findEquipmentType(equipment).getName());
+            fields.get("physical_location"+current_row).setValue(equipment.getPhysical_location());
+            fields.get("next_mantainance"+current_row).setValue(equipment.getNext_mantainance().toString());
+            i++;
+        }
+        
+        form.flattenFields();
+        pdf.close();
     }
 }
