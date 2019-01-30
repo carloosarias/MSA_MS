@@ -29,20 +29,6 @@
                         </DatePicker>
                      </children>
                   </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Número de Revisión:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <TextField fx:id="rev_field" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                     </children>
-                  </VBox>
                </children>
             </HBox>
             <HBox>
@@ -61,6 +47,24 @@
                         </ComboBox>
                      </children>
                   </VBox>
+                  <VBox>
+                     <children>
+                        <Label text="Número de Revisión:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="rev_field" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
                   <VBox>
                      <children>
                         <Label text="Metal Base:">
@@ -91,7 +95,7 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox>
+            <HBox alignment="CENTER">
                <children>
                   <VBox>
                      <children>
@@ -100,11 +104,19 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="area_field" prefWidth="150.0">
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <TextField fx:id="area_field" prefWidth="100.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Label text="in²" />
+                           </children>
                            <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                              <Insets />
                            </VBox.margin>
-                        </TextField>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox>
@@ -114,11 +126,20 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="baseweight_field" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
+                        <HBox>
+                           <children>
+                              <TextField fx:id="baseweight_field" prefWidth="100.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Label text="kg.">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox>
@@ -128,16 +149,25 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="finalweight_field" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
+                        <HBox>
+                           <children>
+                              <TextField fx:id="finalweight_field" prefWidth="100.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Label text="kg.">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <HBox nodeOrientation="RIGHT_TO_LEFT">
+            <HBox alignment="CENTER_LEFT" nodeOrientation="RIGHT_TO_LEFT">
                <children>
                   <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
                      <HBox.margin>

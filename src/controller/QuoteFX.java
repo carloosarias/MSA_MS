@@ -267,7 +267,7 @@ public class QuoteFX implements Initializable {
                 ).getMetal_name()));
         density_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getDensity())));
         unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
-        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getThickness())));
+        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getThickness())+" in."));
         volume_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getVolume())));
         weight_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getWeight())));
         estimatedprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getEstimatedPrice())));

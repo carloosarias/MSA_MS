@@ -27,21 +27,39 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <TextField fx:id="minimumthickness_field">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TextField>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <TextField fx:id="minimumthickness_field" prefWidth="100.0">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Label text="in.">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
             <Label text="Espesor Máximo:">
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </VBox.margin>
             </Label>
-            <TextField fx:id="maximumthickness_field">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TextField>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <TextField fx:id="maximumthickness_field" prefWidth="100.0">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Label text="in.">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
             <HBox nodeOrientation="RIGHT_TO_LEFT">
                <children>
                   <Button fx:id="submit_button" mnemonicParsing="false" text="Guardar">

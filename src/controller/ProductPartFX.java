@@ -27,6 +27,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -71,11 +72,11 @@ public class ProductPartFX implements Initializable {
     @FXML
     private TableColumn<PartRevision, String> revspecnumber_column;
     @FXML
-    private TableColumn<PartRevision, Double> area_column;
+    private TableColumn<PartRevision, String> area_column;
     @FXML
-    private TableColumn<PartRevision, Double> baseweight_column;
+    private TableColumn<PartRevision, String> baseweight_column;
     @FXML
-    private TableColumn<PartRevision, Double> finalweight_column;
+    private TableColumn<PartRevision, String> finalweight_column;
     @FXML
     private TableColumn<PartRevision, String> partrevisionstatus_column;
     @FXML
@@ -264,15 +265,33 @@ public class ProductPartFX implements Initializable {
         basemetal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findMetal(c.getValue()).getMetal_name()));
         finalprocess_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findSpecification(c.getValue()).getProcess()));
         revspecnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findSpecification(c.getValue()).getSpecification_number()));
-        area_column.setCellValueFactory(new PropertyValueFactory<>("area"));
-        baseweight_column.setCellValueFactory(new PropertyValueFactory<>("base_weight"));
-        finalweight_column.setCellValueFactory(new PropertyValueFactory<>("final_weight"));
+        area_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getArea()+" in²"));
+        area_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        area_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setArea(getAreaValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            partrevision_tableview.refresh();
+        });
+        baseweight_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBase_weight()+" kg"));
+        baseweight_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        baseweight_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setBase_weight(getBase_weightValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            partrevision_tableview.refresh();
+        });
+        finalweight_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getFinal_weight()+" kg"));
+        finalweight_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        finalweight_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setFinal_weight(getFinal_weightValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            partrevision_tableview.refresh();
+        });
         partrevisionstatus_column.setCellValueFactory(c -> new SimpleStringProperty(getStatus(c.getValue().isActive())));
         partrevisionstatus_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
         partrevisionstatus_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setActive(getActive(t.getNewValue()));
             msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            setPartRevisionItems(productpart_selection);
+            partrevision_tableview.refresh();
         });
     }
     
@@ -288,8 +307,8 @@ public class ProductPartFX implements Initializable {
         df.setMaximumFractionDigits(6);
         specificationitemid_column.setCellValueFactory(c -> new SimpleStringProperty(""+(specificationitem_tableview.getItems().indexOf(c.getValue())+1)));
         metal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getSpecificationItemDAO().findMetal(c.getValue()).getMetal_name()));
-        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())));
-        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())));
+        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())+" in."));
+        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())+" in."));
     }
     
     public void setMetalTable(){
@@ -339,4 +358,27 @@ public class ProductPartFX implements Initializable {
         return productpart_selection;
     }
     
+    public Double getAreaValue(PartRevision revision, String area){
+        try{
+            return Double.parseDouble(area);
+        }catch(Exception e){
+            return revision.getArea();
+        }
+    }
+    
+    public Double getBase_weightValue(PartRevision revision, String base_weight){
+        try{
+            return Double.parseDouble(base_weight);
+        }catch(Exception e){
+            return revision.getBase_weight();
+        }
+    }
+    
+    public Double getFinal_weightValue(PartRevision revision, String final_weight){
+        try{
+            return Double.parseDouble(final_weight);
+        }catch(Exception e){
+            return revision.getFinal_weight();
+        }
+    }
 }

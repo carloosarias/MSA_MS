@@ -40,7 +40,7 @@
                            <children>
                               <HBox>
                                  <children>
-                                    <TableView fx:id="partrevision_tableview">
+                                    <TableView fx:id="partrevision_tableview" editable="true">
                                       <columns>
                                         <TableColumn fx:id="partrevisionid_column" prefWidth="75.0" text="ID" />
                                         <TableColumn fx:id="rev_column" prefWidth="75.0" text="# de Rev." />
@@ -48,7 +48,7 @@
                                           <TableColumn fx:id="basemetal_column" prefWidth="100.0" text="Metal Base" />
                                           <TableColumn fx:id="finalprocess_column" prefWidth="100.0" text="Proceso Final" />
                                           <TableColumn fx:id="revspecnumber_column" prefWidth="125.0" text="# de Specificación" />
-                                          <TableColumn fx:id="area_column" prefWidth="75.0" text="Área (cm²)" />
+                                          <TableColumn fx:id="area_column" prefWidth="75.0" text="Área" />
                                           <TableColumn prefWidth="75.0" text="Peso">
                                              <columns>
                                                 <TableColumn fx:id="baseweight_column" prefWidth="75.0" text="Base" />
@@ -87,7 +87,7 @@
                                       <columns>
                                         <TableColumn fx:id="specificationitemid_column" prefWidth="75.0" text="#" />
                                         <TableColumn fx:id="metal_column" prefWidth="100.0" text="Metal" />
-                                          <TableColumn fx:id="minimumthickness_column" prefWidth="115.0" text="Espesor Mínimo" />
+                                          <TableColumn fx:id="minimumthickness_column" prefWidth="115.0" text="Espesor Mínimo " />
                                           <TableColumn fx:id="maximumthickness_column" prefWidth="115.0" text="Espesor Máximo" />
                                       </columns>
                                        <HBox.margin>
