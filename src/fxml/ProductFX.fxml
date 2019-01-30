@@ -11,7 +11,7 @@
    <children>
       <VBox alignment="CENTER">
          <children>
-            <TableView fx:id="product_tableview">
+            <TableView fx:id="product_tableview" editable="true">
               <columns>
                 <TableColumn fx:id="id_column" prefWidth="106.0" text="ID de Producto" />
                 <TableColumn fx:id="description_column" prefWidth="200.0" text="Descripción" />

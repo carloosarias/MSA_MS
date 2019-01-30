@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,11 +123,14 @@ public class ProductSupplierFX implements Initializable {
     }
     
     public void setProductSupplierTable(){
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(4);
         id_column.setCellValueFactory(new PropertyValueFactory("id"));
         description_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(c.getValue()).getDescription()));
         supplier_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findCompany(c.getValue()).getName()));
         unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue()).getUnit_measure()));
         quantity_column.setCellValueFactory(new PropertyValueFactory("quantity"));
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getUnit_price()/c.getValue().getQuantity()))+" USD"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getUnit_price()+" USD"));
         unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
         unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<ProductSupplier, String> t) -> {
@@ -134,7 +138,6 @@ public class ProductSupplierFX implements Initializable {
             msabase.getProductSupplierDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             productsupplier_tableview.refresh();
         });
-        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+(c.getValue().getUnit_price()/c.getValue().getQuantity())+" USD"));
     }
     
     public Double getUnit_priceValue(ProductSupplier revision, String unit_price){

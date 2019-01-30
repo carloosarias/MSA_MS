@@ -271,8 +271,8 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
         }
         
         Object[] values = {
-            product_supplier.getQuantity(),
             product_supplier.getUnit_price(),
+            product_supplier.getQuantity(),
             product_supplier.isActive(),
             product_supplier.getId()
         };
