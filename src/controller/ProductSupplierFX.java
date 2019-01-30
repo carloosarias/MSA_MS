@@ -21,13 +21,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.ProductSupplier;
 import model.PurchaseItem;
-import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -51,7 +51,9 @@ public class ProductSupplierFX implements Initializable {
     @FXML
     private TableColumn<ProductSupplier, String> unitmeasure_column;
     @FXML
-    private TableColumn<ProductSupplier, Double> unitprice_column;
+    private TableColumn<ProductSupplier, String> unitmeasureprice_column;
+    @FXML
+    private TableColumn<ProductSupplier, String> unitprice_column;
     @FXML
     private Button delete_button;
     @FXML
@@ -121,11 +123,25 @@ public class ProductSupplierFX implements Initializable {
     
     public void setProductSupplierTable(){
         id_column.setCellValueFactory(new PropertyValueFactory("id"));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(c.getValue()).getId()));
+        description_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(c.getValue()).getDescription()));
         supplier_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findCompany(c.getValue()).getName()));
         unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue()).getUnit_measure()));
         quantity_column.setCellValueFactory(new PropertyValueFactory("quantity"));
-        unitprice_column.setCellValueFactory(new PropertyValueFactory("unit_price"));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getUnit_price()+" USD"));
+        unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<ProductSupplier, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnit_price(getUnit_priceValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getProductSupplierDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            productsupplier_tableview.refresh();
+        });
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+(c.getValue().getUnit_price()/c.getValue().getQuantity())+" USD"));
     }
     
+    public Double getUnit_priceValue(ProductSupplier revision, String unit_price){
+        try{
+            return Double.parseDouble(unit_price);
+        }catch(Exception e){
+            return revision.getUnit_price();
+        }
+    }
 }

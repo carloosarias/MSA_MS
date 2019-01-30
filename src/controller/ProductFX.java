@@ -22,12 +22,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Invoice;
 import model.Product;
+import model.ProductSupplier;
 
 /**
  * FXML Controller class
@@ -105,6 +107,12 @@ public class ProductFX implements Initializable {
     public void setProductTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
+        description_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        description_column.setOnEditCommit((TableColumn.CellEditEvent<Product, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setDescription(t.getNewValue());
+            msabase.getProductDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            product_tableview.refresh();
+        });
         unitmeasure_column.setCellValueFactory(new PropertyValueFactory<>("unit_measure"));
     }
     

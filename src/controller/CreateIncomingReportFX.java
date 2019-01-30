@@ -111,7 +111,6 @@ public class CreateIncomingReportFX implements Initializable {
     @FXML
     private Button save_button;
 
-    
     private ProductPart partcombo_selection;
     private String partcombo_text;
     
@@ -284,7 +283,9 @@ public class CreateIncomingReportFX implements Initializable {
         });
        
         save_button.setOnAction((ActionEvent) -> {
+            save_button.setDisable(true);
             if(!testSaveFields()){
+                save_button.setDisable(false);
                 return;
             }
             saveIncomingReport();
@@ -341,7 +342,7 @@ public class CreateIncomingReportFX implements Initializable {
     
     public void saveIncomingLots(IncomingReport incoming_report){
         for(IncomingLot incoming_lot : incoming_lots){
-            if(incoming_lot.getTemp_departlot().getId() != null){
+            if(incoming_lot.getTemp_departlot() != null){
                 msabase.getIncomingLotDAO().create(incoming_report, incoming_lot.getTemp_departlot(), incoming_lot.getTemp_partrevision(), incoming_lot);
                 incoming_lot.getTemp_departlot();
                 incoming_lot.getTemp_departlot().setRejected(true);
