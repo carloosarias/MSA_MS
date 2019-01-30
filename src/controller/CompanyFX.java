@@ -121,10 +121,10 @@ public class CompanyFX implements Initializable {
             if(!testFields()){
                 return;
             }
-            if(comp_listview.getSelectionModel().getSelectedItem() != null){
-                msabase.getCompanyDAO().update(mapCompany(comp_listview.getSelectionModel().getSelectedItem()));
-            } else{
+            if(id_field.getText().replace(" ", "").equals("")){
                 msabase.getCompanyDAO().create(mapCompany(new Company()));
+            } else{
+                msabase.getCompanyDAO().update(mapCompany(comp_listview.getSelectionModel().getSelectedItem()));
             }
             setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
             updateList();
@@ -293,13 +293,15 @@ public class CompanyFX implements Initializable {
         comp_listview.getItems().clear();
         switch (filter_combo.getSelectionModel().getSelectedItem()){
             case "Compañías Registradas":
-                comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listActive(true)));
+                comp_listview.getItems().setAll(FXCollections.observableArrayList(msabase.getCompanyDAO().list()));
                 break;
             case "Solo Clientes":
                 comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
+                comp_listview.getItems().addAll(msabase.getCompanyDAO().listClient(false));
                 break;
             case "Solo Proveedores":
                 comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listSupplier(true)));
+                comp_listview.getItems().addAll(msabase.getCompanyDAO().listSupplier(false));
                 break;
         }
        

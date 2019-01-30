@@ -139,10 +139,11 @@ public class CreateIncomingReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        incominglot_tableview.setDisable(incominglot_tableview.getItems().isEmpty());
         departreport_vbox.getChildren().removeAll(departreport_label, departreport_combo, departlot_label, departlot_combo);
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPart_revision_id())).toString()));
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPart_revision_id()).getRev()));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productpart().toString()));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_partrevision().getRev()));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
@@ -199,7 +200,14 @@ public class CreateIncomingReportFX implements Initializable {
         
         part_combo.setOnAction((ActionEvent) -> {
             partcombo_text = part_combo.getEditor().textProperty().getValue();
-            partcombo_selection = msabase.getProductPartDAO().find(partcombo_text);
+            partcombo_selection = null;
+            for(ProductPart product_part : part_combo.getItems()){
+                if(partcombo_text.equals(product_part.getPart_number())){
+                    partcombo_selection = product_part;
+                    break;
+                }
+            }
+            
             if(partcombo_selection == null){
                 part_combo.getEditor().selectAll();
             }else{
@@ -210,12 +218,19 @@ public class CreateIncomingReportFX implements Initializable {
         });
         
         partrev_combo.setOnAction((ActionEvent) -> {
+            
             if(partcombo_selection == null){
                 ActionEvent.consume();
                 return;
             }
                 partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
-                partrevcombo_selection = msabase.getPartRevisionDAO().find(partcombo_selection, partrevcombo_text);
+                partrevcombo_selection = null;
+                for(PartRevision part_revision : partrev_combo.getItems()){
+                    if(partrevcombo_text.equals(part_revision.getRev())){
+                        partrevcombo_selection = part_revision;
+                        break;
+                    }
+                }
                 if(partrevcombo_selection == null){
                     partrev_combo.getEditor().selectAll();
                 }
@@ -246,9 +261,10 @@ public class CreateIncomingReportFX implements Initializable {
             incoming_lot.setBox_quantity(1);
             incoming_lot.setStatus(status_combo.getSelectionModel().getSelectedItem());
             incoming_lot.setComments("");
-            incoming_lot.setPart_revision_id(partrevcombo_selection.getId());
+            incoming_lot.setTemp_productpart(partcombo_selection);
+            incoming_lot.setTemp_partrevision(partrevcombo_selection);
             if(incoming_lot.getStatus().equals("Rechazo")){
-                incoming_lot.setDepart_lot_id(departlotcombo_selection.getId());
+                incoming_lot.setTemp_departlot(departlotcombo_selection);
                 departlot_queue.add(departlotcombo_selection);
                 incoming_lot.setComments(incoming_lot.getComments()+"Folio de Remisión #"+msabase.getDepartLotDAO().findDepartReport(departlotcombo_selection));
             }
@@ -325,20 +341,20 @@ public class CreateIncomingReportFX implements Initializable {
     
     public void saveIncomingLots(IncomingReport incoming_report){
         for(IncomingLot incoming_lot : incoming_lots){
-            if(incoming_lot.getDepart_lot_id() != null){
-                msabase.getIncomingLotDAO().create(incoming_report, msabase.getDepartLotDAO().find(incoming_lot.getDepart_lot_id()), msabase.getPartRevisionDAO().find(incoming_lot.getPart_revision_id()), incoming_lot);
-                DepartLot depart_lot = msabase.getDepartLotDAO().find(incoming_lot.getDepart_lot_id());
-                depart_lot.setRejected(true);
-                msabase.getDepartLotDAO().update(depart_lot);
+            if(incoming_lot.getTemp_departlot().getId() != null){
+                msabase.getIncomingLotDAO().create(incoming_report, incoming_lot.getTemp_departlot(), incoming_lot.getTemp_partrevision(), incoming_lot);
+                incoming_lot.getTemp_departlot();
+                incoming_lot.getTemp_departlot().setRejected(true);
+                msabase.getDepartLotDAO().update(incoming_lot.getTemp_departlot());
             }else{
-                msabase.getIncomingLotDAO().create(incoming_report, msabase.getPartRevisionDAO().find(incoming_lot.getPart_revision_id()), incoming_lot);
+                msabase.getIncomingLotDAO().create(incoming_report, incoming_lot.getTemp_partrevision(), incoming_lot);
             }
         }
     }
     
     public void updateLotListview(){
         incominglot_tableview.setItems(FXCollections.observableArrayList(incoming_lots));
-        incominglot_tableview.disableProperty().bind(Bindings.isEmpty(incominglot_tableview.getItems()));
+        incominglot_tableview.setDisable(incominglot_tableview.getItems().isEmpty());
     }
     
     public void clearFields(){

@@ -19,8 +19,9 @@ public class IncomingLot implements Serializable {
     private Integer box_quantity;
     private String status;
     private String comments;
-    private Integer part_revision_id;
-    private Integer depart_lot_id;
+    private PartRevision temp_partrevision;
+    private DepartLot temp_departlot;
+    private ProductPart temp_productpart;
 
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -71,20 +72,28 @@ public class IncomingLot implements Serializable {
         return comments;
     }
     
-    public void setPart_revision_id(Integer part_revision_id){
-        this.part_revision_id = part_revision_id;
+    public void setTemp_partrevision(PartRevision temp_partrevision){
+        this.temp_partrevision = temp_partrevision;
     }
     
-    public Integer getPart_revision_id(){
-        return part_revision_id;
+    public PartRevision getTemp_partrevision(){
+        return temp_partrevision;
     }
     
-    public void setDepart_lot_id(Integer depart_lot_id){
-        this.depart_lot_id = depart_lot_id;
+    public void setTemp_departlot(DepartLot temp_departlot){
+        this.temp_departlot = temp_departlot;
     }
     
-    public Integer getDepart_lot_id(){
-        return depart_lot_id;
+    public DepartLot getTemp_departlot(){
+        return temp_departlot;
+    }
+    
+    public void setTemp_productpart(ProductPart temp_productpart){
+        this.temp_productpart = temp_productpart;
+    }
+    
+    public ProductPart getTemp_productpart(){
+        return temp_productpart;
     }
     
     // Object overrides ---------------------------------------------------------------------------

@@ -82,7 +82,7 @@ public class Product implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%d",
-                id);
+        return String.format("%s",
+                description);
     } 
 }

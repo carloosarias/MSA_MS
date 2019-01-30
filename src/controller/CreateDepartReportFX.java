@@ -107,9 +107,10 @@ public class CreateDepartReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        departlot_tableview.setDisable(departlot_tableview.getItems().isEmpty());
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getPartRevisionDAO().find(c.getValue().getPart_revision_id())).toString()));
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().find(c.getValue().getPart_revision_id()).getRev()));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productpart().toString()));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_partrevision().getRev()));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
@@ -143,7 +144,14 @@ public class CreateDepartReportFX implements Initializable {
         
         part_combo.setOnAction((ActionEvent) -> {
             partcombo_text = part_combo.getEditor().textProperty().getValue();
-            partcombo_selection = msabase.getProductPartDAO().find(partcombo_text);
+            partcombo_selection = null;
+            for(ProductPart product_part : part_combo.getItems()){
+                if(partcombo_text.equals(product_part.getPart_number())){
+                    partcombo_selection = product_part;
+                    break;
+                }
+            }
+           
             if(partcombo_selection == null){
                 part_combo.getEditor().selectAll();
             }else{
@@ -159,7 +167,13 @@ public class CreateDepartReportFX implements Initializable {
                 return;
             }
             partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
-            partrevcombo_selection = msabase.getPartRevisionDAO().find(partcombo_selection, partrevcombo_text);
+            partrevcombo_selection = null;
+            for(PartRevision part_revision : partrev_combo.getItems()){
+                if(partrevcombo_text.equals(part_revision.getRev())){
+                    partrevcombo_selection = part_revision;
+                    break;
+                }
+            }
             if(partrevcombo_selection == null){
                 partrev_combo.getEditor().selectAll();
             }
@@ -190,7 +204,8 @@ public class CreateDepartReportFX implements Initializable {
             depart_lot.setBox_quantity(1);
             depart_lot.setProcess(process_combo.getSelectionModel().getSelectedItem());
             depart_lot.setComments("n/a");
-            depart_lot.setPart_revision_id(partrevcombo_selection.getId());
+            depart_lot.setTemp_partrevision(partrevcombo_selection);
+            depart_lot.setTemp_productpart(partcombo_selection);
             depart_lot.setPending(true);
             depart_lots.add(depart_lot);
             clearFields();
@@ -248,7 +263,7 @@ public class CreateDepartReportFX implements Initializable {
     
     public void saveDepartLots(DepartReport depart_report){
         for(DepartLot depart_lot : depart_lots){
-            msabase.getDepartLotDAO().create(depart_report, msabase.getPartRevisionDAO().find(depart_lot.getPart_revision_id()), depart_lot);
+            msabase.getDepartLotDAO().create(depart_report, depart_lot.getTemp_partrevision(), depart_lot);
         }
     }
     

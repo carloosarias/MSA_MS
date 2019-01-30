@@ -22,7 +22,8 @@ public class DepartLot implements Serializable {
     private String comments;
     private boolean rejected;
     private boolean pending;
-    private Integer part_revision_id;
+    private PartRevision temp_partrevision;
+    private ProductPart temp_productpart;
 
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -89,12 +90,20 @@ public class DepartLot implements Serializable {
         return pending;
     }
     
-    public void setPart_revision_id(Integer part_revision_id){
-        this.part_revision_id = part_revision_id;
+    public void setTemp_partrevision(PartRevision temp_partrevision){
+        this.temp_partrevision = temp_partrevision;
     }
     
-    public Integer getPart_revision_id(){
-        return part_revision_id;
+    public PartRevision getTemp_partrevision(){
+        return temp_partrevision;
+    }
+    
+    public void setTemp_productpart(ProductPart temp_productpart){
+        this.temp_productpart = temp_productpart;
+    }
+    
+    public ProductPart getTemp_productpart(){
+        return temp_productpart;
     }
     
     public String getStatus(){
