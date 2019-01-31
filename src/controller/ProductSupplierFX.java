@@ -48,7 +48,7 @@ public class ProductSupplierFX implements Initializable {
     @FXML
     private TableColumn<ProductSupplier, String> supplier_column;
     @FXML
-    private TableColumn<ProductSupplier, Double> quantity_column;
+    private TableColumn<ProductSupplier, String> quantity_column;
     @FXML
     private TableColumn<ProductSupplier, String> unitmeasure_column;
     @FXML
@@ -129,9 +129,15 @@ public class ProductSupplierFX implements Initializable {
         description_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(c.getValue()).getDescription()));
         supplier_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findCompany(c.getValue()).getName()));
         unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue()).getUnit_measure()));
-        quantity_column.setCellValueFactory(new PropertyValueFactory("quantity"));
+        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getQuantity())));
+        quantity_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantity_column.setOnEditCommit((TableColumn.CellEditEvent<ProductSupplier, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity(getQuantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getProductSupplierDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            productsupplier_tableview.refresh();
+        });
         unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getUnit_price()/c.getValue().getQuantity()))+" USD"));
-        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getUnit_price()+" USD"));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getUnit_price())+" USD"));
         unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
         unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<ProductSupplier, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnit_price(getUnit_priceValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
@@ -145,6 +151,14 @@ public class ProductSupplierFX implements Initializable {
             return Double.parseDouble(unit_price);
         }catch(Exception e){
             return revision.getUnit_price();
+        }
+    }
+    
+    public Double getQuantityValue(ProductSupplier revision, String quantity){
+        try{
+            return Double.parseDouble(quantity);
+        }catch(Exception e){
+            return revision.getQuantity();
         }
     }
 }
