@@ -122,9 +122,8 @@ public interface DepartLotDAO {
      */    
     public void delete(DepartLot depart_lot) throws DAOException;
     
-    public Integer getPartRevisionQuantity(DepartReport depart_report, PartRevision part_revision);
-    
-    public Integer getPartRevisionBoxQuantity(DepartReport depart_report, PartRevision part_revision);
+    public Integer findTotalQuantity(DepartReport incoming_report, PartRevision part_revision);
+    public Integer findTotalBoxQuantity(DepartReport incoming_report, PartRevision part_revision);
     
     public List<DepartLot> listDateRange(ProductPart product_part, Date start, Date end);
 }

@@ -422,8 +422,8 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
         }
         
-        if(incoming_report.getId() == null) {
-            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
+        if(part_revision.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
         Integer total_quantity = 0;
@@ -455,8 +455,8 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
         }
         
-        if(incoming_report.getId() == null) {
-            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
+        if(part_revision.getId() == null) {
+            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
         Integer total_quantity = 0;

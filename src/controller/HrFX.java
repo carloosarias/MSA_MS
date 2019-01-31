@@ -100,6 +100,7 @@ public class HrFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        edit_button.setDisable(true);
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
         updateList();
@@ -115,6 +116,7 @@ public class HrFX implements Initializable {
         
         emp_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) -> {
             setFieldValues(emp_listview.getSelectionModel().getSelectedItem());
+            edit_button.setDisable(emp_listview.getSelectionModel().isEmpty());
         });
         
         module_list.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {

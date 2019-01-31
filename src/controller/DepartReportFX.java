@@ -7,16 +7,11 @@ package controller;
 
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.fields.PdfFormField;
-import com.itextpdf.io.font.PdfEncodings;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
-import java.awt.Desktop;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
@@ -165,8 +160,8 @@ public class DepartReportFX implements Initializable {
             msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString())
         );
         revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getPartRevisionQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
-        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().getPartRevisionBoxQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findTotalQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findTotalBoxQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
     }
     
     public void setLotTable(){
@@ -187,8 +182,8 @@ public class DepartReportFX implements Initializable {
             Map<String, PdfFormField> fields = form.getFormFields();
             fields.get("depart_report_id").setValue(""+depart_report.getId());
             fields.get("date").setValue(depart_report.getReport_date().toString());
-            fields.get("client").setValue(msabase.getDepartReportDAO().findCompany(depart_report).getName());
-            fields.get("client_address").setValue(msabase.getDepartReportDAO().findCompanyAddress(depart_report).getAddress());
+            fields.get("client").setValue(report_client_column.getCellData(depart_report));
+            fields.get("client_address").setValue(address_column.getCellData(depart_report));
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report));
             if(company_contact.isEmpty()){
                 fields.get("contact").setValue("n/a");
@@ -199,14 +194,15 @@ public class DepartReportFX implements Initializable {
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());
                 fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
             }
-            List<PartRevision> part_revision_list = msabase.getDepartLotDAO().listPartRevision(depart_report);
+            
+            List<PartRevision> part_revision_list = partrevision_tableview.getItems();
             int i = 0;
             for(PartRevision part_revision : part_revision_list){
                 List<String> process_list = msabase.getDepartLotDAO().listProcess(part_revision, depart_report);
                 for(String process : process_list){
                     int current_row = i+1;
                     if(current_row > 26) break;
-                    fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(part_revision).getPart_number());
+                    fields.get("part_number"+current_row).setValue(part_column.getCellData(part_revision));
                     fields.get("revision"+current_row).setValue(part_revision.getRev());
                     fields.get("description"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(part_revision).getDescription());
                     fields.get("process"+current_row).setValue(process);

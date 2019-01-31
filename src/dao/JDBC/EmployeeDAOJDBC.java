@@ -90,6 +90,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             if (resultSet.next()) {
                 employee = map(resultSet);
             }
+            connection.close();
         } catch (SQLException e) {
             throw new DAOException(e);
         }
@@ -109,6 +110,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             while(resultSet.next()){
                 employees.add(map(resultSet));
             }
+            connection.close();
         } catch(SQLException e){
             throw new DAOException(e);
         }
@@ -132,6 +134,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             while(resultSet.next()){
                 employees.add(map(resultSet));
             }
+            connection.close();
         } catch(SQLException e){
             throw new DAOException(e);
         }
@@ -168,14 +171,14 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
                 throw new DAOException("Creating Employee failed, no rows affected.");
             }
             
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            try(ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     employee.setId(generatedKeys.getInt(1));
                 } else {
                     throw new DAOException("Creating Employee failed, no generated key obtained.");
                 }
             }
-            
+            connection.close();
         } catch (SQLException e){
             throw new DAOException(e);
         }
@@ -209,6 +212,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             if(affectedRows == 0){
                 throw new DAOException("Updating Employee failed, no rows affected.");
             }
+            connection.close();
         } catch(SQLException e){
             throw new DAOException(e);
         }
@@ -230,6 +234,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             } else{
                 employee.setId(null);
             }
+            connection.close();
         } catch(SQLException e){
             throw new DAOException(e);
         }
@@ -249,10 +254,10 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             exist = resultSet.next();
+            connection.close();
         }catch(SQLException e){
             throw new DAOException(e);
         }
-        
         return exist;
     }
     
@@ -271,6 +276,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             exist = resultSet.next();
+            connection.close();
         }catch(SQLException e){
             throw new DAOException(e);
         }
@@ -297,6 +303,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             if(affectedRows == 0){
                 throw new DAOException("Changing password failed, no rows affected.");
             }
+            connection.close();
         } catch(SQLException e){
             throw new DAOException(e);
         }
