@@ -64,6 +64,7 @@ public class ProductSupplierFX implements Initializable {
     
     private Stage add_stage = new Stage();
     
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**

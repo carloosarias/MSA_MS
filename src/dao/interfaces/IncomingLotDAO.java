@@ -141,9 +141,8 @@ public interface IncomingLotDAO {
      */    
     public void delete(IncomingLot incoming_lot) throws DAOException;
     
-    public Integer getPartRevisionQuantity(IncomingReport incoming_report, PartRevision part_revision);
-    
-    public Integer getPartRevisionBoxQuantity(IncomingReport incoming_report, PartRevision part_revision);
+    public Integer findTotalQuantity(IncomingReport incoming_report, PartRevision part_revision);
+    public Integer findTotalBoxQuantity(IncomingReport incoming_report, PartRevision part_revision);
     
     public List<IncomingLot> listDateRange(ProductPart product_part, boolean discrepancy, Date start, Date end);
 }

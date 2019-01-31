@@ -144,8 +144,8 @@ public class IncomingReportFX implements Initializable {
                 msabase.getPartRevisionDAO().findProductPart(c.getValue()).getPart_number()
         ));
         revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().getPartRevisionQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
-        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().getPartRevisionBoxQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().findTotalQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().findTotalBoxQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
     }
     
     public void setLotTable(){
@@ -154,5 +154,7 @@ public class IncomingReportFX implements Initializable {
         lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         lot_status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         lot_comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        
     }
+    
 }
