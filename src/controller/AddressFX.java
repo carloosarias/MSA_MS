@@ -20,7 +20,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import model.Company;
 import model.CompanyAddress;
 
 /**
@@ -96,10 +95,10 @@ public class AddressFX implements Initializable {
             if(!testFields()){
                 return;
             }
-            if(address_listview.getSelectionModel().getSelectedItem() != null){
-                msabase.getCompanyAddressDAO().update(mapAddress(address_listview.getSelectionModel().getSelectedItem()));
-            } else{
+            if(id_field.getText().replace(" ", "").equals("")){
                 msabase.getCompanyAddressDAO().create(msabase.getCompanyDAO().find(CompanyFX.getCompanyId()),mapAddress(new CompanyAddress()));
+            } else{
+                msabase.getCompanyAddressDAO().update(mapAddress(address_listview.getSelectionModel().getSelectedItem()));
             }
             updateList();
             disableFields(true);

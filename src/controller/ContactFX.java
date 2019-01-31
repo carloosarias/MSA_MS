@@ -81,10 +81,10 @@ public class ContactFX implements Initializable {
             if(!testFields()){
                 return;
             }
-            if(contact_listview.getSelectionModel().getSelectedItem() != null){
-                msabase.getCompanyContactDAO().update(mapContact(contact_listview.getSelectionModel().getSelectedItem()));
-            } else{
+            if(id_field.getText().replace(" ", "").equals("")){
                 msabase.getCompanyContactDAO().create(msabase.getCompanyDAO().find(CompanyFX.getCompanyId()),mapContact(new CompanyContact()));
+            } else{
+                msabase.getCompanyContactDAO().update(mapContact(contact_listview.getSelectionModel().getSelectedItem()));
             }
             updateList();
             disableFields(true);

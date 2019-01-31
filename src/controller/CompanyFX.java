@@ -104,7 +104,8 @@ public class CompanyFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            setFieldValues(null);
+            comp_listview.getSelectionModel().clearSelection();
+            //setFieldValues(null);
             disableFields(false);
             contact_button.setDisable(true);
             address_button.setDisable(true);
@@ -113,7 +114,6 @@ public class CompanyFX implements Initializable {
         cancel_button.setOnAction((ActionEvent) -> {
             filter_combo.getOnAction();
             setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
-            closeOther();
             disableFields(true);
         });
         
@@ -128,7 +128,6 @@ public class CompanyFX implements Initializable {
             }
             setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
             updateList();
-            closeOther();
             disableFields(true);
         });
         
@@ -141,11 +140,11 @@ public class CompanyFX implements Initializable {
         });
         
         address_button.setOnAction((ActionEvent) -> {
-            showAddress();
+            showAddressStage();
         });
         
         contact_button.setOnAction((ActionEvent) -> {
-            showContact();
+            showContactStage();
         });
     }
     
@@ -158,7 +157,7 @@ public class CompanyFX implements Initializable {
         }
     }
     
-    public void showAddress(){
+    public void showAddressStage(){
         try {
             addressStage = new Stage();
             addressStage.initOwner((Stage) root_hbox.getScene().getWindow());
@@ -166,7 +165,7 @@ public class CompanyFX implements Initializable {
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddressFX.fxml"));
             Scene scene = new Scene(root);
             
-            addressStage.setTitle("Opciones");
+            addressStage.setTitle("Administrar Direcciones de Compañía");
             addressStage.setResizable(false);
             addressStage.initStyle(StageStyle.UTILITY);
             addressStage.setScene(scene);
@@ -176,7 +175,7 @@ public class CompanyFX implements Initializable {
         }
     }
     
-    public void showContact(){
+    public void showContactStage(){
         try {
             contactStage = new Stage();
             contactStage.initOwner((Stage) root_hbox.getScene().getWindow());
@@ -184,7 +183,7 @@ public class CompanyFX implements Initializable {
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/ContactFX.fxml"));
             Scene scene = new Scene(root);
             
-            contactStage.setTitle("Opciones");
+            contactStage.setTitle("Administrar Contactos de Compañía");
             contactStage.setResizable(false);
             contactStage.initStyle(StageStyle.UTILITY);
             contactStage.setScene(scene);
