@@ -26,9 +26,9 @@
                         <TableColumn fx:id="quantity_column" prefWidth="100.0" resizable="false" text="Presentación" />
                         <TableColumn fx:id="unitmeasure_column" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
                         <TableColumn fx:id="unitmeasureprice_column" prefWidth="100.0" text="Valor Unitario" />
-                        <TableColumn fx:id="unitprice_column" prefWidth="150.0" resizable="false" sortable="false" text="Precio Cotizado" />
                      </columns>
                   </TableColumn>
+                  <TableColumn fx:id="unitprice_column" prefWidth="150.0" resizable="false" sortable="false" text="Precio Cotizado Por Bulto" />
               </columns>
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

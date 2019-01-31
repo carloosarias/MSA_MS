@@ -90,6 +90,8 @@ public final class DAOUtil {
         java.sql.Date sqlDate = java.sql.Date.valueOf(date); 
         java.util.Date utilDate = new java.util.Date();
         utilDate.setDate(sqlDate.getDate());
+        utilDate.setMonth(sqlDate.getMonth());
+        utilDate.setYear(sqlDate.getYear());
         utilDate.setHours(17);
         utilDate.setMinutes(0);
         return utilDate;
