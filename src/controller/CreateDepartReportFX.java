@@ -203,7 +203,7 @@ public class CreateDepartReportFX implements Initializable {
             depart_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
             depart_lot.setBox_quantity(1);
             depart_lot.setProcess(process_combo.getSelectionModel().getSelectedItem());
-            depart_lot.setComments("n/a");
+            depart_lot.setComments("N/A");
             depart_lot.setTemp_partrevision(partrevcombo_selection);
             depart_lot.setTemp_productpart(partcombo_selection);
             depart_lot.setPending(true);

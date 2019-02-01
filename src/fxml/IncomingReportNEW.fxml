@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.IncomingReportFX">
+   <children>
+      <VBox alignment="CENTER">
+         <children>
+            <TabPane tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab closable="false" text="Historial de Reporte">
+                     <content>
+                        <VBox>
+                           <children>
+                              <HBox>
+                                 <children>
+                                    <TableView fx:id="incoming_report_tableview">
+                                      <columns>
+                                          <TableColumn fx:id="report_id_column" prefWidth="99.0" resizable="false" text="# De Folio" />
+                                          <TableColumn fx:id="report_employee_column" prefWidth="166.0" resizable="false" text="Empleado" />
+                                        <TableColumn fx:id="report_date_column" prefWidth="123.0" resizable="false" text="Fecha de Reporte" />
+                                        <TableColumn fx:id="report_client_column" prefWidth="133.0" resizable="false" text="Cliente" />
+                                          <TableColumn fx:id="report_ponumber_column" prefWidth="169.0" resizable="false" text="# De Orden de Cliente" />
+                                          <TableColumn fx:id="report_packinglist_column" prefWidth="170.0" resizable="false" text="# De Packing List" />
+                                          <TableColumn fx:id="discrepancy_column" minWidth="-1.0" prefWidth="100.0" resizable="false" text="Estado" />
+                                      </columns>
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </TableView>
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+                <Tab closable="false" text="Detalles de Selección">
+                     <content>
+                        <TabPane tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab text="Detalles Por # de Parte">
+                                 <content>
+                                    <VBox>
+                                       <children>
+                                          <HBox alignment="CENTER">
+                                             <children>
+                                                <TableView fx:id="partrevision_tableview" prefWidth="962.0">
+                                                   <columns>
+                                                      <TableColumn fx:id="part_column" prefWidth="380.0" resizable="false" text="# De Parte" />
+                                                      <TableColumn fx:id="revision_column" prefWidth="380.0" resizable="false" text="# de Revisión" />
+                                                      <TableColumn prefWidth="200.0" resizable="false" text="Cantidad">
+                                                         <columns>
+                                                            <TableColumn fx:id="item_qty_column" prefWidth="100.0" resizable="false" text="# De Piezas" />
+                                                            <TableColumn fx:id="item_boxqty_column" prefWidth="100.0" resizable="false" text="# De Cajas" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                   </columns>
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TableView>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </Tab>
+                              <Tab text="Detalles Por # de Lote">
+                                 <content>
+                                    <VBox>
+                                       <children>
+                                          <HBox alignment="CENTER">
+                                             <children>
+                                                <TableView prefWidth="962.0">
+                                                  <columns>
+                                                    <TableColumn prefWidth="255.0" resizable="false" text="# De Parte" />
+                                                    <TableColumn prefWidth="250.0" resizable="false" text="# De Revisión" />
+                                                      <TableColumn prefWidth="255.0" resizable="false" text="# De Lote" />
+                                                      <TableColumn prefWidth="75.0" resizable="false" text="Cantidad">
+                                                         <columns>
+                                                            <TableColumn prefWidth="100.0" resizable="false" text="# De Piezas" />
+                                                            <TableColumn prefWidth="100.0" resizable="false" text="# De Cajas" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                  </columns>
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TableView>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content></Tab>
+                            <Tab text="Detalles Por Caja">
+                                 <content>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <HBox alignment="CENTER">
+                                             <children>
+                                                <TableView fx:id="incominglot_tableview" prefWidth="962.0">
+                                                   <columns>
+                                                      <TableColumn prefWidth="150.0" text="# De Parte" />
+                                                      <TableColumn prefWidth="150.0" text="# De Revisión" />
+                                                      <TableColumn fx:id="lot_column" prefWidth="150.0" resizable="false" text="# De Lote" />
+                                                      <TableColumn prefWidth="200.0" resizable="false" text="Cantidad">
+                                                         <columns>
+                                                            <TableColumn fx:id="lot_qty" prefWidth="100.0" resizable="false" text="# De Piezas" />
+                                                            <TableColumn fx:id="lot_boxqty_column" prefWidth="100.0" resizable="false" text="# De Cajas" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn fx:id="lot_status_column" prefWidth="100.0" resizable="false" text="Estado" />
+                                                      <TableColumn fx:id="lot_comments_column" prefWidth="210.0" resizable="false" text="Comentarios" />
+                                                   </columns>
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TableView>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                              </Tab>
+                          </tabs>
+                        </TabPane>
+                     </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </VBox>
+   </children>
+</HBox>

@@ -19,6 +19,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -198,6 +199,7 @@ public class DepartReportFX implements Initializable {
             Map<String, PdfFormField> fields = form.getFormFields();
             fields.get("depart_report_id").setValue(""+depart_report.getId());
             fields.get("date").setValue(depart_report.getReport_date().toString());
+            fields.get("employee_email").setValue("cmartinez@maquilasales.com");
             fields.get("client").setValue(report_client_column.getCellData(depart_report));
             fields.get("client_address").setValue(address_column.getCellData(depart_report));
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report));
@@ -211,27 +213,55 @@ public class DepartReportFX implements Initializable {
                 fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
             }
             
+            
+            
             List<PartRevision> part_revision_list = partrevision_tableview.getItems();
             int i = 0;
             for(PartRevision part_revision : part_revision_list){
                 List<String> process_list = msabase.getDepartLotDAO().listProcess(part_revision, depart_report);
                 for(String process : process_list){
-                    int current_row = i+1;
-                    if(current_row > 26) break;
-                    fields.get("part_number"+current_row).setValue(part_column.getCellData(part_revision));
-                    fields.get("revision"+current_row).setValue(part_revision.getRev());
-                    fields.get("description"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(part_revision).getDescription());
-                    fields.get("process"+current_row).setValue(process);
-                    List<DepartLot> depart_lot_list = msabase.getDepartLotDAO().list(part_revision, process, depart_report);
-                    int quantity = 0;
-                    int quantity_box = 0;
-                    for(DepartLot depart_lot : depart_lot_list){
-                        quantity += depart_lot.getQuantity();
-                        quantity_box += depart_lot.getBox_quantity();
+                    List<DepartLot> departlot_list = msabase.getDepartLotDAO().list(part_revision, process, depart_report);
+                    List<String> lotnumber_list = new ArrayList();
+                    
+                    for(DepartLot depart_lot : departlot_list){
+                        if(!lotnumber_list.contains(depart_lot.getLot_number())){
+                            lotnumber_list.add(depart_lot.getLot_number());
+                        }
                     }
-                    fields.get("quantity"+current_row).setValue(""+quantity);
-                    fields.get("quantity_box"+current_row).setValue(""+quantity_box);
-                    i++;
+                    
+                    for(String lot_number : lotnumber_list){
+                        int current_row = i+1;
+                        if(current_row > 26) break;
+                        int quantity = 0;
+                        int quantity_box = 0;
+                        fields.get("part_number"+current_row).setValue(part_column.getCellData(part_revision));
+                        fields.get("lotnumber"+current_row).setValue(lot_number);
+                        fields.get("process"+current_row).setValue(process);
+                        List<String> departlot_listcomments = new ArrayList();
+                        
+                        for(DepartLot depart_lot : departlot_list){
+                            if(depart_lot.getLot_number().equals(lot_number)){
+                                if(!depart_lot.getComments().equalsIgnoreCase("N/A") && !depart_lot.getComments().replace(" ", "").equals("")){
+                                    departlot_listcomments.add(depart_lot.getComments());
+                                }
+                                quantity += depart_lot.getQuantity();
+                                quantity_box += depart_lot.getBox_quantity();
+                            }
+                        }
+                        fields.get("quantity"+current_row).setValue(""+quantity);
+                        fields.get("quantity_box"+current_row).setValue(""+quantity_box);
+                        
+                        if(!departlot_listcomments.isEmpty()){
+                            for(String comment : departlot_listcomments){
+                                current_row = i+1;
+                                if(current_row > 26) break;
+                                fields.get("description"+current_row).setValue(comment);
+                                i++;
+                            }
+                        }
+                        i++;
+                    }
+                    
                 }
             }
             
