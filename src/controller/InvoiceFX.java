@@ -13,7 +13,11 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -123,8 +127,7 @@ public class InvoiceFX implements Initializable {
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
-                buildPDF(invoice_tableview.getSelectionModel().getSelectedItem());
-                MainApp.openPDF("./src/pdf/InvoicePDF.pdf");
+                MainApp.openPDF(buildPDF(invoice_tableview.getSelectionModel().getSelectedItem()));
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -214,11 +217,21 @@ public class InvoiceFX implements Initializable {
                 msabase.getInvoiceItemDAO().findQuote(c.getValue()).getEstimated_total()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
     }
 
-    private void buildPDF(Invoice invoice) throws IOException {
+    private File buildPDF(Invoice invoice) throws IOException {
+            Path template = Files.createTempFile("InvoiceTemplate", ".pdf");
+            template.toFile().deleteOnExit();
+            try (InputStream is = MainApp.class.getClassLoader().getResourceAsStream("template/InvoiceTemplate.pdf")) {
+                Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
+            }
+            
+            Path output = Files.createTempFile("FacturaPDF", ".pdf");
+            template.toFile().deleteOnExit();            
+            
             PdfDocument pdf = new PdfDocument(
-                new PdfReader(new File("./src/template/InvoiceTemplate.pdf")),
-                new PdfWriter(new File("./src/pdf/InvoicePDF.pdf"))
+                new PdfReader(template.toFile()),
+                new PdfWriter(output.toFile())
             );
+            
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
             Map<String, PdfFormField> fields = form.getFormFields();
             fields.get("invoice_id").setValue(""+invoice.getId());
@@ -260,25 +273,10 @@ public class InvoiceFX implements Initializable {
             }
             fields.get("total_price").setValue("$ "+total_price);
             
-            /*List<PartRevision> part_revision_list = msabase.getInvoiceItemDAO().listPartRevision(invoice);
-            int i = 0;
-            double total_price = 0;
-            for(PartRevision part_revision : part_revision_list){
-                int current_row = i+1;
-                if(current_row > 26) break;
-                List<InvoiceItem> invoice_item_list = msabase.getInvoiceItemDAO().list(invoice, part_revision);
-                int quantity = 0;
-                int quantity_box = 0;
-                double unit_price = 0;
-                for(InvoiceItem invoice_item : invoice_item_list){
-                    quantity += msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getQuantity();
-                    quantity_box += msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getBox_quantity();
-                    unit_price = msabase.getInvoiceItemDAO().findQuote(invoice_item).getUnit_price();
-                }
-                double lot_price = unit_price * quantity;
-                total_price += lot_price;
-            }*/
+
             form.flattenFields();
             pdf.close();
+            
+            return output.toFile();
     }
 }

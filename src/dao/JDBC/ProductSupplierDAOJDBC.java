@@ -26,17 +26,37 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, unit_price, quantity, active FROM PRODUCT_SUPPLIER WHERE id = ?";
+            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, "
+            + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name "
+            + "FROM PRODUCT_SUPPLIER "
+            + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
+            + "INNER JOIN COMPANY ON PRODUCT_SUPPLIER.COMPANY_ID = COMPANY.id "
+            + "WHERE PRODUCT_SUPPLIER.id = ?";
     private static final String SQL_FIND_PRODUCT_BY_ID = 
             "SELECT PRODUCT_ID FROM PRODUCT_SUPPLIER WHERE id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM PRODUCT_SUPPLIER WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, unit_price, quantity, active FROM PRODUCT_SUPPLIER WHERE active = ? ORDER BY id";
+            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, "
+            + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name "
+            + "FROM PRODUCT_SUPPLIER "
+            + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
+            + "INNER JOIN COMPANY ON PRODUCT_SUPPLIER.COMPANY_ID = COMPANY.id "
+            + "WHERE PRODUCT_SUPPLIER.active = ? ORDER BY PRODUCT_SUPPLIER.id";
     private static final String SQL_LIST_PRODUCT_ORDER_BY_ID = 
-            "SELECT id, unit_price, quantity, active FROM PRODUCT_SUPPLIER WHERE PRODUCT_ID = ? ORDER BY id";
+            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, "
+            + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name "
+            + "FROM PRODUCT_SUPPLIER "
+            + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
+            + "INNER JOIN COMPANY ON PRODUCT_SUPPLIER.COMPANY_ID = COMPANY.id "
+            + "WHERE PRODUCT_SUPPLIER.PRODUCT_ID = ? ORDER BY PRODUCT_SUPPLIER.id";
     private static final String SQL_LIST_COMPANY_ORDER_BY_ID = 
-            "SELECT id, unit_price, quantity, active FROM PRODUCT_SUPPLIER WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, "
+            + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name "
+            + "FROM PRODUCT_SUPPLIER "
+            + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
+            + "INNER JOIN COMPANY ON PRODUCT_SUPPLIER.COMPANY_ID = COMPANY.id "
+            + "WHERE PRODUCT_SUPPLIER.COMPANY_ID = ? ORDER BY PRODUCT_SUPPLIER.id";
     private static final String SQL_INSERT = 
             "INSERT INTO PRODUCT_SUPPLIER (PRODUCT_ID, COMPANY_ID, unit_price, quantity, active) "
             + "VALUES(?, ?, ?, ?, ?)";
@@ -320,10 +340,15 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
      */
     public static ProductSupplier map(ResultSet resultSet) throws SQLException{
         ProductSupplier product_supplier = new ProductSupplier();
-        product_supplier.setId(resultSet.getInt("id"));
-        product_supplier.setUnit_price(resultSet.getDouble("unit_price"));
-        product_supplier.setQuantity(resultSet.getDouble("quantity"));
-        product_supplier.setActive(resultSet.getBoolean("active"));
+        product_supplier.setId(resultSet.getInt("PRODUCT_SUPPLIER.id"));
+        product_supplier.setUnit_price(resultSet.getDouble("PRODUCT_SUPPLIER.unit_price"));
+        product_supplier.setQuantity(resultSet.getDouble("PRODUCT_SUPPLIER.quantity"));
+        product_supplier.setActive(resultSet.getBoolean("PRODUCT_SUPPLIER.active"));
+        
+        //INNER JOINS
+        product_supplier.setProduct_description(resultSet.getString("PRODUCT.description"));
+        product_supplier.setProduct_unitmeasure(resultSet.getString("PRODUCT.unit_measure"));
+        product_supplier.setCompany_name(resultSet.getString("COMPANY.name"));
         return product_supplier;
     }
 }

@@ -13,7 +13,11 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -166,8 +170,7 @@ public class QuoteFX implements Initializable {
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
-                buildPDF(quote_tableview.getSelectionModel().getSelectedItem());
-                MainApp.openPDF("./src/pdf/QuotePDF.pdf");
+                MainApp.openPDF(buildPDF(quote_tableview.getSelectionModel().getSelectedItem()));
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -288,34 +291,49 @@ public class QuoteFX implements Initializable {
         });
     }
     
-    private void buildPDF(Quote quote) throws IOException {
-            PdfDocument pdf = new PdfDocument(
-                new PdfReader(new File("./src/template/QuoteTemplate.pdf")),
-                new PdfWriter(new File("./src/pdf/QuotePDF.pdf"))
-            );
-            PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
-            Map<String, PdfFormField> fields = form.getFormFields();
-            fields.get("quote_id").setValue(""+quote.getId());
-            fields.get("date").setValue(quote.getQuote_date().toString());
-            fields.get("client").setValue(msabase.getCompanyContactDAO().findCompany(msabase.getQuoteDAO().findCompanyContact(quote)).getName());
-            fields.get("contact").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getName());
-            fields.get("contact_email").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getEmail());
-            fields.get("contact_number").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getPhone_number());
-            List<CompanyAddress> company_address = msabase.getCompanyAddressDAO().listActive(msabase.getCompanyContactDAO().findCompany(msabase.getQuoteDAO().findCompanyContact(quote)), true);
-            if(company_address.isEmpty()){
-                fields.get("client_address").setValue("n/a");
-            }else{
-                fields.get("client_address").setValue(company_address.get(0).getAddress());
-            }
-            fields.get("part_number").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getPart_number());
-            fields.get("revision").setValue(msabase.getQuoteDAO().findPartRevision(quote).getRev());
-            fields.get("description").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getDescription());
-            fields.get("process").setValue(msabase.getPartRevisionDAO().findSpecification(partrevision_selection).getProcess());
-            fields.get("eau").setValue(""+quote.getEstimated_annual_usage());
-            fields.get("unit_price").setValue(""+quote.getEstimated_total());
-            fields.get("comments").setValue(quote.getComments());
-            form.flattenFields();
-            pdf.close();
+    private File buildPDF(Quote quote) throws IOException {
+        
+        Path template = Files.createTempFile("OrderPurchaseTemplate", ".pdf");
+        template.toFile().deleteOnExit();
+        
+        try (InputStream is = MainApp.class.getClassLoader().getResourceAsStream("template/OrderPurchaseTemplate.pdf")) {
+            Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        Path output = Files.createTempFile("OrdenDeCompraPDF", ".pdf");
+        template.toFile().deleteOnExit();  
+        
+        PdfDocument pdf = new PdfDocument(
+            new PdfReader(template.toFile()),
+            new PdfWriter(output.toFile())
+        );
+            
+        PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
+        Map<String, PdfFormField> fields = form.getFormFields();
+        
+        fields.get("quote_id").setValue(""+quote.getId());
+        fields.get("date").setValue(quote.getQuote_date().toString());
+        fields.get("client").setValue(msabase.getCompanyContactDAO().findCompany(msabase.getQuoteDAO().findCompanyContact(quote)).getName());
+        fields.get("contact").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getName());
+        fields.get("contact_email").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getEmail());
+        fields.get("contact_number").setValue(msabase.getQuoteDAO().findCompanyContact(quote).getPhone_number());
+        List<CompanyAddress> company_address = msabase.getCompanyAddressDAO().listActive(msabase.getCompanyContactDAO().findCompany(msabase.getQuoteDAO().findCompanyContact(quote)), true);
+        if(company_address.isEmpty()){
+            fields.get("client_address").setValue("n/a");
+        }else{
+            fields.get("client_address").setValue(company_address.get(0).getAddress());
+        }
+        fields.get("part_number").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getPart_number());
+        fields.get("revision").setValue(msabase.getQuoteDAO().findPartRevision(quote).getRev());
+        fields.get("description").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getDescription());
+        fields.get("process").setValue(msabase.getPartRevisionDAO().findSpecification(partrevision_selection).getProcess());
+        fields.get("eau").setValue(""+quote.getEstimated_annual_usage());
+        fields.get("unit_price").setValue(""+quote.getEstimated_total());
+        fields.get("comments").setValue(quote.getComments());
+        form.flattenFields();
+        pdf.close();
+        
+        return output.toFile();
     }
     
     public static PartRevision getPartrevision_selection(){

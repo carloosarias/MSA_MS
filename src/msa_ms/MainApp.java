@@ -1,8 +1,14 @@
 package msa_ms;
 
+import static com.itextpdf.kernel.pdf.PdfName.Path;
 import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
@@ -60,8 +66,7 @@ public class MainApp extends Application{
             "Cancelada"
     );
 
-    public static void openPDF(String path) throws IOException{
-        File file = new File(path);
+    public static void openPDF(File file) throws IOException{
         Desktop.getDesktop().open(file);
     }
     

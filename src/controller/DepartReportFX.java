@@ -11,9 +11,14 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +45,7 @@ import model.DepartLot;
 import model.DepartReport;
 import model.PartRevision;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.openPDF;
 
 /**
  * FXML Controller class
@@ -120,8 +126,7 @@ public class DepartReportFX implements Initializable {
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
-                buildPDF(depart_report_tableview.getSelectionModel().getSelectedItem());
-                MainApp.openPDF("./src/pdf/DepartReportPDF.pdf");
+                MainApp.openPDF(buildPDF(depart_report_tableview.getSelectionModel().getSelectedItem()));
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -172,10 +177,21 @@ public class DepartReportFX implements Initializable {
         lot_comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
 
-    private void buildPDF(DepartReport depart_report) throws Exception{
+    private File buildPDF(DepartReport depart_report) throws Exception{
+        
+            Path template = Files.createTempFile("DepartReportTemplate", ".pdf");
+            template.toFile().deleteOnExit();
+            
+            try (InputStream is = MainApp.class.getClassLoader().getResourceAsStream("template/DepartReportTemplate.pdf")) {
+                Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
+            }
+            
+            Path output = Files.createTempFile("RemisionPDF", ".pdf");
+            template.toFile().deleteOnExit();
+            
             PdfDocument pdf = new PdfDocument(
-                new PdfReader(new File("./src/template/DepartReportTemplate.pdf")),
-                new PdfWriter(new File("./src/pdf/DepartReportPDF.pdf"))
+                new PdfReader(template.toFile()),
+                new PdfWriter(output.toFile())
             );
             
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
@@ -221,6 +237,8 @@ public class DepartReportFX implements Initializable {
             
             form.flattenFields();
             pdf.close();
+            
+            return output.toFile();
     }
     
 }

@@ -13,7 +13,11 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -139,8 +143,7 @@ public class OrderPurchaseFX implements Initializable {
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
-                buildPDF(orderpurchase_tableview.getSelectionModel().getSelectedItem());
-                MainApp.openPDF("./src/pdf/OrdenDeCompraPDF.pdf");
+                MainApp.openPDF(buildPDF(orderpurchase_tableview.getSelectionModel().getSelectedItem()));
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -207,40 +210,51 @@ public class OrderPurchaseFX implements Initializable {
         total_field.setText(""+(Double.parseDouble(subtotal_field.getText())+Double.parseDouble(iva_field.getText())));
     }
     
-    public void buildPDF(OrderPurchase order_purchase) throws IOException{
-            PdfDocument pdf = new PdfDocument(
-                new PdfReader(new File("./src/template/OrderPurchaseTemplate.pdf")),
-                new PdfWriter(new File("./src/pdf/OrdenDeCompraPDF.pdf"))
-            );
-            
-            PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
-            Map<String, PdfFormField> fields = form.getFormFields();
-            fields.get("id").setValue(""+order_purchase.getId());
-            fields.get("report_date").setValue(order_purchase.getReport_date().toString());
-            fields.get("company_name").setValue(msabase.getOrderPurchaseDAO().findCompany(order_purchase).getName());
-            fields.get("company_address").setValue(msabase.getOrderPurchaseDAO().findCompanyAddress(order_purchase).getAddress());
-            fields.get("iva_rate").setValue("%"+order_purchase.getIva_rate());
-            fields.get("exchange_rate").setValue("$1 USD = $"+order_purchase.getExchange_rate()+" MXN");
-            fields.get("comments").setValue(order_purchase.getComments());
-            
-            List<PurchaseItem> purchaseitem_list = purchaseitem_tableview.getItems();
-            int i = 0;
-            for(PurchaseItem purchase_item : purchaseitem_list){
-                int current_row = i+1;
-                fields.get("quantity_ordered"+current_row).setValue("x"+purchase_item.getUnits_ordered());
-                fields.get("description"+current_row).setValue(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(purchase_item)).getDescription());
-                fields.get("quantity"+current_row).setValue(""+msabase.getPurchaseItemDAO().findProductSupplier(purchase_item).getQuantity());
-                fields.get("unit_measure"+current_row).setValue(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(purchase_item)).getUnit_measure());
-                fields.get("unit_price"+current_row).setValue("$"+purchase_item.getPrice_unit()+" USD");
-                fields.get("price_lot"+current_row).setValue("$ "+purchase_item.getPrice_total()+" USD");
-                i++;
-            }
-            fields.get("subtotal").setValue("$ "+subtotal_field.getText()+" USD");
-            fields.get("iva").setValue("$ "+iva_field.getText()+" USD");
-            fields.get("total").setValue("$ "+total_field.getText()+" USD");
-            
-            form.flattenFields();
-            pdf.close();
+    public File buildPDF(OrderPurchase order_purchase) throws IOException{
+        Path template = Files.createTempFile("OrderPurchaseTemplate", ".pdf");
+        template.toFile().deleteOnExit();
+        try (InputStream is = MainApp.class.getClassLoader().getResourceAsStream("template/OrderPurchaseTemplate.pdf")) {
+            Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        Path output = Files.createTempFile("OrdenDeCompraPDF", ".pdf");
+        template.toFile().deleteOnExit();  
+        
+        PdfDocument pdf = new PdfDocument(
+            new PdfReader(template.toFile()),
+            new PdfWriter(output.toFile())
+        );
+
+        PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
+        Map<String, PdfFormField> fields = form.getFormFields();
+        fields.get("id").setValue(""+order_purchase.getId());
+        fields.get("report_date").setValue(order_purchase.getReport_date().toString());
+        fields.get("company_name").setValue(msabase.getOrderPurchaseDAO().findCompany(order_purchase).getName());
+        fields.get("company_address").setValue(msabase.getOrderPurchaseDAO().findCompanyAddress(order_purchase).getAddress());
+        fields.get("iva_rate").setValue("%"+order_purchase.getIva_rate());
+        fields.get("exchange_rate").setValue("$1 USD = $"+order_purchase.getExchange_rate()+" MXN");
+        fields.get("comments").setValue(order_purchase.getComments());
+
+        List<PurchaseItem> purchaseitem_list = purchaseitem_tableview.getItems();
+        int i = 0;
+        for(PurchaseItem purchase_item : purchaseitem_list){
+            int current_row = i+1;
+            fields.get("quantity_ordered"+current_row).setValue("x"+purchase_item.getUnits_ordered());
+            fields.get("description"+current_row).setValue(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(purchase_item)).getDescription());
+            fields.get("quantity"+current_row).setValue(""+msabase.getPurchaseItemDAO().findProductSupplier(purchase_item).getQuantity());
+            fields.get("unit_measure"+current_row).setValue(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(purchase_item)).getUnit_measure());
+            fields.get("unit_price"+current_row).setValue("$"+purchase_item.getPrice_unit()+" USD");
+            fields.get("price_lot"+current_row).setValue("$ "+purchase_item.getPrice_total()+" USD");
+            i++;
+        }
+        fields.get("subtotal").setValue("$ "+subtotal_field.getText()+" USD");
+        fields.get("iva").setValue("$ "+iva_field.getText()+" USD");
+        fields.get("total").setValue("$ "+total_field.getText()+" USD");
+
+        form.flattenFields();
+        pdf.close();
+
+        return output.toFile();
     }
     
 }

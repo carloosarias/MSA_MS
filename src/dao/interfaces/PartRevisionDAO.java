@@ -112,11 +112,11 @@ public interface PartRevisionDAO {
      * Returns a list of all PartRevisions matching Specification ID from the database ordered by PartRevision ID. The Specification ID must not be null, otherwise it will throw
      * IllegalArgumentException. The list is never null and
      * is empty when the database does not contain any PartRevision matching Specification.
-     * @param specification The specification_number to be searched for.
+     * @param specification The specification to be searched for.
      * @return A list of all PartRevisions matching Specification from the database ordered by PartRevision ID.
      * @throws DAOException If something fails at database level.
      */    
-    public List<PartRevision> listOfSpecification(String specification) throws DAOException;
+    public List<PartRevision> listOfSpecification(Specification specification) throws DAOException;
     
     /**
      * Create the given PartRevision in the database. The ProductPart ID must 

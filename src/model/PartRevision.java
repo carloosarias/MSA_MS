@@ -7,6 +7,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
+import javafx.beans.property.SimpleStringProperty;
     
 /**
  *
@@ -21,6 +22,11 @@ public class PartRevision implements Serializable{
     private double base_weight;
     private double final_weight;
     private boolean active;
+    
+    //INNER JOIN
+    private String metal_metalname;
+    private String specification_process;
+    private String specification_specificationnumber;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -85,6 +91,30 @@ public class PartRevision implements Serializable{
         this.active = active;
     }
     
+    //INNER JOINS
+    public String getMetal_metalname() {
+        return metal_metalname;
+    }
+
+    public void setMetal_metalname(String metal_metalname) {
+        this.metal_metalname = metal_metalname;
+    }
+
+    public String getSpecification_process() {
+        return specification_process;
+    }
+
+    public void setSpecification_process(String specification_process) {
+        this.specification_process = specification_process;
+    }
+
+    public String getSpecification_specificationnumber() {
+        return specification_specificationnumber;
+    }
+
+    public void setSpecification_specificationnumber(String specification_specificationnumber) {
+        this.specification_specificationnumber = specification_specificationnumber;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**

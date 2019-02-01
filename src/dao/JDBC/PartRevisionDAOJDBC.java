@@ -27,9 +27,19 @@ import model.Specification;
 public class PartRevisionDAOJDBC implements PartRevisionDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, rev, rev_date, area, base_weight, final_weight, active FROM PART_REVISION WHERE id = ?";
+            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
+            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "FROM PART_REVISION "
+            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.id = ?";
     private static final String SQL_FIND_BY_PART_REV = 
-            "SELECT id, rev, rev_date, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND rev = ?";
+            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
+            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "FROM PART_REVISION "
+            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PART_REVISION.rev = ?";
     private static final String SQL_FIND_PRODUCT_PART_BY_ID = 
             "SELECT PRODUCT_PART_ID FROM PART_REVISION WHERE id = ?";
     private static final String SQL_FIND_SPECIFICATION_BY_ID = 
@@ -37,15 +47,40 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     private static final String SQL_FIND_BASE_METAL_BY_ID = 
             "SELECT BASE_METAL_ID FROM PART_REVISION WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, area, base_weight, final_weight, active FROM PART_REVISION ORDER BY id";
+            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
+            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "FROM PART_REVISION "
+            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "ORDER BY PART_REVISION.id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, area, base_weight, final_weight, active FROM PART_REVISION WHERE active = ? ORDER BY id";
+            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
+            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "FROM PART_REVISION "
+            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.active = ? ORDER BY PART_REVISION.id";
     private static final String SQL_LIST_OF_PART_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? ORDER BY id";
+            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
+            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "FROM PART_REVISION "
+            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? ORDER BY PART_REVISION.id";
     private static final String SQL_LIST_ACTIVE_OF_PART_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, area, base_weight, final_weight, active FROM PART_REVISION WHERE PRODUCT_PART_ID = ? AND active = ? ORDER BY id";
+            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
+            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "FROM PART_REVISION "
+            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PART_REVISION.active = ? ORDER BY PART_REVISION.id";
     private static final String SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT id, rev, rev_date, area, base_weight, final_weight, active FROM PART_REVISION WHERE specification_number = ? ORDER BY id";
+            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
+            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "FROM PART_REVISION "
+            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.SPECIFICATION_ID = ? ORDER BY PART_REVISION.id";
     private static final String SQL_INSERT = 
             "INSERT INTO PART_REVISION (PRODUCT_PART_ID, SPECIFICATION_ID, BASE_METAL_ID, rev, rev_date, area, base_weight, final_weight, active) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -288,12 +323,15 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public List<PartRevision> listOfSpecification(String specification_number) throws DAOException { 
+    public List<PartRevision> listOfSpecification(Specification specification) throws DAOException { 
+        if(specification.getId() == null) {
+            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
+        }    
         
         List<PartRevision> revisions = new ArrayList<>();
         
         Object[] values = {
-            specification_number
+            specification.getId()
         };
         
         try(
@@ -423,13 +461,18 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
      */
     public static PartRevision map(ResultSet resultSet) throws SQLException{
         PartRevision revision = new PartRevision();
-        revision.setId(resultSet.getInt("id"));
-        revision.setRev(resultSet.getString("rev"));
-        revision.setRev_date(resultSet.getDate("rev_date"));
-        revision.setArea(resultSet.getDouble("area"));
-        revision.setBase_weight(resultSet.getDouble("base_weight"));
-        revision.setFinal_weight(resultSet.getDouble("final_weight"));
-        revision.setActive(resultSet.getBoolean("active"));
+        revision.setId(resultSet.getInt("PART_REVISION.id"));
+        revision.setRev(resultSet.getString("PART_REVISION.rev"));
+        revision.setRev_date(resultSet.getDate("PART_REVISION.rev_date"));
+        revision.setArea(resultSet.getDouble("PART_REVISION.area"));
+        revision.setBase_weight(resultSet.getDouble("PART_REVISION.base_weight"));
+        revision.setFinal_weight(resultSet.getDouble("PART_REVISION.final_weight"));
+        revision.setActive(resultSet.getBoolean("PART_REVISION.active"));
+        
+        //INNER JOINS
+        revision.setMetal_metalname(resultSet.getString("METAL.metal_name"));
+        revision.setSpecification_specificationnumber(resultSet.getString("SPECIFICATION.specification_number"));
+        revision.setSpecification_process(resultSet.getString("SPECIFICATION.process"));
         return revision;
     }
 }

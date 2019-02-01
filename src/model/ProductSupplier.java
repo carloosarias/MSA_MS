@@ -18,6 +18,11 @@ public class ProductSupplier implements Serializable {
     private double quantity;
     private boolean active;
     
+    //INNER JOINS
+    private String product_description;
+    private String product_unitmeasure;
+    private String company_name;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -51,7 +56,30 @@ public class ProductSupplier implements Serializable {
     public void setActive(boolean active){
         this.active = active;
     }
-   
+
+    public String getProduct_description() {
+        return product_description;
+    }
+
+    public void setProduct_description(String product_description) {
+        this.product_description = product_description;
+    }
+
+    public String getProduct_unitmeasure() {
+        return product_unitmeasure;
+    }
+
+    public void setProduct_unitmeasure(String product_unitmeasure) {
+        this.product_unitmeasure = product_unitmeasure;
+    }
+
+    public String getCompany_name() {
+        return company_name;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**

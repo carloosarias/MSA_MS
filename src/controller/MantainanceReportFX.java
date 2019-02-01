@@ -14,7 +14,11 @@ import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -150,8 +154,7 @@ public class MantainanceReportFX implements Initializable {
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
-                buildPDF(equipment_tableview.getItems());
-                MainApp.openPDF("./src/pdf/MantemientoPDF.pdf");
+                MainApp.openPDF(buildPDF(equipment_tableview.getItems()));
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -223,10 +226,20 @@ public class MantainanceReportFX implements Initializable {
         return equipment_selection;
     }
     
-    public void buildPDF(List<Equipment> equipment_list) throws IOException{
+    public File buildPDF(List<Equipment> equipment_list) throws IOException{
+        
+        Path template = Files.createTempFile("MantainanceTemplate", ".pdf");
+        template.toFile().deleteOnExit();
+        try (InputStream is = MainApp.class.getClassLoader().getResourceAsStream("template/MantainanceTemplate.pdf")) {
+            Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
+        }
+            
+        Path output = Files.createTempFile("ActividadesDeMantenimientoPDF", ".pdf");
+        template.toFile().deleteOnExit();  
+        
         PdfDocument pdf = new PdfDocument(
-            new PdfReader(new File("./src/template/MantainanceTemplate.pdf")),
-            new PdfWriter(new File("./src/pdf/MantemientoPDF.pdf"))
+            new PdfReader(template.toFile()),
+            new PdfWriter(output.toFile())
         );
 
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
@@ -249,5 +262,7 @@ public class MantainanceReportFX implements Initializable {
         
         form.flattenFields();
         pdf.close();
+        
+        return output.toFile();
     }
 }

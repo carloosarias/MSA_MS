@@ -35,6 +35,7 @@ import javafx.stage.StageStyle;
 import model.Metal;
 import model.PartRevision;
 import model.ProductPart;
+import model.ProductSupplier;
 import model.Specification;
 import model.SpecificationItem;
 
@@ -261,10 +262,16 @@ public class ProductPartFX implements Initializable {
     public void setPartRevisionTable(){
         partrevisionid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         rev_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
+        rev_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        rev_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setRev(t.getNewValue());
+            msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            partrevision_tableview.refresh();
+        });
         revdate_column.setCellValueFactory(new PropertyValueFactory<>("rev_date"));
-        basemetal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findMetal(c.getValue()).getMetal_name()));
-        finalprocess_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findSpecification(c.getValue()).getProcess()));
-        revspecnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findSpecification(c.getValue()).getSpecification_number()));
+        basemetal_column.setCellValueFactory(new PropertyValueFactory<>("metal_metalname"));
+        finalprocess_column.setCellValueFactory(new PropertyValueFactory<>("specification_process"));
+        revspecnumber_column.setCellValueFactory(new PropertyValueFactory<>("specification_specificationnumber"));
         area_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getArea()+" in²"));
         area_column.setCellFactory(TextFieldTableCell.forTableColumn());
         area_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
