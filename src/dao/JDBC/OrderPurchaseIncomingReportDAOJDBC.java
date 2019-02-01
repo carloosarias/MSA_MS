@@ -26,17 +26,43 @@ import model.OrderPurchaseIncomingReport;
 public class OrderPurchaseIncomingReportDAOJDBC implements OrderPurchaseIncomingReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
+            "SELECT ORDER_PURCHASE_INCOMING_REPORT.id, ORDER_PURCHASE_INCOMING_REPORT.report_date, ORDER_PURCHASE_INCOMING_REPORT.comments, ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID, ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID, "
+            + "COMPANY.name, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ORDER_PURCHASE_INCOMING_REPORT "
+            + "INNER JOIN ORDER_PURCHASE ON ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID = ORDER_PURCHASE.id "
+            + "INNER JOIN EMPLOYEE ON ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON ORDER_PURCHASE.COMPANY_ID = COMPANY.id "
+            + "WHERE ORDER_PURCHASE_INCOMING_REPORT.id = ?";
     private static final String SQL_FIND_ORDER_PURCHASE_BY_ID = 
             "SELECT ORDER_PURCHASE_ID FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM ORDER_PURCHASE_INCOMING_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT ORDER BY id";
+            "SELECT ORDER_PURCHASE_INCOMING_REPORT.id, ORDER_PURCHASE_INCOMING_REPORT.report_date, ORDER_PURCHASE_INCOMING_REPORT.comments, ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID, ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID, "
+            + "COMPANY.name, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ORDER_PURCHASE_INCOMING_REPORT "
+            + "INNER JOIN ORDER_PURCHASE ON ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID = ORDER_PURCHASE.id "
+            + "INNER JOIN EMPLOYEE ON ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON ORDER_PURCHASE.COMPANY_ID = COMPANY.id "
+            + "ORDER BY ORDER_PURCHASE_INCOMING_REPORT.id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT ORDER_PURCHASE_INCOMING_REPORT.id, ORDER_PURCHASE_INCOMING_REPORT.report_date, ORDER_PURCHASE_INCOMING_REPORT.comments, ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID, ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID, "
+            + "COMPANY.name, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ORDER_PURCHASE_INCOMING_REPORT "
+            + "INNER JOIN ORDER_PURCHASE ON ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID = ORDER_PURCHASE.id "
+            + "INNER JOIN EMPLOYEE ON ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON ORDER_PURCHASE.COMPANY_ID = COMPANY.id "
+            + "WHERE ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID = ? "
+            + "ORDER BY ORDER_PURCHASE_INCOMING_REPORT.id";
     private static final String SQL_LIST_ORDER_PURCHASE_ORDER_BY_ID = 
-            "SELECT id, report_date, comments FROM ORDER_PURCHASE_INCOMING_REPORT WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
+            "SELECT ORDER_PURCHASE_INCOMING_REPORT.id, ORDER_PURCHASE_INCOMING_REPORT.report_date, ORDER_PURCHASE_INCOMING_REPORT.comments, ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID, ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID, "
+            + "COMPANY.name, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ORDER_PURCHASE_INCOMING_REPORT "
+            + "INNER JOIN ORDER_PURCHASE ON ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID = ORDER_PURCHASE.id "
+            + "INNER JOIN EMPLOYEE ON ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON ORDER_PURCHASE.COMPANY_ID = COMPANY.id "
+            + "WHERE ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID = ? "
+            + "ORDER BY ORDER_PURCHASE_INCOMING_REPORT.id";
     private static final String SQL_INSERT = 
             "INSERT INTO ORDER_PURCHASE_INCOMING_REPORT(ORDER_PURCHASE_ID, EMPLOYEE_ID, report_date, comments) "
             + "VALUES(?, ?, ?, ?)";
@@ -313,9 +339,15 @@ public class OrderPurchaseIncomingReportDAOJDBC implements OrderPurchaseIncoming
      */
     public static OrderPurchaseIncomingReport map(ResultSet resultSet) throws SQLException{
         OrderPurchaseIncomingReport order_purchase_incoming_report = new OrderPurchaseIncomingReport();
-        order_purchase_incoming_report.setId(resultSet.getInt("id"));
-        order_purchase_incoming_report.setReport_date(resultSet.getDate("report_date"));
-        order_purchase_incoming_report.setComments(resultSet.getString("comments"));
+        order_purchase_incoming_report.setId(resultSet.getInt("ORDER_PURCHASE_INCOMING_REPORT.id"));
+        order_purchase_incoming_report.setReport_date(resultSet.getDate("ORDER_PURCHASE_INCOMING_REPORT.report_date"));
+        order_purchase_incoming_report.setComments(resultSet.getString("ORDER_PURCHASE_INCOMING_REPORT.comments"));
+        order_purchase_incoming_report.setOrderpurchase_id(resultSet.getInt("ORDER_PURCHASE_INCOMING_REPORT.ORDER_PURCHASE_ID"));
+        order_purchase_incoming_report.setOrderpurchase_id(resultSet.getInt("ORDER_PURCHASE_INCOMING_REPORT.EMPLOYEE_ID"));
+        
+        //INNER JOINS
+        order_purchase_incoming_report.setOrderpurchase_companyname(resultSet.getString("COMPANY.name"));
+        order_purchase_incoming_report.setEmployee_employeename(resultSet.getString("EMPLOYEE.first_name") + resultSet.getString("EMPLOYEE.last_name"));
         return order_purchase_incoming_report;
     }
 }

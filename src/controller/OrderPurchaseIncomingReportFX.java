@@ -44,17 +44,18 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, Integer> orderpurchaseincomingreportid_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingReport, String> orderpurchaseid_column;
+    private TableColumn<OrderPurchaseIncomingReport, Integer> orderpurchaseid_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, String> company_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, Date> reportdate_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingReport, String> employeeid_column;
+    private TableColumn<OrderPurchaseIncomingReport, Integer> employeeid_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, String> employeename_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, String> comments_column;
+    
     @FXML
     private TableView<OrderPurchaseIncomingItem> orderpurchaseincomingitem_tableview;
     @FXML
@@ -110,11 +111,11 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     
     public void setOrderPurchaseIncomingReportTable(){
         orderpurchaseincomingreportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        orderpurchaseid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getOrderPurchaseIncomingReportDAO().findOrderPurchase(c.getValue()).getId()));
-        company_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getOrderPurchaseDAO().findCompany(msabase.getOrderPurchaseIncomingReportDAO().findOrderPurchase(c.getValue()))));
+        orderpurchaseid_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_id"));
+        company_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_comapanyname"));
         reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
-        employeeid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getOrderPurchaseIncomingReportDAO().findEmployee(c.getValue()).getId()));
-        employeename_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getOrderPurchaseIncomingReportDAO().findEmployee(c.getValue())));
+        employeeid_column.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
+        employeename_column.setCellValueFactory(new PropertyValueFactory<>("employee_employeename"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
     

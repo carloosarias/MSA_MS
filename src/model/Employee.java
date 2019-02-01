@@ -155,8 +155,8 @@ public class Employee implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%s, %s",
-                last_name, first_name);
+        return String.format("%s %s",
+                first_name, last_name);
     }
     
 }

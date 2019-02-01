@@ -18,6 +18,12 @@ public class OrderPurchaseIncomingReport implements Serializable {
     private Date report_date;
     private String comments;
     
+    //INNER JOINS
+    private Integer orderpurchase_id;
+    private String orderpurchase_companyname;
+    private Integer employee_id;
+    private String employee_employeename;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -42,6 +48,39 @@ public class OrderPurchaseIncomingReport implements Serializable {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    //INNER JOINS
+    public Integer getOrderpurchase_id() {
+        return orderpurchase_id;
+    }
+
+    public void setOrderpurchase_id(Integer orderpurchase_id) {
+        this.orderpurchase_id = orderpurchase_id;
+    }
+
+    public String getOrderpurchase_companyname() {
+        return orderpurchase_companyname;
+    }
+
+    public void setOrderpurchase_companyname(String orderpurchase_companyname) {
+        this.orderpurchase_companyname = orderpurchase_companyname;
+    }
+
+    public Integer getEmployeee_id() {
+        return employee_id;
+    }
+
+    public void setEmployee_id(Integer employee_id) {
+        this.employee_id = employee_id;
+    }
+
+    public String getEmployee_employeename() {
+        return employee_employeename;
+    }
+
+    public void setEmployee_employeename(String employee_employeename) {
+        this.employee_employeename = employee_employeename;
     }
     
     // Object overrides ---------------------------------------------------------------------------
