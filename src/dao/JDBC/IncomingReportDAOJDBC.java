@@ -26,17 +26,39 @@ import model.IncomingReport;
 public class IncomingReportDAOJDBC implements IncomingReportDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, report_date, po_number, packing_list, discrepancy FROM INCOMING_REPORT WHERE id = ?";
+            "SELECT INCOMING_REPORT.id, INCOMING_REPORT.report_date, INCOMING_REPORT.po_number, INCOMING_REPORT.packing_list, INCOMING_REPORT.discrepancy, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name "
+            + "FROM INCOMING_REPORT "
+            + "INNER JOIN EMPLOYEE ON INCOMING_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON INCOMING_REPORT.COMPANY_ID = COMPANY.id "
+            + "WHERE INCOMING_REPORT.id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM INCOMING_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM INCOMING_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, po_number, packing_list, discrepancy FROM INCOMING_REPORT ORDER BY id";
+            "SELECT INCOMING_REPORT.id, INCOMING_REPORT.report_date, INCOMING_REPORT.po_number, INCOMING_REPORT.packing_list, INCOMING_REPORT.discrepancy, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name "
+            + "FROM INCOMING_REPORT "
+            + "INNER JOIN EMPLOYEE ON INCOMING_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON INCOMING_REPORT.COMPANY_ID = COMPANY.id "
+            + "ORDER BY INCOMING_REPORT.id";
     private static final String SQL_LIST_OF_DISCREPANCY_ORDER_BY_ID = 
-        "SELECT id, report_date, po_number, packing_list, discrepancy FROM INCOMING_REPORT ORDER BY id";
+            "SELECT INCOMING_REPORT.id, INCOMING_REPORT.report_date, INCOMING_REPORT.po_number, INCOMING_REPORT.packing_list, INCOMING_REPORT.discrepancy, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name "
+            + "FROM INCOMING_REPORT "
+            + "INNER JOIN EMPLOYEE ON INCOMING_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON INCOMING_REPORT.COMPANY_ID = COMPANY.id "
+            + "WHERE INCOMING_REPORT.discrepancy = ?"
+            + "ORDER BY INCOMING_REPORT.id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, report_date, po_number, packing_list, discrepancy FROM INCOMING_REPORT WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT INCOMING_REPORT.id, INCOMING_REPORT.report_date, INCOMING_REPORT.po_number, INCOMING_REPORT.packing_list, INCOMING_REPORT.discrepancy, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name "
+            + "FROM INCOMING_REPORT "
+            + "INNER JOIN EMPLOYEE ON INCOMING_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON INCOMING_REPORT.COMPANY_ID = COMPANY.id "
+            + "WHERE INCOMING_REPORT.COMPANY_ID = ? "
+            + "ORDER BY INCOMING_REPORT.id";
     private static final String SQL_INSERT =
             "INSERT INTO INCOMING_REPORT (COMPANY_ID, EMPLOYEE_ID, report_date, po_number, packing_list, discrepancy) "
             + "VALUES (?, ?, ?, ?, ?, ?)";
@@ -170,7 +192,7 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
         List<IncomingReport> incoming_report = new ArrayList<>();
         
         Object[] values = {
-            discrepancy,
+            discrepancy
         };
         
         try(
@@ -323,6 +345,10 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
         incoming_report.setPo_number(resultSet.getString("po_number"));
         incoming_report.setPacking_list(resultSet.getString("packing_list"));
         incoming_report.setDiscrepancy(resultSet.getBoolean("discrepancy"));
+        
+        //INNER JOINS
+        incoming_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
+        incoming_report.setClient_name(resultSet.getString("COMPANY.name"));
         return incoming_report;
     }
 }

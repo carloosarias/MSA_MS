@@ -21,6 +21,10 @@ public class IncomingReport implements Serializable{
     private boolean discrepancy;
     private String[] discrepancy_string = new String[]{"Recibido","Discrepancia"};
     
+    //INNER JOINS
+    private String employee_name;
+    private String client_name;
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -69,6 +73,24 @@ public class IncomingReport implements Serializable{
         
         return discrepancy_string[0];
     }
+    
+    //INNER JOINS
+    public String getEmployee_name() {
+        return employee_name;
+    }
+
+    public void setEmployee_name(String employee_name) {
+        this.employee_name = employee_name;
+    }
+
+    public String getClient_name() {
+        return client_name;
+    }
+
+    public void setClient_name(String client_name) {
+        this.client_name = client_name;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -102,4 +124,5 @@ public class IncomingReport implements Serializable{
         return String.format("%d",
                 id);
     }
+
 }

@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -19,10 +20,14 @@ public class IncomingLot implements Serializable {
     private Integer box_quantity;
     private String status;
     private String comments;
+    
     private PartRevision temp_partrevision;
     private DepartLot temp_departlot;
     private ProductPart temp_productpart;
-
+    
+    //INNER JOINS
+    private String part_number;
+    private String part_revision;
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -96,6 +101,23 @@ public class IncomingLot implements Serializable {
         return temp_productpart;
     }
     
+    //INNER JOINS
+    public String getPart_number() {
+        return part_number;
+    }
+
+    public void setPart_number(String part_number) {
+        this.part_number = part_number;
+    }
+
+    public String getPart_revision() {
+        return part_revision;
+    }
+
+    public void setPart_revision(String part_revision) {
+        this.part_revision = part_revision;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -108,7 +130,8 @@ public class IncomingLot implements Serializable {
             ? id.equals(((IncomingLot) other).id)
             : (other == this);
     }
-
+    
+    
     /**
      * IncomingLot with same ID should return same hashcode.
      * @see java.lang.Object#hashCode()

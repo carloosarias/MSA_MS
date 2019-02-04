@@ -199,7 +199,7 @@ public class CreateDepartReportFX implements Initializable {
                 return;
             }
             DepartLot depart_lot = new DepartLot();
-            depart_lot.setLot_number(lotnumber_field.getText());
+            depart_lot.setLot_number(lotnumber_field.getText().toUpperCase());
             depart_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
             depart_lot.setBox_quantity(1);
             depart_lot.setProcess(process_combo.getSelectionModel().getSelectedItem());

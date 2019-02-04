@@ -100,7 +100,7 @@ public class IncomingReportFX implements Initializable {
             partrevision_tableview.getItems().clear();
             incominglot_tableview.getItems().clear();
             if(newValue != null){
-                partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listPartRevision(newValue)));
+                //partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listPartRevision(newValue)));
                 incominglot_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().list(incoming_report_tableview.getSelectionModel().getSelectedItem())));
             }
         });
@@ -144,8 +144,8 @@ public class IncomingReportFX implements Initializable {
                 msabase.getPartRevisionDAO().findProductPart(c.getValue()).getPart_number()
         ));
         revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().findTotalQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
-        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().findTotalBoxQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+       // item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().findTotalQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+       // item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getIncomingLotDAO().findTotalBoxQuantity(incoming_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
     }
     
     public void setLotTable(){

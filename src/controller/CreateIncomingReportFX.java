@@ -255,7 +255,7 @@ public class CreateIncomingReportFX implements Initializable {
                 return;
             }
             IncomingLot incoming_lot = new IncomingLot();
-            incoming_lot.setLot_number(lotnumber_field.getText());
+            incoming_lot.setLot_number(lotnumber_field.getText().toUpperCase());
             incoming_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
             incoming_lot.setBox_quantity(1);
             incoming_lot.setStatus(status_combo.getSelectionModel().getSelectedItem());

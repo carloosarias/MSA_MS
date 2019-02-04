@@ -28,19 +28,34 @@ import model.ProductPart;
 public class IncomingLotDAOJDBC implements IncomingLotDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE id = ?";
+            "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments, "
+            + "PART_REVISION.rev, PRODUCT_PART.part_number "
+            + "FROM INCOMING_LOT "
+            + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "WHERE INCOMING_LOT.id = ?";
     private static final String SQL_FIND_INCOMING_REPORT_BY_ID =
             "SELECT INCOMING_REPORT_ID FROM INCOMING_LOT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM INCOMING_LOT WHERE id = ?";
     private static final String SQL_FIND_DEPART_LOT_BY_ID = 
-            "SELECT DEPART_LOT_ID FROM INCOMING_LOT WHERE id = ?";            
+            "SELECT DEPART_LOT_ID FROM INCOMING_LOT WHERE id = ?";
     private static final String SQL_LIST_OF_INCOMING_REPORT_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE INCOMING_REPORT_ID = ? ORDER BY id";
+            "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments, "
+            + "PART_REVISION.rev, PRODUCT_PART.part_number "
+            + "FROM INCOMING_LOT "
+            + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "WHERE INCOMING_REPORT_ID = ? "
+            + "ORDER BY id";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID = 
-            "SELECT id, lot_number, quantity, box_quantity, status, comments FROM INCOMING_LOT WHERE lot_number = ? ORDER BY id";
-    private static final String SQL_LIST_PART_REVISIONS = 
-            "SELECT DISTINCT PART_REVISION_ID FROM INCOMING_LOT WHERE INCOMING_REPORT_ID = ?";
+            "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments, "
+            + "PART_REVISION.rev, PRODUCT_PART.part_number "
+            + "FROM INCOMING_LOT "
+            + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "WHERE lot_number = ? "
+            + "ORDER BY id";
     private static final String SQL_INSERT = 
             "INSERT INTO INCOMING_LOT (INCOMING_REPORT_ID, DEPART_LOT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, status, comments) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -48,8 +63,6 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             "UPDATE INCOMING_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, status = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM INCOMING_LOT WHERE id = ?";
-    private static final String SQL_QUANTITY_BY_INCOMING_REPORT_PART_REVISION = 
-            "SELECT quantity, box_quantity FROM INCOMING_LOT WHERE INCOMING_REPORT_ID = ? AND PART_REVISION_ID = ?";
     private static final String LIST_INCOMING_LOT_BY_PRODUCT_PART_DATE_RANGE = 
             "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments "
             + "FROM INCOMING_LOT "
@@ -238,32 +251,6 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     }
     
     @Override
-    public List<PartRevision> listPartRevision(IncomingReport incoming_report) throws IllegalArgumentException, DAOException {
-        if(incoming_report.getId() == null) {
-            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
-        }
-        List<PartRevision> part_revision = new ArrayList<>();
-        
-        Object[] values = {
-            incoming_report.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PART_REVISIONS, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                part_revision.add(daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID")));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return part_revision;
-    }
-    
-    @Override
     public void create(IncomingReport incoming_report, PartRevision part_revision, IncomingLot incoming_lot) throws IllegalArgumentException, DAOException {
         if (incoming_report.getId() == null) {
             throw new IllegalArgumentException("IncomingItem is not created yet, the IncomingItem ID is null.");
@@ -416,72 +403,6 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     }   
     
     @Override
-    public Integer findTotalQuantity(IncomingReport incoming_report, PartRevision part_revision){
-
-        if(incoming_report.getId() == null) {
-            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
-        }
-        
-        if(part_revision.getId() == null) {
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }
-        
-        Integer total_quantity = 0;
-        
-        Object[] values = {
-            incoming_report.getId(),
-            part_revision.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_QUANTITY_BY_INCOMING_REPORT_PART_REVISION, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                total_quantity += resultSet.getInt("quantity");
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return total_quantity;
-    }
-    
-    @Override
-    public Integer findTotalBoxQuantity(IncomingReport incoming_report, PartRevision part_revision){
-
-        if(incoming_report.getId() == null) {
-            throw new IllegalArgumentException("IncomingReport is not created yet, the IncomingReport ID is null.");
-        }
-        
-        if(part_revision.getId() == null) {
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }
-        
-        Integer total_quantity = 0;
-        
-        Object[] values = {
-            incoming_report.getId(),
-            part_revision.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_QUANTITY_BY_INCOMING_REPORT_PART_REVISION, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                total_quantity += resultSet.getInt("box_quantity");
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return total_quantity;
-    }
-    
-    @Override
     public List<IncomingLot> listDateRange(ProductPart product_part, boolean discrepancy, Date start, Date end){
         
         List<IncomingLot> incominglot_list = new ArrayList<>();
@@ -518,12 +439,16 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
      */
     public static IncomingLot map(ResultSet resultSet) throws SQLException{
         IncomingLot incoming_lot = new IncomingLot();
-        incoming_lot.setId(resultSet.getInt("id"));
-        incoming_lot.setLot_number(resultSet.getString("lot_number"));
-        incoming_lot.setQuantity(resultSet.getInt("quantity"));
-        incoming_lot.setBox_quantity(resultSet.getInt("box_quantity"));
-        incoming_lot.setStatus(resultSet.getString("status"));
-        incoming_lot.setComments(resultSet.getString("comments"));
+        incoming_lot.setId(resultSet.getInt("INCOMING_LOT.id"));
+        incoming_lot.setLot_number(resultSet.getString("INCOMING_LOT.lot_number"));
+        incoming_lot.setQuantity(resultSet.getInt("INCOMING_LOT.quantity"));
+        incoming_lot.setBox_quantity(resultSet.getInt("INCOMING_LOT.box_quantity"));
+        incoming_lot.setStatus(resultSet.getString("INCOMING_LOT.status"));
+        incoming_lot.setComments(resultSet.getString("INCOMING_LOT.comments"));
+        
+        //INNER JOINS
+        incoming_lot.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
+        incoming_lot.setPart_revision(resultSet.getString("PART_REVISION.rev"));
         return incoming_lot;
     }
 }

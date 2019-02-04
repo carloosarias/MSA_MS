@@ -80,17 +80,7 @@ public interface IncomingLotDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<IncomingLot> list(String lot_number) throws IllegalArgumentException;
-    
-    /**
-     * Returns a list of distinct PartRevision matching a given IncomingReport from the database ordered by PartRevision ID.
-     * The IncomingReport ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any PartRevisions matching IncomingReport.
-     * @param incoming_report The incoming_report to be searched for.
-     * @return A list of distinct PartRevision matching IncomingReport from the database ordered by PartRevision ID.
-     * @throws IllegalArgumentException If the IncomingReport ID is null.
-     * @throws DAOException If something fails at database level.
-     */       
-    public List<PartRevision> listPartRevision(IncomingReport incoming_report) throws IllegalArgumentException, DAOException;    
+     
     /**
      * Create the given IncomingLot for a given IncomingReport in the database. 
      * The IncomingReport ID must not be null, the PartRevision ID must not be null
@@ -140,9 +130,6 @@ public interface IncomingLotDAO {
      * @throws DAOException If something fails at database level.
      */    
     public void delete(IncomingLot incoming_lot) throws DAOException;
-    
-    public Integer findTotalQuantity(IncomingReport incoming_report, PartRevision part_revision);
-    public Integer findTotalBoxQuantity(IncomingReport incoming_report, PartRevision part_revision);
     
     public List<IncomingLot> listDateRange(ProductPart product_part, boolean discrepancy, Date start, Date end);
 }
