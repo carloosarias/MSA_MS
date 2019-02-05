@@ -26,8 +26,8 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, "
-            + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name "
+            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, PRODUCT_SUPPLIER.PRODUCT_ID, PRODUCT_SUPPLIER.COMPANY_ID, "
+            + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name"
             + "FROM PRODUCT_SUPPLIER "
             + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
             + "INNER JOIN COMPANY ON PRODUCT_SUPPLIER.COMPANY_ID = COMPANY.id "
@@ -37,21 +37,21 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM PRODUCT_SUPPLIER WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, "
+            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, PRODUCT_SUPPLIER.PRODUCT_ID, PRODUCT_SUPPLIER.COMPANY_ID,"
             + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name "
             + "FROM PRODUCT_SUPPLIER "
             + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
             + "INNER JOIN COMPANY ON PRODUCT_SUPPLIER.COMPANY_ID = COMPANY.id "
             + "WHERE PRODUCT_SUPPLIER.active = ? ORDER BY PRODUCT_SUPPLIER.id";
     private static final String SQL_LIST_PRODUCT_ORDER_BY_ID = 
-            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, "
+            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, PRODUCT_SUPPLIER.PRODUCT_ID, PRODUCT_SUPPLIER.COMPANY_ID,"
             + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name "
             + "FROM PRODUCT_SUPPLIER "
             + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
             + "INNER JOIN COMPANY ON PRODUCT_SUPPLIER.COMPANY_ID = COMPANY.id "
             + "WHERE PRODUCT_SUPPLIER.PRODUCT_ID = ? ORDER BY PRODUCT_SUPPLIER.id";
     private static final String SQL_LIST_COMPANY_ORDER_BY_ID = 
-            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, "
+            "SELECT PRODUCT_SUPPLIER.id, PRODUCT_SUPPLIER.unit_price, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.active, PRODUCT_SUPPLIER.PRODUCT_ID, PRODUCT_SUPPLIER.COMPANY_ID,"
             + "PRODUCT.description, PRODUCT.unit_measure, COMPANY.name "
             + "FROM PRODUCT_SUPPLIER "
             + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
@@ -346,6 +346,8 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
         product_supplier.setActive(resultSet.getBoolean("PRODUCT_SUPPLIER.active"));
         
         //INNER JOINS
+        product_supplier.setProduct_id(resultSet.getInt("PRODUCT_SUPPLIER.PRODUCT_ID"));
+        product_supplier.setCompany_id(resultSet.getInt("PRODUCT_SUPPLIER.COMPANY_ID"));
         product_supplier.setProduct_description(resultSet.getString("PRODUCT.description"));
         product_supplier.setProduct_unitmeasure(resultSet.getString("PRODUCT.unit_measure"));
         product_supplier.setCompany_name(resultSet.getString("COMPANY.name"));

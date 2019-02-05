@@ -126,10 +126,10 @@ public class ProductSupplierFX implements Initializable {
     public void setProductSupplierTable(){
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(4);
-        id_column.setCellValueFactory(new PropertyValueFactory("id"));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_description()));
-        supplier_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCompany_name()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_unitmeasure()));
+        id_column.setCellValueFactory(new PropertyValueFactory("product_id"));
+        description_column.setCellValueFactory(new PropertyValueFactory("product_description"));
+        supplier_column.setCellValueFactory(new PropertyValueFactory("company_name"));
+        unitmeasure_column.setCellValueFactory(new PropertyValueFactory("product_unitmeasure"));
         quantity_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getQuantity())));
         quantity_column.setCellFactory(TextFieldTableCell.forTableColumn());
         quantity_column.setOnEditCommit((TableColumn.CellEditEvent<ProductSupplier, String> t) -> {

@@ -8,7 +8,6 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -130,20 +128,23 @@ public class OrderPurchaseCartFX implements Initializable {
     
     public void updateCompanyList(){
         ObservableSet<Company> company_set = FXCollections.observableSet();
+        
         for(PurchaseItem item : cart_list){
-            company_set.add(msabase.getProductSupplierDAO().findCompany(item.getTemp_productsupplier()));
+            Company company = new Company();
+            company.setId(item.getTemp_productsupplier().getCompany_id());
+            company.setName(item.getTemp_productsupplier().getCompany_name());
+            company_set.add(company);
         }
         
         company_list.setAll(FXCollections.observableArrayList(company_set));
     }
     
     public void setPurchaseItemTable(){
-             productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getId()));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getDescription()));
-        supplier_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findCompany(c.getValue().getTemp_productsupplier()).getName()));
+        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getProduct_id()));
+        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct_description()));
+        supplier_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getCompany_name()));
         quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getQuantity()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getUnit_measure()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getUnit_measure()));
+        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct_unitmeasure()));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         unitsordered_column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));

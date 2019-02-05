@@ -19,6 +19,8 @@ public class ProductSupplier implements Serializable {
     private boolean active;
     
     //INNER JOINS
+    private Integer product_id;
+    private Integer company_id;
     private String product_description;
     private String product_unitmeasure;
     private String company_name;
@@ -56,7 +58,24 @@ public class ProductSupplier implements Serializable {
     public void setActive(boolean active){
         this.active = active;
     }
+    
+    //INNER JOINS
+    public Integer getProduct_id() {
+        return product_id;
+    }
 
+    public void setProduct_id(Integer product_id) {
+        this.product_id = product_id;
+    }
+    
+    public Integer getCompany_id() {
+        return product_id;
+    }
+
+    public void setCompany_id(Integer company_id) {
+        this.company_id = company_id;
+    }
+    
     public String getProduct_description() {
         return product_description;
     }
@@ -113,5 +132,4 @@ public class ProductSupplier implements Serializable {
         return String.format("%d",
                 id);
     } 
-
 }

@@ -108,6 +108,8 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         
         calculateTotals();
         
+        OrderPurchaseCartFX.cart_list.removeAll(purchaseitem_tableview.getItems());
+        
         ivarate_field.setOnAction((ActionEvent) -> {
             calculateTotals();
         });
@@ -121,7 +123,6 @@ public class CreateOrderPurchaseReportFX implements Initializable {
             if(!testFields()){
                 return;
             }
-            OrderPurchaseCartFX.cart_list.removeAll(purchaseitem_tableview.getItems());
             saveOrderPurchase();
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
@@ -246,10 +247,10 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     
     
     public void setPurchaseItemTable(){
-        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getId()));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getDescription()));
+        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getProduct_id()));
+        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct_description()));
         quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getQuantity()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(c.getValue().getTemp_productsupplier()).getUnit_measure()));
+        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct_unitmeasure()));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         price_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_total()+" USD"));
