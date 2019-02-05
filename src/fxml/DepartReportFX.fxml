@@ -86,7 +86,7 @@
                                     </VBox>
                                  </content>
                               </Tab>
-                              <Tab closable="false" text="Detalles Por # de Lote">
+                              <Tab closable="false" text="Detalles Por Proceso">
                                  <content>
                                     <VBox>
                                        <children>
