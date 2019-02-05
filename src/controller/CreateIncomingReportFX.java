@@ -429,14 +429,8 @@ public class CreateIncomingReportFX implements Initializable {
     }
     
     public void updateDepartLotCombo(){
-        List<DepartLot> list = new ArrayList<DepartLot>();
-        try{
-            list = msabase.getDepartLotDAO().list(departreportcombo_selection, false);
-            list.removeAll(departlot_queue);
-        } catch(Exception e){
-            
-        }
-        departlot_combo.setItems(FXCollections.observableArrayList(list));
+        departlot_combo.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreportcombo_selection, false)));
+        departlot_combo.getItems().removeAll(departlot_queue);
         departlot_combo.setDisable(departlot_combo.getItems().isEmpty());
     }
     
