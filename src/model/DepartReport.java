@@ -17,6 +17,11 @@ public class DepartReport implements Serializable {
     private Integer id;
     private Date report_date;
     
+    //INNER JOINS
+    private String employee_name;
+    private String company_name;
+    private String company_address;
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -32,6 +37,30 @@ public class DepartReport implements Serializable {
 
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
+    }
+    //INNER JOINS
+    public String getEmployee_name() {
+        return employee_name;
+    }
+
+    public void setEmployee_name(String employee_name) {
+        this.employee_name = employee_name;
+    }
+
+    public String getCompany_name() {
+        return company_name;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
+
+    public String getCompany_address() {
+        return company_address;
+    }
+
+    public void setCompany_address(String company_address) {
+        this.company_address = company_address;
     }
     
     // Object overrides ---------------------------------------------------------------------------

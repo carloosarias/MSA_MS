@@ -6,23 +6,30 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.IncomingLot;
 import model.IncomingReport;
 
@@ -32,6 +39,7 @@ import model.IncomingReport;
  * @author Pavilion Mini
  */
 public class IncomingReportFX implements Initializable {
+    
     @FXML
     private HBox root_hbox;
     @FXML
@@ -75,7 +83,7 @@ public class IncomingReportFX implements Initializable {
     @FXML
     private TableColumn<IncomingLot, String> partnumber_column3;
     @FXML
-    private TableColumn<IncomingLot, String> partrevision_column3;
+    private TableColumn<IncomingLot, String> partrevision_column;
     @FXML
     private TableColumn<IncomingLot, String> lotnumber_column2;
     @FXML
@@ -114,7 +122,28 @@ public class IncomingReportFX implements Initializable {
             }
         });
         
-        
+        add_button.setOnAction((ActionEvent) -> {
+            showAdd_stage();
+            updateIncomingReportTable();
+        });
+    }
+    
+    public void showAdd_stage(){
+        try {
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateIncomingReportFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            add_stage.setTitle("Nuevo Reporte de Reciba");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(DepartReportFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void updateIncomingReportTable(){
@@ -184,7 +213,7 @@ public class IncomingReportFX implements Initializable {
         partnumber_column1.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         partnumber_column2.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         partnumber_column3.setCellValueFactory(new PropertyValueFactory<>("part_number"));
-        partrevision_column3.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
+        partrevision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
         lotnumber_column1.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         lotnumber_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));

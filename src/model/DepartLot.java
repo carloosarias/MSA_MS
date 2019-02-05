@@ -22,8 +22,13 @@ public class DepartLot implements Serializable {
     private String comments;
     private boolean rejected;
     private boolean pending;
+    
     private PartRevision temp_partrevision;
     private ProductPart temp_productpart;
+    
+    //INNER JOINS
+    private String part_number;
+    private String part_revision;
 
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -114,6 +119,23 @@ public class DepartLot implements Serializable {
         }else{
             return "Facturado";
         }
+    }
+    
+    //INNER JOINS
+    public String getPart_number() {
+        return part_number;
+    }
+
+    public void setPart_number(String part_number) {
+        this.part_number = part_number;
+    }
+
+    public String getPart_revision() {
+        return part_revision;
+    }
+
+    public void setPart_revision(String part_revision) {
+        this.part_revision = part_revision;
     }
     
     // Object overrides ---------------------------------------------------------------------------

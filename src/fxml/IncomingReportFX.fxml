@@ -115,7 +115,7 @@
                                                 <TableView fx:id="incominglot_tableview3" prefWidth="962.0">
                                                    <columns>
                                                       <TableColumn fx:id="partnumber_column3" editable="false" prefWidth="150.0" text="# De Parte" />
-                                                      <TableColumn fx:id="partrevision_column3" editable="false" prefWidth="150.0" text="# De Revisión" />
+                                                      <TableColumn fx:id="partrevision_column" editable="false" prefWidth="150.0" text="# De Revisión" />
                                                       <TableColumn fx:id="lotnumber_column2" editable="false" prefWidth="150.0" resizable="false" text="# De Lote" />
                                                       <TableColumn editable="false" prefWidth="200.0" resizable="false" text="Cantidad">
                                                          <columns>

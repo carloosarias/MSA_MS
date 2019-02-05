@@ -169,8 +169,8 @@ public class MainFX implements Initializable {
                         break;
                     case "Reciba":
                         incoming_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
-                        //orderpurchaseincomingreport_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
-                        //depart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX.fxml")));
+                        orderpurchaseincomingreport_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
+                        depart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX.fxml")));
                         root_tabpane.getTabs().setAll(incoming_tab, orderpurchaseincomingreport_tab, depart_tab);
                         break;
                     case "Facturación":

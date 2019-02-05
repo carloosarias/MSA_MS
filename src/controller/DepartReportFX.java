@@ -11,7 +11,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.JDBC.DAOFactory;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +25,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -34,6 +32,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -44,9 +43,7 @@ import javafx.stage.StageStyle;
 import model.CompanyContact;
 import model.DepartLot;
 import model.DepartReport;
-import model.PartRevision;
 import msa_ms.MainApp;
-import static msa_ms.MainApp.openPDF;
 
 /**
  * FXML Controller class
@@ -58,76 +55,94 @@ public class DepartReportFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private TableView<DepartReport> depart_report_tableview;
+    private TableView<DepartReport> departreport_tableview;
     @FXML
-    private TableColumn<DepartReport, Integer> report_id_column;
+    private TableColumn<DepartReport, Integer> reportid_column;
     @FXML
-    private TableColumn<DepartReport, String> report_employee_column;
+    private TableColumn<DepartReport, String> employee_column;
     @FXML
-    private TableColumn<DepartReport, Date> report_date_column;
+    private TableColumn<DepartReport, Date> reportdate_column;
     @FXML
-    private TableColumn<DepartReport, String> report_client_column;
+    private TableColumn<DepartReport, String> client_column;
     @FXML
     private TableColumn<DepartReport, String> address_column;
     @FXML
-    private TableView<PartRevision> partrevision_tableview;
+    private Tab details_tab;
     @FXML
-    private TableColumn<PartRevision, String> part_column;
+    private TableView<DepartLot> departlot_tableview1;
     @FXML
-    private TableColumn<PartRevision, String> revision_column;
+    private TableColumn<DepartLot, String> partnumber_column1;
     @FXML
-    private TableColumn<PartRevision, String> item_qty_column;
+    private TableColumn<DepartLot, Integer> quantity_column1;
     @FXML
-    private TableColumn<PartRevision, String> item_boxqty_column;
+    private TableColumn<DepartLot, Integer> boxquantity_column1;
     @FXML
-    private TableView<DepartLot> departlot_tableview;
+    private TableView<DepartLot> departlot_tableview2;
     @FXML
-    private TableColumn<DepartLot, String> lot_column;
+    private TableColumn<DepartLot, String> partnumber_column2;
     @FXML
-    private TableColumn<DepartLot, Integer> lot_qty;
+    private TableColumn<DepartLot, String> lotnumber_column1;
     @FXML
-    private TableColumn<DepartLot, Integer> lot_boxqty_column;
+    private TableColumn<DepartLot, Integer> quantity_column2;
     @FXML
-    private TableColumn<DepartLot, String> lot_process_column;
+    private TableColumn<DepartLot, Integer> boxquantity_column2;
     @FXML
-    private TableColumn<DepartLot, String> lot_comments_column;
+    private TableColumn<DepartLot, String> process_column1;
+    @FXML
+    private TableView<DepartLot> departlot_tableview3;
+    @FXML
+    private TableColumn<DepartLot, String> partnumber_column3;
+    @FXML
+    private TableColumn<DepartLot, String> partrevision_column;
+    @FXML
+    private TableColumn<DepartLot, String> lotnumber_column2;
+    @FXML
+    private TableColumn<DepartLot, Integer> quantity_column3;
+    @FXML
+    private TableColumn<DepartLot, Integer> boxquantity_column3;
+    @FXML
+    private TableColumn<DepartLot, String> process_column2;
+    @FXML
+    private TableColumn<DepartLot, String> comments_column;
     @FXML
     private Button add_button;
     @FXML
     private Button pdf_button;
     
     private Stage add_stage = new Stage();
-
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setReportTable();
-        setItemTable();
-        setLotTable();
-        depart_report_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartReportDAO().list()));
+        setDepartReportTable();
+        setDepartLotTable();
+        updateDepartReportTable();
         
-        depart_report_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
-            partrevision_tableview.getItems().clear();
-            departlot_tableview.getItems().clear();
-            if(newValue != null){
-                departlot_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(newValue)));
-                partrevision_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listPartRevision(newValue)));
+        details_tab.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        pdf_button.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
+        departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
+            if(!departreport_tableview.getSelectionModel().isEmpty()){
+                updateDepartLotTable();
+            }else{
+                departlot_tableview3.getItems().clear();
+                departlot_tableview3.getItems().clear();
+                departlot_tableview3.getItems().clear();
             }
-            pdf_button.setDisable(newValue == null);
         });
         
         add_button.setOnAction((ActionEvent) -> {
             showAdd_stage();
-            depart_report_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartReportDAO().list()));
+            updateDepartReportTable();
         });
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
-                MainApp.openPDF(buildPDF(depart_report_tableview.getSelectionModel().getSelectedItem()));
+                MainApp.openPDF(buildPDF(departreport_tableview.getSelectionModel().getSelectedItem(), departlot_tableview2.getItems()));
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -153,32 +168,97 @@ public class DepartReportFX implements Initializable {
         }
     }
     
-    public void setReportTable(){
-        report_id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        report_employee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartReportDAO().findEmployee(c.getValue()).toString()));
-        report_date_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
-        report_client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartReportDAO().findCompany(c.getValue()).toString()));
-        address_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartReportDAO().findCompanyAddress(c.getValue()).toString()));
+    public void updateDepartReportTable(){
+        departreport_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartReportDAO().list()));
     }
     
-    public void setItemTable(){
-        part_column.setCellValueFactory(c -> new SimpleStringProperty(
-            msabase.getPartRevisionDAO().findProductPart(c.getValue()).toString())
-        );
-        revision_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        item_qty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findTotalQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
-        item_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findTotalBoxQuantity(depart_report_tableview.getSelectionModel().getSelectedItem(), c.getValue())));
+    public void updateDepartLotTable(){
+        departlot_tableview3.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreport_tableview.getSelectionModel().getSelectedItem())));
+        departlot_tableview2.setItems(FXCollections.observableArrayList(mergeByProcess(departlot_tableview3.getItems())));
+        departlot_tableview1.setItems(FXCollections.observableArrayList(mergeByPart_number(departlot_tableview3.getItems())));
     }
     
-    public void setLotTable(){
-        lot_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        lot_qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
-        lot_process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
-        lot_comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+    public List<DepartLot> mergeByProcess(List<DepartLot> unfilteredList){
+        //find all part_number + process
+        ArrayList<String> partnumber_process = new ArrayList();
+        ArrayList<DepartLot> mergedList = new ArrayList();
+        for(DepartLot depart_lot : unfilteredList){
+            if(partnumber_process.contains(depart_lot.getPart_number()+" "+depart_lot.getProcess())){
+                mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).setQuantity(mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getQuantity() + depart_lot.getQuantity());
+                mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).setBox_quantity(mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getBox_quantity() + depart_lot.getBox_quantity());
+                if(!depart_lot.getComments().equalsIgnoreCase("N/A") && !depart_lot.getComments().replace(" ", "").equals("")){
+                    mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).setComments(mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getComments()+","+depart_lot.getComments());
+                }
+                if(!mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getLot_number().contains(depart_lot.getLot_number())){
+                    mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).setLot_number(mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getLot_number()+","+depart_lot.getLot_number());
+                }
+            }else{
+                partnumber_process.add(depart_lot.getPart_number()+" "+depart_lot.getProcess());
+                DepartLot item = new DepartLot();
+                item.setLot_number(depart_lot.getLot_number());
+                item.setPart_number(depart_lot.getPart_number());
+                item.setProcess(depart_lot.getProcess());
+                item.setQuantity(depart_lot.getQuantity());
+                item.setBox_quantity(depart_lot.getBox_quantity());
+                item.setComments("");
+                if(!depart_lot.getComments().equalsIgnoreCase("N/A") && !depart_lot.getComments().replace(" ", "").equals("")){
+                    item.setComments(depart_lot.getComments());
+                }
+                mergedList.add(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess()),item);
+            }
+        }
+        
+        return mergedList;
     }
-
-    private File buildPDF(DepartReport depart_report) throws Exception{
+    
+    public List<DepartLot> mergeByPart_number(List<DepartLot> unfilteredList){
+        //find all part_number
+        ArrayList<String> partnumber = new ArrayList();
+        ArrayList<DepartLot> mergedList = new ArrayList();
+        for(DepartLot depart_lot : unfilteredList){
+            if(partnumber.contains(depart_lot.getPart_number())){
+                mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).setQuantity(mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).getQuantity() + depart_lot.getQuantity());
+                mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).setBox_quantity(mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).getBox_quantity() + depart_lot.getBox_quantity());
+            }else{
+                partnumber.add(depart_lot.getPart_number());
+                DepartLot item = new DepartLot();
+                item.setPart_number(depart_lot.getPart_number());
+                item.setQuantity(depart_lot.getQuantity());
+                item.setBox_quantity(depart_lot.getBox_quantity());
+                mergedList.add(partnumber.indexOf(depart_lot.getPart_number()),item);
+            }
+        }
+        
+        return mergedList;
+    }
+    
+    public void setDepartReportTable(){
+        reportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
+        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
+        address_column.setCellValueFactory(new PropertyValueFactory<>("company_address"));
+    }
+    
+    public void setDepartLotTable(){
+        partnumber_column1.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        partnumber_column2.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        partnumber_column3.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        partrevision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
+        lotnumber_column1.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        lotnumber_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantity_column2.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantity_column3.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        boxquantity_column1.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        boxquantity_column2.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        boxquantity_column3.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        process_column1.setCellValueFactory(new PropertyValueFactory<>("process"));
+        process_column2.setCellValueFactory(new PropertyValueFactory<>("process"));
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+    }
+    
+    private File buildPDF(DepartReport depart_report, List<DepartLot> departlot_list) throws Exception{
         
             Path template = Files.createTempFile("DepartReportTemplate", ".pdf");
             template.toFile().deleteOnExit();
@@ -200,8 +280,8 @@ public class DepartReportFX implements Initializable {
             fields.get("depart_report_id").setValue(""+depart_report.getId());
             fields.get("date").setValue(depart_report.getReport_date().toString());
             fields.get("employee_email").setValue("cmartinez@maquilasales.com");
-            fields.get("client").setValue(report_client_column.getCellData(depart_report));
-            fields.get("client_address").setValue(address_column.getCellData(depart_report));
+            fields.get("client").setValue(depart_report.getCompany_name());
+            fields.get("client_address").setValue(depart_report.getCompany_address());
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report));
             if(company_contact.isEmpty()){
                 fields.get("contact").setValue("n/a");
@@ -212,57 +292,30 @@ public class DepartReportFX implements Initializable {
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());
                 fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
             }
-            
-            
-            
-            List<PartRevision> part_revision_list = partrevision_tableview.getItems();
-            int i = 0;
-            for(PartRevision part_revision : part_revision_list){
-                List<String> process_list = msabase.getDepartLotDAO().listProcess(part_revision, depart_report);
-                for(String process : process_list){
-                    List<DepartLot> departlot_list = msabase.getDepartLotDAO().list(part_revision, process, depart_report);
-                    List<String> lotnumber_list = new ArrayList();
-                    
-                    for(DepartLot depart_lot : departlot_list){
-                        if(!lotnumber_list.contains(depart_lot.getLot_number())){
-                            lotnumber_list.add(depart_lot.getLot_number());
-                        }
-                    }
-                    
-                    for(String lot_number : lotnumber_list){
-                        int current_row = i+1;
-                        if(current_row > 26) break;
-                        int quantity = 0;
-                        int quantity_box = 0;
-                        fields.get("part_number"+current_row).setValue(part_column.getCellData(part_revision));
-                        fields.get("lotnumber"+current_row).setValue(lot_number);
-                        fields.get("process"+current_row).setValue(process);
-                        List<String> departlot_listcomments = new ArrayList();
-                        
-                        for(DepartLot depart_lot : departlot_list){
-                            if(depart_lot.getLot_number().equals(lot_number)){
-                                if(!depart_lot.getComments().equalsIgnoreCase("N/A") && !depart_lot.getComments().replace(" ", "").equals("")){
-                                    departlot_listcomments.add(depart_lot.getComments());
-                                }
-                                quantity += depart_lot.getQuantity();
-                                quantity_box += depart_lot.getBox_quantity();
-                            }
-                        }
-                        fields.get("quantity"+current_row).setValue(""+quantity);
-                        fields.get("quantity_box"+current_row).setValue(""+quantity_box);
-                        
-                        if(!departlot_listcomments.isEmpty()){
-                            for(String comment : departlot_listcomments){
-                                current_row = i+1;
-                                if(current_row > 26) break;
-                                fields.get("description"+current_row).setValue(comment);
-                                i++;
-                            }
-                        }
-                        i++;
-                    }
-                    
+            int current_row = 1;
+            for(DepartLot item : departlot_list){
+                if(current_row > 26) break;
+                int extra_rows = 0;
+                int offset = 0;
+                fields.get("part_number"+current_row).setValue(item.getPart_number());
+                fields.get("process"+current_row).setValue(item.getProcess());
+                fields.get("quantity"+current_row).setValue(""+item.getQuantity());
+                fields.get("quantity_box"+current_row).setValue(""+item.getBox_quantity());
+                for(String lot_number : item.getLot_number().split(",")){
+                    fields.get("lotnumber"+(current_row+offset)).setValue(lot_number);
+                    offset++;
                 }
+                extra_rows = offset;
+                
+                offset = 0;
+                for(String comment : item.getComments().split(",")){
+                    fields.get("description"+(current_row+offset)).setValue(comment);
+                    offset++;
+                }
+                
+                if(offset > extra_rows) extra_rows = offset;
+
+                current_row = (current_row + extra_rows) + 1;
             }
             
             form.flattenFields();
@@ -270,5 +323,4 @@ public class DepartReportFX implements Initializable {
             
             return output.toFile();
     }
-    
 }

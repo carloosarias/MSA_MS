@@ -28,7 +28,13 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, report_date FROM DEPART_REPORT WHERE id = ?";
+            "SELECT DEPART_REPORT.id, DEPART_REPORT.report_date, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name, COMPANY_ADDRESS.address "
+            + "FROM DEPART_REPORT "
+            + "INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            + "WHERE DEPART_REPORT.id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM DEPART_REPORT WHERE id = ?";
     private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
@@ -36,9 +42,22 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM DEPART_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date FROM DEPART_REPORT ORDER BY id";
+            "SELECT DEPART_REPORT.id, DEPART_REPORT.report_date, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name, COMPANY_ADDRESS.address "
+            + "FROM DEPART_REPORT "
+            + "INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            + "ORDER BY DEPART_REPORT.id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, report_date FROM DEPART_REPORT WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT DEPART_REPORT.id, DEPART_REPORT.report_date, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name, COMPANY_ADDRESS.address "
+            + "FROM DEPART_REPORT "
+            + "INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            + "WHERE DEPART_REPORT.COMPANY_ID = ? "
+            + "ORDER BY DEPART_REPORT.id";
     private static final String SQL_INSERT =
             "INSERT INTO DEPART_REPORT (COMPANY_ID, COMPANY_ADDRESS_ID, EMPLOYEE_ID, report_date) "
             + "VALUES (?, ?, ?, ?)";
@@ -319,6 +338,11 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
         DepartReport depart_report = new DepartReport();
         depart_report.setId(resultSet.getInt("id"));
         depart_report.setReport_date(resultSet.getDate("report_date"));
+        
+        //INNER JOINS
+        depart_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
+        depart_report.setCompany_name(resultSet.getString("COMPANY.name"));
+        depart_report.setCompany_address(resultSet.getString("COMPANY_ADDRESS.address"));
         return depart_report;
     }
 }

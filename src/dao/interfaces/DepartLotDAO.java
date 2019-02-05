@@ -76,20 +76,8 @@ public interface DepartLotDAO {
      */    
     public List<DepartLot> list(String lot_number) throws IllegalArgumentException;
     
-    public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException;
-    
-    /**
-     * Returns a list of distinct PartRevision matching a given DepartReport from the database ordered by PartRevision ID.
-     * The DepartReport ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any PartRevisions matching DepartReport.
-     * @param depart_report The DepartReport to be searched for.
-     * @return A list of distinct PartRevision matching DepartReport from the database ordered by PartRevision ID.
-     * @throws IllegalArgumentException If the DepartReport ID is null.
-     * @throws DAOException If something fails at database level.
-     */       
-    public List<PartRevision> listPartRevision(DepartReport depart_report) throws IllegalArgumentException, DAOException;
+    public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException, DAOException;
     public List<String> listProcess(PartRevision part_revision, DepartReport depart_report) throws IllegalArgumentException, DAOException;
-    
     /**
      * Create the given DepartLot for a given DepartReport in the database. 
      * The DepartReport ID must not be null, the PartRevision ID must not be null
@@ -121,9 +109,6 @@ public interface DepartLotDAO {
      * @throws DAOException If something fails at database level.
      */    
     public void delete(DepartLot depart_lot) throws DAOException;
-    
-    public Integer findTotalQuantity(DepartReport incoming_report, PartRevision part_revision);
-    public Integer findTotalBoxQuantity(DepartReport incoming_report, PartRevision part_revision);
     
     public List<DepartLot> listDateRange(ProductPart product_part, Date start, Date end);
 }
