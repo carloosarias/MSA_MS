@@ -21,6 +21,10 @@ public class OrderPurchase implements Serializable {
     private Double exchange_rate;
     private Double iva_rate;
     
+    //INNER JOINS
+    private String company_name;
+    private String companyaddress_address;
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -68,6 +72,23 @@ public class OrderPurchase implements Serializable {
     
     public void setIva_rate(Double iva_rate){
         this.iva_rate = iva_rate;
+    }
+    
+    //INNER JOINS
+    public String getCompany_name() {
+        return company_name;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
+
+    public String getCompanyaddress_address() {
+        return companyaddress_address;
+    }
+
+    public void setCompanyaddress_address(String companyaddress_address) {
+        this.companyaddress_address = companyaddress_address;
     }
     
     // Object overrides ---------------------------------------------------------------------------

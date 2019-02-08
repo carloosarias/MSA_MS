@@ -26,17 +26,39 @@ import model.OrderPurchase;
 public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE id = ?";
+            "SELECT ORDER_PURCHASE.id, ORDER_PURCHASE.report_date, ORDER_PURCHASE.comments, ORDER_PURCHASE.status, ORDER_PURCHASE.exchange_rate, ORDER_PURCHASE.iva_rate, "
+            + "COMPANY.name, COMPANY_ADDRESS.address "
+            + "FROM ORDER_PURCHASE "
+            + "INNER JOIN COMPANY ON ORDER_PURCHASE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS ON ORDER_PURCHASE.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            + "WHERE ORDER_PURCHASE.id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
             "SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE ORDER BY id";
+            "SELECT ORDER_PURCHASE.id, ORDER_PURCHASE.report_date, ORDER_PURCHASE.comments, ORDER_PURCHASE.status, ORDER_PURCHASE.exchange_rate, ORDER_PURCHASE.iva_rate, "
+            + "COMPANY.name, COMPANY_ADDRESS.address "
+            + "FROM ORDER_PURCHASE "
+            + "INNER JOIN COMPANY ON ORDER_PURCHASE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS ON ORDER_PURCHASE.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            + "ORDER BY ORDER_PURCHASE.id";
     private static final String SQL_LIST_COMPANY_ORDER_BY_ID = 
-            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT ORDER_PURCHASE.id, ORDER_PURCHASE.report_date, ORDER_PURCHASE.comments, ORDER_PURCHASE.status, ORDER_PURCHASE.exchange_rate, ORDER_PURCHASE.iva_rate, "
+            + "COMPANY.name, COMPANY_ADDRESS.address "
+            + "FROM ORDER_PURCHASE "
+            + "INNER JOIN COMPANY ON ORDER_PURCHASE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS ON ORDER_PURCHASE.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            + "WHERE ORDER_PURCHASE.COMPANY_ID = ? "
+            + "ORDER BY ORDER_PURCHASE.id";
     private static final String SQL_LIST_STATUS_ORDER_BY_ID = 
-            "SELECT id, report_date, comments, status, exchange_rate, iva_rate FROM ORDER_PURCHASE WHERE status = ? ORDER BY id";
+            "SELECT ORDER_PURCHASE.id, ORDER_PURCHASE.report_date, ORDER_PURCHASE.comments, ORDER_PURCHASE.status, ORDER_PURCHASE.exchange_rate, ORDER_PURCHASE.iva_rate, "
+            + "COMPANY.name, COMPANY_ADDRESS.address "
+            + "FROM ORDER_PURCHASE "
+            + "INNER JOIN COMPANY ON ORDER_PURCHASE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS ON ORDER_PURCHASE.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            + "WHERE ORDER_PURCHASE.status = ? "
+            + "ORDER BY ORDER_PURCHASE.id";
     private static final String SQL_INSERT = 
             "INSERT INTO ORDER_PURCHASE (COMPANY_ID, COMPANY_ADDRESS_ID, report_date, comments, status, exchange_rate, iva_rate) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -317,12 +339,16 @@ public class OrderPurchaseDAOJDBC implements OrderPurchaseDAO {
      */
     public static OrderPurchase map(ResultSet resultSet) throws SQLException{
         OrderPurchase order_purchase = new OrderPurchase();
-        order_purchase.setId(resultSet.getInt("id"));
-        order_purchase.setReport_date(resultSet.getDate("report_date"));
-        order_purchase.setComments(resultSet.getString("comments"));
-        order_purchase.setStatus(resultSet.getString("status"));
-        order_purchase.setExchange_rate(resultSet.getDouble("exchange_rate"));
-        order_purchase.setIva_rate(resultSet.getDouble("iva_rate"));
+        order_purchase.setId(resultSet.getInt("ORDER_PURCHASE.id"));
+        order_purchase.setReport_date(resultSet.getDate("ORDER_PURCHASE.report_date"));
+        order_purchase.setComments(resultSet.getString("ORDER_PURCHASE.comments"));
+        order_purchase.setStatus(resultSet.getString("ORDER_PURCHASE.status"));
+        order_purchase.setExchange_rate(resultSet.getDouble("ORDER_PURCHASE.exchange_rate"));
+        order_purchase.setIva_rate(resultSet.getDouble("ORDER_PURCHASE.iva_rate"));
+        
+        //INNER JOINS
+        order_purchase.setCompany_name(resultSet.getString("COMPANY.name"));
+        order_purchase.setCompanyaddress_address(resultSet.getString("COMPANY_ADDRESS.address"));
         return order_purchase;
     }
 }

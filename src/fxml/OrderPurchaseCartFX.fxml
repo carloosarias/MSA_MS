@@ -15,20 +15,17 @@
          <children>
             <TableView fx:id="purchaseitem_tableview" editable="true">
               <columns>
-                <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Producto">
+                  <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción de Producto" />
+                <TableColumn fx:id="serialnumber_column" editable="false" prefWidth="120.0" resizable="false" text="Número de Serie" />
+                  <TableColumn fx:id="supplier_column" editable="false" prefWidth="220.0" resizable="false" text="Proveedor" />
+                  <TableColumn editable="false" prefWidth="-1.0" resizable="false" text="Cotización">
                      <columns>
-                      <TableColumn fx:id="productid_column" editable="false" prefWidth="75.0" resizable="false" text="ID" />
-                        <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción" />
+                        <TableColumn fx:id="quantity_column" editable="false" prefWidth="100.0" resizable="false" text="Presentación" />
+                        <TableColumn fx:id="unitmeasure_column" editable="false" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                        <TableColumn fx:id="unitmeasureprice_column" editable="false" prefWidth="100.0" resizable="false" text="Valor Unitario" />
+                        <TableColumn fx:id="unitprice_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Por Bulto" />
                      </columns>
                   </TableColumn>
-                  <TableColumn fx:id="supplier_column" editable="false" prefWidth="100.0" resizable="false" text="Proveedor" />
-                  <TableColumn editable="false" prefWidth="-1.0" resizable="false" text="Presentación">
-                     <columns>
-                        <TableColumn fx:id="quantity_column" prefWidth="100.0" resizable="false" text="Cantd." />
-                        <TableColumn fx:id="unitmeasure_column" prefWidth="100.0" resizable="false" text="Ud. de Medida" />
-                     </columns>
-                  </TableColumn>
-                  <TableColumn fx:id="unitprice_column" editable="false" prefWidth="100.0" resizable="false" text="Precio Unitario" />
                   <TableColumn fx:id="unitsordered_column" prefWidth="120.0" resizable="false" text="Cantidad a ordenar" />
               </columns>
                <VBox.margin>

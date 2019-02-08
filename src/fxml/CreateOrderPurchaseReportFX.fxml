@@ -45,7 +45,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="company_combo" disable="true" prefWidth="150.0">
+                        <ComboBox fx:id="company_combo" disable="true" prefWidth="250.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -64,7 +64,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="companyaddress_combo" prefWidth="150.0">
+                        <ComboBox fx:id="companyaddress_combo" prefWidth="271.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -90,7 +90,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
                               </Label>
-                              <TextField fx:id="exchangerate_field" prefWidth="75.0" text="0.0">
+                              <TextField fx:id="exchangerate_field" prefWidth="75.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -118,7 +118,7 @@
                         </Label>
                         <HBox alignment="CENTER_LEFT">
                            <children>
-                              <TextField fx:id="ivarate_field" prefWidth="75.0" text="0">
+                              <TextField fx:id="ivarate_field" prefWidth="75.0">
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </HBox.margin>
@@ -138,7 +138,7 @@
                <children>
                   <VBox>
                      <children>
-                        <TableView fx:id="purchaseitem_tableview" editable="true" prefWidth="847.0">
+                        <TableView fx:id="purchaseitem_tableview" editable="true">
                           <columns>
                             <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Producto">
                                  <columns>
@@ -146,15 +146,16 @@
                                     <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Presentación">
+                              <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Cotización">
                                  <columns>
-                                    <TableColumn fx:id="quantity_column" editable="false" prefWidth="100.0" resizable="false" text="Cantidad" />
+                                    <TableColumn fx:id="quantity_column" editable="false" prefWidth="100.0" resizable="false" text="Presentación" />
                                     <TableColumn fx:id="unitmeasure_column" editable="false" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                                    <TableColumn fx:id="unitmeasureprice_column" editable="false" prefWidth="120.0" resizable="false" text="Valor Unitario" />
+                                    <TableColumn fx:id="unitprice_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Por Bulto" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn fx:id="unitprice_column" editable="false" prefWidth="100.0" resizable="false" text="Precio Unitario" />
-                              <TableColumn fx:id="unitsordered_column" prefWidth="150.0" resizable="false" text="Cantidad a ordenar" />
-                              <TableColumn fx:id="price_column" editable="false" prefWidth="100.0" resizable="false" text="Precio Calculado" />
+                              <TableColumn fx:id="unitsordered_column" prefWidth="120.0" resizable="false" text="Cantidad a ordenar" />
+                              <TableColumn fx:id="price_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Calculado" />
                           </columns>
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -188,9 +189,31 @@
                                           </Label>
                                        </children>
                                     </HBox>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField fx:id="mxnsubtotal_field" disable="true" prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="MXN">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
-                              <Separator orientation="VERTICAL" />
+                              <Separator orientation="VERTICAL">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin></Separator>
                               <VBox>
                                  <children>
                                     <Label text="IVA Total:">
@@ -217,9 +240,31 @@
                                           </Label>
                                        </children>
                                     </HBox>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField fx:id="mxniva_field" disable="true" prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="MXN">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
-                              <Separator orientation="VERTICAL" />
+                              <Separator orientation="VERTICAL">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin></Separator>
                               <VBox>
                                  <children>
                                     <Label text="Total:">
@@ -246,8 +291,32 @@
                                           </Label>
                                        </children>
                                     </HBox>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField fx:id="mxntotal_field" disable="true" prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="MXN">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
+                              <Separator orientation="VERTICAL">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Separator>
                               <HBox alignment="TOP_CENTER" prefHeight="58.0" prefWidth="410.0">
                                  <children>
                                     <TextArea fx:id="comments_area" prefHeight="50.0" prefWidth="350.0" promptText="Comentarios" wrapText="true">

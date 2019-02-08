@@ -11,8 +11,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Blend?>
-<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -20,221 +18,67 @@
    <children>
       <VBox alignment="CENTER">
          <children>
-            <TableView fx:id="orderpurchase_tableview" prefHeight="512.0">
-              <columns>
-                <TableColumn fx:id="orderid_column" editable="false" prefWidth="75.0" resizable="false" text="# de Orden" />
-                <TableColumn fx:id="orderdate_column" editable="false" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
-                  <TableColumn fx:id="status_column" editable="false" prefWidth="150.0" resizable="false" text="Estado" />
-              </columns>
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TableView>
-            <HBox alignment="TOP_CENTER">
-               <children>
-                  <ComboBox fx:id="status_combo" disable="true" prefWidth="120.0" promptText="Estado">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </ComboBox>
-                  <Button fx:id="changestatus_button" disable="true" mnemonicParsing="false" text="Cambiar Estado">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox alignment="CENTER">
-         <children>
             <TabPane tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Detalles de Selección">
+                  <Tab text="Historial de Orden de Compra">
                      <content>
-                        <VBox>
+                        <VBox alignment="CENTER">
                            <children>
-                              <HBox alignment="TOP_CENTER">
+                              <TableView fx:id="orderpurchase_tableview" prefHeight="458.0">
+                                <columns>
+                                  <TableColumn fx:id="orderid_column" editable="false" prefWidth="100.0" resizable="false" text="# de Reporte" />
+                                  <TableColumn fx:id="orderdate_column" editable="false" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
+                                    <TableColumn fx:id="company_column" editable="false" prefWidth="220.0" resizable="false" text="Proveedor" />
+                                    <TableColumn fx:id="companyaddress_column" editable="false" prefWidth="260.0" resizable="false" text="Dirección" />
+                                    <TableColumn fx:id="exchangerate_column" editable="false" prefWidth="100.0" resizable="false" text="Valor del Dólar" />
+                                    <TableColumn fx:id="ivarate_column" prefWidth="100.0" text="IVA" />
+                                    <TableColumn fx:id="status_column" editable="false" prefWidth="120.0" resizable="false" text="Estado" />
+                                </columns>
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TableView>
+                              <HBox>
                                  <children>
-                                    <VBox />
-                                    <VBox>
-                                       <children>
-                                          <Label text="Proveedor">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <ComboBox fx:id="company_combo" disable="true" prefWidth="150.0" promptText="Proveedor">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                             <effect>
-                                                <ColorAdjust contrast="1.0">
-                                                   <input>
-                                                      <Blend mode="MULTIPLY">
-                                                         <topInput>
-                                                            <Blend mode="MULTIPLY">
-                                                               <topInput>
-                                                                  <Blend mode="MULTIPLY" />
-                                                               </topInput>
-                                                            </Blend>
-                                                         </topInput>
-                                                      </Blend>
-                                                   </input>
-                                                </ColorAdjust>
-                                             </effect>
-                                          </ComboBox>
-                                       </children>
-                                    </VBox>
-                                    <Separator orientation="VERTICAL">
+                                    <ComboBox fx:id="status_combo" disable="true" prefWidth="120.0" promptText="Estado">
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
-                                    </Separator>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Dirección:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <ComboBox fx:id="companyaddress_combo" disable="true" prefWidth="150.0" promptText="Dirección">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                             <effect>
-                                                <ColorAdjust contrast="1.0">
-                                                   <input>
-                                                      <Blend mode="MULTIPLY">
-                                                         <topInput>
-                                                            <Blend mode="MULTIPLY">
-                                                               <topInput>
-                                                                  <Blend mode="MULTIPLY" />
-                                                               </topInput>
-                                                            </Blend>
-                                                         </topInput>
-                                                      </Blend>
-                                                   </input>
-                                                </ColorAdjust>
-                                             </effect>
-                                          </ComboBox>
-                                       </children>
-                                    </VBox>
-                                    <Separator orientation="VERTICAL">
+                                    </ComboBox>
+                                    <Button fx:id="changestatus_button" disable="true" mnemonicParsing="false" text="Cambiar Estado">
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
-                                    </Separator>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Valor del dólar:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <HBox alignment="CENTER_LEFT">
-                                             <children>
-                                                <Label text="\$">
-                                                   <HBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </HBox.margin>
-                                                </Label>
-                                                <TextField fx:id="exchangerate_field" disable="true" editable="false" prefWidth="75.0" text="0.0">
-                                                   <HBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </HBox.margin>
-                                                   <effect>
-                                                      <ColorAdjust contrast="1.0">
-                                                         <input>
-                                                            <Blend mode="MULTIPLY">
-                                                               <topInput>
-                                                                  <Blend mode="MULTIPLY">
-                                                                     <topInput>
-                                                                        <Blend mode="MULTIPLY" />
-                                                                     </topInput>
-                                                                  </Blend>
-                                                               </topInput>
-                                                            </Blend>
-                                                         </input>
-                                                      </ColorAdjust>
-                                                   </effect>
-                                                </TextField>
-                                                <Label text="MXN">
-                                                   <HBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </HBox.margin>
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                    <Separator orientation="VERTICAL">
+                                    </Button>
+                                    <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF">
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </HBox.margin>
-                                    </Separator>
-                                    <VBox>
-                                       <children>
-                                          <Label text="IVA:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <HBox alignment="CENTER_LEFT">
-                                             <children>
-                                                <TextField fx:id="ivarate_field" disable="true" editable="false" prefWidth="75.0" text="0.0">
-                                                   <HBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </HBox.margin>
-                                                   <effect>
-                                                      <ColorAdjust contrast="1.0">
-                                                         <input>
-                                                            <Blend mode="MULTIPLY">
-                                                               <topInput>
-                                                                  <Blend mode="MULTIPLY">
-                                                                     <topInput>
-                                                                        <Blend mode="MULTIPLY" />
-                                                                     </topInput>
-                                                                  </Blend>
-                                                               </topInput>
-                                                            </Blend>
-                                                         </input>
-                                                      </ColorAdjust>
-                                                   </effect>
-                                                </TextField>
-                                                <Label text="\%">
-                                                   <HBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </HBox.margin>
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
+                                    </Button>
                                  </children>
                               </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                  </Tab>
+                <Tab text="Detalles de Selección">
+                     <content>
+                        <VBox alignment="CENTER">
+                           <children>
                               <TableView fx:id="purchaseitem_tableview">
                                  <columns>
-                                    <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Producto">
+                                    <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción de Producto" />
+                                    <TableColumn fx:id="serialnumber_column" editable="false" prefWidth="120.0" resizable="false" text="Número de Serie" />
+                                    <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Cotización">
                                        <columns>
-                                          <TableColumn fx:id="productid_column" prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Presentación">
-                                       <columns>
-                                          <TableColumn fx:id="quantity_column" editable="false" prefWidth="100.0" resizable="false" text="Cantidad" />
+                                          <TableColumn fx:id="quantity_column" editable="false" prefWidth="100.0" resizable="false" text="Presentación" />
                                           <TableColumn fx:id="unitmeasure_column" editable="false" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                                          <TableColumn fx:id="unitmeasureprice_column" editable="false" prefWidth="120.0" resizable="false" text="Valor Unitario" />
+                                          <TableColumn fx:id="unitprice_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Por Bulto" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="unitprice_column" editable="false" prefWidth="100.0" resizable="false" text="Precio Unitario" />
-                                    <TableColumn fx:id="unitsordered_column" editable="false" prefWidth="150.0" resizable="false" text="Cantidad Ordenada" />
-                                    <TableColumn fx:id="price_column" editable="false" prefWidth="100.0" resizable="false" text="Precio Final" />
+                                    <TableColumn fx:id="unitsordered_column" editable="false" prefWidth="120.0" resizable="false" text="Cantidad Ordenada" />
+                                    <TableColumn fx:id="price_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Calculado" />
                                  </columns>
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -260,23 +104,27 @@
                                                    <HBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>
-                                                   <effect>
-                                                      <ColorAdjust contrast="1.0">
-                                                         <input>
-                                                            <Blend mode="MULTIPLY">
-                                                               <topInput>
-                                                                  <Blend mode="MULTIPLY">
-                                                                     <topInput>
-                                                                        <Blend mode="MULTIPLY" />
-                                                                     </topInput>
-                                                                  </Blend>
-                                                               </topInput>
-                                                            </Blend>
-                                                         </input>
-                                                      </ColorAdjust>
-                                                   </effect>
                                                 </TextField>
                                                 <Label text="USD">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="\$">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="mxnsubtotal_field" disable="true" editable="false" prefWidth="75.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label text="MXN">
                                                    <HBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>
@@ -308,23 +156,27 @@
                                                    <HBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>
-                                                   <effect>
-                                                      <ColorAdjust contrast="1.0">
-                                                         <input>
-                                                            <Blend mode="MULTIPLY">
-                                                               <topInput>
-                                                                  <Blend mode="MULTIPLY">
-                                                                     <topInput>
-                                                                        <Blend mode="MULTIPLY" />
-                                                                     </topInput>
-                                                                  </Blend>
-                                                               </topInput>
-                                                            </Blend>
-                                                         </input>
-                                                      </ColorAdjust>
-                                                   </effect>
                                                 </TextField>
                                                 <Label text="USD">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="\$">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="mxniva_field" disable="true" editable="false" prefWidth="75.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label text="MXN">
                                                    <HBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>
@@ -356,23 +208,27 @@
                                                    <HBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>
-                                                   <effect>
-                                                      <ColorAdjust contrast="1.0">
-                                                         <input>
-                                                            <Blend mode="MULTIPLY">
-                                                               <topInput>
-                                                                  <Blend mode="MULTIPLY">
-                                                                     <topInput>
-                                                                        <Blend mode="MULTIPLY" />
-                                                                     </topInput>
-                                                                  </Blend>
-                                                               </topInput>
-                                                            </Blend>
-                                                         </input>
-                                                      </ColorAdjust>
-                                                   </effect>
                                                 </TextField>
                                                 <Label text="USD">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="\$">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="mxntotal_field" disable="true" editable="false" prefWidth="75.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label text="MXN">
                                                    <HBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>
@@ -387,21 +243,6 @@
                                              <HBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </HBox.margin>
-                                             <effect>
-                                                <ColorAdjust contrast="1.0">
-                                                   <input>
-                                                      <Blend mode="MULTIPLY">
-                                                         <topInput>
-                                                            <Blend mode="MULTIPLY">
-                                                               <topInput>
-                                                                  <Blend mode="MULTIPLY" />
-                                                               </topInput>
-                                                            </Blend>
-                                                         </topInput>
-                                                      </Blend>
-                                                   </input>
-                                                </ColorAdjust>
-                                             </effect>
                                           </TextArea>
                                        </children>
                                     </HBox>

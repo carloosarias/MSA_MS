@@ -27,13 +27,24 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, units_ordered, price_timestamp, price_updated, date_modified, modified FROM PURCHASE_ITEM WHERE id = ?";
+            "SELECT PURCHASE_ITEM.id, PURCHASE_ITEM.units_ordered, PURCHASE_ITEM.price_timestamp, PURCHASE_ITEM.price_updated, PURCHASE_ITEM.date_modified, PURCHASE_ITEM.modified, "
+            + "PRODUCT_SUPPLIER.serial_number, PRODUCT_SUPPLIER.quantity, PRODUCT.description, PRODUCT.unit_measure "
+            + "FROM PURCHASE_ITEM "
+            + "INNER JOIN PRODUCT_SUPPLIER ON PURCHASE_ITEM.PRODUCT_SUPPLIER_ID = PRODUCT_SUPPLIER.id "
+            + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
+            + "WHERE PURCHASE_ITEM.id = ?";
     private static final String SQL_FIND_ORDER_PURCHASE_BY_ID = 
             "SELECT ORDER_PURCHASE_ID FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_FIND_PRODUCT_SUPPLIER_BY_ID = 
             "SELECT PRODUCT_SUPPLIER_ID FROM PURCHASE_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_PURCHASE_ORDER_BY_ID = 
-            "SELECT id, units_ordered, price_timestamp, price_updated, date_modified, modified FROM PURCHASE_ITEM WHERE ORDER_PURCHASE_ID = ? ORDER BY id";
+            "SELECT PURCHASE_ITEM.id, PURCHASE_ITEM.units_ordered, PURCHASE_ITEM.price_timestamp, PURCHASE_ITEM.price_updated, PURCHASE_ITEM.date_modified, PURCHASE_ITEM.modified, "
+            + "PRODUCT_SUPPLIER.serial_number, PRODUCT_SUPPLIER.quantity, PRODUCT.description, PRODUCT.unit_measure "
+            + "FROM PURCHASE_ITEM "
+            + "INNER JOIN PRODUCT_SUPPLIER ON PURCHASE_ITEM.PRODUCT_SUPPLIER_ID = PRODUCT_SUPPLIER.id "
+            + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
+            + "WHERE PURCHASE_ITEM.ORDER_PURCHASE_ID = ? "
+            + "ORDER BY PURCHASE_ITEM.id";
     private static final String SQL_INSERT = 
             "INSERT INTO PURCHASE_ITEM (ORDER_PURCHASE_ID, PRODUCT_SUPPLIER_ID, units_ordered, price_timestamp, price_updated, date_modified, modified) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -272,12 +283,18 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
      */
     public static PurchaseItem map(ResultSet resultSet) throws SQLException{
         PurchaseItem purchase_item = new PurchaseItem();
-        purchase_item.setId(resultSet.getInt("id"));
-        purchase_item.setUnits_ordered(resultSet.getInt("units_ordered"));
-        purchase_item.setPrice_timestamp(resultSet.getDouble("price_timestamp"));
-        purchase_item.setPrice_updated(resultSet.getDouble("price_updated"));
-        purchase_item.setDate_modified(resultSet.getDate("date_modified"));
-        purchase_item.setModified(resultSet.getBoolean("modified"));
+        purchase_item.setId(resultSet.getInt("PURCHASE_ITEM.id"));
+        purchase_item.setUnits_ordered(resultSet.getInt("PURCHASE_ITEM.units_ordered"));
+        purchase_item.setPrice_timestamp(resultSet.getDouble("PURCHASE_ITEM.price_timestamp"));
+        purchase_item.setPrice_updated(resultSet.getDouble("PURCHASE_ITEM.price_updated"));
+        purchase_item.setDate_modified(resultSet.getDate("PURCHASE_ITEM.date_modified"));
+        purchase_item.setModified(resultSet.getBoolean("PURCHASE_ITEM.modified"));
+        
+        //INNER JOINS
+        purchase_item.setProductsupplier_serialnumber(resultSet.getString("PRODUCT_SUPPLIER.serial_number"));
+        purchase_item.setProductsupplier_quantity(resultSet.getDouble("PRODUCT_SUPPLIER.quantity"));
+        purchase_item.setProduct_description(resultSet.getString("PRODUCT.description"));
+        purchase_item.setProduct_unitmeasure(resultSet.getString("PRODUCT.unit_measure"));
         return purchase_item;
     }
 }

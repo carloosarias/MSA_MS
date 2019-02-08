@@ -95,6 +95,7 @@ public class AddressFX implements Initializable {
             if(!testFields()){
                 return;
             }
+            address_field.setText(address_field.getText().replace("\r\n", " ").replace("\n", " "));
             if(id_field.getText().replace(" ", "").equals("")){
                 msabase.getCompanyAddressDAO().create(msabase.getCompanyDAO().find(CompanyFX.getCompanyId()),mapAddress(new CompanyAddress()));
             } else{

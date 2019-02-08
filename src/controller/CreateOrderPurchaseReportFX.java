@@ -9,12 +9,15 @@ import dao.DAOException;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -24,10 +27,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import model.Company;
 import model.CompanyAddress;
@@ -65,6 +70,8 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     @FXML
     private TableColumn<PurchaseItem, String> unitmeasure_column;
     @FXML
+    private TableColumn<PurchaseItem, String> unitmeasureprice_column;
+    @FXML
     private TableColumn<PurchaseItem, String> unitprice_column;
     @FXML
     private TableColumn<PurchaseItem, Integer> unitsordered_column;
@@ -77,6 +84,12 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     @FXML
     private TextField total_field;
     @FXML
+    private TextField mxnsubtotal_field;
+    @FXML
+    private TextField mxniva_field;
+    @FXML
+    private TextField mxntotal_field;
+    @FXML
     private TextArea comments_area;
     @FXML
     private Button cancel_button;
@@ -86,13 +99,15 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     public static Company company_selection;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-
+    
+    DecimalFormat df = new DecimalFormat("#");
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        df.setMaximumFractionDigits(4);
+        
         reportdate_picker.setValue(LocalDate.now());
         
         company_combo.getItems().setAll(company_selection);
@@ -108,12 +123,14 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         
         calculateTotals();
         
-        OrderPurchaseCartFX.cart_list.removeAll(purchaseitem_tableview.getItems());
-        
-        ivarate_field.setOnAction((ActionEvent) -> {
+        ivarate_field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             calculateTotals();
         });
         
+        exchangerate_field.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            calculateTotals();
+        });
+                
         cancel_button.setOnAction((ActionEvent) -> {
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
@@ -147,6 +164,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     
     public void savePurchaseItems(OrderPurchase order_purchase){
         try{
+            OrderPurchaseCartFX.cart_list.removeAll(purchaseitem_tableview.getItems());
             for(PurchaseItem item : purchaseitem_tableview.getItems()){
                 item.setPrice_updated(item.getPrice_timestamp());
                 item.setDate_modified(order_purchase.getReport_date());
@@ -158,6 +176,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
                 msabase.getPurchaseItemDAO().delete(item);
             }
             msabase.getOrderPurchaseDAO().delete(order_purchase);
+            OrderPurchaseCartFX.cart_list.addAll(purchaseitem_tableview.getItems());
             System.out.println("Failed to generate Purchase Items; DB Entries were deleted"+e.getMessage());
         }
         
@@ -197,7 +216,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
             Double.parseDouble(ivarate_field.getText());
         }catch(Exception e){
             ivarate_field.setStyle("-fx-background-color: lightpink;");
-            ivarate_field.setText("0");
+            ivarate_field.setText("0.0");
             b = false;
         }
         
@@ -215,24 +234,49 @@ public class CreateOrderPurchaseReportFX implements Initializable {
             subtotal += item.getPrice_total();
         }
         
-        subtotal_field.setText(""+subtotal);
+        subtotal_field.setText(df.format(subtotal));
+        mxnsubtotal_field.setText(df.format(subtotal*Double.parseDouble(exchangerate_field.getText())));
     }
+    
+    public void clearTotals(){
+        subtotal_field.setText("0.0");
+        mxnsubtotal_field.setText("0.0");
+        iva_field.setText("0.0");
+        mxniva_field.setText("0.0");
+        mxntotal_field.setText("0.0");
+        mxntotal_field.setText("0.0");
+    }
+    
     public void calculateTotals(){
+        try{
+            exchangerate_field.setStyle(null);
+            Double.parseDouble(exchangerate_field.getText());
+        }catch(Exception e){
+            exchangerate_field.setStyle("-fx-background-color: lightpink;");
+            clearTotals();
+            return;
+        }
+        try{
+            ivarate_field.setStyle(null);
+            Double.parseDouble(ivarate_field.getText());
+        }catch(Exception e){
+            ivarate_field.setStyle("-fx-background-color: lightpink;");
+            clearTotals();
+            return;
+        }
         setSubtotal();
         setIva();
         setTotal();
     }
+    
     public void setIva(){
-        try{
-            Integer.parseInt(ivarate_field.getText());
-        } catch(NumberFormatException e){
-            ivarate_field.setText("0");
-        }
-        iva_field.setText(""+(Double.parseDouble(subtotal_field.getText())*(Double.parseDouble(ivarate_field.getText())/100)));
+        iva_field.setText((df.format(Double.parseDouble(subtotal_field.getText())*(Double.parseDouble(ivarate_field.getText())/100))));
+        mxniva_field.setText(df.format(Double.parseDouble(iva_field.getText())*Double.parseDouble(exchangerate_field.getText())));
     }
     
     public void setTotal(){
-        total_field.setText(""+(Double.parseDouble(subtotal_field.getText())+Double.parseDouble(iva_field.getText())));
+        total_field.setText(df.format((Double.parseDouble(subtotal_field.getText())+Double.parseDouble(iva_field.getText()))));
+        mxntotal_field.setText(df.format((Double.parseDouble(total_field.getText())*Double.parseDouble(exchangerate_field.getText()))));
     }
     
     public ObservableList<PurchaseItem> filterCart_list(ObservableList<PurchaseItem> cart_list, Company company_selection){
@@ -247,10 +291,11 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     
     
     public void setPurchaseItemTable(){
-        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getProduct_id()));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct_description()));
-        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getQuantity()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct_unitmeasure()));
+        productid_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getProductsupplier_serialnumber())));
+        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_description()));
+        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getProductsupplier_quantity())));
+        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_unitmeasure()));
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getPrice_unit()/c.getValue().getProductsupplier_quantity()))+" USD"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         price_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_total()+" USD"));

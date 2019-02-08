@@ -23,6 +23,12 @@ public class PurchaseItem implements Serializable{
     
     private ProductSupplier temp_productsupplier;
     
+    //INNER JOINS
+    private String productsupplier_serialnumber;
+    private String product_description;
+    private double productsupplier_quantity;
+    private String product_unitmeasure;
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -95,6 +101,39 @@ public class PurchaseItem implements Serializable{
         return price_timestamp*units_ordered;
     }
     
+    //INNER JOINS
+    public String getProductsupplier_serialnumber() {
+        return productsupplier_serialnumber;
+    }
+
+    public void setProductsupplier_serialnumber(String productsupplier_serialnumber) {
+        this.productsupplier_serialnumber = productsupplier_serialnumber;
+    }
+
+    public String getProduct_description() {
+        return product_description;
+    }
+
+    public void setProduct_description(String product_description) {
+        this.product_description = product_description;
+    }
+
+    public double getProductsupplier_quantity() {
+        return productsupplier_quantity;
+    }
+
+    public void setProductsupplier_quantity(double productsupplier_quantity) {
+        this.productsupplier_quantity = productsupplier_quantity;
+    }
+
+    public String getProduct_unitmeasure() {
+        return product_unitmeasure;
+    }
+
+    public void setProduct_unitmeasure(String product_unitmeasure) {
+        this.product_unitmeasure = product_unitmeasure;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -127,4 +166,5 @@ public class PurchaseItem implements Serializable{
     public String toString() {
         return String.format("%f", id);
     }
+
 }

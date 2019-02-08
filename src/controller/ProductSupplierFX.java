@@ -42,7 +42,7 @@ public class ProductSupplierFX implements Initializable {
     @FXML
     private TableView<ProductSupplier> productsupplier_tableview;
     @FXML
-    private TableColumn<ProductSupplier, Integer> id_column;
+    private TableColumn<ProductSupplier, String> serialnumber_column;
     @FXML
     private TableColumn<ProductSupplier, String> description_column;
     @FXML
@@ -95,6 +95,10 @@ public class ProductSupplierFX implements Initializable {
             PurchaseItem item = new PurchaseItem();
             item.setTemp_productsupplier(productsupplier_tableview.getSelectionModel().getSelectedItem());
             item.setPrice_timestamp(productsupplier_tableview.getSelectionModel().getSelectedItem().getUnit_price());
+            item.setProductsupplier_serialnumber(item.getTemp_productsupplier().getSerial_number());
+            item.setProduct_unitmeasure(item.getTemp_productsupplier().getProduct_unitmeasure());
+            item.setProduct_description(item.getTemp_productsupplier().getProduct_description());
+            item.setProductsupplier_quantity(item.getTemp_productsupplier().getQuantity());
             item.setUnits_ordered(1);
             OrderPurchaseCartFX.cart_list.add(item);
         });
@@ -126,7 +130,13 @@ public class ProductSupplierFX implements Initializable {
     public void setProductSupplierTable(){
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(4);
-        id_column.setCellValueFactory(new PropertyValueFactory("product_id"));
+        serialnumber_column.setCellValueFactory(new PropertyValueFactory("serial_number"));
+        serialnumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        serialnumber_column.setOnEditCommit((TableColumn.CellEditEvent<ProductSupplier, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setSerial_number(t.getNewValue());
+            msabase.getProductSupplierDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            productsupplier_tableview.refresh();
+        });
         description_column.setCellValueFactory(new PropertyValueFactory("product_description"));
         supplier_column.setCellValueFactory(new PropertyValueFactory("company_name"));
         unitmeasure_column.setCellValueFactory(new PropertyValueFactory("product_unitmeasure"));

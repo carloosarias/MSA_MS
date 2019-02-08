@@ -8,6 +8,7 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +49,7 @@ public class OrderPurchaseCartFX implements Initializable {
     @FXML
     private TableView<PurchaseItem> purchaseitem_tableview;
     @FXML
-    private TableColumn<PurchaseItem, String> productid_column;
+    private TableColumn<PurchaseItem, String> serialnumber_column;
     @FXML
     private TableColumn<PurchaseItem, String> description_column;
     @FXML
@@ -57,6 +58,8 @@ public class OrderPurchaseCartFX implements Initializable {
     private TableColumn<PurchaseItem, String> quantity_column;
     @FXML
     private TableColumn<PurchaseItem, String> unitmeasure_column;
+    @FXML
+    private TableColumn<PurchaseItem, String> unitmeasureprice_column;
     @FXML
     private TableColumn<PurchaseItem, String> unitprice_column;
     @FXML
@@ -100,6 +103,7 @@ public class OrderPurchaseCartFX implements Initializable {
             CreateOrderPurchaseReportFX.company_selection = company_combo.getSelectionModel().getSelectedItem();
             showAdd_stage();
             company_combo.getSelectionModel().clearSelection();
+            purchaseitem_tableview.refresh();
             OrderPurchaseFX.updateOrderPurchaseList(msabase);
         });
         
@@ -138,14 +142,17 @@ public class OrderPurchaseCartFX implements Initializable {
         
         company_list.setAll(FXCollections.observableArrayList(company_set));
     }
-    
+
     public void setPurchaseItemTable(){
-        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getProduct_id()));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct_description()));
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(4);
+        serialnumber_column.setCellValueFactory(new PropertyValueFactory("serial_number"));
+        description_column.setCellValueFactory(new PropertyValueFactory("product_description"));
         supplier_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getCompany_name()));
-        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_productsupplier().getQuantity()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getProduct_unitmeasure()));
+        quantity_column.setCellValueFactory(new PropertyValueFactory("productsupplier_quantity"));
+        unitmeasure_column.setCellValueFactory(new PropertyValueFactory("product_unitmeasure"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getPrice_unit()/c.getValue().getTemp_productsupplier().getQuantity()))+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         unitsordered_column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         unitsordered_column.setOnEditCommit((TableColumn.CellEditEvent<PurchaseItem, Integer> t) -> {

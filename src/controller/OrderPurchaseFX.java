@@ -18,6 +18,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import model.Company;
-import model.CompanyAddress;
-import model.IncomingReport;
 import model.OrderPurchase;
 import model.PurchaseItem;
 import msa_ms.MainApp;
@@ -56,6 +54,14 @@ public class OrderPurchaseFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchase, Date> orderdate_column;
     @FXML
+    private TableColumn<OrderPurchase, String> company_column;
+    @FXML
+    private TableColumn<OrderPurchase, String> companyaddress_column;
+    @FXML
+    private TableColumn<OrderPurchase, String> exchangerate_column;
+    @FXML
+    private TableColumn<OrderPurchase, String> ivarate_column;
+    @FXML
     private TableColumn<OrderPurchase, String> status_column;
     @FXML
     private ComboBox<String> status_combo;
@@ -64,23 +70,17 @@ public class OrderPurchaseFX implements Initializable {
     @FXML
     private Button pdf_button;
     @FXML
-    private ComboBox<Company> company_combo;
-    @FXML
-    private ComboBox<CompanyAddress> companyaddress_combo;
-    @FXML
-    private TextField exchangerate_field;
-    @FXML
-    private TextField ivarate_field;
-    @FXML
     private TableView<PurchaseItem> purchaseitem_tableview;
     @FXML
-    private TableColumn<PurchaseItem, String> productid_column;
+    private TableColumn<PurchaseItem, String> serialnumber_column;
     @FXML
     private TableColumn<PurchaseItem, String> description_column;
     @FXML
     private TableColumn<PurchaseItem, String> quantity_column;
     @FXML
     private TableColumn<PurchaseItem, String> unitmeasure_column;
+    @FXML
+    private TableColumn<PurchaseItem, String> unitmeasureprice_column;
     @FXML
     private TableColumn<PurchaseItem, String> unitprice_column;
     @FXML
@@ -94,44 +94,43 @@ public class OrderPurchaseFX implements Initializable {
     @FXML
     private TextField total_field;
     @FXML
+    private TextField mxnsubtotal_field;
+    @FXML
+    private TextField mxniva_field;
+    @FXML
+    private TextField mxntotal_field;
+    @FXML
     private TextArea comments_area;
     
     private static ObservableList<OrderPurchase> orderpurchase_list = FXCollections.observableArrayList();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
+    DecimalFormat df = new DecimalFormat("#");
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        df.setMaximumFractionDigits(4);
+        
         setOrderPurchaseTable();
         updateOrderPurchaseList(msabase);
         orderpurchase_tableview.setItems(orderpurchase_list);
+        
         status_combo.disableProperty().bind(orderpurchase_tableview.getSelectionModel().selectedItemProperty().isNull());
         pdf_button.disableProperty().bind(orderpurchase_tableview.getSelectionModel().selectedItemProperty().isNull());
         changestatus_button.disableProperty().bind(status_combo.getSelectionModel().selectedItemProperty().isNull());
-        
         
         setPurchaseItemTable();
         
         status_combo.setItems(FXCollections.observableArrayList(MainApp.orderpurchase_status));
         
         orderpurchase_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends OrderPurchase> observable, OrderPurchase oldValue, OrderPurchase newValue) -> {
-            try{
-                purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
-                company_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompany(newValue)));
-                companyaddress_combo.setItems(FXCollections.observableArrayList(msabase.getOrderPurchaseDAO().findCompanyAddress(newValue)));
-                company_combo.getSelectionModel().selectFirst();
-                companyaddress_combo.getSelectionModel().selectFirst();
-                exchangerate_field.setText(""+newValue.getExchange_rate());
-                ivarate_field.setText(""+newValue.getIva_rate());
-                calculateTotals();
-                comments_area.setText(newValue.getComments());
-            }catch(Exception e){
-                clearFields();
-            }
+            purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
+            calculateTotals();
+            comments_area.setText(newValue.getComments());
             status_combo.getSelectionModel().clearSelection();
         });
         
@@ -151,29 +150,22 @@ public class OrderPurchaseFX implements Initializable {
         });
     }
     
-    public void clearFields(){
-        purchaseitem_tableview.getItems().clear();
-        company_combo.getItems().clear();
-        companyaddress_combo.getItems().clear();
-        exchangerate_field.setText("N/A");
-        ivarate_field.setText("N/A");
-        subtotal_field.setText("N/A");
-        iva_field.setText("N/A");
-        total_field.setText("N/A");
-        comments_area.setText("N/A");
-    }
-    
     public void setOrderPurchaseTable(){
         orderid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         orderdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        company_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
+        companyaddress_column.setCellValueFactory(new PropertyValueFactory<>("companyaddress_address"));
+        exchangerate_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getExchange_rate())+" MXN"));
+        ivarate_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getIva_rate())+"%"));
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
     
     public void setPurchaseItemTable(){
-        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue())).getId()));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue())).getDescription()));
-        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getPurchaseItemDAO().findProductSupplier(c.getValue()).getQuantity()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue())).getUnit_measure()));
+        serialnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProductsupplier_serialnumber()));
+        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_description()));
+        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getProductsupplier_quantity())));
+        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_unitmeasure()));
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getPrice_unit()/c.getValue().getProductsupplier_quantity()))+" USD"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         price_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_total()+" USD"));
@@ -190,7 +182,8 @@ public class OrderPurchaseFX implements Initializable {
             subtotal += item.getPrice_total();
         }
         
-        subtotal_field.setText(""+subtotal);
+        subtotal_field.setText(df.format(subtotal));
+        mxnsubtotal_field.setText(df.format(subtotal*orderpurchase_tableview.getSelectionModel().getSelectedItem().getExchange_rate()));
     }
     public void calculateTotals(){
         setSubtotal();
@@ -198,16 +191,13 @@ public class OrderPurchaseFX implements Initializable {
         setTotal();
     }
     public void setIva(){
-        try{
-            Integer.parseInt(ivarate_field.getText());
-        } catch(NumberFormatException e){
-            ivarate_field.setText("0");
-        }
-        iva_field.setText(""+(Double.parseDouble(subtotal_field.getText())*(Double.parseDouble(ivarate_field.getText())/100)));
+        iva_field.setText(df.format(Double.parseDouble(subtotal_field.getText())*orderpurchase_tableview.getSelectionModel().getSelectedItem().getIva_rate()/100));
+        mxniva_field.setText(df.format(Double.parseDouble(iva_field.getText())*orderpurchase_tableview.getSelectionModel().getSelectedItem().getExchange_rate()));
     }
     
     public void setTotal(){
-        total_field.setText(""+(Double.parseDouble(subtotal_field.getText())+Double.parseDouble(iva_field.getText())));
+        total_field.setText(df.format(Double.parseDouble(subtotal_field.getText())+Double.parseDouble(iva_field.getText())));
+        mxntotal_field.setText(df.format(Double.parseDouble(total_field.getText())*orderpurchase_tableview.getSelectionModel().getSelectedItem().getExchange_rate()));
     }
     
     public File buildPDF(OrderPurchase order_purchase) throws IOException{
@@ -229,8 +219,9 @@ public class OrderPurchaseFX implements Initializable {
         Map<String, PdfFormField> fields = form.getFormFields();
         fields.get("id").setValue(""+order_purchase.getId());
         fields.get("report_date").setValue(order_purchase.getReport_date().toString());
-        fields.get("company_name").setValue(msabase.getOrderPurchaseDAO().findCompany(order_purchase).getName());
-        fields.get("company_address").setValue(msabase.getOrderPurchaseDAO().findCompanyAddress(order_purchase).getAddress());
+        fields.get("employee_email").setValue("cmartinez@maquilasales.com");
+        fields.get("company_name").setValue(order_purchase.getCompany_name());
+        fields.get("company_address").setValue(order_purchase.getCompanyaddress_address());
         fields.get("iva_rate").setValue("%"+order_purchase.getIva_rate());
         fields.get("exchange_rate").setValue("$1 USD = $"+order_purchase.getExchange_rate()+" MXN");
         fields.get("comments").setValue(order_purchase.getComments());
@@ -239,10 +230,12 @@ public class OrderPurchaseFX implements Initializable {
         int i = 0;
         for(PurchaseItem purchase_item : purchaseitem_list){
             int current_row = i+1;
+            fields.get("serial_number"+current_row).setValue(purchase_item.getProductsupplier_serialnumber());
             fields.get("quantity_ordered"+current_row).setValue("x"+purchase_item.getUnits_ordered());
-            fields.get("description"+current_row).setValue(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(purchase_item)).getDescription());
-            fields.get("quantity"+current_row).setValue(""+msabase.getPurchaseItemDAO().findProductSupplier(purchase_item).getQuantity());
-            fields.get("unit_measure"+current_row).setValue(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(purchase_item)).getUnit_measure());
+            fields.get("description"+current_row).setValue(purchase_item.getProduct_description());
+            fields.get("quantity"+current_row).setValue(df.format(purchase_item.getProductsupplier_quantity()));
+            fields.get("unit_measure"+current_row).setValue(purchase_item.getProduct_unitmeasure());
+            fields.get("unitmeasure_price"+current_row).setValue("$"+df.format(purchase_item.getPrice_unit()/purchase_item.getProductsupplier_quantity())+" USD");
             fields.get("unit_price"+current_row).setValue("$"+purchase_item.getPrice_unit()+" USD");
             fields.get("price_lot"+current_row).setValue("$ "+purchase_item.getPrice_total()+" USD");
             i++;
@@ -250,6 +243,9 @@ public class OrderPurchaseFX implements Initializable {
         fields.get("subtotal").setValue("$ "+subtotal_field.getText()+" USD");
         fields.get("iva").setValue("$ "+iva_field.getText()+" USD");
         fields.get("total").setValue("$ "+total_field.getText()+" USD");
+        fields.get("subtotal").setValue("$ "+mxnsubtotal_field.getText()+" MXN");
+        fields.get("iva").setValue("$ "+mxniva_field.getText()+" MXN");
+        fields.get("total").setValue("$ "+mxntotal_field.getText()+" MXN");
 
         form.flattenFields();
         pdf.close();
