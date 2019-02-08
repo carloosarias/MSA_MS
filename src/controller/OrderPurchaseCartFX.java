@@ -146,7 +146,7 @@ public class OrderPurchaseCartFX implements Initializable {
     public void setPurchaseItemTable(){
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(4);
-        serialnumber_column.setCellValueFactory(new PropertyValueFactory("serial_number"));
+        serialnumber_column.setCellValueFactory(new PropertyValueFactory("productsupplier_serialnumber"));
         description_column.setCellValueFactory(new PropertyValueFactory("product_description"));
         supplier_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productsupplier().getCompany_name()));
         quantity_column.setCellValueFactory(new PropertyValueFactory("productsupplier_quantity"));

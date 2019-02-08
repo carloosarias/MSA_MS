@@ -62,7 +62,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     @FXML
     private TableView<PurchaseItem> purchaseitem_tableview;
     @FXML
-    private TableColumn<PurchaseItem, String> productid_column;
+    private TableColumn<PurchaseItem, String> serialnumber_column;
     @FXML
     private TableColumn<PurchaseItem, String> description_column;
     @FXML
@@ -291,8 +291,8 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     
     
     public void setPurchaseItemTable(){
-        productid_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getProductsupplier_serialnumber())));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_description()));
+        serialnumber_column.setCellValueFactory(new PropertyValueFactory("productsupplier_serialnumber"));
+        description_column.setCellValueFactory(new PropertyValueFactory("product_description"));
         quantity_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getProductsupplier_quantity())));
         unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_unitmeasure()));
         unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getPrice_unit()/c.getValue().getProductsupplier_quantity()))+" USD"));

@@ -243,9 +243,9 @@ public class OrderPurchaseFX implements Initializable {
         fields.get("subtotal").setValue("$ "+subtotal_field.getText()+" USD");
         fields.get("iva").setValue("$ "+iva_field.getText()+" USD");
         fields.get("total").setValue("$ "+total_field.getText()+" USD");
-        fields.get("subtotal").setValue("$ "+mxnsubtotal_field.getText()+" MXN");
-        fields.get("iva").setValue("$ "+mxniva_field.getText()+" MXN");
-        fields.get("total").setValue("$ "+mxntotal_field.getText()+" MXN");
+        fields.get("mxn_subtotal").setValue("$ "+mxnsubtotal_field.getText()+" MXN");
+        fields.get("mxn_iva").setValue("$ "+mxniva_field.getText()+" MXN");
+        fields.get("mxn_total").setValue("$ "+mxntotal_field.getText()+" MXN");
 
         form.flattenFields();
         pdf.close();

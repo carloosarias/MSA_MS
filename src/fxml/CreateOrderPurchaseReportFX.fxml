@@ -140,12 +140,8 @@
                      <children>
                         <TableView fx:id="purchaseitem_tableview" editable="true">
                           <columns>
-                            <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Producto">
-                                 <columns>
-                                  <TableColumn fx:id="productid_column" editable="false" prefWidth="75.0" resizable="false" text="ID" />
-                                    <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción" />
-                                 </columns>
-                              </TableColumn>
+                              <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción" />
+                            <TableColumn fx:id="serialnumber_column" editable="false" prefWidth="120.0" resizable="false" text="Número de Serie" />
                               <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Cotización">
                                  <columns>
                                     <TableColumn fx:id="quantity_column" editable="false" prefWidth="100.0" resizable="false" text="Presentación" />
