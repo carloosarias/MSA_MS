@@ -28,19 +28,52 @@ import model.InvoiceItem;
 public class InvoiceDAOJDBC implements InvoiceDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE id = ?";
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
+            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            + "FROM INVOICE "
+            + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
+            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
+            + "WHERE INVOICE.id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM INVOICE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
             "SELECT BILLING_ADDRESS_ID, SHIPPING_ADDRESS_ID FROM INVOICE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE ORDER BY id";
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
+            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            + "FROM INVOICE "
+            + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
+            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
+            + "ORDER BY INVOICE.id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
+            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            + "FROM INVOICE "
+            + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
+            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
+            + "WHERE INVOICE.COMPANY_ID = ? "
+            + "ORDER BY INVOICE.id";
     private static final String SQL_LIST_OF_PENDING_ORDER_BY_ID = 
-            "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE pending = ? ORDER BY id";
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
+            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            + "FROM INVOICE "
+            + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
+            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
+            + "WHERE INVOICE.pending = ? "
+            + "ORDER BY INVOICE.id";
     private static final String SQL_LIST_OF_DATE_ORDER_BY_ID = 
-            "SELECT id, invoice_date, terms, shipping_method, fob, pending FROM INVOICE WHERE invoice_date BETWEEN ? AND ?";
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
+            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            + "FROM INVOICE "
+            + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
+            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
+            + "WHERE INVOICE.invoice_date BETWEEN ? AND ? "
+            + "ORDER BY INVOICE.id";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE (COMPANY_ID, BILLING_ADDRESS_ID, SHIPPING_ADDRESS_ID, invoice_date, terms, shipping_method, fob, pending) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -397,12 +430,17 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
      */
     public static Invoice map(ResultSet resultSet) throws SQLException{
         Invoice invoice = new Invoice();
-        invoice.setId(resultSet.getInt("id"));
-        invoice.setInvoice_date(resultSet.getDate("invoice_date"));
-        invoice.setTerms(resultSet.getString("terms"));
-        invoice.setShipping_method(resultSet.getString("shipping_method"));
-        invoice.setFob(resultSet.getString("fob"));
-        invoice.setPending(resultSet.getBoolean("pending"));
+        invoice.setId(resultSet.getInt("INVOICE.id"));
+        invoice.setInvoice_date(resultSet.getDate("INVOICE.invoice_date"));
+        invoice.setTerms(resultSet.getString("INVOICE.terms"));
+        invoice.setShipping_method(resultSet.getString("INVOICE.shipping_method"));
+        invoice.setFob(resultSet.getString("INVOICE.fob"));
+        invoice.setPending(resultSet.getBoolean("INVOICE.pending"));
+        
+        //INNER JOINS
+        invoice.setCompany_name(resultSet.getString("COMPANY.name"));
+        invoice.setBilling_address(resultSet.getString("BILLING_ADDRESS.address"));
+        invoice.setShipping_address(resultSet.getString("SHIPPING_ADDRESS.address"));
         return invoice;
     }
 }

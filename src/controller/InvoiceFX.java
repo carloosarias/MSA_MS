@@ -183,18 +183,10 @@ public class InvoiceFX implements Initializable {
     public void setInvoiceTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
-        client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findCompany(c.getValue()).toString()));
-        billingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findBillingAddress(c.getValue()).toString()));
-        shippingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findShippingAddress(c.getValue()).toString()));
-        pending_column.setCellValueFactory(c -> new SimpleStringProperty(pendingToString(c.getValue().isPending())));
-    }
-    
-    public String pendingToString(boolean pending){
-        if(pending){
-            return "Pendiente";
-        }else{
-            return "Pagada";
-        }
+        client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
+        billingaddress_column.setCellValueFactory(new PropertyValueFactory<>("billing_address"));
+        shippingaddress_column.setCellValueFactory(new PropertyValueFactory<>("shipping_address"));
+        pending_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().pendingToString()));
     }
     
     public void setInvoiceItemTable(){

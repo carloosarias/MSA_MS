@@ -26,7 +26,7 @@
                            <children>
                               <TableView fx:id="orderpurchase_tableview" prefHeight="458.0">
                                 <columns>
-                                  <TableColumn fx:id="orderid_column" editable="false" prefWidth="100.0" resizable="false" text="# de Reporte" />
+                                  <TableColumn fx:id="orderid_column" editable="false" prefWidth="100.0" resizable="false" text="PO #" />
                                   <TableColumn fx:id="orderdate_column" editable="false" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
                                     <TableColumn fx:id="company_column" editable="false" prefWidth="220.0" resizable="false" text="Proveedor" />
                                     <TableColumn fx:id="companyaddress_column" editable="false" prefWidth="260.0" resizable="false" text="Dirección" />
