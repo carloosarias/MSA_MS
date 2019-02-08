@@ -54,15 +54,15 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
     @FXML
     private TableView<OrderPurchaseIncomingItem> orderpurchaseincomingitem_tableview;
     @FXML
-    private TableColumn<OrderPurchaseIncomingItem, String> productid_column;
+    private TableColumn<OrderPurchaseIncomingItem, String> serialnumber_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, String> description_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingItem, String> quantity_column;
+    private TableColumn<OrderPurchaseIncomingItem, Double> quantity_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, String> unitmeasure_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingItem, String> unitsordered_column;
+    private TableColumn<OrderPurchaseIncomingItem, Integer> unitsordered_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, Integer> unitsarrived_column;
     @FXML
@@ -181,11 +181,11 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
     }
     
     public void setOrderPurchaseIncomingItemTable(){
-        productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue().getTemp_purchaseitem())).getId()));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue().getTemp_purchaseitem())).getDescription()));
-        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getPurchaseItemDAO().findProductSupplier(c.getValue().getTemp_purchaseitem()).getQuantity()));
-        unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(c.getValue().getTemp_purchaseitem())).getUnit_measure()));
-        unitsordered_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTemp_purchaseitem().getUnits_ordered()));
+        serialnumber_column.setCellValueFactory(new PropertyValueFactory<>("productsupplier_serialnumber"));
+        description_column.setCellValueFactory(new PropertyValueFactory<>("product_description"));
+        quantity_column.setCellValueFactory(new PropertyValueFactory<>("productsupplier_quantity"));
+        unitmeasure_column.setCellValueFactory(new PropertyValueFactory<>("product_unitmeasure"));
+        unitsordered_column.setCellValueFactory(new PropertyValueFactory<>("purchaseitem_unitsordered"));
 
         unitsarrived_column.setCellValueFactory(new PropertyValueFactory<>("units_arrived"));
         unitsarrived_column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
@@ -194,7 +194,7 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
             if(t.getNewValue() < 1){
                 t.getTableView().getItems().get(t.getTablePosition().getRow()).setUnits_arrived(0);
             }
-            //orderpurchaseincomingitem_tableview.refresh();
+            orderpurchaseincomingitem_tableview.refresh();
         });
     }
     
@@ -204,6 +204,11 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
             OrderPurchaseIncomingItem incoming_item = new OrderPurchaseIncomingItem();
             incoming_item.setTemp_purchaseitem(item);
             incoming_item.setUnits_arrived(0);
+            incoming_item.setProduct_description(item.getProduct_description());
+            incoming_item.setProductsupplier_serialnumber(item.getProductsupplier_serialnumber());
+            incoming_item.setProductsupplier_quantity(item.getProductsupplier_quantity());
+            incoming_item.setProduct_unitmeasure(item.getProduct_unitmeasure());
+            incoming_item.setPurchaseitem_unitsordered(item.getUnits_ordered());
             orderpurchaseincomingitem_list.add(incoming_item);
         }
         orderpurchaseincomingitem_tableview.setItems(orderpurchaseincomingitem_list);

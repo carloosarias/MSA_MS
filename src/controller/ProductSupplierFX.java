@@ -12,8 +12,13 @@ import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -75,7 +80,11 @@ public class ProductSupplierFX implements Initializable {
         setProductSupplierTable();
         updateProductSupplierTable();
         delete_button.disableProperty().bind(productsupplier_tableview.getSelectionModel().selectedItemProperty().isNull());
-        addtocart_button.disableProperty().bind(productsupplier_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
+        productsupplier_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductSupplier> observable, ProductSupplier oldValue, ProductSupplier newValue) -> {
+            addtocart_button.setDisable(productsupplier_tableview.getSelectionModel().isEmpty());
+            isInList(productsupplier_tableview.getSelectionModel().getSelectedItem());
+        });
 
         add_button.setOnAction((ActionEvent) -> {
            showAdd_stage();
@@ -101,9 +110,18 @@ public class ProductSupplierFX implements Initializable {
             item.setProductsupplier_quantity(item.getTemp_productsupplier().getQuantity());
             item.setUnits_ordered(1);
             OrderPurchaseCartFX.cart_list.add(item);
+            productsupplier_tableview.getSelectionModel().clearSelection();
         });
+        
     }
     
+    public void isInList(ProductSupplier product_supplier){
+        for(PurchaseItem item : OrderPurchaseCartFX.cart_list){
+            if(item.getTemp_productsupplier().equals(product_supplier)){
+                addtocart_button.setDisable(true);
+            }
+        }
+    }
     
     public void showAdd_stage(){
         try {

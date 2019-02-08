@@ -21,17 +21,17 @@
                            <children>
                               <TableView fx:id="orderpurchaseincomingreport_tableview">
                                 <columns>
-                                  <TableColumn fx:id="orderpurchaseincomingreportid_column" prefWidth="100.0" resizable="false" text="# de Reporte" />
-                                  <TableColumn fx:id="orderpurchaseid_column" prefWidth="100.0" resizable="false" text="# de Orden" />
-                                    <TableColumn fx:id="company_column" prefWidth="100.0" resizable="false" text="Proveedor" />
-                                    <TableColumn fx:id="reportdate_column" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
-                                    <TableColumn prefWidth="75.0" resizable="false" text="Empleado">
+                                  <TableColumn fx:id="orderpurchaseincomingreportid_column" editable="false" prefWidth="100.0" resizable="false" text="# de Reporte" />
+                                  <TableColumn fx:id="orderpurchaseid_column" editable="false" prefWidth="100.0" resizable="false" text="PO #" />
+                                    <TableColumn fx:id="company_column" editable="false" prefWidth="220.0" resizable="false" text="Proveedor" />
+                                    <TableColumn fx:id="reportdate_column" editable="false" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
+                                    <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Empleado">
                                        <columns>
-                                          <TableColumn fx:id="employeeid_column" prefWidth="75.0" resizable="false" text="# de ID" />
-                                          <TableColumn fx:id="employeename_column" prefWidth="100.0" resizable="false" text="Nombre" />
+                                          <TableColumn fx:id="employeeid_column1" editable="false" prefWidth="75.0" resizable="false" text="# de ID" />
+                                          <TableColumn fx:id="employeename_column" editable="false" prefWidth="120.0" resizable="false" text="Nombre" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="comments_column" prefWidth="190.0" resizable="false" text="Comentarios" />
+                                    <TableColumn fx:id="comments_column" editable="false" prefWidth="190.0" resizable="false" text="Comentarios" />
                                 </columns>
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -47,12 +47,8 @@
                            <children>
                               <TableView fx:id="orderpurchaseincomingitem_tableview">
                                  <columns>
-                                    <TableColumn prefWidth="75.0" resizable="false" text="Producto">
-                                       <columns>
-                                          <TableColumn fx:id="productid_column" prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                                       </columns>
-                                    </TableColumn>
+                                    <TableColumn fx:id="description_column" prefWidth="220.0" resizable="false" text="Descripción de Producto" />
+                                    <TableColumn fx:id="serialnumber_column" prefWidth="120.0" resizable="false" text="Número de Serie" />
                                     <TableColumn prefWidth="100.0" resizable="false" text="Presentación">
                                        <columns>
                                           <TableColumn fx:id="quantity_column" prefWidth="150.0" resizable="false" text="Cantidad" />

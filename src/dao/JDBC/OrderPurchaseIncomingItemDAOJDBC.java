@@ -6,7 +6,6 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.OrderPurchaseIncomingItemDAO;
 import java.sql.Connection;
@@ -26,13 +25,26 @@ import model.PurchaseItem;
 public class OrderPurchaseIncomingItemDAOJDBC implements OrderPurchaseIncomingItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, units_arrived FROM ORDER_PURCHASE_INCOMING_ITEM WHERE id = ?";
+            "SELECT ORDER_PURCHASE_INCOMING_ITEM.id, ORDER_PURCHASE_INCOMING_ITEM.units_arrived, "
+            + "PURCHASE_ITEM.units_ordered, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.serial_number, PRODUCT.description, PRODUCT.unit_measure "
+            + "FROM ORDER_PURCHASE_INCOMING_ITEM "
+            + "INNER JOIN PURCHASE_ITEM ON ORDER_PURCHASE_INCOMING_ITEM.PURCHASE_ITEM_ID = PURCHASE_ITEM.id "
+            + "INNER JOIN PRODUCT_SUPPLIER ON PURCHASE_ITEM.PRODUCT_SUPPLIER_ID = PRODUCT_SUPPLIER.id "
+            + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
+            + "WHERE ORDER_PURCHASE_INCOMING_ITEM.id = ?";
     private static final String SQL_FIND_ORDER_PURCHASE_INCOMING_REPORT_BY_ID = 
             "SELECT ORDER_PURCHASE_INCOMING_REPORT_ID FROM ORDER_PURCHASE_INCOMING_ITEM WHERE id = ?";
     private static final String SQL_FIND_PURCHASE_ITEM_BY_ID = 
             "SELECT PURCHASE_ITEM_ID FROM ORDER_PURCHASE_INCOMING_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_PURCHASE_INCOMING_REPORT_ORDER_BY_ID = 
-            "SELECT id, units_arrived FROM ORDER_PURCHASE_INCOMING_ITEM WHERE ORDER_PURCHASE_INCOMING_REPORT_ID = ? ORDER BY id";
+            "SELECT ORDER_PURCHASE_INCOMING_ITEM.id, ORDER_PURCHASE_INCOMING_ITEM.units_arrived, "
+            + "PURCHASE_ITEM.units_ordered, PRODUCT_SUPPLIER.quantity, PRODUCT_SUPPLIER.serial_number, PRODUCT.description, PRODUCT.unit_measure "
+            + "FROM ORDER_PURCHASE_INCOMING_ITEM "
+            + "INNER JOIN PURCHASE_ITEM ON ORDER_PURCHASE_INCOMING_ITEM.PURCHASE_ITEM_ID = PURCHASE_ITEM.id "
+            + "INNER JOIN PRODUCT_SUPPLIER ON PURCHASE_ITEM.PRODUCT_SUPPLIER_ID = PRODUCT_SUPPLIER.id "
+            + "INNER JOIN PRODUCT ON PRODUCT_SUPPLIER.PRODUCT_ID = PRODUCT.id "
+            + "WHERE ORDER_PURCHASE_INCOMING_ITEM.ORDER_PURCHASE_INCOMING_REPORT_ID = ? "
+            + "ORDER BY ORDER_PURCHASE_INCOMING_ITEM.id";
     private static final String SQL_INSERT = 
             "INSERT INTO ORDER_PURCHASE_INCOMING_ITEM (ORDER_PURCHASE_INCOMING_REPORT_ID, PURCHASE_ITEM_ID, units_arrived) "
             + "VALUES(?, ?, ?)";
@@ -263,8 +275,14 @@ public class OrderPurchaseIncomingItemDAOJDBC implements OrderPurchaseIncomingIt
      */
     public static OrderPurchaseIncomingItem map(ResultSet resultSet) throws SQLException{
         OrderPurchaseIncomingItem order_purchase_incoming_item = new OrderPurchaseIncomingItem();
-        order_purchase_incoming_item.setId(resultSet.getInt("id"));
-        order_purchase_incoming_item.setUnits_arrived(resultSet.getInt("units_arrived"));
+        order_purchase_incoming_item.setId(resultSet.getInt("ORDER_PURCHASE_INCOMING_ITEM.id"));
+        order_purchase_incoming_item.setUnits_arrived(resultSet.getInt("ORDER_PURCHASE_INCOMING_ITEM.units_arrived"));
+        
+        order_purchase_incoming_item.setPurchaseitem_unitsordered(resultSet.getInt("PURCHASE_ITEM.units_ordered"));
+        order_purchase_incoming_item.setProductsupplier_quantity(resultSet.getDouble("PRODUCT_SUPPLIER.quantity"));
+        order_purchase_incoming_item.setProductsupplier_serialnumber(resultSet.getString("PRODUCT_SUPPLIER.serial_number"));
+        order_purchase_incoming_item.setProduct_description(resultSet.getString("PRODUCT.description"));
+        order_purchase_incoming_item.setProduct_unitmeasure(resultSet.getString("PRODUCT.unit_measure"));
         return order_purchase_incoming_item;
     }
 }

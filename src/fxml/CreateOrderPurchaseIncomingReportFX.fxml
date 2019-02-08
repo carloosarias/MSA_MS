@@ -20,7 +20,7 @@
                <children>
                   <VBox>
                      <children>
-                        <Label text="# Orden de Compra:">
+                        <Label text="PO #:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -75,7 +75,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Separator>
-                  <VBox alignment="TOP_CENTER">
+                  <VBox>
                      <children>
                         <Label text="Comentarios:">
                            <VBox.margin>
@@ -99,14 +99,10 @@
             <HBox>
                <children>
                   <VBox />
-                  <TableView fx:id="orderpurchaseincomingitem_tableview" disable="true" editable="true">
+                  <TableView fx:id="orderpurchaseincomingitem_tableview" editable="true">
                      <columns>
-                        <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Producto">
-                           <columns>
-                              <TableColumn fx:id="productid_column" editable="false" prefWidth="75.0" resizable="false" text="ID" />
-                              <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción" />
-                           </columns>
-                        </TableColumn>
+                        <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción de Producto" />
+                        <TableColumn fx:id="serialnumber_column" editable="false" prefWidth="120.0" resizable="false" text="Número de Serie" />
                         <TableColumn editable="false" prefWidth="100.0" resizable="false" text="Presentación">
                            <columns>
                               <TableColumn fx:id="quantity_column" editable="false" prefWidth="150.0" resizable="false" text="Cantidad" />
@@ -134,7 +130,7 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>
                   </Separator>
-                  <ComboBox fx:id="status_combo" disable="true" prefWidth="150.0" promptText="Estado">
+                  <ComboBox fx:id="status_combo" prefWidth="150.0" promptText="Estado">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>

@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +27,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.OrderPurchaseIncomingItem;
 import model.OrderPurchaseIncomingReport;
-import model.ProductPart;
 
 /**
  * FXML Controller class
@@ -50,24 +48,23 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, Date> reportdate_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingReport, Integer> employeeid_column;
+    private TableColumn<OrderPurchaseIncomingReport, Integer> employeeid_column1;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, String> employeename_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, String> comments_column;
-    
     @FXML
     private TableView<OrderPurchaseIncomingItem> orderpurchaseincomingitem_tableview;
     @FXML
-    private TableColumn<OrderPurchaseIncomingItem, String> productid_column;
+    private TableColumn<OrderPurchaseIncomingItem, String> serialnumber_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, String> description_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingItem, String> quantity_column;
+    private TableColumn<OrderPurchaseIncomingItem, Double> quantity_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, String> unitmeasure_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingItem, String> unitsordered_column;
+    private TableColumn<OrderPurchaseIncomingItem, Integer> unitsordered_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, Integer> unitsarrived_column;
     @FXML
@@ -112,20 +109,20 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     public void setOrderPurchaseIncomingReportTable(){
         orderpurchaseincomingreportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         orderpurchaseid_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_id"));
-        company_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_comapanyname"));
+        company_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_companyname"));
         reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
-        employeeid_column.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
+        employeeid_column1.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
         employeename_column.setCellValueFactory(new PropertyValueFactory<>("employee_employeename"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
     
     public void setOrderPurchaseIncomingItemTable(){
-    productid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(msabase.getOrderPurchaseIncomingItemDAO().findPurchaseItem(c.getValue()))).getId()));
-    description_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(msabase.getOrderPurchaseIncomingItemDAO().findPurchaseItem(c.getValue()))).getDescription()));
-    quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getPurchaseItemDAO().findProductSupplier(msabase.getOrderPurchaseIncomingItemDAO().findPurchaseItem(c.getValue())).getQuantity()));
-    unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getProductSupplierDAO().findProduct(msabase.getPurchaseItemDAO().findProductSupplier(msabase.getOrderPurchaseIncomingItemDAO().findPurchaseItem(c.getValue()))).getUnit_measure()));
-    unitsordered_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getOrderPurchaseIncomingItemDAO().findPurchaseItem(c.getValue()).getUnits_ordered()));
-    unitsarrived_column.setCellValueFactory(new PropertyValueFactory<>("units_arrived"));
+        serialnumber_column.setCellValueFactory(new PropertyValueFactory<>("productsupplier_serialnumber"));
+        description_column.setCellValueFactory(new PropertyValueFactory<>("product_description"));
+        quantity_column.setCellValueFactory(new PropertyValueFactory<>("productsupplier_quantity"));
+        unitmeasure_column.setCellValueFactory(new PropertyValueFactory<>("product_unitmeasure"));
+        unitsordered_column.setCellValueFactory(new PropertyValueFactory<>("purchaseitem_unitsordered"));
+        unitsarrived_column.setCellValueFactory(new PropertyValueFactory<>("units_arrived"));
     }
     
     public void showAdd_stage(){

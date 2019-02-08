@@ -15,6 +15,13 @@ public class OrderPurchaseIncomingItem {
     private Integer units_arrived;
     
     private PurchaseItem temp_purchaseitem;
+
+    //INNER JOINS
+    private String productsupplier_serialnumber;
+    private String product_description;
+    private double productsupplier_quantity;
+    private String product_unitmeasure;
+    private Integer purchaseitem_unitsordered;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -40,6 +47,47 @@ public class OrderPurchaseIncomingItem {
 
     public void setTemp_purchaseitem(PurchaseItem temp_purchaseitem) {
         this.temp_purchaseitem = temp_purchaseitem;
+    }
+    
+    //INNER JOINS
+    public String getProductsupplier_serialnumber() {
+        return productsupplier_serialnumber;
+    }
+
+    public void setProductsupplier_serialnumber(String productsupplier_serialnumber) {
+        this.productsupplier_serialnumber = productsupplier_serialnumber;
+    }
+
+    public String getProduct_description() {
+        return product_description;
+    }
+
+    public void setProduct_description(String product_description) {
+        this.product_description = product_description;
+    }
+
+    public double getProductsupplier_quantity() {
+        return productsupplier_quantity;
+    }
+
+    public void setProductsupplier_quantity(double productsupplier_quantity) {
+        this.productsupplier_quantity = productsupplier_quantity;
+    }
+
+    public String getProduct_unitmeasure() {
+        return product_unitmeasure;
+    }
+
+    public void setProduct_unitmeasure(String product_unitmeasure) {
+        this.product_unitmeasure = product_unitmeasure;
+    }
+
+    public Integer getPurchaseitem_unitsordered() {
+        return purchaseitem_unitsordered;
+    }
+
+    public void setPurchaseitem_unitsordered(Integer purchaseitem_unitsordered) {
+        this.purchaseitem_unitsordered = purchaseitem_unitsordered;
     }
     
     // Object overrides ---------------------------------------------------------------------------
@@ -74,4 +122,5 @@ public class OrderPurchaseIncomingItem {
     public String toString() {
         return String.format("%f", id);
     }
+
 }

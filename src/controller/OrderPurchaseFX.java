@@ -128,10 +128,22 @@ public class OrderPurchaseFX implements Initializable {
         status_combo.setItems(FXCollections.observableArrayList(MainApp.orderpurchase_status));
         
         orderpurchase_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends OrderPurchase> observable, OrderPurchase oldValue, OrderPurchase newValue) -> {
-            purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
-            calculateTotals();
-            comments_area.setText(newValue.getComments());
-            status_combo.getSelectionModel().clearSelection();
+            if(!orderpurchase_tableview.getSelectionModel().isEmpty()){
+                purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
+                calculateTotals();
+                comments_area.setText(newValue.getComments());
+                status_combo.getSelectionModel().clearSelection();
+            }else{
+                purchaseitem_tableview.getItems().clear();
+                subtotal_field.clear();
+                iva_field.clear();
+                total_field.clear();
+                mxnsubtotal_field.clear();
+                mxniva_field.clear();
+                mxntotal_field.clear();
+                comments_area.clear();
+                status_combo.getSelectionModel().clearSelection();
+            }
         });
         
         changestatus_button.setOnAction((ActionEvent) -> {

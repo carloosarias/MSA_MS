@@ -67,7 +67,7 @@ public class OrderPurchaseIncomingReport implements Serializable {
         this.orderpurchase_companyname = orderpurchase_companyname;
     }
 
-    public Integer getEmployeee_id() {
+    public Integer getEmployee_id() {
         return employee_id;
     }
 
