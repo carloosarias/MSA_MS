@@ -8,6 +8,7 @@ package dao.interfaces;
 import dao.DAOException;
 import java.util.List;
 import model.CompanyContact;
+import model.DepartLot;
 import model.PartRevision;
 import model.Quote;
 
@@ -66,6 +67,7 @@ public interface QuoteDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<Quote> list(PartRevision part_revision, String approved) throws IllegalArgumentException, DAOException;
+    public List<Quote> list(DepartLot depart_lot, String approved) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all Quote matching PartRevision ID from the database ordered by Quote ID. 

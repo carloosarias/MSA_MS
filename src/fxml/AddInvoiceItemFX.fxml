@@ -21,12 +21,12 @@
             </HBox>
             <HBox>
                <children>
-                  <TableView fx:id="departlot_tableview" prefHeight="400.0" prefWidth="502.0">
+                  <TableView fx:id="departlot_tableview">
                      <columns>
-                        <TableColumn fx:id="remision_column" prefWidth="75.0" resizable="false" text="# Remisión" />
-                        <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />
-                        <TableColumn fx:id="revision_column" prefWidth="75.0" resizable="false" text="Rev" />
-                        <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="# Lote" />
+                        <TableColumn fx:id="departreportid_column" prefWidth="100.0" resizable="false" text="No. de Remisión" />
+                        <TableColumn fx:id="part_column" prefWidth="120.0" resizable="false" text="Número de Parte" />
+                        <TableColumn fx:id="revision_column" prefWidth="75.0" resizable="false" text="Revisión" />
+                        <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="Número de Lote" />
                         <TableColumn prefWidth="160.0" resizable="false" text="Cantidad">
                            <columns>
                               <TableColumn fx:id="lot_qty" prefWidth="75.0" resizable="false" text="Piezas" />
@@ -40,7 +40,7 @@
                   </TableView>
                </children>
             </HBox>
-            <HBox>
+            <HBox alignment="CENTER">
                <children>
                   <VBox>
                      <children>

@@ -140,7 +140,7 @@
                      <children>
                         <TableView fx:id="purchaseitem_tableview" editable="true">
                           <columns>
-                              <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción" />
+                              <TableColumn fx:id="description_column" editable="false" prefWidth="245.0" resizable="false" text="Descripción" />
                             <TableColumn fx:id="serialnumber_column" editable="false" prefWidth="120.0" resizable="false" text="Número de Serie" />
                               <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Cotización">
                                  <columns>
@@ -150,7 +150,7 @@
                                     <TableColumn fx:id="unitprice_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Por Bulto" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn fx:id="unitsordered_column" prefWidth="120.0" resizable="false" text="Cantidad a ordenar" />
+                              <TableColumn fx:id="unitsordered_column" prefWidth="75.0" resizable="false" text="Bultos" />
                               <TableColumn fx:id="price_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Calculado" />
                           </columns>
                            <VBox.margin>

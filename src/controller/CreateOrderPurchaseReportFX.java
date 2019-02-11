@@ -155,20 +155,17 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         order_purchase.setIva_rate(Double.parseDouble(ivarate_field.getText()));
         try{
             msabase.getOrderPurchaseDAO().create(company_selection, companyaddress_combo.getSelectionModel().getSelectedItem(), order_purchase);
+            savePurchaseItems(order_purchase);
         }catch(DAOException e){
             System.out.println("Failed to generate order purchase; DB Entries were not saved"+e.getMessage());
             return;
         }
-        savePurchaseItems(order_purchase);
     }
     
     public void savePurchaseItems(OrderPurchase order_purchase){
         try{
             OrderPurchaseCartFX.cart_list.removeAll(purchaseitem_tableview.getItems());
             for(PurchaseItem item : purchaseitem_tableview.getItems()){
-                item.setPrice_updated(item.getPrice_timestamp());
-                item.setDate_modified(order_purchase.getReport_date());
-                item.setModified(false);
                 msabase.getPurchaseItemDAO().create(order_purchase, item.getTemp_productsupplier(), item);
             }
         }catch(DAOException e){
@@ -282,7 +279,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
     public ObservableList<PurchaseItem> filterCart_list(ObservableList<PurchaseItem> cart_list, Company company_selection){
         ObservableList<PurchaseItem> filtered_list = FXCollections.observableArrayList(); 
         for(PurchaseItem item : cart_list){
-            if(msabase.getProductSupplierDAO().findCompany(item.getTemp_productsupplier()).equals(company_selection)){
+            if(item.getTemp_productsupplier().getCompany_id().equals(company_selection.getId())){
                 filtered_list.add(item);
             }
         }

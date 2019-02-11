@@ -209,14 +209,14 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
-                throw new DAOException("Creating OrderPurchase failed, no rows affected.");
+                throw new DAOException("Creating PurchaseItem failed, no rows affected.");
             }
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    order_purchase.setId(generatedKeys.getInt(1));
+                    purchase_item.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new DAOException("Creating OrderPurchase failed, no generated key obtained.");
+                    throw new DAOException("Creating PurchaseItem failed, no generated key obtained.");
                 }
             }
             
@@ -236,7 +236,8 @@ public class PurchaseItemDAOJDBC implements PurchaseItemDAO {
             purchase_item.getPrice_timestamp(),
             purchase_item.getPrice_updated(),
             DAOUtil.toSqlDate(purchase_item.getDate_modified()),
-            purchase_item.isModified()
+            purchase_item.isModified(),
+            purchase_item.getId()
         };
         
         try(

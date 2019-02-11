@@ -93,18 +93,6 @@ public interface InvoiceItemDAO {
     public List<InvoiceItem> list(Invoice invoice, PartRevision part_revision) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all unique PartRevision matching Invoice ID from the database ordered by PartRevision ID. 
-     * The Invoice ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not 
-     * contain any PartRevision matching Invoice ID.
-     * @param invoice The Invoice ID to be searched for.
-     * @return A list of all unique PartRevision matching Invoice ID from the database ordered by PartRevision ID.
-     * @throws IllegalArgumentException If Invoice ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<PartRevision> listPartRevision(Invoice invoice) throws IllegalArgumentException, DAOException;
-    
-    /**
      * Create the given InvoiceItem in the database.
      * The Company ID must not be null, The BillingAddress must not be null,
      * The ShippingAddress must not be null and The InvoiceItem ID must be null,

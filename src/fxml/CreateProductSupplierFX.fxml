@@ -17,6 +17,24 @@
                <children>
                   <VBox>
                      <children>
+                        <Label text="Compañía:">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ComboBox fx:id="company_combo" prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </ComboBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
                         <Label text="Producto:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -31,16 +49,16 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <Label text="Compañía:">
+                        <Label text="Número de Serie:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="company_combo" prefWidth="150.0">
+                        <TextField fx:id="serialnumber_field">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </ComboBox>
+                        </TextField>
                      </children>
                   </VBox>
                </children>
@@ -54,7 +72,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="quantity_field">
+                        <TextField fx:id="quantity_field" prefWidth="75.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>

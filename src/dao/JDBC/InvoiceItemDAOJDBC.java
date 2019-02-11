@@ -27,29 +27,56 @@ import model.Quote;
 public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, comments FROM INVOICE_ITEM WHERE id = ?";
+            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
+            + "FROM INVOICE_ITEM "
+            + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
+            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
+            + "WHERE INVOICE_ITEM.id = ?";
     private static final String SQL_FIND_INVOICE_BY_ID = 
-            "SELECT INVOICE_ID FROM INVOICE_ITEM WHERE id = ?";
+            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
+            + "FROM INVOICE_ITEM "
+            + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
+            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
+            + "WHERE INVOICE_ITEM.id = ?";
     private static final String SQL_FIND_DEPART_LOT_BY_ID = 
             "SELECT DEPART_LOT_ID FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_FIND_QUOTE_BY_ID = 
             "SELECT QUOTE_ID FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, comments FROM INVOICE_ITEM ORDER BY id";
-    private static final String SQL_LIST_OF_INVOICE_ORDER_BY_ID = 
-            "SELECT id, comments FROM INVOICE_ITEM WHERE INVOICE_ID = ? ORDER BY id";
-    private static final String SQL_LIST_OF_INVOICE_PART_REVISION_ORDER_BY_ID = 
-            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments "
+            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
             + "FROM INVOICE_ITEM "
             + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
-            + "WHERE INVOICE_ID = ? AND DEPART_LOT.PART_REVISION_ID = ? "
+            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
             + "ORDER BY INVOICE_ITEM.id";
-    private static final String SQL_LIST_PART_REVISION = 
-            "SELECT DISTINCT DEPART_LOT.PART_REVISION_ID "
+    private static final String SQL_LIST_OF_INVOICE_ORDER_BY_ID = 
+            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
             + "FROM INVOICE_ITEM "
             + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
-            + "WHERE INVOICE_ID = ?"
-            + "ORDER BY DEPART_LOT.PART_REVISION_ID";
+            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
+            + "WHERE INVOICE_ITEM.INVOICE_ID = ? "
+            + "ORDER BY INVOICE_ITEM.id";
+    private static final String SQL_LIST_OF_INVOICE_PART_REVISION_ORDER_BY_ID = 
+            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
+            + "FROM INVOICE_ITEM "
+            + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
+            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
+            + "WHERE INVOICE_ITEM.INVOICE_ID = ? AND DEPART_LOT.PART_REVISION_ID = ? "
+            + "ORDER BY INVOICE_ITEM.id";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE_ITEM (INVOICE_ID, DEPART_LOT_ID, QUOTE_ID, comments) "
             + "VALUES (?, ?, ?, ?)";
@@ -264,32 +291,6 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
     }
     
     @Override
-    public List<PartRevision> listPartRevision(Invoice invoice) throws IllegalArgumentException, DAOException {
-        if(invoice.getId() == null) {
-            throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
-        }
-        
-        List<PartRevision> part_revision_list = new ArrayList<>();
-        
-        Object[] values = {
-            invoice.getId(),
-        };
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PART_REVISION, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                part_revision_list.add(daoFactory.getPartRevisionDAO().find(resultSet.getInt("DEPART_LOT.PART_REVISION_ID")));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return part_revision_list;
-    }
-    
-    @Override
     public void create(Invoice invoice, DepartLot depart_lot, Quote quote, InvoiceItem invoice_item) throws IllegalArgumentException, DAOException {
     if (invoice.getId() == null) {
             throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
@@ -387,8 +388,17 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
      */
     public static InvoiceItem map(ResultSet resultSet) throws SQLException{
         InvoiceItem invoice_item = new InvoiceItem();
-        invoice_item.setId(resultSet.getInt("id"));
-        invoice_item.setComments(resultSet.getString("comments"));
+        invoice_item.setId(resultSet.getInt("INVOICE_ITEM.id"));
+        invoice_item.setComments(resultSet.getString("INVOICE_ITEM.comments"));
+        
+        //INNER JOINS
+        invoice_item.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
+        invoice_item.setPart_revision(resultSet.getString("PART_REVISION.rev"));
+        invoice_item.setDepartreport_id(resultSet.getInt("DEPART_LOT.DEPART_REPORT_ID"));
+        invoice_item.setLot_number(resultSet.getString("DEPART_LOT.lot_number"));
+        invoice_item.setDepartlot_quantity(resultSet.getInt("DEPART_LOT.quantity"));
+        invoice_item.setDepartlot_boxquantity(resultSet.getInt("DEPART_LOT.box_quantity"));
+        invoice_item.setQuote_estimatedtotal(resultSet.getDouble("QUOTE.estimated_total"));
         return invoice_item;
     }
 }

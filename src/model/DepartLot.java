@@ -29,6 +29,7 @@ public class DepartLot implements Serializable {
     //INNER JOINS
     private String part_number;
     private String part_revision;
+    private Integer departreport_id;
 
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -138,6 +139,14 @@ public class DepartLot implements Serializable {
         this.part_revision = part_revision;
     }
     
+    public Integer getDepartreport_id() {
+        return departreport_id;
+    }
+
+    public void setDepartreport_id(Integer departreport_id) {
+        this.departreport_id = departreport_id;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -168,16 +177,8 @@ public class DepartLot implements Serializable {
      */
     @Override
     public String toString() {
-        String part_number;
-        String rev;
-        if(id != null){
-            DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-            part_number = msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(this)).getPart_number();
-            rev = msabase.getDepartLotDAO().findPartRevision(this).getRev();
             return String.format("%s %s %s - %d",
-                part_number, rev, lot_number, quantity);
-        }
-        return String.format("%s - %d",
-                lot_number, quantity);
+                part_number, part_revision, lot_number, quantity);
     }        
+
 }

@@ -8,7 +8,6 @@ package dao.JDBC;
 import dao.DAOException;
 import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.InvoiceDAOJDBC.map;
 import dao.interfaces.QuoteDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.CompanyContact;
+import model.DepartLot;
 import model.PartRevision;
 import model.Quote;
 
@@ -34,8 +34,15 @@ public class QuoteDAOJDBC implements QuoteDAO {
             "SELECT COMPANY_CONTACT_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved FROM QUOTE ORDER BY id";
+    private static final String SQL_LIST_OF_DEPART_LOT_PART_REVISION_APPROVED_ORDER_BY_DATE = 
+            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.approved "
+            + "FROM QUOTE "
+            + "INNER JOIN DEPART_LOT ON ? = DEPART_LOT.id "
+            + "WHERE QUOTE.PART_REVISION_ID = DEPART_LOT.PART_REVISION_ID and QUOTE.approved = ? "
+            + "ORDER BY QUOTE.quote_date DESC, QUOTE.id DESC";
     private static final String SQL_LIST_OF_PART_REVISION_APPROVED_ORDER_BY_DATE = 
-            "SELECT id, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? ORDER BY quote_date DESC, id DESC";
+            "SELECT id, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved FROM QUOTE WHERE PART_REVISION_ID = ? and approved = ? "
+            + "ORDER BY QUOTE.quote_date DESC, QUOTE.id DESC";
     private static final String SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE = 
             "SELECT id, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved FROM QUOTE WHERE PART_REVISION_ID = ? ORDER BY quote_date DESC, id DESC";
     private static final String SQL_INSERT =
@@ -165,7 +172,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
         
         return quote;
     }
-
+    
     @Override
     public List<Quote> list(PartRevision part_revision, String approved) throws IllegalArgumentException, DAOException {
         if(part_revision.getId() == null) {
@@ -182,6 +189,34 @@ public class QuoteDAOJDBC implements QuoteDAO {
         try(
             Connection connection = daoFactory.getConnection();
             PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PART_REVISION_APPROVED_ORDER_BY_DATE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                quote.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return quote;
+    }
+    
+    @Override
+    public List<Quote> list(DepartLot depart_lot, String approved) throws IllegalArgumentException, DAOException {
+        if(depart_lot.getId() == null) {
+            throw new IllegalArgumentException("DepartLot is not created yet, the DepartLot ID is null.");
+        }    
+        
+        List<Quote> quote = new ArrayList<>();
+        
+        Object[] values = {
+            depart_lot.getId(),
+            approved
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_DEPART_LOT_PART_REVISION_APPROVED_ORDER_BY_DATE, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){

@@ -65,19 +65,19 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private TableView<InvoiceItem> invoiceitem_tableview;
     @FXML
-    private TableColumn<InvoiceItem, String> remision_column;
+    private TableColumn<InvoiceItem, Integer> departreportid_column;
     @FXML
-    private TableColumn<InvoiceItem, String> part_column;
+    private TableColumn<InvoiceItem, String> partnumber_column;
     @FXML
     private TableColumn<InvoiceItem, String> revision_column;
     @FXML
     private TableColumn<InvoiceItem, String> lot_column;
     @FXML
-    private TableColumn<InvoiceItem, Double> unitprice_column;
+    private TableColumn<InvoiceItem, String> unitprice_column;
     @FXML
-    private TableColumn<InvoiceItem, String> lot_qty;
+    private TableColumn<InvoiceItem, Integer> lot_qty;
     @FXML
-    private TableColumn<InvoiceItem, String> lot_boxqty_column;
+    private TableColumn<InvoiceItem, Integer> lot_boxqty_column;
     @FXML
     private TableColumn<InvoiceItem, String> lotprice_column;
     @FXML
@@ -107,6 +107,7 @@ public class CreateInvoiceFX implements Initializable {
         setInvoiceItemTable();
         client_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
         delete_button.disableProperty().bind(invoiceitem_tableview.getSelectionModel().selectedItemProperty().isNull());
+        add_button.disableProperty().bind(client_combo.getSelectionModel().selectedItemProperty().isNull());
         
         client_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Company> observable, Company oldValue, Company newValue) -> {
             setClientList(newValue);
@@ -114,11 +115,12 @@ public class CreateInvoiceFX implements Initializable {
         
         delete_button.setOnAction((ActionEvent) -> {
             invoiceitem_queue.remove(invoiceitem_tableview.getSelectionModel().getSelectedItem());
-            departlot_list.add(msabase.getDepartLotDAO().find(invoiceitem_tableview.getSelectionModel().getSelectedItem().getDepart_lot_id()));
+            departlot_list.add(invoiceitem_tableview.getSelectionModel().getSelectedItem().getTemp_departlot());
             updateInvoiceItemTable();
         });
         
         add_button.setOnAction((ActionEvent) -> {
+            departlot_list = msabase.getDepartLotDAO().list(client_combo.getSelectionModel().getSelectedItem(), true, false);
             showAdd_stage();
         });
         
@@ -195,11 +197,10 @@ public class CreateInvoiceFX implements Initializable {
     
     public void saveInvoiceItems(Invoice invoice){
         for(InvoiceItem invoice_item : invoiceitem_queue){
-            DepartLot depart_lot = msabase.getDepartLotDAO().find(invoice_item.getDepart_lot_id());
-            depart_lot.setPending(false);
-            msabase.getDepartLotDAO().update(depart_lot);
-            System.out.println(depart_lot.isPending());
-            msabase.getInvoiceItemDAO().create(invoice, depart_lot, msabase.getQuoteDAO().find(invoice_item.getQuote_id()), invoice_item);
+            invoice_item.getTemp_departlot().setPending(false);
+            msabase.getDepartLotDAO().update(invoice_item.getTemp_departlot());
+            System.out.println(invoice_item.getTemp_departlot().isPending());
+            msabase.getInvoiceItemDAO().create(invoice, invoice_item.getTemp_departlot(), invoice_item.getTemp_quote(), invoice_item);
         }
     }
     public void updateInvoiceItemTable(){
@@ -227,9 +228,8 @@ public class CreateInvoiceFX implements Initializable {
         }else{
             invoiceitem_queue.clear();
             departlot_list.clear();
-            departlot_list = msabase.getDepartLotDAO().list(company, true, false);
             billingaddress_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyAddressDAO().listActive(company, true)));
-            shippingaddress_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyAddressDAO().listActive(company, true)));
+            shippingaddress_combo.setItems(billingaddress_combo.getItems());
         }
         updateInvoiceItemTable();
     }
@@ -255,19 +255,15 @@ public class CreateInvoiceFX implements Initializable {
     }
     
     public void setInvoiceItemTable(){
-        remision_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findDepartReport(msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id())).getId()));
-        part_column.setCellValueFactory(c -> new SimpleStringProperty(
-            msabase.getPartRevisionDAO().findProductPart(
-                    msabase.getDepartLotDAO().findPartRevision(
-                            msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()))).getPart_number()
-        ));
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartLotDAO().findPartRevision(msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id())).getRev()));
-        lot_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getLot_number()));
+        departreportid_column.setCellValueFactory(new PropertyValueFactory<>("departreport_id"));
+        partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        revision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
+        lot_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
-        lot_qty.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getQuantity()));
-        lot_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getBox_quantity()));
-        unitprice_column.setCellValueFactory(new PropertyValueFactory<>("unit_price"));
-        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+(msabase.getQuoteDAO().find(c.getValue().getQuote_id()).getEstimated_total()*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getQuantity())*msabase.getDepartLotDAO().find(c.getValue().getDepart_lot_id()).getBox_quantity()));
+        lot_qty.setCellValueFactory(new PropertyValueFactory<>("departlot_quantity"));
+        lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_boxquantity"));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$"+c.getValue().getQuote_estimatedtotal()+" USD"));
+        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty("$"+(c.getValue().getQuote_estimatedtotal()*c.getValue().getDepartlot_quantity())+" USD"));
     }
     
     public static List<DepartLot> getDepartlot_list(){

@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 import model.Company;
 import model.Product;
 import model.ProductSupplier;
-import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -33,6 +32,8 @@ public class CreateProductSupplierFX implements Initializable {
     private HBox root_hbox;
     @FXML
     private ComboBox<Product> product_combo;
+    @FXML
+    private TextField serialnumber_field;
     @FXML
     private ComboBox<Company> company_combo;
     @FXML
@@ -80,7 +81,8 @@ public class CreateProductSupplierFX implements Initializable {
         product_combo.setStyle(null);
         company_combo.setStyle(null);
         unitprice_field.setStyle(null);
-        quantity_field.setStyle(null);        
+        quantity_field.setStyle(null);
+        serialnumber_field.setStyle(null);
     }
     
     public boolean testFields(){
@@ -110,6 +112,10 @@ public class CreateProductSupplierFX implements Initializable {
             unitprice_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
+        if(serialnumber_field.getText().replace(" ", "").equals("")){
+            serialnumber_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
         
         return b;
     }
@@ -117,6 +123,7 @@ public class CreateProductSupplierFX implements Initializable {
     public void saveProductSupplier(){
         ProductSupplier product_supplier = new ProductSupplier();
         product_supplier.setUnit_price(Double.parseDouble(unitprice_field.getText()));
+        product_supplier.setSerial_number(serialnumber_field.getText());
         product_supplier.setQuantity(Double.parseDouble(quantity_field.getText()));
         product_supplier.setActive(true);
         

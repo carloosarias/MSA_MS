@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.converter.IntegerStringConverter;
 import model.Company;
+import model.ProductSupplier;
 import model.PurchaseItem;
 import msa_ms.MainApp;
 
@@ -73,7 +74,7 @@ public class OrderPurchaseCartFX implements Initializable {
     
     public static ObservableList<PurchaseItem> cart_list = FXCollections.observableArrayList();
     
-    private ObservableList<Company> company_list = FXCollections.observableArrayList();
+    private static ObservableList<Company> company_list = FXCollections.observableArrayList();
     
     private Stage add_stage = new Stage();
     
@@ -90,14 +91,7 @@ public class OrderPurchaseCartFX implements Initializable {
         delete_button.disableProperty().bind(purchaseitem_tableview.getSelectionModel().selectedItemProperty().isNull());
         company_combo.disableProperty().bind(Bindings.size(company_combo.getItems()).isEqualTo(0));
         create_button.disableProperty().bind(company_combo.getSelectionModel().selectedItemProperty().isNull());
-        
-        //CART_LIST LISTENER SETUP
-        if(MainApp.OrderPurchaseCartFX_setup){
-            cart_list.addListener((ListChangeListener) c -> {
-                updateCompanyList();
-            });
-            MainApp.OrderPurchaseCartFX_setup = false;
-        }
+
         
         create_button.setOnAction((ActionEvent) -> {
             CreateOrderPurchaseReportFX.company_selection = company_combo.getSelectionModel().getSelectedItem();
@@ -105,10 +99,12 @@ public class OrderPurchaseCartFX implements Initializable {
             company_combo.getSelectionModel().clearSelection();
             purchaseitem_tableview.refresh();
             OrderPurchaseFX.updateOrderPurchaseList(msabase);
+            updateCompanyList();
         });
         
         delete_button.setOnAction((ActionEvent) -> {
             cart_list.remove(purchaseitem_tableview.getSelectionModel().getSelectedItem());
+            updateCompanyList();
         });
     }
     
@@ -130,7 +126,7 @@ public class OrderPurchaseCartFX implements Initializable {
         }
     }
     
-    public void updateCompanyList(){
+    public static void updateCompanyList(){
         ObservableSet<Company> company_set = FXCollections.observableSet();
         
         for(PurchaseItem item : cart_list){
@@ -152,6 +148,11 @@ public class OrderPurchaseCartFX implements Initializable {
         quantity_column.setCellValueFactory(new PropertyValueFactory("productsupplier_quantity"));
         unitmeasure_column.setCellValueFactory(new PropertyValueFactory("product_unitmeasure"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
+        unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<PurchaseItem, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPrice_updated(getPrice_Unitvalue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            purchaseitem_tableview.refresh();
+        });
         unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getPrice_unit()/c.getValue().getTemp_productsupplier().getQuantity()))+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         unitsordered_column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
@@ -162,7 +163,14 @@ public class OrderPurchaseCartFX implements Initializable {
             }
             purchaseitem_tableview.refresh();
         });
+        
     }
     
-    
+    public Double getPrice_Unitvalue(PurchaseItem item, String unit_price){
+        try{
+            return Double.parseDouble(unit_price);
+        }catch(Exception e){
+            return item.getPrice_unit();
+        }
+    }
 }

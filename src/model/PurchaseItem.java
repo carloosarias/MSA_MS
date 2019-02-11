@@ -5,7 +5,9 @@
  */
 package model;
 
+import dao.DAOUtil;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -60,6 +62,8 @@ public class PurchaseItem implements Serializable{
 
     public void setPrice_updated(double price_updated) {
         this.price_updated = price_updated;
+        this.modified = true;
+        this.date_modified = DAOUtil.toUtilDate(LocalDate.now());
     }
 
     public Date getDate_modified() {

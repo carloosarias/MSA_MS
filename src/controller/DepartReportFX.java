@@ -279,7 +279,7 @@ public class DepartReportFX implements Initializable {
             Map<String, PdfFormField> fields = form.getFormFields();
             fields.get("depart_report_id").setValue(""+depart_report.getId());
             fields.get("date").setValue(depart_report.getReport_date().toString());
-            fields.get("employee_email").setValue("cmartinez@maquilasales.com");
+            fields.get("employee_email").setValue("alberto.nunez@maquilasales.com");
             fields.get("client").setValue(depart_report.getCompany_name());
             fields.get("client_address").setValue(depart_report.getCompany_address());
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report));

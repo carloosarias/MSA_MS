@@ -8,7 +8,6 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -37,7 +36,7 @@ public class AddInvoiceItemFX implements Initializable {
     @FXML
     private TableView<DepartLot> departlot_tableview;
     @FXML
-    private TableColumn<DepartLot, String> remision_column;
+    private TableColumn<DepartLot, String> departreportid_column;
     @FXML
     private TableColumn<DepartLot, String> part_column;
     @FXML
@@ -66,11 +65,11 @@ public class AddInvoiceItemFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setDepartLotTable();
         departlot_tableview.setItems(FXCollections.observableArrayList(CreateInvoiceFX.getDepartlot_list()));
-        departlot_combo.setItems(departlot_tableview.getItems());
         
+
         departlot_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartLot> observable, DepartLot oldValue, DepartLot newValue) -> {
-            departlot_combo.getSelectionModel().select(newValue);
-            save_button.setDisable(newValue == null);
+            departlot_combo.getItems().setAll(departlot_tableview.getSelectionModel().getSelectedItem());
+            departlot_combo.getSelectionModel().selectFirst();
             setQuoteCombo(newValue);
         });
         
@@ -103,7 +102,7 @@ public class AddInvoiceItemFX implements Initializable {
         if(depart_lot == null){
             quote_combo.getItems().clear();
         }else{
-            quote_combo.setItems(FXCollections.observableArrayList(msabase.getQuoteDAO().list(msabase.getDepartLotDAO().findPartRevision(depart_lot), "Aprovado")));
+            quote_combo.getItems().setAll(msabase.getQuoteDAO().list(depart_lot, "Aprovado"));
             if(!quote_combo.getItems().isEmpty()){
                 quote_combo.getSelectionModel().selectFirst();
             }
@@ -117,9 +116,16 @@ public class AddInvoiceItemFX implements Initializable {
     
     public InvoiceItem mapInvoiceItem(){
         InvoiceItem invoice_item = new InvoiceItem();
-        invoice_item.setDepart_lot_id(departlot_combo.getSelectionModel().getSelectedItem().getId());
-        invoice_item.setQuote_id(quote_combo.getSelectionModel().getSelectedItem().getId());
+        invoice_item.setTemp_departlot(departlot_combo.getSelectionModel().getSelectedItem());
+        invoice_item.setTemp_quote(quote_combo.getSelectionModel().getSelectedItem());
         invoice_item.setComments(comments_field.getText());
+        invoice_item.setDepartreport_id(departlot_combo.getSelectionModel().getSelectedItem().getDepartreport_id());
+        invoice_item.setPart_number(departlot_combo.getSelectionModel().getSelectedItem().getPart_number());
+        invoice_item.setPart_revision(departlot_combo.getSelectionModel().getSelectedItem().getPart_revision());
+        invoice_item.setLot_number(departlot_combo.getSelectionModel().getSelectedItem().getLot_number());
+        invoice_item.setDepartlot_quantity(departlot_combo.getSelectionModel().getSelectedItem().getQuantity());
+        invoice_item.setDepartlot_boxquantity(departlot_combo.getSelectionModel().getSelectedItem().getBox_quantity());
+        invoice_item.setQuote_estimatedtotal(quote_combo.getSelectionModel().getSelectedItem().getEstimated_total());
         if(invoice_item.getComments().equals("")){
             invoice_item.setComments("n/a");
         }
@@ -127,12 +133,9 @@ public class AddInvoiceItemFX implements Initializable {
     }
     
     public void setDepartLotTable(){
-        remision_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findDepartReport(c.getValue()).getId()));
-        part_column.setCellValueFactory(c -> new SimpleStringProperty(
-                msabase.getPartRevisionDAO().findProductPart(
-                        msabase.getDepartLotDAO().findPartRevision(c.getValue())).getPart_number()
-        ));
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartLotDAO().findPartRevision(c.getValue()).getRev()));
+        departreportid_column.setCellValueFactory(new PropertyValueFactory<>("departreport_id"));
+        part_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        revision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
         lot_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         lot_qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));

@@ -59,7 +59,7 @@ public class ProductSupplierDAOJDBC implements ProductSupplierDAO{
             + "WHERE PRODUCT_SUPPLIER.COMPANY_ID = ? ORDER BY PRODUCT_SUPPLIER.id";
     private static final String SQL_INSERT = 
             "INSERT INTO PRODUCT_SUPPLIER (PRODUCT_ID, COMPANY_ID, serial_number, unit_price, quantity, active) "
-            + "VALUES(?, ?, ?, ?, ?)";
+            + "VALUES(?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE PRODUCT_SUPPLIER SET serial_number = ?, unit_price = ?, quantity = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 

@@ -15,7 +15,7 @@
    <children>
       <VBox>
          <children>
-            <HBox>
+            <HBox alignment="CENTER">
                <children>
                   <VBox>
                      <children>
@@ -46,10 +46,6 @@
                      </children>
                   </VBox>
                   <VBox />
-               </children>
-            </HBox>
-            <HBox prefWidth="788.0">
-               <children>
                   <VBox>
                      <children>
                         <Label text="Dirección de Facturación:">
@@ -57,7 +53,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="billingaddress_combo" prefWidth="150.0">
+                        <ComboBox fx:id="billingaddress_combo" prefWidth="250.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -71,13 +67,41 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="shippingaddress_combo" prefWidth="150.0">
+                        <ComboBox fx:id="shippingaddress_combo" prefWidth="250.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </ComboBox>
                      </children>
                   </VBox>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <TableView fx:id="invoiceitem_tableview">
+                     <columns>
+                        <TableColumn fx:id="departreportid_column" prefWidth="120.0" resizable="false" text="No. de Remisión" />
+                        <TableColumn fx:id="partnumber_column" prefWidth="120.0" resizable="false" text="Número de Parte" />
+                        <TableColumn fx:id="revision_column" prefWidth="75.0" resizable="false" text="Revisión" />
+                        <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="Número de Lote" />
+                        <TableColumn fx:id="unitprice_column" prefWidth="100.0" resizable="false" text="Valor Unitario" />
+                        <TableColumn prefWidth="160.0" resizable="false" text="Cantidad">
+                           <columns>
+                              <TableColumn fx:id="lot_qty" prefWidth="75.0" resizable="false" text="Piezas" />
+                              <TableColumn fx:id="lot_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
+                           </columns>
+                        </TableColumn>
+                        <TableColumn fx:id="lotprice_column" prefWidth="100.0" resizable="false" text="Precio de Lote" />
+                        <TableColumn fx:id="comments_column" prefWidth="150.0" resizable="false" text="Comentarios" />
+                     </columns>
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </TableView>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
                   <VBox>
                      <children>
                         <Label text="Terminos de pago:">
@@ -124,30 +148,38 @@
                         </TextField>
                      </children>
                   </VBox>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <TableView fx:id="invoiceitem_tableview" prefHeight="400.0" prefWidth="778.0">
-                     <columns>
-                        <TableColumn fx:id="remision_column" prefWidth="75.0" resizable="false" text="# Remisión" />
-                        <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />
-                        <TableColumn fx:id="revision_column" prefWidth="75.0" resizable="false" text="Rev" />
-                        <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="# Lote" />
-                        <TableColumn fx:id="unitprice_column" prefWidth="75.0" resizable="false" text="Precio Pieza" />
-                        <TableColumn prefWidth="160.0" resizable="false" text="Cantidad">
-                           <columns>
-                              <TableColumn fx:id="lot_qty" prefWidth="75.0" resizable="false" text="Piezas" />
-                              <TableColumn fx:id="lot_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
-                           </columns>
-                        </TableColumn>
-                        <TableColumn fx:id="lotprice_column" prefWidth="86.0" resizable="false" text="Precio Parcial" />
-                        <TableColumn fx:id="comments_column" prefWidth="115.0" resizable="false" text="Comentarios" />
-                     </columns>
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </TableView>
+                  <HBox alignment="TOP_RIGHT" prefHeight="58.0" prefWidth="401.0">
+                     <children>
+                        <VBox fillWidth="false">
+                           <children>
+                              <Label text="Total:">
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label text="\$">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <TextField fx:id="total_field" editable="false" focusTraversable="false" prefWidth="75.0">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Label text="USD">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                </children>
             </HBox>
             <HBox alignment="CENTER">
@@ -172,15 +204,6 @@
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
-                  </VBox>
-                  <VBox alignment="TOP_RIGHT" fillWidth="false" prefHeight="33.0" prefWidth="442.0">
-                     <children>
-                        <TextField fx:id="total_field" editable="false" focusTraversable="false" promptText="Precio Total">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
-                     </children>
                   </VBox>
                   <VBox>
                      <children>

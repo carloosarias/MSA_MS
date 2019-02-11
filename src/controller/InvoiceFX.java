@@ -65,8 +65,6 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TableColumn<Invoice, String> billingaddress_column;
     @FXML
-    private TableColumn<Invoice, String> shippingaddress_column;
-    @FXML
     private TableColumn<Invoice, String> pending_column;
     @FXML
     private TextField terms_field;
@@ -77,19 +75,19 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TableView<InvoiceItem> invoiceitem_tableview;
     @FXML
-    private TableColumn<InvoiceItem, String> remision_column;
+    private TableColumn<InvoiceItem, Integer> departreportid_column;
     @FXML
-    private TableColumn<InvoiceItem, String> part_column;
+    private TableColumn<InvoiceItem, String> partnumber_column;
     @FXML
     private TableColumn<InvoiceItem, String> revision_column;
     @FXML
-    private TableColumn<InvoiceItem, String> lot_column;
+    private TableColumn<InvoiceItem, String> lotnumber_column;
     @FXML
     private TableColumn<InvoiceItem, String> comments_column;
     @FXML
-    private TableColumn<InvoiceItem, String> lot_qty;
+    private TableColumn<InvoiceItem, Integer> lot_qty;
     @FXML
-    private TableColumn<InvoiceItem, String> lot_boxqty_column;
+    private TableColumn<InvoiceItem, Integer> lot_boxqty_column;
     @FXML
     private TableColumn<InvoiceItem, String> unitprice_column;
     @FXML
@@ -185,28 +183,19 @@ public class InvoiceFX implements Initializable {
         invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
         client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
         billingaddress_column.setCellValueFactory(new PropertyValueFactory<>("billing_address"));
-        shippingaddress_column.setCellValueFactory(new PropertyValueFactory<>("shipping_address"));
         pending_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().pendingToString()));
     }
     
     public void setInvoiceItemTable(){
-        remision_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getDepartLotDAO().findDepartReport(msabase.getInvoiceItemDAO().findDepartLot(c.getValue())).getId()));
-        part_column.setCellValueFactory(c -> new SimpleStringProperty(
-            msabase.getPartRevisionDAO().findProductPart(
-                    msabase.getDepartLotDAO().findPartRevision(
-                            msabase.getInvoiceItemDAO().findDepartLot(c.getValue()))).getPart_number())
-        );
-        revision_column.setCellValueFactory(c -> new SimpleStringProperty(
-                    msabase.getDepartLotDAO().findPartRevision(
-                            msabase.getInvoiceItemDAO().findDepartLot(c.getValue())).getRev())
-        );
-        lot_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getLot_number()));
+        departreportid_column.setCellValueFactory(new PropertyValueFactory<>("departreport_id"));
+        partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        revision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
+        lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
-        lot_qty.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()));
-        lot_boxqty_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getBox_quantity()));
-        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceItemDAO().findQuote(c.getValue()).getEstimated_total()));
-        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty(
-                msabase.getInvoiceItemDAO().findQuote(c.getValue()).getEstimated_total()*msabase.getInvoiceItemDAO().findDepartLot(c.getValue()).getQuantity()+""));
+        lot_qty.setCellValueFactory(new PropertyValueFactory<>("departlot_quantity"));
+        lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_boxquantity"));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getQuote_estimatedtotal()+" USD"));
+        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+(c.getValue().getQuote_estimatedtotal()*c.getValue().getDepartlot_quantity())+" USD"));
     }
 
     private File buildPDF(Invoice invoice) throws IOException {
@@ -228,8 +217,8 @@ public class InvoiceFX implements Initializable {
             Map<String, PdfFormField> fields = form.getFormFields();
             fields.get("invoice_id").setValue(""+invoice.getId());
             fields.get("date").setValue(invoice.getInvoice_date().toString());
-            fields.get("client").setValue(msabase.getInvoiceDAO().findCompany(invoice).getName());
-            fields.get("billing_address").setValue(msabase.getInvoiceDAO().findBillingAddress(invoice).getAddress());
+            fields.get("client").setValue(invoice.getCompany_name());
+            fields.get("billing_address").setValue(invoice.getBilling_address());
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getInvoiceDAO().findCompany(invoice));
             if(company_contact.isEmpty()){
                 fields.get("contact").setValue("n/a");
@@ -240,7 +229,7 @@ public class InvoiceFX implements Initializable {
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());
                 fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
             }
-            fields.get("shipping_address").setValue(msabase.getInvoiceDAO().findShippingAddress(invoice).getAddress());
+            fields.get("shipping_address").setValue(invoice.getShipping_address());
             fields.get("payment_terms").setValue(invoice.getTerms());
             fields.get("shipping_method").setValue(invoice.getShipping_method());
             fields.get("fob").setValue(invoice.getFob());
@@ -251,15 +240,15 @@ public class InvoiceFX implements Initializable {
             for(InvoiceItem invoice_item : invoice_item_list){
                 int current_row = i+1;
                 double lot_price = 0;
-                double quantity = +msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getQuantity();
-                double unit_price = msabase.getInvoiceItemDAO().findQuote(invoice_item).getEstimated_total();
-                fields.get("depart_report_id"+current_row).setValue(""+msabase.getDepartLotDAO().findDepartReport(msabase.getInvoiceItemDAO().findDepartLot(invoice_item)).getId());
-                fields.get("part_number"+current_row).setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getDepartLotDAO().findPartRevision(msabase.getInvoiceItemDAO().findDepartLot(invoice_item))).getPart_number());
-                fields.get("quantity_box"+current_row).setValue(""+msabase.getInvoiceItemDAO().findDepartLot(invoice_item).getBox_quantity());
+                double quantity = invoice_item.getDepartlot_quantity();
+                double unit_price = invoice_item.getQuote_estimatedtotal();
+                fields.get("depart_report_id"+current_row).setValue(""+invoice_item.getDepartreport_id());
+                fields.get("part_number"+current_row).setValue(invoice_item.getPart_number());
+                fields.get("quantity_box"+current_row).setValue(""+invoice_item.getDepartlot_boxquantity());
                 fields.get("quantity"+current_row).setValue(""+quantity);
-                fields.get("unit_price"+current_row).setValue("$ "+unit_price);
+                fields.get("unit_price"+current_row).setValue("$ "+unit_price+" USD");
                 lot_price = unit_price * quantity;
-                fields.get("lot_price"+current_row).setValue("$ "+lot_price);
+                fields.get("lot_price"+current_row).setValue("$ "+lot_price+" USD");
                 total_price += lot_price;
                 i++;
             }

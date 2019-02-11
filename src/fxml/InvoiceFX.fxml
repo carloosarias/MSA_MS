@@ -19,17 +19,16 @@
                <tabs>
                   <Tab text="Historial de Facturas">
                      <content>
-                        <HBox>
+                        <HBox alignment="CENTER">
                            <children>
-                              <TableView fx:id="invoice_tableview" prefHeight="500.0" prefWidth="862.0">
+                              <TableView fx:id="invoice_tableview" prefWidth="937.0">
                                  <columns>
-                                    <TableColumn fx:id="id_column" prefWidth="99.0" text="# ID" />
-                                    <TableColumn fx:id="invoicedate_column" prefWidth="131.0" text="Fecha de Facturación" />
-                                    <TableColumn fx:id="client_column" prefWidth="125.0" text="Cliente" />
-                                    <TableColumn fx:id="billingaddress_column" prefWidth="201.0" text="Dirección de Facturación" />
-                                    <TableColumn fx:id="shippingaddress_column" prefWidth="189.0" text="Dirección de Entrega" />
-                                    <TableColumn fx:id="pending_column" prefWidth="115.0" text="Estado" />
-                                    <TableColumn prefWidth="75.0" text="F.O.B." />
+                                    <TableColumn fx:id="id_column" prefWidth="99.0" resizable="false" text="No. de Folio" />
+                                    <TableColumn fx:id="invoicedate_column" prefWidth="131.0" resizable="false" text="Fecha de Facturación" />
+                                    <TableColumn fx:id="client_column" prefWidth="175.0" resizable="false" text="Cliente" />
+                                    <TableColumn fx:id="billingaddress_column" prefWidth="300.0" resizable="false" text="Dirección de Facturación" />
+                                    <TableColumn minWidth="0.0" prefWidth="100.0" resizable="false" text="F.O.B." />
+                                    <TableColumn fx:id="pending_column" prefWidth="130.0" resizable="false" text="Estado" />
                                  </columns>
                                  <HBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -41,83 +40,25 @@
                   </Tab>
                   <Tab text="Detalles de Selección">
                      <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
+                        <VBox>
                            <children>
                               <HBox>
                                  <children>
-                                    <VBox>
-                                       <children>
-                                          <HBox>
-                                             <children>
-                                                <VBox>
-                                                   <children>
-                                                      <Label text="Terminos de pago:">
-                                                         <VBox.margin>
-                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                         </VBox.margin>
-                                                      </Label>
-                                                      <TextField fx:id="terms_field" disable="true" editable="false">
-                                                         <VBox.margin>
-                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
-                                                   </children>
-                                                </VBox>
-                                                <VBox>
-                                                   <children>
-                                                      <Label text="Método de Envío:">
-                                                         <VBox.margin>
-                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                         </VBox.margin>
-                                                      </Label>
-                                                      <TextField fx:id="shippingmethod_field" disable="true" editable="false">
-                                                         <VBox.margin>
-                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="FOB:">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </Label>
-                                          <HBox>
-                                             <children>
-                                                <TextField fx:id="fob_field" disable="true" editable="false">
-                                                   <HBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </HBox.margin>
-                                                </TextField>
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <TableView fx:id="invoiceitem_tableview" prefHeight="500.0" prefWidth="862.0">
+                                    <TableView fx:id="invoiceitem_tableview">
                                        <columns>
-                                          <TableColumn fx:id="remision_column" prefWidth="100.0" resizable="false" text="No. de Remisión" />
-                                          <TableColumn fx:id="part_column" prefWidth="100.0" resizable="false" text="# Parte" />
-                                          <TableColumn fx:id="revision_column" prefWidth="60.0" resizable="false" text="Revision" />
-                                          <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="# Lote" />
-                                          <TableColumn fx:id="comments_column" prefWidth="150.0" resizable="false" text="Comentarios" />
+                                          <TableColumn fx:id="departreportid_column" prefWidth="120.0" resizable="false" text="No. de Remisión" />
+                                          <TableColumn fx:id="partnumber_column" prefWidth="120.0" resizable="false" text="Número de Parte" />
+                                          <TableColumn fx:id="revision_column" prefWidth="75.0" resizable="false" text="Revisión" />
+                                          <TableColumn fx:id="lotnumber_column" prefWidth="120.0" resizable="false" text="Número de Lote" />
                                           <TableColumn prefWidth="160.0" resizable="false" text="Cantidad">
                                              <columns>
                                                 <TableColumn fx:id="lot_qty" prefWidth="75.0" resizable="false" text="Piezas" />
                                                 <TableColumn fx:id="lot_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
                                              </columns>
                                           </TableColumn>
-                                          <TableColumn fx:id="unitprice_column" prefWidth="100.0" resizable="false" text="Precio Pieza" />
+                                          <TableColumn fx:id="unitprice_column" prefWidth="100.0" resizable="false" text="Valor Unitario" />
                                           <TableColumn fx:id="lotprice_column" prefWidth="100.0" resizable="false" text="Precio Lote" />
+                                          <TableColumn fx:id="comments_column" prefWidth="150.0" resizable="false" text="Comentarios" />
                                        </columns>
                                        <HBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -125,11 +66,69 @@
                                     </TableView>
                                  </children>
                               </HBox>
-                              <HBox alignment="TOP_RIGHT">
+                              <HBox>
                                  <children>
-                                    <VBox>
+                                    <HBox>
                                        <children>
-                                          <HBox>
+                                          <VBox>
+                                             <children>
+                                                <HBox>
+                                                   <children>
+                                                      <VBox>
+                                                         <children>
+                                                            <Label text="Términos de pago:">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                               </VBox.margin>
+                                                            </Label>
+                                                            <TextField fx:id="terms_field" disable="true" editable="false">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                               </VBox.margin>
+                                                            </TextField>
+                                                         </children>
+                                                      </VBox>
+                                                      <VBox>
+                                                         <children>
+                                                            <Label text="Método de Envío:">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                               </VBox.margin>
+                                                            </Label>
+                                                            <TextField fx:id="shippingmethod_field" disable="true" editable="false">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                               </VBox.margin>
+                                                            </TextField>
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox>
+                                             <children>
+                                                <Label text="F.O.B.:">
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <HBox>
+                                                   <children>
+                                                      <TextField fx:id="fob_field" disable="true" editable="false">
+                                                         <HBox.margin>
+                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                         </HBox.margin>
+                                                      </TextField>
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                    <VBox prefHeight="58.0" prefWidth="469.0">
+                                       <children>
+                                          <HBox alignment="TOP_RIGHT">
                                              <children>
                                                 <VBox>
                                                    <children>
@@ -138,11 +137,25 @@
                                                             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                          </VBox.margin>
                                                       </Label>
-                                                      <TextField fx:id="total_field" disable="true" editable="false">
-                                                         <VBox.margin>
-                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                         </VBox.margin>
-                                                      </TextField>
+                                                      <HBox alignment="CENTER_LEFT">
+                                                         <children>
+                                                            <Label text="\$">
+                                                               <HBox.margin>
+                                                                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                               </HBox.margin>
+                                                            </Label>
+                                                            <TextField fx:id="total_field" disable="true" editable="false" prefWidth="75.0">
+                                                               <HBox.margin>
+                                                                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                               </HBox.margin>
+                                                            </TextField>
+                                                            <Label text="USD">
+                                                               <HBox.margin>
+                                                                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                               </HBox.margin>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
                                                    </children>
                                                 </VBox>
                                              </children>
@@ -159,7 +172,7 @@
             </TabPane>
             <HBox>
                <children>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte">
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Nueva Factura">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>

@@ -5,10 +5,12 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,8 +111,12 @@ public class ProductSupplierFX implements Initializable {
             item.setProduct_description(item.getTemp_productsupplier().getProduct_description());
             item.setProductsupplier_quantity(item.getTemp_productsupplier().getQuantity());
             item.setUnits_ordered(1);
+            item.setPrice_updated(item.getPrice_timestamp());
+            item.setDate_modified(DAOUtil.toUtilDate(LocalDate.now()));
+            item.setModified(false);
             OrderPurchaseCartFX.cart_list.add(item);
-            productsupplier_tableview.getSelectionModel().clearSelection();
+            OrderPurchaseCartFX.updateCompanyList();
+            isInList(productsupplier_tableview.getSelectionModel().getSelectedItem());
         });
         
     }
