@@ -243,7 +243,7 @@ public class OrderPurchaseFX implements Initializable {
         setTotal();
     }
     public void setIva(){
-        iva_field.setText(df.format((Double.parseDouble(subtotal_field.getText())*orderpurchase_tableview.getSelectionModel().getSelectedItem().getIva_rate()/100)*exchangetype_multiplier));
+        iva_field.setText(df.format((Double.parseDouble(subtotal_field.getText())*orderpurchase_tableview.getSelectionModel().getSelectedItem().getIva_rate()/100)));
     }
     
     public void setTotal(){
@@ -286,8 +286,8 @@ public class OrderPurchaseFX implements Initializable {
             fields.get("quantity"+current_row).setValue(df.format(purchase_item.getProductsupplier_quantity()));
             fields.get("unit_measure"+current_row).setValue(purchase_item.getProduct_unitmeasure());
             fields.get("unitmeasure_price"+current_row).setValue("$"+df.format((purchase_item.getPrice_unit()/purchase_item.getProductsupplier_quantity())*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
-            fields.get("unit_price"+current_row).setValue("$"+(purchase_item.getPrice_unit()*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
-            fields.get("price_lot"+current_row).setValue("$ "+(purchase_item.getPrice_total()*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
+            fields.get("unit_price"+current_row).setValue("$"+(df.format(purchase_item.getPrice_unit()*exchangetype_multiplier))+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
+            fields.get("price_lot"+current_row).setValue("$ "+(df.format(purchase_item.getPrice_total()*exchangetype_multiplier))+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
             i++;
         }
         fields.get("subtotal").setValue("$ "+subtotal_field.getText()+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
