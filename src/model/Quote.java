@@ -21,6 +21,20 @@ public class Quote implements Serializable{
     private double margin;
     private double estimated_total;
     private String approved;
+    
+    //INNER JOINS
+    private String spec_number;
+    private String spec_process;
+    private String partrev_area;
+    private Integer company_id;
+    private String company_name;
+    private String contact_name;
+    private String contact_email;
+    private String contact_number;
+    private String part_number;
+    private String part_description;
+    private String part_rev;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -55,19 +69,19 @@ public class Quote implements Serializable{
         this.comments = comments;
     }
     
-    public Double getMargin(){
+    public double getMargin(){
         return margin;
     }
     
-    public void setMargin(Double margin){
+    public void setMargin(double margin) {
         this.margin = margin;
     }
-    
-    public Double getEstimated_total(){
+
+    public double getEstimated_total(){
         return estimated_total;
     }
     
-    public void setEstimated_total(Double estimated_total){
+    public void setEstimated_total(double estimated_total) {
         this.estimated_total = estimated_total;
     }
     
@@ -78,6 +92,100 @@ public class Quote implements Serializable{
     public void setApproved(String approved) {
         this.approved = approved;
     }
+    
+    public double getActualprice(){
+        return (estimated_total * 100) / margin;
+    }
+    
+    //INNER JOINS
+    public String getSpec_number() {
+        return spec_number;
+    }
+
+    public void setSpec_number(String spec_number) {
+        this.spec_number = spec_number;
+    }
+
+    public String getSpec_process() {
+        return spec_process;
+    }
+
+    public void setSpec_process(String spec_process) {
+        this.spec_process = spec_process;
+    }
+
+    public String getPartrev_area() {
+        return partrev_area;
+    }
+
+    public void setPartrev_area(String partrev_area) {
+        this.partrev_area = partrev_area;
+    }
+    
+    public Integer getCompany_id() {
+        return company_id;
+    }
+
+    public void setCompany_id(Integer company_id) {
+        this.company_id = company_id;
+    }
+
+    public String getCompany_name() {
+        return company_name;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
+
+    public String getContact_name() {
+        return contact_name;
+    }
+
+    public void setContact_name(String contact_name) {
+        this.contact_name = contact_name;
+    }
+
+    public String getContact_email() {
+        return contact_email;
+    }
+
+    public void setContact_email(String contact_email) {
+        this.contact_email = contact_email;
+    }
+
+    public String getContact_number() {
+        return contact_number;
+    }
+
+    public void setContact_number(String contact_number) {
+        this.contact_number = contact_number;
+    }
+
+    public String getPart_number() {
+        return part_number;
+    }
+
+    public void setPart_number(String part_number) {
+        this.part_number = part_number;
+    }
+
+    public String getPart_description() {
+        return part_description;
+    }
+
+    public void setPart_description(String part_description) {
+        this.part_description = part_description;
+    }
+
+    public String getPart_rev() {
+        return part_rev;
+    }
+
+    public void setPart_rev(String part_rev) {
+        this.part_rev = part_rev;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**

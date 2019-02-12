@@ -17,7 +17,15 @@ public class QuoteItem implements Serializable {
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     private Integer id;
     private Double unit_price;
+    
     private SpecificationItem temp_specificationitem;
+    
+    //INNER JOINS
+    private Double specitem_maximumthickness;
+    private Double partrev_area;
+    private String metal_name;
+    private Double metal_density;
+    private Double quote_margin;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -44,66 +52,77 @@ public class QuoteItem implements Serializable {
     public void setTemp_specificationitem(SpecificationItem temp_specificationitem){
         this.temp_specificationitem = temp_specificationitem;
     }
-    //Converts specification maximum_thickness from in to mm
-    public Double getThickness(){
-        if(this.id == null){
-            return 0.0;
-        }
-        return getThickness(msabase.getQuoteItemDAO().findSpecificationItem(this));
-    }
     
-    public Double getThickness(SpecificationItem temp_specificationitem){
-        return temp_specificationitem.getMaximum_thickness() * 25.4;
-    }
-    
-    //calculates the volume using the area(mm2) and the thickness(mm)
+    //Calculates the volume using the area(mm2) and the thickness(mm)
     public Double getVolume(){
-        if(this.id == null){
-            return 0.0;
-        }
-        return getVolume(msabase.getQuoteDAO().findPartRevision(msabase.getQuoteItemDAO().findQuote(this)), msabase.getQuoteItemDAO().findSpecificationItem(this));
+        return getPartrev_areaMM() * getSpecitem_maximumthicknessMM();
     }
     
-    public Double getVolume(PartRevision temp_partrevision, SpecificationItem temp_specificationitem){
-        return temp_partrevision.getAreaSquareMillimiters() * getThickness(temp_specificationitem);
-    }
-    
-    //Converts the metal density from (g/cm3) to (g/mm3)
-    public Double getDensity(){
-        if(this.id == null){
-            return 0.0;
-        }
-        return getDensity(msabase.getQuoteItemDAO().findSpecificationItem(this));
-    }
-    
-    public Double getDensity(SpecificationItem temp_specificationitem){
-        return msabase.getSpecificationItemDAO().findMetal(temp_specificationitem).getDensity() / 1000;
-    }
-    
-    //Calculates the weight using the Volume and the Density
+    //Calculates the weight using the Volume and the Density    
     public Double getWeight(){
-        if(this.id == null){
-            return 0.0;
-        }
-        return getWeight(msabase.getQuoteDAO().findPartRevision(msabase.getQuoteItemDAO().findQuote(this)), msabase.getQuoteItemDAO().findSpecificationItem(this));
-    }
-    
-    public Double getWeight(PartRevision temp_partrevision, SpecificationItem temp_specificationitem){
-        return getVolume(temp_partrevision, temp_specificationitem) * getDensity(temp_specificationitem);
+        return getVolume() * getMetal_densityGMM();
     }
     
     //Calculates the estimated price using the Weight, Unit Price and Margin
     public Double getEstimatedPrice(){
-        if(this.id == null){
-            return 0.0;
-        }
-        return getEstimatedPrice(msabase.getQuoteDAO().findPartRevision(msabase.getQuoteItemDAO().findQuote(this)), msabase.getQuoteItemDAO().findSpecificationItem(this), msabase.getQuoteItemDAO().findQuote(this).getMargin());
+        return (getWeight() * unit_price * (quote_margin/100));
     }
     
-    public Double getEstimatedPrice(PartRevision temp_partrevision, SpecificationItem temp_specificationitem, Double temp_margin){
-        return (getWeight(temp_partrevision, temp_specificationitem) * unit_price * (temp_margin/100));
+    //Converts specification maximum_thickness from in to mm
+    public Double getSpecitem_maximumthicknessMM(){
+        return specitem_maximumthickness * 25.4;
     }
     
+    //1 in² == 645.16 mm²
+    public double getPartrev_areaMM(){
+        return partrev_area * 645.16;
+    }
+    
+    //Converts the metal density from (g/cm³) to (g/mm³)    
+    public Double getMetal_densityGMM(){
+        return metal_density / 1000;
+    }
+    
+    //INNER JOINS
+    public Double getSpecitem_maximumthickness(){
+        return specitem_maximumthickness;
+    }
+    
+    public void setSpecitem_maximumthickness(Double specitem_maximumthickness){
+        this.specitem_maximumthickness = specitem_maximumthickness;
+    }
+    
+    public Double getPartrev_area(){
+        return partrev_area;
+    }
+    
+    public void setPartrev_area(Double partrev_area){
+        this.partrev_area = partrev_area;
+    }
+    
+    public String getMetal_name() {
+        return metal_name;
+    }
+
+    public void setMetal_name(String metal_name) {
+        this.metal_name = metal_name;
+    }
+    
+    public Double getMetal_density(){
+        return metal_density;
+    }
+    
+    public void setMetal_density(Double metal_density){
+        this.metal_density = metal_density;
+    }
+    
+    public Double getQuote_margin() {
+        return quote_margin;
+    }
+
+    public void setQuote_margin(Double quote_margin) {
+        this.quote_margin = quote_margin;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**

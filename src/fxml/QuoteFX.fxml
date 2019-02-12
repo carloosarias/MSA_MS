@@ -5,6 +5,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -113,31 +114,7 @@
                      <children>
                         <VBox>
                            <children>
-                              <Label text="Detalles de Proceso:">
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <TableView fx:id="quoteitem_tableview">
-                                <columns>
-                                  <TableColumn fx:id="listnumber_column" prefWidth="75.0" resizable="false" text="#" />
-                                    <TableColumn prefWidth="75.0" resizable="false" text="Metal">
-                                       <columns>
-                                          <TableColumn fx:id="metal_name_column" prefWidth="100.0" resizable="false" text="Nombre" />
-                                          <TableColumn fx:id="density_column" prefWidth="150.0" resizable="false" text="Densidad (g/mm³)" />
-                                        <TableColumn fx:id="unitprice_column" prefWidth="150.0" resizable="false" text="Precio Unitario ($/g)" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn fx:id="maximumthickness_column" prefWidth="150.0" resizable="false" text="Espesor Máximo (mm)" />
-                                    <TableColumn fx:id="volume_column" prefWidth="106.0" resizable="false" text="Volumen (mm³)" />
-                                    <TableColumn fx:id="weight_column" prefWidth="100.0" resizable="false" text="Peso (g)" />
-                                    <TableColumn fx:id="estimatedprice_column" prefWidth="125.0" resizable="false" text="Precio Estimado" />
-                                </columns>
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TableView>
-                              <HBox alignment="TOP_RIGHT">
+                              <HBox>
                                  <children>
                                     <VBox>
                                        <children>
@@ -146,7 +123,7 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <ComboBox fx:id="specification_combo" disable="true" prefWidth="150.0">
+                                          <ComboBox fx:id="specification_combo" disable="true" focusTraversable="false" prefWidth="220.0">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
@@ -155,58 +132,159 @@
                                     </VBox>
                                     <VBox>
                                        <children>
-                                          <Label text="Proceso:">
+                                          <Label text="Proceso Final:">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <TextField fx:id="specificationprocess_field" disable="true">
+                                          <TextField fx:id="specificationprocess_field" editable="false" focusTraversable="false">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </TextField>
                                        </children>
                                     </VBox>
+                                    <Separator orientation="VERTICAL">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Separator>
                                     <VBox>
                                        <children>
-                                          <Label text="Área (mm²):">
+                                          <Label text="Área:">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <TextField fx:id="revisionarea_field" disable="true">
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <TextField fx:id="revisionarea_field" editable="false" focusTraversable="false" prefWidth="75.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label text="IN²">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
                                              <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                <Insets />
                                              </VBox.margin>
-                                          </TextField>
+                                          </HBox>
                                        </children>
                                     </VBox>
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="quoteitem_tableview">
+                                <columns>
+                                  <TableColumn fx:id="listnumber_column" prefWidth="75.0" resizable="false" text="#" />
+                                    <TableColumn prefWidth="75.0" resizable="false" text="Metal">
+                                       <columns>
+                                          <TableColumn fx:id="metal_name_column" prefWidth="100.0" resizable="false" text="Nombre" />
+                                          <TableColumn fx:id="density_column" prefWidth="150.0" resizable="false" text="Densidad" />
+                                        <TableColumn fx:id="unitprice_column" prefWidth="150.0" resizable="false" text="Precio Unitario" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn fx:id="maximumthickness_column" prefWidth="150.0" resizable="false" text="Espesor Máximo" />
+                                    <TableColumn fx:id="volume_column" prefWidth="106.0" resizable="false" text="Volumen" />
+                                    <TableColumn fx:id="weight_column" prefWidth="100.0" resizable="false" text="Peso" />
+                                    <TableColumn fx:id="estimatedprice_column" prefWidth="125.0" resizable="false" text="Precio Estimado" />
+                                </columns>
+                                 <VBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </VBox.margin>
+                              </TableView>
+                              <HBox alignment="CENTER_RIGHT">
+                                 <children>
                                     <VBox>
                                        <children>
-                                          <Label text="Margen Agregado (%):">
+                                          <Label text="Margen de Ganancia:">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <TextField fx:id="quotemargin_field" disable="true">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </TextField>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <TextField fx:id="quotemargin_field" editable="false" layoutX="10.0" layoutY="10.0" prefWidth="75.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label text="\%">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
                                        </children>
                                     </VBox>
+                                    <Separator orientation="VERTICAL">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Separator>
                                     <VBox>
                                        <children>
-                                          <Label text="Precio Total Estimado:">
+                                          <Label text="Precio Estimado:">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
                                           </Label>
-                                          <TextField fx:id="estimatedtotal_field" disable="true">
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="\$">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="realprice_field" editable="false" prefWidth="75.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label text="USD">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <Separator orientation="VERTICAL">
+                                       <HBox.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </HBox.margin>
+                                    </Separator>
+                                    <VBox>
+                                       <children>
+                                          <Label text="Precio Cotizado:">
                                              <VBox.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </VBox.margin>
-                                          </TextField>
+                                          </Label>
+                                          <HBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label text="\$">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <TextField fx:id="estimatedtotal_field" editable="false" prefWidth="75.0">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </TextField>
+                                                <Label text="USD">
+                                                   <HBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                             </children>
+                                          </HBox>
                                        </children>
                                     </VBox>
                                  </children>

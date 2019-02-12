@@ -18,6 +18,9 @@ public class SpecificationItem implements Serializable {
     private double maximum_thickness;
     private Metal temp_metal;
     
+    //INNER JOINS
+    private String metal_name;
+    private Double metal_density;
     // Getters/setters ----------------------------------------------------------------------------
     
     public Integer getId() {
@@ -50,6 +53,23 @@ public class SpecificationItem implements Serializable {
     
     public void setTemp_metal(Metal temp_metal){
         this.temp_metal = temp_metal;
+    }
+    
+    //INNER JOINS
+    public String getMetal_name() {
+        return metal_name;
+    }
+
+    public void setMetal_name(String metal_name) {
+        this.metal_name = metal_name;
+    }
+
+    public double getMetal_density() {
+        return metal_density;
+    }
+
+    public void setMetal_density(double metal_density) {
+        this.metal_density = metal_density;
     }
     
     // Object overrides ---------------------------------------------------------------------------

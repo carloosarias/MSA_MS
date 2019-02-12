@@ -99,14 +99,14 @@ public class CreateQuoteFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         quotedate_picker.setValue(LocalDate.now());
-        client_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
-        part_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().findProductPart(QuoteFX.getPartrevision_selection())));
+        client_combo.getItems().setAll(msabase.getCompanyDAO().listClient(true));
+        part_combo.getItems().setAll(msabase.getPartRevisionDAO().findProductPart(QuoteFX.getPartrevision_selection()));
         part_combo.getSelectionModel().selectFirst();
-        partrev_combo.setItems(FXCollections.observableArrayList(QuoteFX.getPartrevision_selection()));
+        partrev_combo.getItems().setAll(QuoteFX.getPartrevision_selection());
         partrev_combo.getSelectionModel().selectFirst();
         specificationnumber_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().findSpecification(QuoteFX.getPartrevision_selection())));
         specificationnumber_combo.getSelectionModel().selectFirst();
-        area_field.setText(""+QuoteFX.getPartrevision_selection().getAreaSquareMillimiters());
+        area_field.setText(""+partrev_combo.getSelectionModel().getSelectedItem().getArea());
         process_field.setText(specificationnumber_combo.getSelectionModel().getSelectedItem().getProcess());
         margin_slider.setValue(120);
         setQuoteItemList();
@@ -199,6 +199,11 @@ public class CreateQuoteFX implements Initializable {
             QuoteItem item = new QuoteItem();
             item.setTemp_specificationitem(specification_item);
             item.setUnit_price(0.0);
+            item.setMetal_name(item.getTemp_specificationitem().getMetal_name());
+            item.setMetal_density(item.getTemp_specificationitem().getMetal_density());
+            item.setQuote_margin(margin_slider.getValue());
+            item.setPartrev_area(partrev_combo.getSelectionModel().getSelectedItem().getArea());
+            item.setSpecitem_maximumthickness(specification_item.getMaximum_thickness());
             quoteitem_list.add(item);
         }
     }
@@ -213,8 +218,8 @@ public class CreateQuoteFX implements Initializable {
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(6);
         listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(quoteitem_tableview.getItems().indexOf(c.getValue())+1)));
-        metalname_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getSpecificationItemDAO().findMetal(c.getValue().getTemp_specificationitem())));
-        density_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getDensity(c.getValue().getTemp_specificationitem())));
+        metalname_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMetal_name()));
+        density_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMetal_densityGMM())+" G/MM³"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getUnit_price()));
         unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
         unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<QuoteItem, String> t) -> {
@@ -222,10 +227,10 @@ public class CreateQuoteFX implements Initializable {
             quoteitem_tableview.refresh();
             setQuoteItemItems();
         });
-        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getThickness(c.getValue().getTemp_specificationitem()))));
-        volume_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getVolume(partrev_combo.getSelectionModel().getSelectedItem(), c.getValue().getTemp_specificationitem()))));
-        weight_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getWeight(partrev_combo.getSelectionModel().getSelectedItem(), c.getValue().getTemp_specificationitem()))));
-        estimatedprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getEstimatedPrice(partrev_combo.getSelectionModel().getSelectedItem(), c.getValue().getTemp_specificationitem(), margin_slider.getValue()))));
+        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getSpecitem_maximumthicknessMM())+" MM"));
+        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" MM³"));
+        weight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getWeight())+" G"));
+        estimatedprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getEstimatedPrice())+" USD"));
     }
     
     public Double getUnit_priceValue(String unit_price){
@@ -239,7 +244,8 @@ public class CreateQuoteFX implements Initializable {
     public Double getTotal(){
         Double total = 0.0;
         for(QuoteItem item : quoteitem_list){
-            total += item.getEstimatedPrice(partrev_combo.getSelectionModel().getSelectedItem(), item.getTemp_specificationitem(), margin_slider.getValue());
+            item.setQuote_margin(margin_slider.getValue());
+            total += item.getEstimatedPrice();
         }
         return total;
     }
