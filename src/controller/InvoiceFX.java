@@ -111,11 +111,10 @@ public class InvoiceFX implements Initializable {
         setInvoiceTable();
         setInvoiceItemTable();
         updateInvoiceTable();
-        
+        pdf_button.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
         invoice_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> observable, Invoice oldValue, Invoice newValue) -> {
             setInvoiceDetails(newValue);
             setTotal();
-            pdf_button.setDisable(invoice_tableview.getSelectionModel().isEmpty());
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -136,7 +135,7 @@ public class InvoiceFX implements Initializable {
     public void setTotal(){
         double total = 0;
         for(InvoiceItem invoice_item : invoiceitem_tableview.getItems()){
-            total += Double.parseDouble(lotprice_column.getCellData(invoice_item));
+            total += (invoice_item.getQuote_estimatedtotal()*invoice_item.getDepartlot_quantity());
         }
         total_field.setText(total+"");
     }

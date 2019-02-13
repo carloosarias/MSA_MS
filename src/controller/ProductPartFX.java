@@ -107,7 +107,7 @@ public class ProductPartFX implements Initializable {
     @FXML
     private TableColumn<Metal, String> metalname_column;
     @FXML
-    private TableColumn<Metal, Double> density_column;
+    private TableColumn<Metal, String> density_column;
     @FXML
     private Button addproductpart_button;
     @FXML
@@ -124,12 +124,13 @@ public class ProductPartFX implements Initializable {
     private List<String> status_items = Arrays.asList("Activo", "Inactivo");
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    
+    DecimalFormat df = new DecimalFormat("#");
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        df.setMaximumFractionDigits(6);
         setProductPartTable();
         setPartRevisionTable();
         setSpecificationTable();
@@ -272,21 +273,21 @@ public class ProductPartFX implements Initializable {
         basemetal_column.setCellValueFactory(new PropertyValueFactory<>("metal_metalname"));
         finalprocess_column.setCellValueFactory(new PropertyValueFactory<>("specification_process"));
         revspecnumber_column.setCellValueFactory(new PropertyValueFactory<>("specification_specificationnumber"));
-        area_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getArea()+" in²"));
+        area_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getArea())+" IN²"));
         area_column.setCellFactory(TextFieldTableCell.forTableColumn());
         area_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setArea(getAreaValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             partrevision_tableview.refresh();
         });
-        baseweight_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBase_weight()+" kg"));
+        baseweight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getBase_weight())+" KG"));
         baseweight_column.setCellFactory(TextFieldTableCell.forTableColumn());
         baseweight_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setBase_weight(getBase_weightValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             partrevision_tableview.refresh();
         });
-        finalweight_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getFinal_weight()+" kg"));
+        finalweight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getFinal_weight())+" KG"));
         finalweight_column.setCellFactory(TextFieldTableCell.forTableColumn());
         finalweight_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setFinal_weight(getFinal_weightValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
@@ -310,18 +311,16 @@ public class ProductPartFX implements Initializable {
     }
     
     public void setSpecificationItemTable(){
-        DecimalFormat df = new DecimalFormat("#");
-        df.setMaximumFractionDigits(6);
         specificationitemid_column.setCellValueFactory(c -> new SimpleStringProperty(""+(specificationitem_tableview.getItems().indexOf(c.getValue())+1)));
-        metal_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getSpecificationItemDAO().findMetal(c.getValue()).getMetal_name()));
-        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())+" in."));
-        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())+" in."));
+        metal_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMetal_name()));
+        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())+" IN"));
+        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())+" IN"));
     }
     
     public void setMetalTable(){
         metalid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         metalname_column.setCellValueFactory(new PropertyValueFactory<>("metal_name"));
-        density_column.setCellValueFactory(new PropertyValueFactory<>("density"));
+        density_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getDensity())+" G/CM³"));
     }
     
     

@@ -86,6 +86,8 @@ public class CreateQuoteFX implements Initializable {
     @FXML
     private Slider margin_slider;
     @FXML
+    private TextField actualprice_field;
+    @FXML
     private TextField estimatedtotal_field;
     @FXML
     private Button save_button;
@@ -141,6 +143,18 @@ public class CreateQuoteFX implements Initializable {
         quote.setMargin(margin_slider.getValue());
         quote.setEstimated_total(Double.parseDouble(estimatedtotal_field.getText()));
         quote.setApproved("Pendiente");
+        quote.setSpec_number(partrev_combo.getSelectionModel().getSelectedItem().getSpecification_specificationnumber());
+        quote.setSpec_process(partrev_combo.getSelectionModel().getSelectedItem().getSpecification_process());
+        quote.setPartrev_area(partrev_combo.getSelectionModel().getSelectedItem().getArea());
+        quote.setCompany_id(client_combo.getSelectionModel().getSelectedItem().getId());
+        quote.setCompany_name(client_combo.getSelectionModel().getSelectedItem().getName());
+        quote.setContact_name(contact_combo.getSelectionModel().getSelectedItem().getName());
+        quote.setContact_email(contact_combo.getSelectionModel().getSelectedItem().getEmail());
+        quote.setContact_number(contact_combo.getSelectionModel().getSelectedItem().getPhone_number());
+        quote.setPart_number(part_combo.getSelectionModel().getSelectedItem().getPart_number());
+        quote.setPart_description(part_combo.getSelectionModel().getSelectedItem().getDescription());
+        quote.setPart_rev(partrev_combo.getSelectionModel().getSelectedItem().getRev());
+        
         
         msabase.getQuoteDAO().create(partrev_combo.getSelectionModel().getSelectedItem(), contact_combo.getSelectionModel().getSelectedItem(), quote);
         
@@ -211,7 +225,8 @@ public class CreateQuoteFX implements Initializable {
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(6);
         quoteitem_tableview.setItems(FXCollections.observableArrayList(quoteitem_list));
-        estimatedtotal_field.setText(""+df.format(getTotal()));
+        actualprice_field.setText(df.format((getTotal() * 100) / margin_slider.getValue()));
+        estimatedtotal_field.setText(df.format(getTotal()));
     }
     
     public void setQuoteItemTable(){

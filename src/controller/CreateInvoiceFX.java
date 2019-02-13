@@ -120,7 +120,6 @@ public class CreateInvoiceFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            departlot_list = msabase.getDepartLotDAO().list(client_combo.getSelectionModel().getSelectedItem(), true, false);
             showAdd_stage();
         });
         
@@ -212,9 +211,9 @@ public class CreateInvoiceFX implements Initializable {
     public void setTotal(){
         double total = 0;
         for(InvoiceItem invoice_item : invoiceitem_queue){
-            total += Double.parseDouble(lotprice_column.getCellData(invoice_item));
+            total += (invoice_item.getQuote_estimatedtotal()*invoice_item.getDepartlot_quantity());
         }
-        total_field.setText(total+"");
+        total_field.setText(""+total);
     }
     
     public void setClientList(Company company){
@@ -227,7 +226,7 @@ public class CreateInvoiceFX implements Initializable {
             invoiceitem_tableview.getItems().clear();
         }else{
             invoiceitem_queue.clear();
-            departlot_list.clear();
+            departlot_list = msabase.getDepartLotDAO().list(client_combo.getSelectionModel().getSelectedItem(), true, false);
             billingaddress_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyAddressDAO().listActive(company, true)));
             shippingaddress_combo.setItems(billingaddress_combo.getItems());
         }

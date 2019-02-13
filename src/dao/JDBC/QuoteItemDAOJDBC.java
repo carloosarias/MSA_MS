@@ -6,9 +6,7 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.QuoteDAOJDBC.map;
 import dao.interfaces.QuoteItemDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,13 +25,28 @@ import model.SpecificationItem;
 public class QuoteItemDAOJDBC implements QuoteItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, unit_price FROM QUOTE_ITEM WHERE id = ?";
+            "SELECT QUOTE_ITEM.id, QUOTE_ITEM.unit_price, "
+            + "SPECIFICATION_ITEM.maximum_thickness, PART_REVISION.area, METAL.metal_name, METAL.density, QUOTE.margin "
+            + "FROM QUOTE_ITEM "
+            + "INNER JOIN SPECIFICATION_ITEM ON QUOTE_ITEM.SPECIFICATION_ITEM_ID = SPECIFICATION_ITEM.id "
+            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
+            + "INNER JOIN QUOTE ON QUOTE_ITEM.QUOTE_ID = QUOTE.id "
+            + "INNER JOIN PART_REVISION ON QUOTE.PART_REVISION_ID = PART_REVISION.id "
+            + "WHERE QUOTE_ITEM.id = ?";
     private static final String SQL_FIND_QUOTE_BY_ID = 
             "SELECT QUOTE_ID FROM QUOTE_ITEM WHERE id = ?";
     private static final String SQL_FIND_SPECIFICATION_ITEM_BY_ID = 
             "SELECT SPECIFICATION_ITEM_ID FROM QUOTE_ITEM WHERE id = ?";
     private static final String SQL_LIST_OF_QUOTE_ORDER_BY_ID = 
-            "SELECT id, unit_price FROM QUOTE_ITEM WHERE QUOTE_ID = ? ORDER BY ID";
+            "SELECT QUOTE_ITEM.id, QUOTE_ITEM.unit_price, "
+            + "SPECIFICATION_ITEM.maximum_thickness, PART_REVISION.area, METAL.metal_name, METAL.density, QUOTE.margin "
+            + "FROM QUOTE_ITEM "
+            + "INNER JOIN SPECIFICATION_ITEM ON QUOTE_ITEM.SPECIFICATION_ITEM_ID = SPECIFICATION_ITEM.id "
+            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
+            + "INNER JOIN QUOTE ON QUOTE_ITEM.QUOTE_ID = QUOTE.id "
+            + "INNER JOIN PART_REVISION ON QUOTE.PART_REVISION_ID = PART_REVISION.id "
+            + "WHERE QUOTE_ITEM.QUOTE_ID = ? "
+            + "ORDER BY QUOTE_ITEM.id";
     private static final String SQL_INSERT =
             "INSERT INTO QUOTE_ITEM (SPECIFICATION_ITEM_ID, QUOTE_ID, unit_price) "
             + "VALUES (?, ?, ?)";
@@ -267,8 +280,15 @@ public class QuoteItemDAOJDBC implements QuoteItemDAO {
      */
     public static QuoteItem map(ResultSet resultSet) throws SQLException{
         QuoteItem quote_item = new QuoteItem();
-        quote_item.setId(resultSet.getInt("id"));
-        quote_item.setUnit_price(resultSet.getDouble("unit_price"));
+        quote_item.setId(resultSet.getInt("QUOTE_ITEM.id"));
+        quote_item.setUnit_price(resultSet.getDouble("QUOTE_ITEM.unit_price"));
+        
+        //INNER JOINS
+        quote_item.setSpecitem_maximumthickness(resultSet.getDouble("SPECIFICATION_ITEM.maximum_thickness"));
+        quote_item.setPartrev_area(resultSet.getDouble("PART_REVISION.area"));
+        quote_item.setMetal_name(resultSet.getString("METAL.metal_name"));
+        quote_item.setMetal_density(resultSet.getDouble("METAL.density"));
+        quote_item.setQuote_margin(resultSet.getDouble("QUOTE.margin"));
         return quote_item;
     }
 }

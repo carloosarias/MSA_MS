@@ -25,13 +25,22 @@ import model.SpecificationItem;
 public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, minimum_thickness, maximum_thickness FROM SPECIFICATION_ITEM WHERE id = ?";
+            "SELECT SPECIFICATION_ITEM.id, SPECIFICATION_ITEM.minimum_thickness, SPECIFICATION_ITEM.maximum_thickness, "
+            + "METAL.metal_name, METAL.density "
+            + "FROM SPECIFICATION_ITEM "
+            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
+            + "WHERE SPECIFICATION_ITEM.id = ?";
     private static final String SQL_FIND_SPECIFICATION_BY_ID = 
             "SELECT SPECIFICATION_ID FROM SPECIFICATION_ITEM WHERE id = ?";
     private static final String SQL_FIND_METAL_BY_ID = 
             "SELECT METAL_ID FROM SPECIFICATION_ITEM WHERE id = ?";
     private static final String SQL_LIST_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT id, minimum_thickness, maximum_thickness FROM SPECIFICATION_ITEM WHERE SPECIFICATION_ID = ? ORDER BY id";
+            "SELECT SPECIFICATION_ITEM.id, SPECIFICATION_ITEM.minimum_thickness, SPECIFICATION_ITEM.maximum_thickness, "
+            + "METAL.metal_name, METAL.density "
+            + "FROM SPECIFICATION_ITEM "
+            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
+            + "WHERE SPECIFICATION_ITEM.SPECIFICATION_ID = ? "
+            + "ORDER BY SPECIFICATION_ITEM.id";
     private static final String SQL_INSERT = 
             "INSERT INTO SPECIFICATION_ITEM (SPECIFICATION_ID, METAL_ID, minimum_thickness, maximum_thickness) "
             + "VALUES(?, ?, ?, ?)";
@@ -264,9 +273,13 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
      */
     public static SpecificationItem map(ResultSet resultSet) throws SQLException{
         SpecificationItem specification_item = new SpecificationItem();
-        specification_item.setId(resultSet.getInt("id"));
-        specification_item.setMinimum_thickness(resultSet.getDouble("minimum_thickness"));
-        specification_item.setMaximum_thickness(resultSet.getDouble("maximum_thickness"));
+        specification_item.setId(resultSet.getInt("SPECIFICATION_ITEM.id"));
+        specification_item.setMinimum_thickness(resultSet.getDouble("SPECIFICATION_ITEM.minimum_thickness"));
+        specification_item.setMaximum_thickness(resultSet.getDouble("SPECIFICATION_ITEM.maximum_thickness"));
+        
+        //INNER JOINS
+        specification_item.setMetal_name(resultSet.getString("METAL.metal_name"));
+        specification_item.setMetal_density(resultSet.getDouble("METAL.density"));
         return specification_item;
     }
 }

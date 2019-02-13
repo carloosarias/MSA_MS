@@ -25,7 +25,7 @@ public class Quote implements Serializable{
     //INNER JOINS
     private String spec_number;
     private String spec_process;
-    private String partrev_area;
+    private double partrev_area;
     private Integer company_id;
     private String company_name;
     private String contact_name;
@@ -114,11 +114,11 @@ public class Quote implements Serializable{
         this.spec_process = spec_process;
     }
 
-    public String getPartrev_area() {
+    public double getPartrev_area() {
         return partrev_area;
     }
 
-    public void setPartrev_area(String partrev_area) {
+    public void setPartrev_area(double partrev_area) {
         this.partrev_area = partrev_area;
     }
     

@@ -64,8 +64,8 @@ public class AddInvoiceItemFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setDepartLotTable();
-        departlot_tableview.setItems(FXCollections.observableArrayList(CreateInvoiceFX.getDepartlot_list()));
-        
+        departlot_tableview.getItems().setAll(CreateInvoiceFX.getDepartlot_list());
+        save_button.disableProperty().bind(departlot_tableview.getSelectionModel().selectedItemProperty().isNull());
 
         departlot_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartLot> observable, DepartLot oldValue, DepartLot newValue) -> {
             departlot_combo.getItems().setAll(departlot_tableview.getSelectionModel().getSelectedItem());
@@ -77,8 +77,8 @@ public class AddInvoiceItemFX implements Initializable {
             if(!testFields()){
                 return;
             }
-            CreateInvoiceFX.getInvoiceitem_queue().add(mapInvoiceItem());
             CreateInvoiceFX.getDepartlot_list().remove(departlot_combo.getSelectionModel().getSelectedItem());
+            CreateInvoiceFX.getInvoiceitem_queue().add(mapInvoiceItem());
             Stage current_stage = (Stage) root_hbox.getScene().getWindow();
             current_stage.close();
         });
@@ -94,6 +94,9 @@ public class AddInvoiceItemFX implements Initializable {
         if(quote_combo.getSelectionModel().isEmpty()){
             quote_combo.setStyle("-fx-background-color: lightpink");
             b = false;
+        }
+        if(comments_field.getText().replace(" ", "").equals("")){
+            comments_field.setText("N/A");
         }
         return b;
     }
@@ -126,9 +129,6 @@ public class AddInvoiceItemFX implements Initializable {
         invoice_item.setDepartlot_quantity(departlot_combo.getSelectionModel().getSelectedItem().getQuantity());
         invoice_item.setDepartlot_boxquantity(departlot_combo.getSelectionModel().getSelectedItem().getBox_quantity());
         invoice_item.setQuote_estimatedtotal(quote_combo.getSelectionModel().getSelectedItem().getEstimated_total());
-        if(invoice_item.getComments().equals("")){
-            invoice_item.setComments("n/a");
-        }
         return invoice_item;
     }
     

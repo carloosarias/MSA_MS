@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -101,18 +102,27 @@
             </HBox>
             <HBox>
                <children>
-                  <VBox>
+                  <VBox prefWidth="157.0">
                      <children>
-                        <Label text="Área (mm²):">
+                        <Label text="Área:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="area_field" disable="true">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <TextField fx:id="area_field" editable="false" focusTraversable="false" prefWidth="75.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Label text="IN²">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox>
@@ -154,7 +164,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="process_field" disable="true">
+                        <TextField fx:id="process_field" editable="false" focusTraversable="false">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
@@ -191,13 +201,13 @@
                 <TableColumn prefWidth="75.0" resizable="false" text="Metal">
                      <columns>
                         <TableColumn fx:id="metalname_column" editable="false" prefWidth="100.0" resizable="false" text="Nombre" />
-                        <TableColumn fx:id="density_column" editable="false" prefWidth="120.0" resizable="false" text="Densidad (g/mm³)" />
-                        <TableColumn fx:id="unitprice_column" prefWidth="125.0" resizable="false" text="Precio Unitario ($/g)" />
+                        <TableColumn fx:id="density_column" editable="false" prefWidth="120.0" resizable="false" text="Densidad" />
+                        <TableColumn fx:id="unitprice_column" prefWidth="125.0" resizable="false" text="Precio Unitario" />
                      </columns>
                   </TableColumn>
-                  <TableColumn fx:id="maximumthickness_column" editable="false" prefWidth="150.0" resizable="false" text="Espesor Máximo (mm)" />
-                  <TableColumn fx:id="volume_column" editable="false" prefWidth="100.0" resizable="false" text="Volumen (mm³)" />
-                  <TableColumn fx:id="weight_column" editable="false" prefWidth="75.0" resizable="false" text="Peso (g)" />
+                  <TableColumn fx:id="maximumthickness_column" editable="false" prefWidth="150.0" resizable="false" text="Espesor Máximo" />
+                  <TableColumn fx:id="volume_column" editable="false" prefWidth="100.0" resizable="false" text="Volumen" />
+                  <TableColumn fx:id="weight_column" editable="false" prefWidth="75.0" resizable="false" text="Peso" />
                   <TableColumn fx:id="estimatedprice_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Estimado" />
               </columns>
                <VBox.margin>
@@ -216,20 +226,77 @@
                         <Slider fx:id="margin_slider" majorTickUnit="10.0" max="200.0" min="100.0" minorTickCount="1" prefHeight="38.0" prefWidth="295.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                      </children>
                   </VBox>
+                  <Separator orientation="VERTICAL">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Separator>
                   <VBox>
                      <children>
-                        <Label text="Precio Total Estimado:">
+                        <Label text="Precio Estimado:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="estimatedtotal_field" disable="true">
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="\$">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="actualprice_field" editable="false" prefWidth="75.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Label text="USD">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Separator>
+                  <VBox>
+                     <children>
+                        <Label text="Precio Cotizado:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
-                        </TextField>
+                        </Label>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <Label text="\$">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="estimatedtotal_field" prefWidth="75.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Label text="USD">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
+                  <Separator orientation="VERTICAL">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Separator>
                   <VBox alignment="CENTER_RIGHT">
                      <children>
                         <Button fx:id="save_button" mnemonicParsing="false" prefHeight="50.0" prefWidth="100.0" text="Aceptar">

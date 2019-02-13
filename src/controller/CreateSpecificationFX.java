@@ -56,7 +56,7 @@ public class CreateSpecificationFX implements Initializable {
     @FXML
     private TableColumn<SpecificationItem, String> listnumber_column;
     @FXML
-    private TableColumn<SpecificationItem, Metal> metal_column;
+    private TableColumn<SpecificationItem, String> metal_column;
     @FXML
     private TableColumn<SpecificationItem, String> minimumthickness_column;
     @FXML
@@ -169,9 +169,9 @@ public class CreateSpecificationFX implements Initializable {
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(6);
         listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(specificationitem_tableview.getItems().indexOf(c.getValue())+1)));
-        metal_column.setCellValueFactory(new PropertyValueFactory("temp_metal"));
-        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())));
-        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())));
+        metal_column.setCellValueFactory(new PropertyValueFactory<>("metal_name"));
+        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())+" IN"));
+        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())+" IN"));
     }
     
     public void setSpecificationItemItems(){

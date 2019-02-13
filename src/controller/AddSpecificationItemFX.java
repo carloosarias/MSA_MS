@@ -62,7 +62,8 @@ public class AddSpecificationItemFX implements Initializable {
         item.setTemp_metal(metal_combo.getSelectionModel().getSelectedItem());
         item.setMinimum_thickness(Double.parseDouble(minimumthickness_field.getText()));
         item.setMaximum_thickness(Double.parseDouble(maximumthickness_field.getText()));
-        
+        item.setMetal_name(item.getTemp_metal().getMetal_name());
+        item.setMetal_density(item.getTemp_metal().getDensity());
         return item;
     }
     

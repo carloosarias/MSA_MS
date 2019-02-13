@@ -132,9 +132,11 @@ public class QuoteFX implements Initializable {
     
     private List<String> status_items = Arrays.asList("Aprovado", "Descartado", "Pendiente");
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    DecimalFormat df = new DecimalFormat("#");
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        df.setMaximumFractionDigits(6);
         setInvoiceQuoteTab();
         add_button.disableProperty().bind(partrev_combo.getSelectionModel().selectedItemProperty().isNull());
         partrev_combo.disableProperty().bind(partrev_combo.itemsProperty().isNull());
@@ -254,15 +256,13 @@ public class QuoteFX implements Initializable {
     }
     
     public void setQuoteItemTableView(){
-        DecimalFormat df = new DecimalFormat("#");
-        df.setMaximumFractionDigits(6);
-        listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+quoteitem_tableview.getItems().indexOf(c.getValue())+1));
+        listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(quoteitem_tableview.getItems().indexOf(c.getValue())+1)));
         metal_name_column.setCellValueFactory(new PropertyValueFactory<>("metal_name"));
-        density_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMetal_densityGMM()+" G/MM³")));
+        density_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMetal_densityGMM())+" G/MM³"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getUnit_price())+" USD"));
         maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getSpecitem_maximumthicknessMM())+" MM"));
-        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume()+" MM³")));
-        weight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getWeight()+" G")));
+        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" MM³"));
+        weight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getWeight())+" G"));
         estimatedprice_column.setCellValueFactory(c -> new SimpleStringProperty("$"+df.format(c.getValue().getEstimatedPrice())+" USD"));
     }
     
@@ -313,12 +313,12 @@ public class QuoteFX implements Initializable {
         }else{
             fields.get("client_address").setValue(company_address.get(0).getAddress());
         }
-        fields.get("part_number").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getPart_number());
-        fields.get("revision").setValue(msabase.getQuoteDAO().findPartRevision(quote).getRev());
-        fields.get("description").setValue(msabase.getPartRevisionDAO().findProductPart(msabase.getQuoteDAO().findPartRevision(quote)).getDescription());
-        fields.get("process").setValue(quote.getSpec_number() +" - "+ quote.getSpec_process());
+        fields.get("part_number").setValue(quote.getPart_number());
+        fields.get("revision").setValue(quote.getPart_rev());
+        fields.get("description").setValue(quote.getPart_description());
+        fields.get("process").setValue(quote.getSpec_number());
         fields.get("eau").setValue(""+quote.getEstimated_annual_usage());
-        fields.get("unit_price").setValue(""+quote.getEstimated_total());
+        fields.get("unit_price").setValue("$ "+df.format(quote.getEstimated_total())+ " USD");
         fields.get("comments").setValue(quote.getComments());
         form.flattenFields();
         pdf.close();

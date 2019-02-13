@@ -64,9 +64,11 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     private static final String SQL_DELETE =
             "DELETE FROM INCOMING_LOT WHERE id = ?";
     private static final String LIST_INCOMING_LOT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments "
+            "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments, "
+            + "PART_REVISION.rev, PRODUCT_PART.part_number "
             + "FROM INCOMING_LOT "
             + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN INCOMING_REPORT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id "
             + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND INCOMING_REPORT.discrepancy = ? AND INCOMING_REPORT.report_date BETWEEN ? AND ? "
             + "ORDER BY INCOMING_REPORT.report_date, INCOMING_LOT.INCOMING_REPORT_ID, INCOMING_LOT.id";

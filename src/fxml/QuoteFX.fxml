@@ -240,7 +240,7 @@
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField fx:id="realprice_field" editable="false" prefWidth="75.0">
+                                                <TextField fx:id="actualprice_field" editable="false" prefWidth="75.0">
                                                    <HBox.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </HBox.margin>
