@@ -20,6 +20,9 @@ public class InvoicePaymentReport implements Serializable{
     private Double ammount_paid;
     private String comments;
     
+    //INNER JOINS
+    private String company_name;
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -59,6 +62,14 @@ public class InvoicePaymentReport implements Serializable{
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+    
+    public String getCompany_name(){
+        return company_name;
+    }
+    
+    public void setCompany_name(String company_name){
+        this.company_name = company_name;
     }
     
     // Object overrides ---------------------------------------------------------------------------

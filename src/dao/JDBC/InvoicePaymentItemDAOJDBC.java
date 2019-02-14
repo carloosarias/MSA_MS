@@ -25,15 +25,28 @@ import model.InvoicePaymentReport;
 public class InvoicePaymentItemDAOJDBC implements InvoicePaymentItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id FROM INVOICE_PAYMENT_ITEM WHERE id = ?";
+            "SELECT INVOICE_PAYMENT_ITEM.id, INVOICE_PAYMENT_ITEM.INVOICE_ID, "
+            + "INVOICE.invoice_date, INVOICE.payment_terms "
+            + "FROM INVOICE_PAYMENT_ITEM "
+            + "INNER JOIN INVOICE ON INVOICE_PAYMENT_ITEM.INVOICE_ID = INVOICE.id "
+            + "WHERE INVOICE_PAYMENT_ITEM.id = ?";
     private static final String SQL_FIND_INVOICE_BY_ID = 
             "SELECT INVOICE_ID FROM INVOICE_PAYMENT_ITEM WHERE id = ?";
     private static final String SQL_FIND_INVOICE_PAYMENT_REPORT_BY_ID = 
             "SELECT INVOICE_PAYMENT_REPORT_ID FROM INVOICE_PAYMENT_ITEM";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id FROM INVOICE_PAYMENT_ITEM ORDER BY id";
+            "SELECT INVOICE_PAYMENT_ITEM.id, INVOICE_PAYMENT_ITEM.INVOICE_ID, "
+            + "INVOICE.invoice_date, INVOICE.terms "
+            + "FROM INVOICE_PAYMENT_ITEM "
+            + "INNER JOIN INVOICE ON INVOICE_PAYMENT_ITEM.INVOICE_ID = INVOICE.id "
+            + "ORDER BY INVOICE_PAYMENT_ITEM.id";
     private static final String SQL_LIST_OF_INVOICE_PAYMENT_REPORT_ORDER_BY_ID = 
-            "SELECT id FROM INVOICE_PAYMENT_ITEM WHERE INVOICE_PAYMENT_REPORT_ID = ? ORDER BY id";
+            "SELECT INVOICE_PAYMENT_ITEM.id, INVOICE_PAYMENT_ITEM.INVOICE_ID, "
+            + "INVOICE.invoice_date, INVOICE.terms "
+            + "FROM INVOICE_PAYMENT_ITEM "
+            + "INNER JOIN INVOICE ON INVOICE_PAYMENT_ITEM.INVOICE_ID = INVOICE.id "
+            + "WHERE INVOICE_PAYMENT_ITEM.INVOICE_PAYMENT_REPORT_ID = ? "
+            + "ORDER BY INVOICE_PAYMENT_ITEM.id";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE_PAYMENT_ITEM (INVOICE_ID, INVOICE_PAYMENT_REPORT_ID)"
             + "VALUES (?, ?)";
@@ -255,7 +268,10 @@ public class InvoicePaymentItemDAOJDBC implements InvoicePaymentItemDAO {
      */
     public static InvoicePaymentItem map(ResultSet resultSet) throws SQLException{
         InvoicePaymentItem invoice_payment_item = new InvoicePaymentItem();
-        invoice_payment_item.setId(resultSet.getInt("id"));
+        invoice_payment_item.setId(resultSet.getInt("INVOICE_PAYMENT_ITEM.id"));
+        invoice_payment_item.setInvoice_id(resultSet.getInt("INVOICE_PAYMENT_ITEM.INVOICE_ID"));
+        invoice_payment_item.setInvoice_date(resultSet.getDate("INVOICE.invoice_date"));
+        invoice_payment_item.setInvoice_terms(resultSet.getString("INVOICE.terms"));
         return invoice_payment_item;
     }
 }

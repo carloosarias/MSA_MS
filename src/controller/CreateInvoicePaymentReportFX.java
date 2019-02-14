@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -53,7 +54,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     @FXML
     private TableColumn<InvoicePaymentItem, Integer> invoiceid_column;
     @FXML
-    private TableColumn<InvoicePaymentItem, String> invoicedate_column;
+    private TableColumn<InvoicePaymentItem, Date> invoicedate_column;
     @FXML
     private TableColumn<InvoicePaymentItem, String> invoicetotal_column;
     @FXML
@@ -170,7 +171,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     public void saveInvoicePaymentItems(InvoicePaymentReport invoice_payment_report){
         for(InvoicePaymentItem item: invoicepaymentitem_queue){
             Invoice invoice = msabase.getInvoiceDAO().find(item.getInvoice_id());
-            msabase.getInvoicePaymentItemDAO().create(msabase.getInvoiceDAO().find(item.getInvoice_id()), invoice_payment_report, item);
+            msabase.getInvoicePaymentItemDAO().create(item.getTemp_invoice(), invoice_payment_report, item);
             invoice.setPending(false);
             msabase.getInvoiceDAO().update(invoice);
         }
@@ -180,7 +181,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
         invoicepaymentitem_tableview.setItems(FXCollections.observableArrayList(invoicepaymentitem_queue));
         double total = 0;
         for(InvoicePaymentItem item: invoicepaymentitem_tableview.getItems()){
-            total += Double.parseDouble(invoicetotal_column.getCellData(item));
+            total += msabase.getInvoiceDAO().findTotal(item.getTemp_invoice());
         }
         calculated_field.setText(""+total);
     };
@@ -214,8 +215,8 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     
     public void setInvoicePaymentItemTable(){
         invoiceid_column.setCellValueFactory(new PropertyValueFactory<>("invoice_id"));
-        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceDAO().find(c.getValue().getInvoice_id()).getInvoice_date()));
-        invoicetotal_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceDAO().findTotal(msabase.getInvoiceDAO().find(c.getValue().getInvoice_id()))));
+        invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
+        invoicetotal_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+msabase.getInvoiceDAO().findTotal(c.getValue().getTemp_invoice())+" USD"));
     }
 
     public static List<Invoice> getInvoice_list() {

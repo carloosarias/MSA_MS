@@ -216,8 +216,8 @@ public class Quote implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%d",
-                id);
+        return String.format("$ %f USD",
+                spec_number, estimated_total);
     
     }
 }

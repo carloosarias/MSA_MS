@@ -25,12 +25,12 @@
                                  <children>
                                     <TableView fx:id="invoicepayment_tableview">
                                        <columns>
-                                          <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
-                                          <TableColumn fx:id="client_column" prefWidth="100.0" text="Cliente" />
-                                          <TableColumn fx:id="reportdate_column" prefWidth="100.0" text="Fecha" />
-                                          <TableColumn fx:id="ammountpaid_column" prefWidth="120.0" text="Cantidad Pagada" />
-                                          <TableColumn fx:id="checknumber_column" prefWidth="120.0" text="No. de Cheque" />
-                                          <TableColumn fx:id="comments_column" prefWidth="150.0" text="Comentarios" />
+                                          <TableColumn fx:id="id_column" prefWidth="75.0" text="# de Folio" />
+                                          <TableColumn fx:id="client_column" prefWidth="220.0" resizable="false" text="Cliente" />
+                                          <TableColumn fx:id="reportdate_column" prefWidth="100.0" resizable="false" text="Fecha" />
+                                          <TableColumn fx:id="ammountpaid_column" prefWidth="120.0" resizable="false" text="Cantidad Pagada" />
+                                          <TableColumn fx:id="checknumber_column" prefWidth="150.0" resizable="false" text="No. de Cheque" />
+                                          <TableColumn fx:id="comments_column" prefWidth="200.0" resizable="false" text="Comentarios" />
                                        </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -44,16 +44,16 @@
                   </Tab>
                   <Tab text="Detalles de Selección">
                      <content>
-                        <HBox>
+                        <HBox alignment="CENTER">
                            <children>
                               <VBox>
                                  <children>
-                                    <TableView fx:id="invoiceitem_tableview" prefHeight="400.0" prefWidth="510.0">
+                                    <TableView fx:id="invoiceitem_tableview">
                                        <columns>
-                                          <TableColumn fx:id="invoiceid_column" prefWidth="108.0" text="No. de Factura" />
-                                          <TableColumn fx:id="invoicedate_column" prefWidth="150.0" text="Fecha de Facturación" />
-                                          <TableColumn fx:id="invoicetotal_column" prefWidth="125.0" text="Total de Factura" />
-                                          <TableColumn fx:id="terms_column" prefWidth="125.0" text="Terminos de Pago" />
+                                          <TableColumn fx:id="invoiceid_column" prefWidth="120.0" resizable="false" text="# de Factura" />
+                                          <TableColumn fx:id="invoicedate_column" prefWidth="150.0" resizable="false" text="Fecha de Facturación" />
+                                          <TableColumn fx:id="invoicetotal_column" prefWidth="150.0" resizable="false" text="Total de Factura" />
+                                          <TableColumn fx:id="terms_column" prefWidth="150.0" resizable="false" text="Terminos de Pago" />
                                        </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -68,31 +68,76 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="caculated_field" promptText="Cantidad Total">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField fx:id="caculated_field" editable="false" prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="USD">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
                                     <Label text="Cantidad Pagada:">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="ammountpaid_field" promptText="Cantidad Pagada">
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TextField>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField fx:id="ammountpaid_field" editable="false" prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="USD">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
+                                    </HBox>
                                     <Label text="Balance:">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="balance_field" promptText="Balance">
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label text="\$">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                          <TextField fx:id="balance_field" editable="false" prefWidth="75.0">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                          <Label text="USD">
+                                             <HBox.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </HBox.margin>
+                                          </Label>
+                                       </children>
                                        <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                          <Insets />
                                        </VBox.margin>
-                                    </TextField>
+                                    </HBox>
                                  </children>
                               </VBox>
                            </children>
@@ -103,7 +148,7 @@
             </TabPane>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Pago">
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Pago de Factura">
                      <HBox.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </HBox.margin>

@@ -55,16 +55,19 @@ public class AddInvoicePaymentItemFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        save_button.disableProperty().bind(invoice_combo.getSelectionModel().selectedItemProperty().isNull());
         setInvoiceTable();
         setInvoiceListItems();
         invoice_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> observable, Invoice oldValue, Invoice newValue) -> {
-            save_button.setDisable(invoice_tableview.getSelectionModel().isEmpty());
             invoice_combo.getSelectionModel().select(newValue);
         });
         
         save_button.setOnAction((ActionEvent) -> {
             InvoicePaymentItem item = new InvoicePaymentItem();
+            item.setTemp_invoice(invoice_combo.getSelectionModel().getSelectedItem());
+            item.setInvoice_date(invoice_combo.getSelectionModel().getSelectedItem().getInvoice_date());
             item.setInvoice_id(invoice_combo.getSelectionModel().getSelectedItem().getId());
+            item.setInvoice_terms(invoice_combo.getSelectionModel().getSelectedItem().getTerms());
             CreateInvoicePaymentReportFX.getInvoice_list().remove(invoice_combo.getSelectionModel().getSelectedItem());
             CreateInvoicePaymentReportFX.getInvoicepaymentitem_queue().add(item);
             Stage stage = (Stage) root_hbox.getScene().getWindow();
@@ -75,8 +78,8 @@ public class AddInvoicePaymentItemFX implements Initializable {
     public void setInvoiceTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
-        client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findCompany(c.getValue()).toString()));
-        shippingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoiceDAO().findShippingAddress(c.getValue()).toString()));
+        client_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCompany_name()));
+        shippingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getShipping_address()));
     }
     
     public void setInvoiceListItems(){

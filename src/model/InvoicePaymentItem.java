@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -15,6 +16,11 @@ public class InvoicePaymentItem implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Integer invoice_id;
+    private Invoice temp_invoice;
+    //INNER JOINS
+    private Date invoice_date;
+    private String invoice_terms;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -31,6 +37,30 @@ public class InvoicePaymentItem implements Serializable {
 
     public void setInvoice_id(Integer invoice_id) {
         this.invoice_id = invoice_id;
+    }
+    
+    public Invoice getTemp_invoice(){
+        return temp_invoice;
+    }
+    
+    public void setTemp_invoice(Invoice temp_invoice){
+        this.temp_invoice = temp_invoice;
+    }
+    
+    public Date getInvoice_date(){
+        return invoice_date;
+    }
+    
+    public void setInvoice_date(Date invoice_date){
+        this.invoice_date = invoice_date;
+    }
+    
+    public String getInvoice_terms(){
+        return invoice_terms;
+    }
+    
+    public void setInvoice_terms(String invoice_terms){
+        this.invoice_terms = invoice_terms;
     }
     
     // Object overrides ---------------------------------------------------------------------------

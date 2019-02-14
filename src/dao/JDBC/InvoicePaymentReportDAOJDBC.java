@@ -25,13 +25,26 @@ import model.InvoicePaymentReport;
 public class InvoicePaymentReportDAOJDBC implements InvoicePaymentReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, report_date, check_number, ammount_paid, comments FROM INVOICE_PAYMENT_REPORT WHERE id = ?";
+            "SELECT INVOICE_PAYMENT_REPORT.id, INVOICE_PAYMENT_REPORT.report_date, INVOICE_PAYMENT_REPORT.check_number, INVOICE_PAYMENT_REPORT.ammount_paid, INVOICE_PAYMENT_REPORT.comments, "
+            + "COMPANY.name "
+            + "FROM INVOICE_PAYMENT_REPORT "
+            + "INNER JOIN COMPANY ON INVOICE_PAYMENT_REPORT.COMPANY_ID = COMPANY.id "
+            + "WHERE INVOICE_PAYMENT_REPORT.id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM INVOICE_PAYMENT_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, check_number, ammount_paid, comments FROM INVOICE_PAYMENT_REPORT ORDER BY id";
+            "SELECT INVOICE_PAYMENT_REPORT.id, INVOICE_PAYMENT_REPORT.report_date, INVOICE_PAYMENT_REPORT.check_number, INVOICE_PAYMENT_REPORT.ammount_paid, INVOICE_PAYMENT_REPORT.comments, "
+            + "COMPANY.name "
+            + "FROM INVOICE_PAYMENT_REPORT "
+            + "INNER JOIN COMPANY ON INVOICE_PAYMENT_REPORT.COMPANY_ID = COMPANY.id "
+            + "ORDER BY INVOICE_PAYMENT_REPORT.id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT id, report_date, po_number, packing_list FROM INVOICE_PAYMENT_REPORT WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT INVOICE_PAYMENT_REPORT.id, INVOICE_PAYMENT_REPORT.report_date, INVOICE_PAYMENT_REPORT.check_number, INVOICE_PAYMENT_REPORT.ammount_paid, INVOICE_PAYMENT_REPORT.comments, "
+            + "COMPANY.name "
+            + "FROM INVOICE_PAYMENT_REPORT "
+            + "INNER JOIN COMPANY ON INVOICE_PAYMENT_REPORT.COMPANY_ID = COMPANY.id "
+            + "WHERE COMPANY_ID = ? "
+            + "ORDER BY INVOICE_PAYMENT_REPORT.id";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE_PAYMENT_REPORT (COMPANY_ID, report_date, check_number, ammount_paid, comments) "
             + "VALUES (?, ?, ?, ?, ?)";
@@ -257,11 +270,15 @@ public class InvoicePaymentReportDAOJDBC implements InvoicePaymentReportDAO {
      */
     public static InvoicePaymentReport map(ResultSet resultSet) throws SQLException{
         InvoicePaymentReport invoice_payment_report = new InvoicePaymentReport();
-        invoice_payment_report.setId(resultSet.getInt("id"));
-        invoice_payment_report.setReport_date(resultSet.getDate("report_date"));
-        invoice_payment_report.setCheck_number(resultSet.getString("check_number"));
-        invoice_payment_report.setAmmount_paid(resultSet.getDouble("ammount_paid"));
-        invoice_payment_report.setComments(resultSet.getString("comments"));
+        invoice_payment_report.setId(resultSet.getInt("INVOICE_PAYMENT_REPORT.id"));
+        invoice_payment_report.setReport_date(resultSet.getDate("INVOICE_PAYMENT_REPORT.report_date"));
+        invoice_payment_report.setCheck_number(resultSet.getString("INVOICE_PAYMENT_REPORT.check_number"));
+        invoice_payment_report.setAmmount_paid(resultSet.getDouble("INVOICE_PAYMENT_REPORT.ammount_paid"));
+        invoice_payment_report.setComments(resultSet.getString("INVOICE_PAYMENT_REPORT.comments"));
+        
+        //INNER JOINS
+        invoice_payment_report.setCompany_name(resultSet.getString("COMPANY.name"));
+        
         return invoice_payment_report;
     }
 }

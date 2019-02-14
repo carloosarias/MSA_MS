@@ -62,29 +62,62 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="calculated_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="\$">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="calculated_field" editable="false" prefWidth="75.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Label text="USD">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
                         <Label text="Cantidad Pagada:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="ammountpaid_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TextField>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="\$">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <TextField fx:id="ammountpaid_field" prefWidth="75.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <Label text="USD">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
                         <Label text="No. de Cheque:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin></Label>
-                        <TextField fx:id="checknumber_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <TextField fx:id="checknumber_field" prefWidth="150.0">
+                                 <HBox.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
                         <Label text="Comentarios:">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

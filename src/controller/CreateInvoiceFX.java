@@ -261,8 +261,8 @@ public class CreateInvoiceFX implements Initializable {
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         lot_qty.setCellValueFactory(new PropertyValueFactory<>("departlot_quantity"));
         lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_boxquantity"));
-        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$"+c.getValue().getQuote_estimatedtotal()+" USD"));
-        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty("$"+(c.getValue().getQuote_estimatedtotal()*c.getValue().getDepartlot_quantity())+" USD"));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getQuote_estimatedtotal()+" USD"));
+        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+(c.getValue().getQuote_estimatedtotal()*c.getValue().getDepartlot_quantity())+" USD"));
     }
     
     public static List<DepartLot> getDepartlot_list(){

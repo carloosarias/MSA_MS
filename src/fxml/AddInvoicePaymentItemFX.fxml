@@ -15,10 +15,10 @@
          <children>
             <TableView fx:id="invoice_tableview">
                <columns>
-                  <TableColumn fx:id="id_column" prefWidth="99.0" text="# ID" />
-                  <TableColumn fx:id="invoicedate_column" prefWidth="131.0" text="Fecha de Facturación" />
-                  <TableColumn fx:id="client_column" prefWidth="125.0" text="Cliente" />
-                  <TableColumn fx:id="shippingaddress_column" prefWidth="189.0" text="Total a Pagar" />
+                  <TableColumn fx:id="id_column" prefWidth="99.0" resizable="false" text="# de Factura" />
+                  <TableColumn fx:id="invoicedate_column" prefWidth="131.0" resizable="false" text="Fecha de Facturación" />
+                  <TableColumn fx:id="client_column" prefWidth="220.0" resizable="false" text="Cliente" />
+                  <TableColumn fx:id="shippingaddress_column" prefWidth="150.0" resizable="false" text="Total a Pagar" />
                </columns>
                <VBox.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -33,7 +33,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>
                         </Label>
-                        <ComboBox fx:id="invoice_combo" disable="true" prefWidth="150.0">
+                        <ComboBox fx:id="invoice_combo" disable="true" prefWidth="300.0">
                            <VBox.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </VBox.margin>

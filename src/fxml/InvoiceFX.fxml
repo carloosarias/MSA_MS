@@ -23,11 +23,10 @@
                            <children>
                               <TableView fx:id="invoice_tableview" prefWidth="937.0">
                                  <columns>
-                                    <TableColumn fx:id="id_column" prefWidth="99.0" resizable="false" text="No. de Folio" />
-                                    <TableColumn fx:id="invoicedate_column" prefWidth="131.0" resizable="false" text="Fecha de Facturación" />
-                                    <TableColumn fx:id="client_column" prefWidth="175.0" resizable="false" text="Cliente" />
-                                    <TableColumn fx:id="billingaddress_column" prefWidth="300.0" resizable="false" text="Dirección de Facturación" />
-                                    <TableColumn minWidth="0.0" prefWidth="100.0" resizable="false" text="F.O.B." />
+                                    <TableColumn fx:id="id_column" prefWidth="100.0" resizable="false" text="No. de Folio" />
+                                    <TableColumn fx:id="invoicedate_column" prefWidth="135.0" resizable="false" text="Fecha de Facturación" />
+                                    <TableColumn fx:id="client_column" prefWidth="220.0" resizable="false" text="Cliente" />
+                                    <TableColumn fx:id="billingaddress_column" prefWidth="350.0" resizable="false" text="Dirección de Facturación" />
                                     <TableColumn fx:id="pending_column" prefWidth="130.0" resizable="false" text="Estado" />
                                  </columns>
                                  <HBox.margin>

@@ -119,10 +119,10 @@ public class InvoicePaymentReportFX implements Initializable {
     }
     
     public void setInvoicePaymentItemTable(){
-        invoiceid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoicePaymentItemDAO().findInvoice(c.getValue()).getId()));
-        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoicePaymentItemDAO().findInvoice(c.getValue()).getInvoice_date()));
-        invoicetotal_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceDAO().findTotal(msabase.getInvoicePaymentItemDAO().findInvoice(c.getValue()))));
-        terms_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoicePaymentItemDAO().findInvoice(c.getValue()).getTerms()));
+        invoiceid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getInvoice_id()));
+        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getInvoice_date().toString()));
+        invoicetotal_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceDAO().findTotal(msabase.getInvoiceDAO().find(c.getValue().getInvoice_id()))));
+        terms_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getInvoice_terms()));
     }
     
     
@@ -150,7 +150,7 @@ public class InvoicePaymentReportFX implements Initializable {
     
     public void setInvoicePaymentReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        client_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getInvoicePaymentReportDAO().findCompany(c.getValue()).toString()));
+        client_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCompany_name()));
         reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
         ammountpaid_column.setCellValueFactory(new PropertyValueFactory<>("ammount_paid"));
         checknumber_column.setCellValueFactory(new PropertyValueFactory<>("check_number"));
