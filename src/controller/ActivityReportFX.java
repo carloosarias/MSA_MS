@@ -113,8 +113,8 @@ public class ActivityReportFX implements Initializable {
     public void setActivityReportTable(){
         reportid_column1.setCellValueFactory(new PropertyValueFactory<>("id"));
         reportid_column2.setCellValueFactory(new PropertyValueFactory<>("id"));
-        employeeid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getActivityReportDAO().findEmployee(c.getValue()).getId()));
-        name_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getActivityReportDAO().findEmployee(c.getValue()).toString()));
+        employeeid_column.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
+        name_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
         reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
         starttime_column.setCellValueFactory(new PropertyValueFactory<>("start_time"));
         endtime_column.setCellValueFactory(new PropertyValueFactory<>("end_time"));

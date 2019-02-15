@@ -26,17 +26,40 @@ import model.Employee;
 public class ActivityReportDAOJDBC implements ActivityReportDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date, start_time, end_time, job_description, physical_location, action_taken, comments FROM ACTIVITY_REPORT WHERE id = ?";
+            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
+            + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ACTIVITY_REPORT "
+            + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "WHERE ACTIVITY_REPORT.id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM ACTIVITY_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, start_time, end_time, job_description, physical_location, action_taken, comments FROM ACTIVITY_REPORT ORDER BY id";
+            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
+            + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ACTIVITY_REPORT "
+            + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "ORDER BY ACTIVITY_REPORT.id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT id, report_date, start_time, end_time, job_description, physical_location, action_taken, comments FROM ACTIVITY_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
+            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
+            + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ACTIVITY_REPORT "
+            + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "WHERE ACTIVITY_REPORT.EMPLOYEE_ID = ? "
+            + "ORDER BY ACTIVITY_REPORT.id";
     private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date, start_time, end_time, job_description, physical_location, action_taken, comments FROM ACTIVITY_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
+            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
+            + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ACTIVITY_REPORT "
+            + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "WHERE ACTIVITY_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY ACTIVITY_REPORT.id";
     private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date, start_time, end_time, job_description, physical_location, action_taken, comments FROM ACTIVITY_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";  
+            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
+            + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ACTIVITY_REPORT "
+            + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "WHERE ACTIVITY_REPORT.EMPLOYEE_ID = ? AND ACTIVITY_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY ACTIVITY_REPORT.id";  
     private static final String SQL_INSERT = 
             "INSERT INTO ACTIVITY_REPORT (EMPLOYEE_ID, report_date, start_time, end_time, job_description, physical_location, action_taken, comments) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -320,14 +343,18 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
      */
     public static ActivityReport map(ResultSet resultSet) throws SQLException{
         ActivityReport activity_report = new ActivityReport();
-        activity_report.setId(resultSet.getInt("id"));
-        activity_report.setReport_date(resultSet.getDate("report_date"));
-        activity_report.setStart_time(resultSet.getTime("start_time"));
-        activity_report.setEnd_time(resultSet.getTime("end_time"));
-        activity_report.setJob_description(resultSet.getString("job_description"));
-        activity_report.setPhysical_location(resultSet.getString("physical_location"));
-        activity_report.setAction_taken(resultSet.getString("action_taken"));
-        activity_report.setComments(resultSet.getString("comments"));
+        activity_report.setId(resultSet.getInt("ACTIVITY_REPORT.id"));
+        activity_report.setReport_date(resultSet.getDate("ACTIVITY_REPORT.report_date"));
+        activity_report.setStart_time(resultSet.getTime("ACTIVITY_REPORT.start_time"));
+        activity_report.setEnd_time(resultSet.getTime("ACTIVITY_REPORT.end_time"));
+        activity_report.setJob_description(resultSet.getString("ACTIVITY_REPORT.job_description"));
+        activity_report.setPhysical_location(resultSet.getString("ACTIVITY_REPORT.physical_location"));
+        activity_report.setAction_taken(resultSet.getString("ACTIVITY_REPORT.action_taken"));
+        activity_report.setComments(resultSet.getString("ACTIVITY_REPORT.comments"));
+        
+        //INNER JOINS
+        activity_report.setEmployee_id(resultSet.getInt("EMPLOYEE.id"));
+        activity_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
         return activity_report;
     }    
 }
