@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -107,7 +106,7 @@ public class EquipmentFX implements Initializable {
         id_column.setCellValueFactory(new PropertyValueFactory("id"));
         name_column.setCellValueFactory(new PropertyValueFactory("name"));
         serialnumber_column.setCellValueFactory(new PropertyValueFactory("serial_number"));
-        equipmenttype_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getEquipmentDAO().findEquipmentType(c.getValue()).getName()));
+        equipmenttype_column.setCellValueFactory(new PropertyValueFactory("equipmenttype_name"));
         description_column.setCellValueFactory(new PropertyValueFactory("description"));
         physicallocation_column.setCellValueFactory(new PropertyValueFactory("physical_location"));
         nextmantainance_column.setCellValueFactory(new PropertyValueFactory("next_mantainance"));

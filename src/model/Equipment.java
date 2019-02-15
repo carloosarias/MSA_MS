@@ -23,6 +23,9 @@ public class Equipment implements Serializable{
     private String serial_number;
     private Date next_mantainance;
     
+    //INNER JOIN
+    private String equipmenttype_name;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -69,6 +72,16 @@ public class Equipment implements Serializable{
 
     public void setNext_mantainance(Date next_mantainance) {
         this.next_mantainance = next_mantainance;
+    }
+    
+    //INNER JOINS
+    
+    public String getEquipmenttype_name(){
+        return equipmenttype_name;
+    }
+    
+    public void setEquipmenttype_name(String equipmenttype_name){
+        this.equipmenttype_name = equipmenttype_name;
     }
     
     // Object overrides ---------------------------------------------------------------------------

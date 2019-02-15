@@ -10,6 +10,7 @@ import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,9 +109,13 @@ public class DepartReportFX implements Initializable {
     @FXML
     private Button add_button;
     @FXML
+    private Button edit_button;
+    @FXML
     private Button pdf_button;
     
     private Stage add_stage = new Stage();
+    
+    private Stage edit_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -126,8 +132,10 @@ public class DepartReportFX implements Initializable {
         pdf_button.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
+            edit_button.setDisable(true);
             if(!departreport_tableview.getSelectionModel().isEmpty()){
                 updateDepartLotTable();
+                edit_button.setDisable(!newValue.getReport_date().toString().equals(LocalDate.now().toString()));
             }else{
                 departlot_tableview3.getItems().clear();
                 departlot_tableview3.getItems().clear();
@@ -138,6 +146,11 @@ public class DepartReportFX implements Initializable {
         add_button.setOnAction((ActionEvent) -> {
             showAdd_stage();
             updateDepartReportTable();
+        });
+        
+        edit_button.setOnAction((ActionEvent) -> {
+           showEdit_stage();
+           updateDepartReportTable();
         });
         
         pdf_button.setOnAction((ActionEvent) -> {
@@ -163,6 +176,25 @@ public class DepartReportFX implements Initializable {
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(DepartReportFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void showEdit_stage(){
+        EditDepartReportFX.departreport_selection = departreport_tableview.getSelectionModel().getSelectedItem();
+        try {
+            edit_stage = new Stage();
+            edit_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            edit_stage.initModality(Modality.APPLICATION_MODAL);
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/EditDepartReportFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            edit_stage.setTitle("Agregar Nuevo Lote a Remisión");
+            edit_stage.setResizable(false);
+            edit_stage.initStyle(StageStyle.UTILITY);
+            edit_stage.setScene(scene);
+            edit_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(DepartReportFX.class.getName()).log(Level.SEVERE, null, ex);
         }

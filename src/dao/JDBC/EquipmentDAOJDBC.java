@@ -26,15 +26,33 @@ import model.EquipmentType;
 public class EquipmentDAOJDBC implements EquipmentDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE id = ?";
+            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, "
+            + "EQUIPMENT_TYPE.name "
+            + "FROM EQUIPMENT "
+            + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
+            + "WHERE EQUIPMENT.id = ?";
     private static final String SQL_FIND_EQUIPMENT_TYPE_BY_ID = 
             "SELECT EQUIPMENT_TYPE_ID FROM EQUIPMENT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT ORDER BY id";
+            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, "
+            + "EQUIPMENT_TYPE.name "
+            + "FROM EQUIPMENT "
+            + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
+            + "ORDER BY EQUIPMENT.id";
     private static final String SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID = 
-            "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
+            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, "
+            + "EQUIPMENT_TYPE.name "
+            + "FROM EQUIPMENT "
+            + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
+            + "WHERE EQUIPMENT.EQUIPMENT_TYPE_ID = ? "
+            + "ORDER BY EQUIPMENT.id";
     private static final String SQL_LIST_NEXT_MANTAINANCE_PENDING_ORDER_BY_ID = 
-            "SELECT id, name, description, physical_location, serial_number, next_mantainance FROM EQUIPMENT WHERE next_mantainance <= ? ORDER BY id";
+            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, "
+            + "EQUIPMENT_TYPE.name "
+            + "FROM EQUIPMENT "
+            + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
+            + "WHERE EQUIPMENT.next_mantainance <= ? "
+            + "ORDER BY EQUIPMENT.id";
     private static final String SQL_INSERT = 
             "INSERT INTO EQUIPMENT (EQUIPMENT_TYPE_ID, name, description, physical_location, serial_number, next_mantainance) "
             + "VALUES(?, ?, ?, ?, ?, ?)";
@@ -283,12 +301,15 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
      */
     public static Equipment map(ResultSet resultSet) throws SQLException{
         Equipment equipment = new Equipment();
-        equipment.setId(resultSet.getInt("id"));
-        equipment.setName(resultSet.getString("name"));
-        equipment.setDescription(resultSet.getString("description"));
-        equipment.setPhysical_location(resultSet.getString("physical_location"));
-        equipment.setSerial_number(resultSet.getString("serial_number"));
-        equipment.setNext_mantainance(resultSet.getDate("next_mantainance"));
+        equipment.setId(resultSet.getInt("EQUIPMENT.id"));
+        equipment.setName(resultSet.getString("EQUIPMENT.name"));
+        equipment.setDescription(resultSet.getString("EQUIPMENT.description"));
+        equipment.setPhysical_location(resultSet.getString("EQUIPMENT.physical_location"));
+        equipment.setSerial_number(resultSet.getString("EQUIPMENT.serial_number"));
+        equipment.setNext_mantainance(resultSet.getDate("EQUIPMENT.next_mantainance"));
+        
+        //INNER JOINS
+        equipment.setEquipmenttype_name(resultSet.getString("EQUIPMENT_TYPE.name"));
         return equipment;
     }  
 }
