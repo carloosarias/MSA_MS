@@ -1,6 +1,7 @@
 package msa_ms;
 
 import static com.itextpdf.kernel.pdf.PdfName.Path;
+import eu.mihosoft.scaledfx.ScalableContentPane;
 import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
@@ -74,7 +75,9 @@ public class MainApp extends Application{
     public void start(Stage primaryStage) throws Exception {
         TimeZone.setDefault(TimeZone.getTimeZone("CST"));
         BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));
-        Scene scene = new Scene(root);
+        ScalableContentPane scale = new ScalableContentPane();
+        scale.setContent(root);
+        Scene scene = new Scene(scale);
         primaryStage.setTitle("MSA Manager");
         primaryStage.setResizable(false);
         primaryStage.initStyle(StageStyle.UTILITY);

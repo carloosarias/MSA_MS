@@ -7,55 +7,71 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane fx:id="root_pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainFX">
-   <center>
-      <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-        <tabs>
-          <Tab fx:id="employee_tab" closable="false" text="Empleados" />
-          <Tab fx:id="company_tab" closable="false" text="Compañías" />
-          <Tab fx:id="productpart_tab" closable="false" text="Partes y Revisiones" />
-            <Tab fx:id="product_tab" closable="false" text="Productos" />
-            <Tab fx:id="productsupplier_tab" closable="false" text="Cotizaciones de Productos" />
-          <Tab fx:id="tank_tab" closable="false" text="Tanques" />
-          <Tab fx:id="orderpurchase_tab" closable="false" text="Historial de Orden de Compra" />
-          <Tab fx:id="orderpurchasecart_tab" closable="false" text="Carrito de Compras"/>
-          <Tab fx:id="incoming_tab" closable="false" text="Reciba" />
-            <Tab fx:id="orderpurchaseincomingreport_tab" closable="false" text="Reciba de Orden de Compra" />
-          <Tab fx:id="depart_tab" closable="false" text="Remisiones" />
-          <Tab fx:id="invoice_tab" closable="false" text="Facturación" />
-          <Tab fx:id="quote_tab" closable="false" text="Cotización" />
-          <Tab fx:id="invoicepayment_tab" closable="false" text="Pago de Facturas" />
-          <Tab fx:id="process_tab" closable="false" text="Producción" />
-          <Tab fx:id="transactionhistory_tab" closable="false" text="Historial de Transacciones" />
-          <Tab fx:id="scrap_tab" closable="false" text="Scrap" />
-          <Tab fx:id="analysis_tab" closable="false" text="Análisis" />
-          <Tab fx:id="equipment_tab" closable="false" text="Equipo" />
-          <Tab fx:id="mantainance_tab" closable="false" text="Mantenimiento" />
-          <Tab fx:id="activityreport_tab" closable="false" text="Reporte de Trabajos" />
-        </tabs>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
-      </TabPane>
-   </center>
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="Opciones">
-            <items>
-              <MenuItem fx:id="logout" mnemonicParsing="false" text="Cerrar Sesión" />
-            </items>
-          </Menu>
-        </menus>
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainFX">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="ALWAYS" />
+   </rowConstraints>
+   <children>
+      <MenuBar>
+         <menus>
+            <Menu mnemonicParsing="false" text="Opciones">
+               <items>
+                  <MenuItem fx:id="logout" mnemonicParsing="false" text="Cerrar Sesión" />
+               </items>
+            </Menu>
+         </menus>
       </MenuBar>
-   </top>
-   <left>
-      <ListView fx:id="menu_listview" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-         </BorderPane.margin>
-      </ListView>
-   </left>
-</BorderPane>
+      <GridPane GridPane.rowIndex="1">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1">
+               <tabs>
+                  <Tab fx:id="employee_tab" closable="false" text="Empleados" />
+                  <Tab fx:id="company_tab" closable="false" text="Compañías" />
+                  <Tab fx:id="productpart_tab" closable="false" text="Partes y Revisiones" />
+                  <Tab fx:id="product_tab" closable="false" text="Productos" />
+                  <Tab fx:id="productsupplier_tab" closable="false" text="Cotizaciones de Productos" />
+                  <Tab fx:id="tank_tab" closable="false" text="Tanques" />
+                  <Tab fx:id="orderpurchase_tab" closable="false" text="Historial de Orden de Compra" />
+                  <Tab fx:id="orderpurchasecart_tab" closable="false" text="Carrito de Compras" />
+                  <Tab fx:id="incoming_tab" closable="false" text="Reciba" />
+                  <Tab fx:id="orderpurchaseincomingreport_tab" closable="false" text="Reciba de Orden de Compra" />
+                  <Tab fx:id="depart_tab" closable="false" text="Remisiones" />
+                  <Tab fx:id="invoice_tab" closable="false" text="Facturación" />
+                  <Tab fx:id="quote_tab" closable="false" text="Cotización" />
+                  <Tab fx:id="invoicepayment_tab" closable="false" text="Pago de Facturas" />
+                  <Tab fx:id="process_tab" closable="false" text="Producción" />
+                  <Tab fx:id="transactionhistory_tab" closable="false" text="Historial de Transacciones" />
+                  <Tab fx:id="scrap_tab" closable="false" text="Scrap" />
+                  <Tab fx:id="analysis_tab" closable="false" text="Análisis" />
+                  <Tab fx:id="equipment_tab" closable="false" text="Equipo" />
+                  <Tab fx:id="mantainance_tab" closable="false" text="Mantenimiento" />
+                  <Tab fx:id="activityreport_tab" closable="false" text="Reporte de Trabajos" />
+               </tabs>
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </TabPane>
+            <ListView fx:id="menu_listview">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </ListView>
+         </children>
+      </GridPane>
+   </children>
+</GridPane>

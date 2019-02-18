@@ -28,7 +28,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
-            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "
             + "FROM INVOICE_ITEM "
             + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -37,7 +37,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             + "WHERE INVOICE_ITEM.id = ?";
     private static final String SQL_FIND_INVOICE_BY_ID = 
             "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
-            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "
             + "FROM INVOICE_ITEM "
             + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -50,7 +50,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             "SELECT QUOTE_ID FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
-            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "
             + "FROM INVOICE_ITEM "
             + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -59,7 +59,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             + "ORDER BY INVOICE_ITEM.id";
     private static final String SQL_LIST_OF_INVOICE_ORDER_BY_ID = 
             "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
-            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "
             + "FROM INVOICE_ITEM "
             + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -69,7 +69,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             + "ORDER BY INVOICE_ITEM.id";
     private static final String SQL_LIST_OF_INVOICE_PART_REVISION_ORDER_BY_ID = 
             "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
-            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.estimated_total "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "
             + "FROM INVOICE_ITEM "
             + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -398,6 +398,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
         invoice_item.setLot_number(resultSet.getString("DEPART_LOT.lot_number"));
         invoice_item.setDepartlot_quantity(resultSet.getInt("DEPART_LOT.quantity"));
         invoice_item.setDepartlot_boxquantity(resultSet.getInt("DEPART_LOT.box_quantity"));
+        invoice_item.setQuote_estimatedtotal(resultSet.getDouble("QUOTE.id"));
         invoice_item.setQuote_estimatedtotal(resultSet.getDouble("QUOTE.estimated_total"));
         return invoice_item;
     }

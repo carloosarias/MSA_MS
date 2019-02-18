@@ -75,7 +75,7 @@
                               </TableColumn>
                               <TableColumn text="Cotización">
                                  <columns>
-                                    <TableColumn fx:id="quoteid_column" prefWidth="75.0" text="ID" />
+                                    <TableColumn fx:id="quoteid_column" prefWidth="75.0" text="# Folio" />
                                     <TableColumn fx:id="quotedate_column" prefWidth="120.0" text="Fecha" />
                                     <TableColumn fx:id="unitprice_column" prefWidth="120.0" text="Precio por Pieza" />
                                  </columns>

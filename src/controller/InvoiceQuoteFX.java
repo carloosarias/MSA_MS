@@ -23,7 +23,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import model.Invoice;
 import model.InvoiceItem;
-import model.Quote;
 import msa_ms.MainApp;
 
 /**
@@ -42,25 +41,25 @@ public class InvoiceQuoteFX implements Initializable {
     @FXML
     private DatePicker enddate_picker;
     @FXML
-    private TableView<InvoiceQuote> invoicequote_tableview;
+    private TableView<InvoiceItem> invoicequote_tableview;
     @FXML
-    private TableColumn<InvoiceQuote, String> partnumber_column;
+    private TableColumn<InvoiceItem, String> partnumber_column;
     @FXML
-    private TableColumn<InvoiceQuote, String> rev_column;
+    private TableColumn<InvoiceItem, String> rev_column;
     @FXML
-    private TableColumn<InvoiceQuote, String> process_column;
+    private TableColumn<InvoiceItem, String> process_column;
     @FXML
-    private TableColumn<InvoiceQuote, String> quoteid_column;
+    private TableColumn<InvoiceItem, String> quoteid_column;
     @FXML
-    private TableColumn<InvoiceQuote, String> quotedate_column;
+    private TableColumn<InvoiceItem, String> quotedate_column;
     @FXML
-    private TableColumn<InvoiceQuote, String> unitprice_column;
+    private TableColumn<InvoiceItem, String> unitprice_column;
     @FXML
-    private TableColumn<InvoiceQuote, String> totalinvoiced_column;
+    private TableColumn<InvoiceItem, String> totalinvoiced_column;
     @FXML
-    private TableColumn<InvoiceQuote, String> totalvalue_column;
+    private TableColumn<InvoiceItem, String> totalvalue_column;
     
-    private List<InvoiceQuote> invoicequote_list = new ArrayList();
+    private List<InvoiceItem> invoiceitem_list = new ArrayList();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
@@ -99,15 +98,10 @@ public class InvoiceQuoteFX implements Initializable {
     }    
     
     public void setInvoiceQuoteTableView(){
-        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(
-                msabase.getPartRevisionDAO().findProductPart(
-                        msabase.getQuoteDAO().findPartRevision(
-                                c.getValue().getQuote()
-                        )
-                ).getPart_number()));
-        rev_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getQuoteDAO().findPartRevision(c.getValue().getQuote()).getRev()));
-        process_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findSpecification(msabase.getQuoteDAO().findPartRevision(c.getValue().getQuote())).getProcess()));
-        quoteid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuote().getId()));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_number()));
+        rev_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_number()));
+        process_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSpec_process()));
+        quoteid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuote_id()));
         quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getQuote().getQuote_date().toString()));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuote().getEstimated_total()));
         totalinvoiced_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getTotal_invoiced()));
@@ -120,7 +114,7 @@ public class InvoiceQuoteFX implements Initializable {
         }
         List<InvoiceQuote> filtered_list = new ArrayList();
         for(InvoiceQuote item : invoicequote_list){
-            if(msabase.getPartRevisionDAO().findSpecification(msabase.getQuoteDAO().findPartRevision(item.getQuote())).getProcess().equalsIgnoreCase(process_combo.getSelectionModel().getSelectedItem())){
+            if(item.getQuote().getSpec_process().equalsIgnoreCase(process_combo.getSelectionModel().getSelectedItem())){
                 filtered_list.add(item);
             }
         }
@@ -129,53 +123,22 @@ public class InvoiceQuoteFX implements Initializable {
     }
     
     public void setInvoiceQuoteItems(){
-        invoicequote_list.clear();
-        for(Invoice item : msabase.getInvoiceDAO().listDateRange(DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()))){
-            for(InvoiceItem invoiceitem : msabase.getInvoiceItemDAO().list(item)){
-                InvoiceQuote invquote = new InvoiceQuote();
-                invquote.setQuote(msabase.getInvoiceItemDAO().findQuote(invoiceitem));
-                invquote.setTotal_invoiced(msabase.getInvoiceItemDAO().findDepartLot(invoiceitem).getQuantity());
-                invoicequote_list.add(invquote);
+        invoiceitem_list.clear();
+        for(Invoice invoice : msabase.getInvoiceDAO().listDateRange(DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()))){
+            for(InvoiceItem invoiceitem : msabase.getInvoiceItemDAO().list(invoice)){
+                invoiceitem_list.add(item);
             }
         }
         
-        for(int i = 0; i < invoicequote_list.size(); i++){
-            for(int j = 0; j < invoicequote_list.size(); j++){
-                if(invoicequote_list.get(i).getQuote().equals(invoicequote_list.get(j).getQuote()) && i != j){
-                    invoicequote_list.get(i).setTotal_invoiced(invoicequote_list.get(i).getTotal_invoiced() + invoicequote_list.get(j).getTotal_invoiced());
-                    invoicequote_list.remove(j);
+        for(int i = 0; i < invoiceitem_list.size(); i++){
+            for(int j = 0; j < invoiceitem_list.size(); j++){
+                if(invoiceitem_list.get(i).getQuote().equals(invoiceitem_list.get(j).getQuote()) && i != j){
+                    invoiceitem_list.get(i).setTotal_invoiced(invoiceitem_list.get(i).getTotal_invoiced() + invoiceitem_list.get(j).getTotal_invoiced());
+                    invoiceitem_list.remove(j);
                 }
             }
         }
         
-        invoicequote_tableview.setItems(FXCollections.observableArrayList(invoicequote_list));
-    }
-    
-    public class InvoiceQuote{
-        private Quote quote;
-        private Integer total_invoiced;
-
-        public Quote getQuote() {
-            return quote;
-        }
-
-        public void setQuote(Quote quote) {
-            this.quote = quote;
-        }
-
-        public Integer getTotal_invoiced() {
-            return total_invoiced;
-        }
-
-        public void setTotal_invoiced(Integer total_invoiced) {
-            this.total_invoiced = total_invoiced;
-        }
-
-        public Double getTotal_value() {
-            return quote.getEstimated_total() * total_invoiced;
-        }
-        
-        
-        
+        invoicequote_tableview.setItems(FXCollections.observableArrayList(invoiceitem_list));
     }
 }

@@ -23,8 +23,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Module;
@@ -38,7 +38,7 @@ import msa_ms.MainApp;
 public class MainFX implements Initializable {
 
     @FXML
-    private BorderPane root_pane;
+    private GridPane root_gridpane;
     @FXML
     private Tab employee_tab;
     @FXML
@@ -113,39 +113,13 @@ public class MainFX implements Initializable {
         setTabs(menu_listview.getSelectionModel().getSelectedItem());
         
         menu_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
-            root_tabpane.getTabs().clear();
-            root_tabpane = new TabPane();
             setTabs(newValue);
-            root_pane.setCenter(root_tabpane);
-            root_pane.getScene().getWindow().sizeToScene();
         });
         
         logout.setOnAction((ActionEvent) ->{
             MainApp.employee_id = null;
             showLogin();
         });
-    }
-    public void setModules(){
-        try {
-            employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
-            company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
-            productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
-            tank_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TankFX.fxml")));
-            incoming_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
-            orderpurchaseincomingreport_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
-            depart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX.fxml")));
-            invoice_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
-            invoicepayment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoicePaymentReportFX.fxml")));
-            quote_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));
-            process_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProcessReportFX.fxml")));
-            transactionhistory_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
-            scrap_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
-            analysis_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/AnalysisReportFX.fxml")));
-            equipment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
-            mantainance_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/MantainanceReportFX.fxml")));
-        } catch (IOException ex) {
-            Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public void setTabs(Module module){
@@ -164,7 +138,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(company_tab, product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
                         break;
                     case "Partes y Revisiones":
-                        productpart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
+                        productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
                         root_tabpane.getTabs().setAll(productpart_tab);
                         break;
                     case "Reciba":
@@ -217,7 +191,7 @@ public class MainFX implements Initializable {
     
     public void showLogin(){
         try {
-            Stage stage = (Stage) root_pane.getScene().getWindow();
+            Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
             stage = new Stage();
             BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));

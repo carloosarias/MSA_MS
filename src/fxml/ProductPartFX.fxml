@@ -2,150 +2,197 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductPartFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <columnConstraints>
+      <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints valignment="CENTER" vgrow="ALWAYS" />
+      <RowConstraints valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+   </rowConstraints>
    <children>
-      <VBox alignment="CENTER">
+      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+         <tabs>
+            <Tab closable="false" text="Números de Parte">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints valignment="CENTER" vgrow="ALWAYS" />
+                     </rowConstraints>
+                  </GridPane>
+               </content>
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TableView fx:id="productpart_tableview" editable="true">
+                           <columns>
+                              <TableColumn fx:id="productpartid_column" minWidth="-Infinity" prefWidth="75.0" text="ID" />
+                              <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="200.0" text="# de Parte" />
+                              <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="500.0" text="Descripción" />
+                              <TableColumn fx:id="productpartstatus_column" minWidth="-Infinity" prefWidth="150.0" text="Estado" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab closable="false" text="Revisiones">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TableView fx:id="partrevision_tableview" editable="true">
+                           <columns>
+                              <TableColumn fx:id="partrevisionid_column" minWidth="-Infinity" prefWidth="75.0" text="ID" />
+                              <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="75.0" text="# de Rev." />
+                              <TableColumn fx:id="revdate_column" minWidth="-Infinity" prefWidth="125.0" text="Fecha de Revisión" />
+                              <TableColumn fx:id="basemetal_column" minWidth="-Infinity" prefWidth="100.0" text="Metal Base" />
+                              <TableColumn fx:id="finalprocess_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso Final" />
+                              <TableColumn fx:id="revspecnumber_column" minWidth="-Infinity" prefWidth="125.0" text="# de Specificación" />
+                              <TableColumn fx:id="area_column" minWidth="-Infinity" prefWidth="75.0" text="Área" />
+                              <TableColumn minWidth="-1.0" prefWidth="75.0" text="Peso">
+                                 <columns>
+                                    <TableColumn fx:id="baseweight_column" minWidth="-Infinity" prefWidth="75.0" text="Base" />
+                                    <TableColumn fx:id="finalweight_column" minWidth="-Infinity" prefWidth="75.0" text="Final" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="partrevisionstatus_column" minWidth="-Infinity" prefWidth="100.0" text="Estado" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab closable="false" text="Especificaciones">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TableView fx:id="specification_tableview">
+                           <columns>
+                              <TableColumn fx:id="specificationid_column" minWidth="-Infinity" prefWidth="75.0" text="ID" />
+                              <TableColumn fx:id="specificationnumber_column" minWidth="-Infinity" prefWidth="120.0" text="# Especificación" />
+                              <TableColumn fx:id="specificationname_column" minWidth="-Infinity" prefWidth="220.0" text="Descripción" />
+                              <TableColumn fx:id="process_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                        <TableView fx:id="specificationitem_tableview" GridPane.columnIndex="1">
+                           <columns>
+                              <TableColumn fx:id="specificationitemid_column" minWidth="-Infinity" prefWidth="75.0" text="#" />
+                              <TableColumn fx:id="metal_column" minWidth="-Infinity" prefWidth="100.0" text="Metal" />
+                              <TableColumn fx:id="minimumthickness_column" minWidth="-Infinity" prefWidth="115.0" text="Espesor Mínimo " />
+                              <TableColumn fx:id="maximumthickness_column" minWidth="-Infinity" prefWidth="115.0" text="Espesor Máximo" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Metales">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TableView fx:id="metal_tableview">
+                           <columns>
+                              <TableColumn fx:id="metalid_column" minWidth="-Infinity" prefWidth="75.0" text="ID" />
+                              <TableColumn fx:id="metalname_column" minWidth="-Infinity" prefWidth="120.0" text="Metal" />
+                              <TableColumn fx:id="density_column" minWidth="-Infinity" prefWidth="120.0" text="Densidad" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+      <Separator prefWidth="200.0" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
+      <GridPane GridPane.rowIndex="2">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <TabPane tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Números de Parte">
-                     <content>
-                        <VBox>
-                           <children>
-                              <TableView fx:id="productpart_tableview" editable="true">
-                                <columns>
-                                  <TableColumn fx:id="productpartid_column" prefWidth="75.0" resizable="false" text="ID" />
-                                  <TableColumn fx:id="partnumber_column" prefWidth="150.0" resizable="false" text="# de Parte" />
-                                    <TableColumn fx:id="description_column" prefWidth="550.0" resizable="false" text="Descripción" />
-                                    <TableColumn fx:id="productpartstatus_column" prefWidth="150.0" resizable="false" text="Estado" />
-                                </columns>
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TableView>
-                           </children>
-                        </VBox>
-                     </content>
-                </Tab>
-                <Tab text="Revisiones">
-                     <content>
-                        <VBox>
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <TableView fx:id="partrevision_tableview" editable="true">
-                                      <columns>
-                                        <TableColumn fx:id="partrevisionid_column" prefWidth="75.0" text="ID" />
-                                        <TableColumn fx:id="rev_column" prefWidth="75.0" text="# de Rev." />
-                                          <TableColumn fx:id="revdate_column" prefWidth="125.0" text="Fecha de Revisión" />
-                                          <TableColumn fx:id="basemetal_column" prefWidth="100.0" text="Metal Base" />
-                                          <TableColumn fx:id="finalprocess_column" prefWidth="100.0" text="Proceso Final" />
-                                          <TableColumn fx:id="revspecnumber_column" prefWidth="125.0" text="# de Specificación" />
-                                          <TableColumn fx:id="area_column" prefWidth="75.0" text="Área" />
-                                          <TableColumn prefWidth="75.0" text="Peso">
-                                             <columns>
-                                                <TableColumn fx:id="baseweight_column" prefWidth="75.0" text="Base" />
-                                                <TableColumn fx:id="finalweight_column" prefWidth="75.0" text="Final" />
-                                             </columns>
-                                          </TableColumn>
-                                          <TableColumn fx:id="partrevisionstatus_column" prefWidth="100.0" text="Estado" />
-                                      </columns>
-                                       <HBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
-                                    </TableView>
-                                 </children></HBox>
-                           </children>
-                        </VBox>
-                     </content>
-                </Tab>
-                <Tab text="Especificaciones">
-                     <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <HBox>
-                                 <children>
-                                    <TableView fx:id="specification_tableview">
-                                      <columns>
-                                        <TableColumn fx:id="specificationid_column" prefWidth="75.0" text="ID" />
-                                        <TableColumn fx:id="specificationnumber_column" prefWidth="120.0" text="# Espec." />
-                                          <TableColumn fx:id="specificationname_column" prefWidth="215.0" text="Descripción" />
-                                          <TableColumn fx:id="process_column" prefWidth="100.0" text="Proceso" />
-                                      </columns>
-                                       <HBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
-                                    </TableView>
-                                    <TableView fx:id="specificationitem_tableview">
-                                      <columns>
-                                        <TableColumn fx:id="specificationitemid_column" prefWidth="75.0" text="#" />
-                                        <TableColumn fx:id="metal_column" prefWidth="100.0" text="Metal" />
-                                          <TableColumn fx:id="minimumthickness_column" prefWidth="115.0" text="Espesor Mínimo " />
-                                          <TableColumn fx:id="maximumthickness_column" prefWidth="115.0" text="Espesor Máximo" />
-                                      </columns>
-                                       <HBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
-                                    </TableView>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
-                     </content></Tab>
-                  <Tab text="Metales">
-                     <content>
-                        <VBox fillWidth="false" prefHeight="200.0" prefWidth="100.0">
-                           <children>
-                              <TableView fx:id="metal_tableview">
-                                <columns>
-                                  <TableColumn fx:id="metalid_column" prefWidth="75.0" text="ID" />
-                                  <TableColumn fx:id="metalname_column" prefWidth="120.0" text="Metal" />
-                                    <TableColumn fx:id="density_column" prefWidth="120.0" text="Densidad" />
-                                </columns>
-                                 <VBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TableView>
-                           </children>
-                        </VBox>
-                     </content>
-                  </Tab>
-              </tabs>
-            </TabPane>
-            <HBox>
-               <children>
-                  <Button fx:id="addproductpart_button" mnemonicParsing="false" text="Nuevo # de Parte">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="addpartrevision_button" disable="true" mnemonicParsing="false" text="Nueva Revisión">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin></Button>
-                  <Button fx:id="addspecification_button" mnemonicParsing="false" text="Nuevo # de Especificación">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="addmetal_button" mnemonicParsing="false" text="Nuevo Metal">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
+            <Button fx:id="addproductpart_button" mnemonicParsing="false" text="Nuevo # de Parte">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="addpartrevision_button" disable="true" mnemonicParsing="false" text="Nueva Revisión" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="addspecification_button" mnemonicParsing="false" text="Nuevo # de Especificación" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="addmetal_button" mnemonicParsing="false" text="Nuevo Metal" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
          </children>
-         <HBox.margin>
-            <Insets />
-         </HBox.margin>
-      </VBox>
+      </GridPane>
    </children>
-</HBox>
+</GridPane>

@@ -7,6 +7,7 @@ package controller;
 
 
 import dao.JDBC.DAOFactory;
+import eu.mihosoft.scaledfx.ScalableContentPane;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,6 +28,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -135,11 +138,12 @@ public class LoginFX implements Initializable {
         try {
             Stage stage = (Stage) root_pane.getScene().getWindow();
             stage.close();
+            
             stage = new Stage();
-            BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/MainFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/MainFX.fxml"));
             Scene scene = new Scene(root);
             stage.setTitle("MSA Manager");
-            stage.setResizable(false);
+            stage.setResizable(true);
             stage.setScene(scene);
             stage.show();
         } catch (IOException ex) {
