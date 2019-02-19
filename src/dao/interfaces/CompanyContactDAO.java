@@ -34,7 +34,7 @@ public interface CompanyContactDAO {
      * @throws IllegalArgumentException If the Company ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public List<CompanyContact> list(Company company) throws IllegalArgumentException, DAOException;
+    public List<CompanyContact> list(Company company, boolean active) throws IllegalArgumentException, DAOException;
     
     public Company findCompany(CompanyContact contact) throws IllegalArgumentException, DAOException;
     

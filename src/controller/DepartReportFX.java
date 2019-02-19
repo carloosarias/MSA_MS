@@ -314,7 +314,7 @@ public class DepartReportFX implements Initializable {
             fields.get("employee_email").setValue("alberto.nunez@maquilasales.com");
             fields.get("client").setValue(depart_report.getCompany_name());
             fields.get("client_address").setValue(depart_report.getCompany_address());
-            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report));
+            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report), true);
             if(company_contact.isEmpty()){
                 fields.get("contact").setValue("n/a");
                 fields.get("contact_email").setValue("n/a");

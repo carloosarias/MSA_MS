@@ -145,6 +145,7 @@ public class LoginFX implements Initializable {
             stage.setTitle("MSA Manager");
             stage.setResizable(true);
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);

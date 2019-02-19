@@ -42,8 +42,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -64,9 +64,7 @@ import msa_ms.MainApp;
 public class QuoteFX implements Initializable {
     
     @FXML
-    private HBox root_hbox;
-    @FXML
-    private VBox filter_vbox;
+    private GridPane root_gridpane;
     @FXML
     private ComboBox<ProductPart> part_combo;
     @FXML
@@ -187,7 +185,7 @@ public class QuoteFX implements Initializable {
     
     public void setInvoiceQuoteTab(){
         try {
-            invoicequote_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceQuoteFX.fxml")));
+            invoicequote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceQuoteFX.fxml")));
         } catch (IOException ex) {
             Logger.getLogger(QuoteFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -196,7 +194,7 @@ public class QuoteFX implements Initializable {
     public void showAddStage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateQuoteFX.fxml"));
             Scene scene = new Scene(root);

@@ -5,97 +5,91 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoiceQuoteFX">
+<GridPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoiceQuoteFX">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <VBox alignment="CENTER">
+      <TableView fx:id="quote_tableview" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+         <columns>
+            <TableColumn minWidth="-Infinity" prefWidth="75.0" text="Número de Parte">
+               <columns>
+                  <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="123.0" text="No. de Parte" />
+                  <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="69.0" text="Revisión" />
+                  <TableColumn fx:id="process_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+               </columns>
+            </TableColumn>
+            <TableColumn minWidth="-Infinity" text="Cotización">
+               <columns>
+                  <TableColumn fx:id="quoteid_column" minWidth="-Infinity" prefWidth="75.0" text="# Folio" />
+                  <TableColumn fx:id="quotedate_column" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                  <TableColumn fx:id="unitprice_column" minWidth="-Infinity" prefWidth="120.0" text="Precio por Pieza" />
+               </columns>
+            </TableColumn>
+            <TableColumn minWidth="-Infinity" prefWidth="139.0" text="Facturación">
+               <columns>
+                  <TableColumn fx:id="totalinvoiced_column" minWidth="-Infinity" prefWidth="120.0" text="Piezas Facturadas" />
+                  <TableColumn fx:id="totalvalue_column" minWidth="-Infinity" prefWidth="150.0" text="Valor Total De Ventas" />
+               </columns>
+            </TableColumn>
+         </columns>
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </TableView>
+      <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <HBox>
-               <children>
-                  <VBox>
-                     <children>
-                        <CheckBox fx:id="processfilter_checkbox" mnemonicParsing="false" text="Filtrar por Proceso">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </CheckBox>
-                        <ComboBox fx:id="process_combo" prefWidth="150.0" promptText="Proceso">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Desde:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker fx:id="startdate_picker" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Hasta:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker fx:id="enddate_picker" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <VBox>
-                     <children>
-                        <TableView fx:id="invoicequote_tableview">
-                           <columns>
-                              <TableColumn prefWidth="75.0" text="Número de Parte">
-                                 <columns>
-                                    <TableColumn fx:id="partnumber_column" prefWidth="123.0" text="No. de Parte" />
-                                    <TableColumn fx:id="rev_column" prefWidth="69.0" text="Revisión" />
-                                    <TableColumn fx:id="process_column" prefWidth="100.0" text="Proceso" />
-                                 </columns>
-                              </TableColumn>
-                              <TableColumn text="Cotización">
-                                 <columns>
-                                    <TableColumn fx:id="quoteid_column" prefWidth="75.0" text="# Folio" />
-                                    <TableColumn fx:id="quotedate_column" prefWidth="120.0" text="Fecha" />
-                                    <TableColumn fx:id="unitprice_column" prefWidth="120.0" text="Precio por Pieza" />
-                                 </columns>
-                              </TableColumn>
-                              <TableColumn prefWidth="139.0" text="Facturación">
-                                 <columns>
-                                    <TableColumn fx:id="totalinvoiced_column" prefWidth="120.0" text="Piezas Facturadas" />
-                                    <TableColumn fx:id="totalvalue_column" prefWidth="150.0" text="Valor Total De Ventas" />
-                                 </columns>
-                              </TableColumn>
-                           </columns>
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TableView>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
+            <CheckBox fx:id="processfilter_checkbox" mnemonicParsing="false" text="Filtrar por Proceso">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin></CheckBox>
+            <Label text="Desde:" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin></Label>
+            <Label text="Hasta:" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin></Label>
+            <ComboBox fx:id="process_combo" prefWidth="150.0" promptText="Proceso" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin></ComboBox>
+            <DatePicker fx:id="startdate_picker" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin></DatePicker>
+            <DatePicker fx:id="enddate_picker" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin></DatePicker>
          </children>
-      </VBox>
+      </GridPane>
+      <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
    </children>
-</HBox>
+</GridPane>

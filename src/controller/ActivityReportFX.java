@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +27,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -43,25 +43,17 @@ import model.Employee;
 public class ActivityReportFX implements Initializable {
     
     @FXML
-    private HBox root_hbox;
-    @FXML
-    private Button filter_button;
-    @FXML
-    private CheckBox employeefilter_checkbox;
+    private GridPane root_gridpane;
     @FXML
     private CheckBox datefilter_checkbox;
-    @FXML
-    private ComboBox<Employee> employee_combo;
     @FXML
     private DatePicker startdate_picker;
     @FXML
     private DatePicker enddate_picker;
     @FXML
-    private TableView<ActivityReport> activityreport_tableview1;
+    private TableView<ActivityReport> activityreport_tableview;
     @FXML
-    private TableColumn<ActivityReport, Integer> reportid_column1;
-    @FXML
-    private TableColumn<ActivityReport, String> employeeid_column;
+    private TableColumn<ActivityReport, Integer> reportid_column;
     @FXML
     private TableColumn<ActivityReport, String> name_column;
     @FXML
@@ -70,10 +62,6 @@ public class ActivityReportFX implements Initializable {
     private TableColumn<ActivityReport, Time> starttime_column;
     @FXML
     private TableColumn<ActivityReport, Time> endtime_column;
-    @FXML
-    private TableView<ActivityReport> activityreport_tableview2;
-    @FXML
-    private TableColumn<ActivityReport, Integer> reportid_column2;
     @FXML
     private TableColumn<ActivityReport, String> jobdescription_column;
     @FXML
@@ -95,25 +83,29 @@ public class ActivityReportFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         startdate_picker.setValue(LocalDate.now().minusWeeks(1));
         enddate_picker.setValue(LocalDate.now());
-        employee_combo.getItems().setAll(msabase.getModuleEmployeeDAO().list(msabase.getModuleDAO().find("Mantenimiento")));
-        employee_combo.getSelectionModel().selectFirst();
         setActivityReportTable();
         updateActivityReportTable();
-        
-        filter_button.setOnAction((ActionEvent) -> {
-            updateActivityReportTable();
-        });
         
         add_button.setOnAction((ActionEvent) -> {
            showAdd_stage(); 
            updateActivityReportTable();
         });
+        
+        datefilter_checkbox.setOnAction((ActionEvent) ->{
+            updateActivityReportTable(); 
+        });
+        
+        startdate_picker.setOnAction((ActionEvent) -> {
+            updateActivityReportTable(); 
+        });
+        
+        enddate_picker.setOnAction((ActionEvent) -> {
+            updateActivityReportTable();
+        });
     }
     
     public void setActivityReportTable(){
-        reportid_column1.setCellValueFactory(new PropertyValueFactory<>("id"));
-        reportid_column2.setCellValueFactory(new PropertyValueFactory<>("id"));
-        employeeid_column.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
+        reportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         name_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
         reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
         starttime_column.setCellValueFactory(new PropertyValueFactory<>("start_time"));
@@ -125,37 +117,21 @@ public class ActivityReportFX implements Initializable {
     }
     
     public void updateActivityReportTable(){
-        if(employeefilter_checkbox.isSelected()){
-            if(datefilter_checkbox.isSelected()){
-                activityreport_tableview1.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().listEmployeeDateRange(
-                    employee_combo.getSelectionModel().getSelectedItem(), 
-                    DAOUtil.toUtilDate(startdate_picker.getValue()), 
-                    DAOUtil.toUtilDate(enddate_picker.getValue())))
-                );
-            }
-            else{
-                activityreport_tableview1.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().listEmployee(
-                    employee_combo.getSelectionModel().getSelectedItem()))
-                );
-            }
-        }
-        else if(datefilter_checkbox.isSelected()){
-            activityreport_tableview1.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().listDateRange(
+        if(datefilter_checkbox.isSelected()){
+            activityreport_tableview.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().listDateRange(
                     DAOUtil.toUtilDate(startdate_picker.getValue()), 
                     DAOUtil.toUtilDate(enddate_picker.getValue())))
             );            
         }
         else{
-            activityreport_tableview1.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().list()));            
+            activityreport_tableview.setItems(FXCollections.observableArrayList(msabase.getActivityReportDAO().list()));            
         }
-        
-        activityreport_tableview2.setItems(activityreport_tableview1.getItems());
     }
     
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateActivityReportFX.fxml"));
             Scene scene = new Scene(root);

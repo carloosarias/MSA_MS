@@ -15,9 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Company;
-import model.CompanyAddress;
 import model.CompanyContact;
-import model.Invoice;
 
 /**
  *
@@ -26,16 +24,16 @@ import model.Invoice;
 public class CompanyContactDAOJDBC implements CompanyContactDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, name, position, email, phone_number FROM COMPANY_CONTACT WHERE id = ?";
+            "SELECT id, name, position, email, phone_number, active FROM COMPANY_CONTACT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, position, email, phone_number FROM COMPANY_CONTACT WHERE COMPANY_ID = ? ORDER BY id";
+            "SELECT id, name, position, email, phone_number, active FROM COMPANY_CONTACT WHERE COMPANY_ID = ? AND active = ? ORDER BY id";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM COMPANY_CONTACT WHERE id = ?";
     private static final String SQL_INSERT = 
-            "INSERT INTO COMPANY_CONTACT (COMPANY_ID, name, position, email, phone_number) "
-            +"VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO COMPANY_CONTACT (COMPANY_ID, name, position, email, phone_number, active) "
+            +"VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE COMPANY_CONTACT SET name = ?, position = ?, email = ?, phone_number = ? WHERE id = ?";
+            "UPDATE COMPANY_CONTACT SET name = ?, position = ?, email = ?, phone_number = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM COMPANY_CONTACT WHERE id = ?";
     
@@ -87,7 +85,7 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
     }
     
     @Override
-    public List<CompanyContact> list(Company company) throws IllegalArgumentException, DAOException {
+    public List<CompanyContact> list(Company company, boolean active) throws IllegalArgumentException, DAOException {
         if(company.getId() == null){
             throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
         }
@@ -95,7 +93,8 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
         List<CompanyContact> companyContacts = new ArrayList<>();
         
         Object[] values = {
-            company.getId()
+            company.getId(),
+            active
         };
         
         try(
@@ -242,6 +241,7 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
         contact.setPosition(resultSet.getString("position"));
         contact.setEmail(resultSet.getString("email"));
         contact.setPhone_number(resultSet.getString("phone_number"));
+        contact.setActive(resultSet.getBoolean("active"));
         return contact;
     }    
 }

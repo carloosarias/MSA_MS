@@ -130,7 +130,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(employee_tab);
                         break;
                     case "Compras":
-                        company_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
+                        company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFXNEW.fxml")));
                         product_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
                         productsupplier_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
                         orderpurchasecart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
@@ -153,7 +153,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(invoice_tab, invoicepayment_tab);
                         break;
                     case "Cotización":
-                        quote_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));
+                        quote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));
                         root_tabpane.getTabs().setAll(quote_tab);
                         break;
                     case "Historial Producción":
@@ -180,7 +180,7 @@ public class MainFX implements Initializable {
                         break;
                     case "Mantenimiento":
                         mantainance_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/MantainanceReportFX.fxml")));
-                        activityreport_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ActivityReportFX.fxml")));
+                        activityreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ActivityReportFX.fxml")));
                         root_tabpane.getTabs().setAll(mantainance_tab, activityreport_tab);
                         break;
                 }

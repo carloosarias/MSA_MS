@@ -18,6 +18,7 @@ public class CompanyContact implements Serializable {
     private String position;
     private String email;
     private String phone_number;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -58,6 +59,14 @@ public class CompanyContact implements Serializable {
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
+    }
+    
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active){
+        this.active = active;
     }
     
     // Object overrides ---------------------------------------------------------------------------

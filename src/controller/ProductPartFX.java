@@ -28,6 +28,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,7 +36,6 @@ import javafx.stage.StageStyle;
 import model.Metal;
 import model.PartRevision;
 import model.ProductPart;
-import model.ProductSupplier;
 import model.Specification;
 import model.SpecificationItem;
 
@@ -47,7 +47,7 @@ import model.SpecificationItem;
 public class ProductPartFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<ProductPart> productpart_tableview;
     @FXML
@@ -178,7 +178,7 @@ public class ProductPartFX implements Initializable {
     public void showAddProductPartStage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddProductPartFX.fxml"));
             Scene scene = new Scene(root);
@@ -196,7 +196,7 @@ public class ProductPartFX implements Initializable {
     public void showAddPartRevisionStage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddPartRevisionFX.fxml"));
             Scene scene = new Scene(root);
@@ -214,7 +214,7 @@ public class ProductPartFX implements Initializable {
     public void showAddSpecificationStage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateSpecificationFX.fxml"));
             Scene scene = new Scene(root);
@@ -232,7 +232,7 @@ public class ProductPartFX implements Initializable {
     public void showAddMetalStage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddMetalFX.fxml"));
             Scene scene = new Scene(root);

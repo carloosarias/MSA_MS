@@ -6,6 +6,7 @@
 package dao.interfaces;
 
 import dao.DAOException;
+import java.util.Date;
 import java.util.List;
 import model.DepartLot;
 import model.Invoice;
@@ -91,6 +92,28 @@ public interface InvoiceItemDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<InvoiceItem> list(Invoice invoice, PartRevision part_revision) throws IllegalArgumentException, DAOException;
+
+    /**
+     * Returns a list of InvoiceItem matching quote between the dateRange
+     * @param quote
+     * @param start_date
+     * @param end_date
+     * @return
+     * @throws IllegalArgumentException
+     * @throws DAOException 
+     */
+    public List<InvoiceItem> list(Quote quote, Date start_date, Date end_date) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns a list of distinct list of Quote referenced by InvoiceItems that match process (if process_filter == true) and are between the date ranges);
+     * @param process
+     * @param process_filter
+     * @param start_date
+     * @param end_date
+     * @return
+     * @throws DAOException 
+     */
+    public List<Quote> listDistinctQuote_byProcessDateRange(String process, boolean process_filter, Date start_date, Date end_date) throws DAOException;
     
     /**
      * Create the given InvoiceItem in the database.

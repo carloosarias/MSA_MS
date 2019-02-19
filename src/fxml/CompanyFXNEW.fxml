@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9.0.1" fx:controller="controller.CompanyFXNEW">
+<GridPane fx:id="root_gridpane" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CompanyFXNEW">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" />
   </columnConstraints>
@@ -22,7 +22,7 @@
     <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE">
+      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <tabs>
           <Tab text="Compañías">
                <content>
@@ -101,7 +101,7 @@
                         <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="contact_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="contact_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="contactname_column" minWidth="-Infinity" prefWidth="250.0" text="Nombre" />
                             <TableColumn fx:id="position_column" minWidth="-Infinity" prefWidth="200.0" text="Pocisión" />
@@ -160,7 +160,7 @@
                         <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TableView fx:id="address_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="address_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="address_column" minWidth="-Infinity" prefWidth="1000.0" text="Dirección" />
                            </columns>

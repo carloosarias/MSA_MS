@@ -172,6 +172,6 @@ public class ContactFX implements Initializable {
     
     public void updateList(){
         contact_listview.getItems().clear();
-        contact_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyContactDAO().list(msabase.getCompanyDAO().find(CompanyFX.getCompanyId()))));
+        contact_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyContactDAO().list(msabase.getCompanyDAO().find(CompanyFX.getCompanyId()), true)));
     }
 }

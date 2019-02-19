@@ -218,7 +218,7 @@ public class InvoiceFX implements Initializable {
             fields.get("date").setValue(invoice.getInvoice_date().toString());
             fields.get("client").setValue(invoice.getCompany_name());
             fields.get("billing_address").setValue(invoice.getBilling_address());
-            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getInvoiceDAO().findCompany(invoice));
+            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getInvoiceDAO().findCompany(invoice), true);
             if(company_contact.isEmpty()){
                 fields.get("contact").setValue("n/a");
                 fields.get("contact_email").setValue("n/a");

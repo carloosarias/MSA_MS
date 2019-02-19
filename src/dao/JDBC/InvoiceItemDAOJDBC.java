@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.DepartLot;
 import model.Invoice;
@@ -36,14 +37,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
             + "WHERE INVOICE_ITEM.id = ?";
     private static final String SQL_FIND_INVOICE_BY_ID = 
-            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
-            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "
-            + "FROM INVOICE_ITEM "
-            + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
-            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
-            + "WHERE INVOICE_ITEM.id = ?";
+            "SELECT INVOICE_ID FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_FIND_DEPART_LOT_BY_ID = 
             "SELECT DEPART_LOT_ID FROM INVOICE_ITEM WHERE id = ?";
     private static final String SQL_FIND_QUOTE_BY_ID = 
@@ -77,6 +71,26 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
             + "WHERE INVOICE_ITEM.INVOICE_ID = ? AND DEPART_LOT.PART_REVISION_ID = ? "
             + "ORDER BY INVOICE_ITEM.id";
+    private static final String SQL_LIST_OF_QUOTE_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
+            + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "
+            + "FROM INVOICE_ITEM "
+            + "INNER JOIN DEPART_LOT ON INVOICE_ITEM.DEPART_LOT_ID = DEPART_LOT.id "
+            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
+            + "INNER JOIN INVOICE ON INVOICE_ITEM.INVOICE_ID = INVOICE.id "
+            + "WHERE INVOICE_ITEM.QUOTE_ID = ? AND INVOICE.invoice_date BETWEEN ? AND ? "
+            + "ORDER BY INVOICE_ITEM.id";
+    private static final String SQL_DISTINCT_QUOTE_PROCESS_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT DISTINCT INVOICE_ITEM.QUOTE_ID "
+            + "FROM INVOICE_ITEM "
+            + "INNER JOIN INVOICE ON INVOICE_ITEM.INVOICE_ID = INVOICE.id "
+            + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
+            + "INNER JOIN PART_REVISION ON QUOTE.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE (SPECIFICATION.process = ? OR ? = 0) AND INVOICE.invoice_date BETWEEN ? AND ? "
+            + "ORDER BY INVOICE_ITEM.QUOTE_ID";
     private static final String SQL_INSERT =
             "INSERT INTO INVOICE_ITEM (INVOICE_ID, DEPART_LOT_ID, QUOTE_ID, comments) "
             + "VALUES (?, ?, ?, ?)";
@@ -288,6 +302,62 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
         }
         
         return invoice_item;
+    }
+    
+    @Override
+    public List<InvoiceItem> list(Quote quote, Date start_date, Date end_date) throws IllegalArgumentException, DAOException {
+        if(quote.getId() == null) {
+            throw new IllegalArgumentException("Quote is not created yet, the Quote ID is null.");
+        }    
+        
+        List<InvoiceItem> invoice_item = new ArrayList<>();
+        
+        Object[] values = {
+            quote.getId(),
+            start_date,
+            end_date
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_QUOTE_DATE_RANGE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                invoice_item.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return invoice_item;
+    }
+    
+    @Override
+    public List<Quote> listDistinctQuote_byProcessDateRange(String process, boolean process_filter, Date start_date, Date end_date) throws DAOException{
+        
+        List<Quote> quote = new ArrayList<>();
+        
+        Object[] values = {
+            process,
+            process_filter,
+            start_date,
+            end_date
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DISTINCT_QUOTE_PROCESS_DATE_RANGE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                quote.add(daoFactory.getQuoteDAO().find(resultSet.getInt("INVOICE_ITEM.QUOTE_ID")));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return quote;
     }
     
     @Override

@@ -16,11 +16,11 @@
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints vgrow="NEVER" />
-      <RowConstraints vgrow="ALWAYS" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <MenuBar>
+      <MenuBar GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
          <menus>
             <Menu mnemonicParsing="false" text="Opciones">
                <items>
@@ -29,7 +29,7 @@
             </Menu>
          </menus>
       </MenuBar>
-      <GridPane GridPane.rowIndex="1">
+      <GridPane GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
             <ColumnConstraints hgrow="SOMETIMES" />
@@ -38,7 +38,7 @@
             <RowConstraints vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1">
+            <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                <tabs>
                   <Tab fx:id="employee_tab" closable="false" text="Empleados" />
                   <Tab fx:id="company_tab" closable="false" text="Compañías" />
@@ -66,7 +66,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </TabPane>
-            <ListView fx:id="menu_listview">
+            <ListView fx:id="menu_listview" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
