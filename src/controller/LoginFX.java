@@ -140,6 +140,8 @@ public class LoginFX implements Initializable {
             stage = new Stage();
             GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/MainFX.fxml"));
             Scene scene = new Scene(root);
+            stage.setHeight(720);
+            stage.setWidth(1024);
             stage.setTitle("MSA Manager");
             stage.setResizable(true);
             stage.setScene(scene);

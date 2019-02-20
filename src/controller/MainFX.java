@@ -101,14 +101,6 @@ public class MainFX implements Initializable {
         modules = msabase.getModuleEmployeeDAO().list(MainApp.current_employee);
         menu_listview.setItems(FXCollections.observableArrayList(modules));
         
-        Module delete = new Module();
-        for(Module module : menu_listview.getItems()){
-            if(module.getName().equals("Historial Producción")){
-                delete = module;
-            }
-        }
-        
-        menu_listview.getItems().remove(delete);
         menu_listview.getSelectionModel().clearAndSelect(0);
         setTabs(menu_listview.getSelectionModel().getSelectedItem());
         
@@ -131,8 +123,8 @@ public class MainFX implements Initializable {
                         break;
                     case "Compras":
                         company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
-                        product_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
-                        productsupplier_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
+                        product_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
+                        productsupplier_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
                         orderpurchasecart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
                         orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
                         root_tabpane.getTabs().setAll(company_tab, product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
@@ -156,7 +148,6 @@ public class MainFX implements Initializable {
                         quote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));
                         root_tabpane.getTabs().setAll(quote_tab);
                         break;
-                    case "Historial Producción":
                     case "Producción":
                         process_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProcessReportFX.fxml")));
                         root_tabpane.getTabs().setAll(process_tab);

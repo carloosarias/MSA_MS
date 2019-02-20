@@ -66,7 +66,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </TabPane>
-            <ListView fx:id="menu_listview" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+            <ListView fx:id="menu_listview" minWidth="-Infinity" prefWidth="175.0" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>

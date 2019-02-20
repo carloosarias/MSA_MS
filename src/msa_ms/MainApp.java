@@ -4,6 +4,7 @@ import eu.mihosoft.scaledfx.ScalableContentPane;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -25,7 +26,7 @@ import model.Employee;
 public class MainApp extends Application{
     public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", new Locale("es","ES"));
-    
+    public static DecimalFormat df = new DecimalFormat("#"); 
     
     //CONTROLLER LISTENER SETUP VARIABLES
     public static boolean CreateEquipmentTypeFX_setup = true;
@@ -74,6 +75,7 @@ public class MainApp extends Application{
     
     @Override
     public void start(Stage primaryStage) throws Exception {
+        df.setMaximumFractionDigits(6);
         TimeZone.setDefault(TimeZone.getTimeZone("CST"));
         BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));
         ScalableContentPane scale = new ScalableContentPane();

@@ -53,6 +53,8 @@ import model.ProductPart;
 import model.Quote;
 import model.QuoteItem;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.dateFormat;
+import static msa_ms.MainApp.df;
 
 
 
@@ -78,7 +80,7 @@ public class QuoteFX implements Initializable {
     @FXML
     private TableColumn<Quote, Integer> id_column;
     @FXML
-    private TableColumn<Quote, Date> quotedate_column;
+    private TableColumn<Quote, String> quotedate_column;
     @FXML
     private TableColumn<Quote, String> contact_column;
     @FXML
@@ -130,11 +132,9 @@ public class QuoteFX implements Initializable {
     
     private List<String> status_items = Arrays.asList("Aprovado", "Descartado", "Pendiente");
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    DecimalFormat df = new DecimalFormat("#");
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        df.setMaximumFractionDigits(6);
         setInvoiceQuoteTab();
         add_button.disableProperty().bind(partrev_combo.getSelectionModel().selectedItemProperty().isNull());
         partrev_combo.disableProperty().bind(partrev_combo.itemsProperty().isNull());
@@ -214,8 +214,6 @@ public class QuoteFX implements Initializable {
     }
     
     public void setQuoteFields(){
-        DecimalFormat df = new DecimalFormat("#");
-        df.setMaximumFractionDigits(6);
         if(quote_tableview.getSelectionModel().getSelectedItem() == null){
             specification_combo.getItems().clear();
             specificationprocess_field.clear();
@@ -267,7 +265,7 @@ public class QuoteFX implements Initializable {
     public void setQuoteTableView(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         contact_column.setCellValueFactory(new PropertyValueFactory<>("contact_name"));
-        quotedate_column.setCellValueFactory(new PropertyValueFactory<>("quote_date"));
+        quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(dateFormat.format(c.getValue().getQuote_date())));
         eau_column.setCellValueFactory(new PropertyValueFactory<>("estimated_annual_usage"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         status_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getApproved()));

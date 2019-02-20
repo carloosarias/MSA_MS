@@ -22,6 +22,7 @@ import javafx.scene.control.TableView;
 import model.InvoiceItem;
 import model.Quote;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.df;
 
 /**
  * FXML Controller class
@@ -96,9 +97,9 @@ public class InvoiceQuoteFX implements Initializable {
         process_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSpec_process()));
         quoteid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getId()));
         quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getQuote_date().toString()));
-        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getEstimated_total() + " USD"));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+ df.format(c.getValue().getEstimated_total()) + " USD"));
         totalinvoiced_column.setCellValueFactory(c -> new SimpleStringProperty(""+getTotal_invoiced(c.getValue())));
-        totalvalue_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+getTotal_value(c.getValue())+" USD"));
+        totalvalue_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(getTotal_value(c.getValue()))+" USD"));
     }
     
     public void updateQuoteTable(){

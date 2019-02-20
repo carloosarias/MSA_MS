@@ -8,10 +8,8 @@ package controller;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -21,20 +19,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.ActivityReport;
-import model.Employee;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.dateTimeFormatter;
@@ -105,9 +99,9 @@ public class ActivityReportFX implements Initializable {
                 comments_area.setText(newValue.getComments());
             }catch(Exception e){
                 delete_button.setDisable(true);
-                job_area.setText("");
-                actiontaken_area.setText("");
-                comments_area.setText("");
+                job_area.setText(null);
+                actiontaken_area.setText(null);
+                comments_area.setText(null);
             }
         });
         
@@ -141,6 +135,7 @@ public class ActivityReportFX implements Initializable {
         add_button.setOnAction((ActionEvent) -> {
            createActivityReport(); 
            updateActivityReportTable();
+           activityreport_tableview.getSelectionModel().selectLast();
         });
         
         delete_button.setOnAction((ActionEvent) -> {

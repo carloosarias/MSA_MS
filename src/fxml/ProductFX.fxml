@@ -4,38 +4,47 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductFX">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <VBox alignment="CENTER">
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <TableView fx:id="product_tableview" editable="true">
-              <columns>
-                <TableColumn fx:id="id_column" prefWidth="106.0" text="ID de Producto" />
-                <TableColumn fx:id="description_column" prefWidth="200.0" text="Descripción" />
-                  <TableColumn fx:id="unitmeasure_column" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
-              </columns>
-               <VBox.margin>
+            <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Producto" GridPane.columnIndex="1">
+               <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TableView>
-            <HBox alignment="TOP_CENTER">
-               <children>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Registrar Producto">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Producto">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
+               </GridPane.margin></Button>
+            <Button fx:id="add_button" mnemonicParsing="false" text="Registrar Producto">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin></Button>
          </children>
-      </VBox>
+      </GridPane>
+      <TableView fx:id="product_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="75.0" text="# de ID" />
+            <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="250.0" text="Descripción" />
+            <TableColumn fx:id="unitmeasure_column" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+         </columns>
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </TableView>
    </children>
-</HBox>
+</GridPane>

@@ -6,30 +6,20 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import model.Invoice;
+import javafx.scene.layout.GridPane;
 import model.Product;
-import model.ProductSupplier;
+import msa_ms.MainApp;
 
 /**
  * FXML Controller class
@@ -39,7 +29,7 @@ import model.ProductSupplier;
 public class ProductFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<Product> product_tableview;
     @FXML
@@ -53,8 +43,6 @@ public class ProductFX implements Initializable {
     @FXML
     private TableColumn<Product, String> unitmeasure_column;
     
-    private Stage add_stage = new Stage();
-    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
@@ -65,43 +53,32 @@ public class ProductFX implements Initializable {
         setProductTable();
         updateProductTable();
         
-        product_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
-            delete_button.setDisable(product_tableview.getSelectionModel().isEmpty());
-        });
+        delete_button.disableProperty().bind(product_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         add_button.setOnAction((ActionEvent) -> {
-            showAdd_stage();
+            createProduct();
             updateProductTable();
         });
         
         delete_button.setOnAction((ActionEvent) -> {
-            disableProduct(product_tableview.getSelectionModel().getSelectedItem());
+            disableProduct();
             updateProductTable();
+            product_tableview.getSelectionModel().selectLast();
         });
        
     }    
     
-    public void disableProduct(Product product){
-        product.setActive(false);
-        msabase.getProductDAO().update(product);
+    public void createProduct(){
+        Product product = new Product();
+        product.setDescription("N/A");
+        product.setUnit_measure("N/A");
+        product.setActive(true);
+        msabase.getProductDAO().create(product);
     }
     
-    public void showAdd_stage(){
-        try {
-            add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
-            add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddProductFX.fxml"));
-            Scene scene = new Scene(root);
-            
-            add_stage.setTitle("Nuevo Producto");
-            add_stage.setResizable(false);
-            add_stage.initStyle(StageStyle.UTILITY);
-            add_stage.setScene(scene);
-            add_stage.showAndWait();
-        } catch (IOException ex) {
-            Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void disableProduct(){
+        product_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getProductDAO().update(product_tableview.getSelectionModel().getSelectedItem());
     }
     
     public void setProductTable(){
@@ -113,7 +90,14 @@ public class ProductFX implements Initializable {
             msabase.getProductDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             product_tableview.refresh();
         });
+        
         unitmeasure_column.setCellValueFactory(new PropertyValueFactory<>("unit_measure"));
+        unitmeasure_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(MainApp.unit_measure)));
+        unitmeasure_column.setOnEditCommit((TableColumn.CellEditEvent<Product, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnit_measure(t.getNewValue());
+            msabase.getProductDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            product_tableview.refresh();
+        });
     }
     
     public void updateProductTable(){

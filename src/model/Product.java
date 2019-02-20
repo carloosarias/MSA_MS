@@ -14,7 +14,6 @@ import java.io.Serializable;
 public class Product implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private String serial_number;
     private String description;
     private String unit_measure;
     private boolean active;
@@ -27,14 +26,6 @@ public class Product implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-    
-    public String getSerial_number(){
-        return serial_number;
-    }
-    
-    public void setSerial_number(String serial_number){
-        this.serial_number = serial_number;
     }
 
     public String getDescription() {

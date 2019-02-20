@@ -14,13 +14,9 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,6 +26,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -45,7 +42,7 @@ import model.PurchaseItem;
 public class ProductSupplierFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<ProductSupplier> productsupplier_tableview;
     @FXML
@@ -81,6 +78,7 @@ public class ProductSupplierFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setProductSupplierTable();
         updateProductSupplierTable();
+        
         delete_button.disableProperty().bind(productsupplier_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         productsupplier_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductSupplier> observable, ProductSupplier oldValue, ProductSupplier newValue) -> {
@@ -91,14 +89,12 @@ public class ProductSupplierFX implements Initializable {
         add_button.setOnAction((ActionEvent) -> {
            showAdd_stage();
            updateProductSupplierTable();
+           productsupplier_tableview.getSelectionModel().selectLast();
         });
         
         delete_button.setOnAction((ActionEvent) -> {
-           ProductSupplier product_supplier = productsupplier_tableview.getSelectionModel().getSelectedItem();
-           product_supplier.setActive(false);
-           
-           msabase.getProductSupplierDAO().update(product_supplier);
-           
+           productsupplier_tableview.getSelectionModel().getSelectedItem().setActive(false);
+           msabase.getProductSupplierDAO().update(productsupplier_tableview.getSelectionModel().getSelectedItem());
            updateProductSupplierTable();
         });
         
@@ -132,12 +128,12 @@ public class ProductSupplierFX implements Initializable {
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateProductSupplierFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/CreateProductSupplierFX.fxml"));
             Scene scene = new Scene(root);
             
-            add_stage.setTitle("Nueva Cotización de Producto");
+            add_stage.setTitle("Nueva Cotización");
             add_stage.setResizable(false);
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
