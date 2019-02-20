@@ -140,7 +140,7 @@ public class CreateMantainanceReportFX implements Initializable {
     
     public void fillComboBoxValues(){
         date_picker.setValue(LocalDate.now());
-        employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
+        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         employee_combo.getSelectionModel().selectFirst();
         equipment_combo.setItems(FXCollections.observableArrayList(MantainanceReportFX.getEquipment_selection()));
         equipment_combo.getSelectionModel().selectFirst();

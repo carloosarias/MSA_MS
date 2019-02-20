@@ -81,7 +81,7 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         reportdate_picker.setValue(LocalDate.now());
         comments_area.setText("N/A");
-        employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
+        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         employee_combo.getSelectionModel().selectFirst();
         status_combo.setItems(FXCollections.observableArrayList(MainApp.orderpurchase_status));
         

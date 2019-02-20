@@ -1,17 +1,14 @@
 package msa_ms;
 
-import static com.itextpdf.kernel.pdf.PdfName.Path;
 import eu.mihosoft.scaledfx.ScalableContentPane;
 import java.awt.Desktop;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -19,18 +16,22 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Employee;
 
 /**
  *
  * @author Pavilion Mini
  */
 public class MainApp extends Application{
+    public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", new Locale("es","ES"));
+    
+    
     //CONTROLLER LISTENER SETUP VARIABLES
-    public static boolean OrderPurchaseCartFX_setup = true;
     public static boolean CreateEquipmentTypeFX_setup = true;
     
     //EMPLOYEE INDEX
-    public static Integer employee_id;
+    public static Employee current_employee;
     
     //CONSTANT LISTS
     public static List<String> process_list = Arrays.asList(

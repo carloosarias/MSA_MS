@@ -113,7 +113,7 @@ public class ProcessReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().listActive(true)));
-        employee_combo.getSelectionModel().select(msabase.getEmployeeDAO().find(MainApp.employee_id));
+        employee_combo.getSelectionModel().select(MainApp.current_employee);
         startdate_picker.setValue(LocalDate.now());
         enddate_picker.setValue(LocalDate.now().plusDays(1));
         setFilterHBox();
@@ -135,7 +135,7 @@ public class ProcessReportFX implements Initializable {
         
     }
     public void setFilterHBox(){
-        modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
+        modules = msabase.getModuleEmployeeDAO().list(MainApp.current_employee);
         for(Module module : modules){
             if(module.getName().equals("Historial Producción")){
                 filter_hbox.setDisable(false);

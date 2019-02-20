@@ -99,9 +99,7 @@ public class CreateDepartReportFX implements Initializable {
     
     private List<DepartLot> depart_lots = new ArrayList<DepartLot>();
     
-    private ObservableList<Employee> employee = FXCollections.observableArrayList(
-        msabase.getEmployeeDAO().find(MainApp.employee_id)
-    );
+    private ObservableList<Employee> employee = FXCollections.observableArrayList(MainApp.current_employee);
     /**
      * Initializes the controller class.
      */

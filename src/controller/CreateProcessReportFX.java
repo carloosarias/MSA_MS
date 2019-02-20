@@ -99,7 +99,7 @@ public class CreateProcessReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setSpinnerValues();
-        employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
+        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
         equipmenttype_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list()));

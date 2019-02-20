@@ -127,9 +127,7 @@ public class CreateIncomingReportFX implements Initializable {
     
     private List<IncomingLot> incoming_lots = new ArrayList<IncomingLot>();
     
-    private ObservableList<Employee> employee = FXCollections.observableArrayList(
-        msabase.getEmployeeDAO().find(MainApp.employee_id)
-    );
+    private ObservableList<Employee> employee = FXCollections.observableArrayList(MainApp.current_employee);
 
     
     /**

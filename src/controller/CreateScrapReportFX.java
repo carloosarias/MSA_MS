@@ -66,7 +66,7 @@ public class CreateScrapReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
+        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         employee_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());

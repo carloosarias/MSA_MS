@@ -67,7 +67,7 @@ public class CreateAnalysisReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         reportdate_picker.setValue(LocalDate.now());
-        employee_combo.setItems(FXCollections.observableArrayList(msabase.getEmployeeDAO().find(MainApp.employee_id)));
+        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         employee_combo.getSelectionModel().selectFirst();
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
         analysistype_combo.setItems(FXCollections.observableArrayList(msabase.getAnalysisTypeDAO().list()));

@@ -345,8 +345,8 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
         ActivityReport activity_report = new ActivityReport();
         activity_report.setId(resultSet.getInt("ACTIVITY_REPORT.id"));
         activity_report.setReport_date(resultSet.getDate("ACTIVITY_REPORT.report_date"));
-        activity_report.setStart_time(resultSet.getTime("ACTIVITY_REPORT.start_time"));
-        activity_report.setEnd_time(resultSet.getTime("ACTIVITY_REPORT.end_time"));
+        activity_report.setStart_time(resultSet.getString("ACTIVITY_REPORT.start_time"));
+        activity_report.setEnd_time(resultSet.getString("ACTIVITY_REPORT.end_time"));
         activity_report.setJob_description(resultSet.getString("ACTIVITY_REPORT.job_description"));
         activity_report.setPhysical_location(resultSet.getString("ACTIVITY_REPORT.physical_location"));
         activity_report.setAction_taken(resultSet.getString("ACTIVITY_REPORT.action_taken"));

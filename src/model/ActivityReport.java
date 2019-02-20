@@ -6,7 +6,6 @@
 package model;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -17,8 +16,8 @@ public class ActivityReport implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date report_date;
-    private Time start_time;
-    private Time end_time;
+    private String start_time;
+    private String end_time;
     private String job_description;
     private String physical_location;
     private String action_taken;
@@ -27,7 +26,7 @@ public class ActivityReport implements Serializable{
     //INNER JOINS
     private Integer employee_id;
     private String employee_name;
-
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -45,19 +44,19 @@ public class ActivityReport implements Serializable{
         this.report_date = report_date;
     }
 
-    public Time getStart_time() {
+    public String getStart_time() {
         return start_time;
     }
 
-    public void setStart_time(Time start_time) {
+    public void setStart_time(String start_time) {
         this.start_time = start_time;
     }
 
-    public Time getEnd_time() {
+    public String getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(Time end_time) {
+    public void setEnd_time(String end_time) {
         this.end_time = end_time;
     }
 
@@ -108,6 +107,7 @@ public class ActivityReport implements Serializable{
     public void setEmployee_name(String employee_name) {
         this.employee_name = employee_name;
     }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**

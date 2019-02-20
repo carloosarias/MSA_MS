@@ -7,33 +7,37 @@ package controller;
 
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import model.ActivityReport;
 import model.Employee;
+import msa_ms.MainApp;
+import static msa_ms.MainApp.dateFormat;
+import static msa_ms.MainApp.dateTimeFormatter;
 
 /**
  * FXML Controller class
@@ -51,31 +55,34 @@ public class ActivityReportFX implements Initializable {
     @FXML
     private DatePicker enddate_picker;
     @FXML
+    private Button add_button;
+    @FXML
+    private Button delete_button;
+    @FXML
     private TableView<ActivityReport> activityreport_tableview;
     @FXML
     private TableColumn<ActivityReport, Integer> reportid_column;
     @FXML
     private TableColumn<ActivityReport, String> name_column;
     @FXML
-    private TableColumn<ActivityReport, Date> reportdate_column;
+    private TableColumn<ActivityReport, String> reportdate_column;
     @FXML
-    private TableColumn<ActivityReport, Time> starttime_column;
+    private TableColumn<ActivityReport, String> starttime_column;
     @FXML
-    private TableColumn<ActivityReport, Time> endtime_column;
-    @FXML
-    private TableColumn<ActivityReport, String> jobdescription_column;
+    private TableColumn<ActivityReport, String> endtime_column;
     @FXML
     private TableColumn<ActivityReport, String> physicallocation_column;
     @FXML
-    private TableColumn<ActivityReport, String> actiontaken_column;
+    private Accordion details_accordion;
     @FXML
-    private TableColumn<ActivityReport, String> comments_column;
+    private TextArea job_area;
     @FXML
-    private Button add_button;
-    
-    private Stage add_stage = new Stage();
+    private TextArea actiontaken_area;
+    @FXML
+    private TextArea comments_area;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+
     /**
      * Initializes the controller class.
      */
@@ -83,12 +90,62 @@ public class ActivityReportFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         startdate_picker.setValue(LocalDate.now().minusWeeks(1));
         enddate_picker.setValue(LocalDate.now());
+        
+        details_accordion.disableProperty().bind(activityreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        activityreport_tableview.editableProperty().bind(delete_button.disabledProperty().not());
+        job_area.editableProperty().bind(activityreport_tableview.editableProperty());
+        actiontaken_area.editableProperty().bind(activityreport_tableview.editableProperty());
+        comments_area.editableProperty().bind(activityreport_tableview.editableProperty());
+        
+        activityreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ActivityReport> observable, ActivityReport oldValue, ActivityReport newValue) -> {
+            try{
+                delete_button.setDisable(!newValue.getReport_date().toString().equals(LocalDate.now().toString()));
+                job_area.setText(newValue.getJob_description());
+                actiontaken_area.setText(newValue.getAction_taken());
+                comments_area.setText(newValue.getComments());
+            }catch(Exception e){
+                delete_button.setDisable(true);
+                job_area.setText("");
+                actiontaken_area.setText("");
+                comments_area.setText("");
+            }
+        });
+        
+        job_area.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                activityreport_tableview.getSelectionModel().getSelectedItem().setJob_description(job_area.getText());
+                msabase.getActivityReportDAO().update(activityreport_tableview.getSelectionModel().getSelectedItem());
+            }
+        });
+        
+        actiontaken_area.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                activityreport_tableview.getSelectionModel().getSelectedItem().setAction_taken(actiontaken_area.getText());
+                msabase.getActivityReportDAO().update(activityreport_tableview.getSelectionModel().getSelectedItem());
+            }
+        });
+        
+        comments_area.setOnKeyPressed((KeyEvent ke) -> {
+            if (ke.getCode().equals(KeyCode.ENTER))
+            {
+                activityreport_tableview.getSelectionModel().getSelectedItem().setComments(comments_area.getText());
+                msabase.getActivityReportDAO().update(activityreport_tableview.getSelectionModel().getSelectedItem());
+            }
+        });
+        
         setActivityReportTable();
         updateActivityReportTable();
         
         add_button.setOnAction((ActionEvent) -> {
-           showAdd_stage(); 
+           createActivityReport(); 
            updateActivityReportTable();
+        });
+        
+        delete_button.setOnAction((ActionEvent) -> {
+            deleteActivityReport();
+            updateActivityReportTable();
         });
         
         datefilter_checkbox.setOnAction((ActionEvent) ->{
@@ -106,14 +163,50 @@ public class ActivityReportFX implements Initializable {
     
     public void setActivityReportTable(){
         reportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        name_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
-        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        name_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));   
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(dateFormat.format(c.getValue().getReport_date()).toUpperCase()));
+        
         starttime_column.setCellValueFactory(new PropertyValueFactory<>("start_time"));
+        starttime_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        starttime_column.setOnEditCommit((TableColumn.CellEditEvent<ActivityReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setStart_time(getStart_time(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getActivityReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            activityreport_tableview.refresh();
+        });
+        
         endtime_column.setCellValueFactory(new PropertyValueFactory<>("end_time"));
-        jobdescription_column.setCellValueFactory(new PropertyValueFactory<>("job_description"));
+        endtime_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        endtime_column.setOnEditCommit((TableColumn.CellEditEvent<ActivityReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEnd_time(getEnd_time(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getActivityReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            activityreport_tableview.refresh();
+        });
+        
         physicallocation_column.setCellValueFactory(new PropertyValueFactory<>("physical_location"));
-        actiontaken_column.setCellValueFactory(new PropertyValueFactory<>("action_taken"));
-        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        physicallocation_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        physicallocation_column.setOnEditCommit((TableColumn.CellEditEvent<ActivityReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhysical_location(t.getNewValue());
+            msabase.getActivityReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            activityreport_tableview.refresh();
+        });
+    }
+    
+    public String getStart_time(ActivityReport report, String value){
+        try{
+            dateTimeFormatter.parse(value);
+        }catch(Exception e){
+            return report.getStart_time();
+        }
+        return value;
+    }
+    
+    public String getEnd_time(ActivityReport report, String value){
+        try{
+            dateTimeFormatter.parse(value);
+        }catch(Exception e){
+            return report.getEnd_time();
+        }
+        return value;
     }
     
     public void updateActivityReportTable(){
@@ -128,21 +221,19 @@ public class ActivityReportFX implements Initializable {
         }
     }
     
-    public void showAdd_stage(){
-        try {
-            add_stage = new Stage();
-            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
-            add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateActivityReportFX.fxml"));
-            Scene scene = new Scene(root);
-            
-            add_stage.setTitle("Nuevo Reporte de Trabajo");
-            add_stage.setResizable(false);
-            add_stage.initStyle(StageStyle.UTILITY);
-            add_stage.setScene(scene);
-            add_stage.showAndWait();
-        } catch (IOException ex) {
-            Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void deleteActivityReport(){
+        msabase.getActivityReportDAO().delete(activityreport_tableview.getSelectionModel().getSelectedItem());
+    }
+    
+    public void createActivityReport(){
+        ActivityReport activity_report = new ActivityReport();
+        activity_report.setReport_date(DAOUtil.toUtilDate(LocalDate.now()));
+        activity_report.setStart_time(LocalTime.now().format(dateTimeFormatter));
+        activity_report.setEnd_time(LocalTime.now().format(dateTimeFormatter));
+        activity_report.setJob_description("N/A");
+        activity_report.setPhysical_location("N/A");
+        activity_report.setAction_taken("N/A");
+        activity_report.setComments("N/A");
+        msabase.getActivityReportDAO().create(MainApp.current_employee, activity_report);
     }
 }

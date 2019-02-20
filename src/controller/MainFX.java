@@ -98,7 +98,7 @@ public class MainFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        modules = msabase.getModuleEmployeeDAO().list(msabase.getEmployeeDAO().find(MainApp.employee_id));
+        modules = msabase.getModuleEmployeeDAO().list(MainApp.current_employee);
         menu_listview.setItems(FXCollections.observableArrayList(modules));
         
         Module delete = new Module();
@@ -117,7 +117,7 @@ public class MainFX implements Initializable {
         });
         
         logout.setOnAction((ActionEvent) ->{
-            MainApp.employee_id = null;
+            MainApp.current_employee = null;
             showLogin();
         });
     }

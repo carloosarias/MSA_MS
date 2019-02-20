@@ -7,7 +7,6 @@ package controller;
 
 
 import dao.JDBC.DAOFactory;
-import eu.mihosoft.scaledfx.ScalableContentPane;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -29,7 +28,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -105,7 +103,7 @@ public class LoginFX implements Initializable {
     public void login(){
         Employee employee = msabase.getEmployeeDAO().find(user_field.getText(), pass_field.getText());
         if(employee != null && employee.isActive()){
-            MainApp.employee_id = employee.getId();
+            MainApp.current_employee = employee;
             showMain();
         }else{
             user_field.setStyle("-fx-background-color: lightpink;");

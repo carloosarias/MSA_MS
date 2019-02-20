@@ -245,7 +245,7 @@ public class MantainanceReportFX implements Initializable {
         PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
         Map<String, PdfFormField> fields = form.getFormFields();
         fields.get("report_date").setValue(LocalDate.now().toString());
-        fields.get("employee").setValue(msabase.getEmployeeDAO().find(MainApp.employee_id).toString());
+        fields.get("employee").setValue(MainApp.current_employee.toString());
 
         int i = 0;
         for(Equipment equipment : equipment_list){
