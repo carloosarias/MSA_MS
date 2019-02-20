@@ -130,7 +130,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(employee_tab);
                         break;
                     case "Compras":
-                        company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFXNEW.fxml")));
+                        company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
                         product_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
                         productsupplier_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
                         orderpurchasecart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));

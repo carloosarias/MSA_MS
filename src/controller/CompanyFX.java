@@ -6,29 +6,30 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import model.Company;
+import model.CompanyAddress;
+import model.CompanyContact;
+import model.ProcessReport;
 
 /**
  * FXML Controller class
@@ -36,278 +37,303 @@ import model.Company;
  * @author Pavilion Mini
  */
 public class CompanyFX implements Initializable {
+
     @FXML
-    private HBox root_hbox;
+    private TableView<Company> company_tableview;
     @FXML
-    private ComboBox<String> filter_combo;
+    private TableColumn<Company, String> companyname_column;
     @FXML
-    private ListView<Company> comp_listview;
+    private TableColumn<Company, String> rfc_column;
     @FXML
-    private Button add_button;
+    private TableColumn<Company, String> taxid_column;
     @FXML
-    private TextField id_field;
+    private TableColumn<Company, String> paymentterms_column;
     @FXML
-    private TextField rfc_field;
+    private TableColumn<Company, Boolean> supplier_column;
     @FXML
-    private TextArea payterm_field;
+    private TableColumn<Company, Boolean> client_column;
     @FXML
-    private TextField name_field;
+    private Button addcompany_button;
     @FXML
-    private TextField tax_field;
+    private ComboBox<String> companytype_combo;
     @FXML
-    private CheckBox supplier_check;
+    private Button deletecompany_button;
     @FXML
-    private CheckBox client_check;
+    private Tab contact_tab;
     @FXML
-    private CheckBox active_check;
+    private TableView<CompanyContact> contact_tableview;
     @FXML
-    private Button contact_button;
+    private TableColumn<CompanyContact, String> contactname_column;
     @FXML
-    private Button address_button;
+    private TableColumn<CompanyContact, String> position_column;
     @FXML
-    private Button edit_button;
+    private TableColumn<CompanyContact, String> email_column;
     @FXML
-    private Button save_button;
+    private TableColumn<CompanyContact, String> phonenumber_column;
     @FXML
-    private Button cancel_button;
-    
-    private Stage addressStage = new Stage();
-    private Stage contactStage = new Stage();
-    
-    private static Integer company_id;
-    
-    private ObservableList<String> filter_list = FXCollections.observableArrayList(
-        "Compañías Registradas",
-        "Solo Clientes",
-        "Solo Proveedores"
-    );
+    private Button addcontact_button;
+    @FXML
+    private Button deletecontact_button;
+    @FXML
+    private TextField company_field1;
+    @FXML
+    private Tab address_tab;
+    @FXML
+    private TableView<CompanyAddress> address_tableview;
+    @FXML
+    private TableColumn<CompanyAddress, String> address_column;
+    @FXML
+    private Button addaddress_button;
+    @FXML
+    private Button deleteaddress_button;
+    @FXML
+    private TextField company_field2;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
+    private ObservableList<String> filter_list = FXCollections.observableArrayList(
+        "Clientes & Proveedores",
+        "Clientes",
+        "Proveedores"
+    );
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        filter_combo.setItems(filter_list);
-        filter_combo.getSelectionModel().selectFirst();
-        updateList();
+        companytype_combo.setItems(filter_list);
+        companytype_combo.getSelectionModel().selectFirst();
         
+        deletecompany_button.disableProperty().bind(company_tableview.getSelectionModel().selectedItemProperty().isNull());
         
+        contact_tab.disableProperty().bind(company_tableview.getSelectionModel().selectedItemProperty().isNull());
+        address_tab.disableProperty().bind(company_tableview.getSelectionModel().selectedItemProperty().isNull());
         
-        filter_combo.setOnAction((ActionEvent) -> {
-            updateList();
-        });    
+        deleteaddress_button.disableProperty().bind(address_tableview.getSelectionModel().selectedItemProperty().isNull());
+        deletecontact_button.disableProperty().bind(contact_tableview.getSelectionModel().selectedItemProperty().isNull());
         
-        comp_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Company> observable, Company oldValue, Company newValue) -> {
-            setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
-        });
+        setCompanyTable();
+        updateCompanyTable();
         
-        add_button.setOnAction((ActionEvent) -> {
-            comp_listview.getSelectionModel().clearSelection();
-            //setFieldValues(null);
-            disableFields(false);
-            contact_button.setDisable(true);
-            address_button.setDisable(true);
-        });
+        setContactTable();
+        setAddressTable();
         
-        cancel_button.setOnAction((ActionEvent) -> {
-            filter_combo.getOnAction();
-            setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
-            disableFields(true);
-        });
-        
-        save_button.setOnAction((ActionEvent) -> {
-            if(!testFields()){
-                return;
+        company_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Company> observable, Company oldValue, Company newValue) -> {
+            try{
+                updateContactTable();
+                updateAddressTable();
+                company_field1.setText(newValue.getName());
+                company_field2.setText(newValue.getName());
+            }catch(Exception e){
+                e.printStackTrace();
             }
-            if(id_field.getText().replace(" ", "").equals("")){
-                msabase.getCompanyDAO().create(mapCompany(new Company()));
-            } else{
-                msabase.getCompanyDAO().update(mapCompany(comp_listview.getSelectionModel().getSelectedItem()));
-            }
-            setFieldValues(comp_listview.getSelectionModel().getSelectedItem());
-            updateList();
-            disableFields(true);
-        });
-        
-        edit_button.setOnAction((ActionEvent) -> {
-            if(comp_listview.getSelectionModel().getSelectedItem() != null){
-                disableFields(false);
-                contact_button.setDisable(false);
-                address_button.setDisable(false);
-            }
-        });
-        
-        address_button.setOnAction((ActionEvent) -> {
-            showAddressStage();
-        });
-        
-        contact_button.setOnAction((ActionEvent) -> {
-            showContactStage();
-        });
-    }
-    
-    public void closeOther(){
-        if(addressStage != null){
-            addressStage.close();
-        }
-        if(contactStage != null){
-            contactStage.close();
-        }
-    }
-    
-    public void showAddressStage(){
-        try {
-            addressStage = new Stage();
-            addressStage.initOwner((Stage) root_hbox.getScene().getWindow());
-            addressStage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddressFX.fxml"));
-            Scene scene = new Scene(root);
             
-            addressStage.setTitle("Administrar Direcciones de Compañía");
-            addressStage.setResizable(false);
-            addressStage.initStyle(StageStyle.UTILITY);
-            addressStage.setScene(scene);
-            addressStage.showAndWait();
-        } catch (IOException ex) {
-            Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void showContactStage(){
-        try {
-            contactStage = new Stage();
-            contactStage.initOwner((Stage) root_hbox.getScene().getWindow());
-            contactStage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/ContactFX.fxml"));
-            Scene scene = new Scene(root);
-            
-            contactStage.setTitle("Administrar Contactos de Compañía");
-            contactStage.setResizable(false);
-            contactStage.initStyle(StageStyle.UTILITY);
-            contactStage.setScene(scene);
-            contactStage.showAndWait();
-        } catch (IOException ex) {
-            Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public Company mapCompany(Company company){
+        });
+
         
-        company.setName(name_field.getText());
-        company.setRfc(rfc_field.getText());
-        company.setTax_id(tax_field.getText());
-        company.setPayment_terms(payterm_field.getText());
-        company.setSupplier(supplier_check.isSelected());
-        company.setClient(client_check.isSelected());
-        company.setActive(!active_check.isSelected());
+        companytype_combo.setOnAction(ActionEvent -> {
+            updateCompanyTable();
+        });
         
-        return company;
+        addcompany_button.setOnAction((ActionEvent -> {
+            createCompany();
+            updateCompanyTable();
+            company_tableview.getSelectionModel().selectLast();
+        }));
+        
+        deletecompany_button.setOnAction((ActionEvent -> {
+            disableCompany();
+            updateCompanyTable();
+        }));
+        
+        addcontact_button.setOnAction((ActionEvent -> {
+            createContact(company_tableview.getSelectionModel().getSelectedItem());
+            updateContactTable();
+            contact_tableview.getSelectionModel().selectLast();
+        }));
+        
+        addaddress_button.setOnAction((ActionEvent) -> {
+           createAddress(company_tableview.getSelectionModel().getSelectedItem());
+           updateAddressTable();
+           address_tableview.getSelectionModel().selectLast();
+        });
+        
+        deletecontact_button.setOnAction((ActionEvent) -> {
+           disableContact();
+           updateContactTable();
+        });
+        
+        deleteaddress_button.setOnAction((ActionEvent) -> {
+           disableAddress();
+           updateAddressTable();
+        });
     }
     
-    public boolean testFields(){
-        boolean b = true;
-        if(name_field.getText().replace(" ", "").equals("")){
-            name_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        } else{
-            name_field.setStyle(null);
-        }
-        if(rfc_field.getText().replace(" ", "").equals("")){
-            rfc_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        } else{
-            rfc_field.setStyle(null);
-        }
-        if(tax_field.getText().replace(" ", "").equals("")){
-            tax_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        } else{
-            tax_field.setStyle(null);
-        }
-        if(payterm_field.getText().replace(" ", "").equals("")){
-            payterm_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        } else{
-            payterm_field.setStyle(null);
-        }
-        return b;
+    public void disableAddress(){
+        address_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getCompanyAddressDAO().update(address_tableview.getSelectionModel().getSelectedItem());
     }
     
-    public void disableFields(boolean value){
-        name_field.setDisable(value);
-        rfc_field.setDisable(value);
-        tax_field.setDisable(value);
-        payterm_field.setDisable(value);
-        supplier_check.setDisable(value);
-        client_check.setDisable(value);
-        active_check.setDisable(value);
-        save_button.setDisable(value);
-        cancel_button.setDisable(value);
-        add_button.setDisable(!value);
-        edit_button.setDisable(!value);
-        filter_combo.setDisable(!value);
-        comp_listview.setDisable(!value);
-        address_button.setDisable(id_field.getText().equals(""));
-        contact_button.setDisable(id_field.getText().equals(""));
+    public void disableContact(){
+        contact_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getCompanyContactDAO().update(contact_tableview.getSelectionModel().getSelectedItem());
     }
     
-    
-    public void setFieldValues(Company company){
-        if(company != null){
-            company_id = company.getId();
-            id_field.setText(""+company.getId());
-            name_field.setText(company.getName());
-            rfc_field.setText(company.getRfc());
-            tax_field.setText(company.getTax_id());
-            payterm_field.setText(company.getPayment_terms());
-            supplier_check.setSelected(company.isSupplier());
-            client_check.setSelected(company.isClient());
-            active_check.setSelected(!company.isActive());
-        } else{
-            company_id = null;
-            id_field.clear();
-            name_field.clear();
-            rfc_field.clear();
-            tax_field.clear();
-            payterm_field.clear();
-            supplier_check.setSelected(false);
-            client_check.setSelected(false);   
-            active_check.setSelected(false);   
-        }
-        address_button.setDisable(id_field.getText().equals(""));
-        contact_button.setDisable(id_field.getText().equals(""));
-        clearStyle();
+    public void createAddress(Company company){
+        CompanyAddress address = new CompanyAddress();
+        address.setAddress("N/A");
+        address.setActive(true);
+        msabase.getCompanyAddressDAO().create(company, address);
     }
     
-    public void clearStyle(){
-        name_field.setStyle(null);
-        rfc_field.setStyle(null);
-        tax_field.setStyle(null);
-        payterm_field.setStyle(null);
+    public void createContact(Company company){
+        CompanyContact contact = new CompanyContact();
+        contact.setName("N/A");
+        contact.setPosition("N/A");
+        contact.setEmail("N/A");
+        contact.setPhone_number("N/A");
+        contact.setActive(true);
+        msabase.getCompanyContactDAO().create(company, contact);
     }
     
-    public void updateList(){
-        comp_listview.getItems().clear();
-        switch (filter_combo.getSelectionModel().getSelectedItem()){
-            case "Compañías Registradas":
-                comp_listview.getItems().setAll(FXCollections.observableArrayList(msabase.getCompanyDAO().list()));
+    public void updateAddressTable(){
+        address_tableview.getItems().setAll(msabase.getCompanyAddressDAO().listActive(company_tableview.getSelectionModel().getSelectedItem(), true));
+    }
+    
+    public void updateContactTable(){
+        contact_tableview.getItems().setAll(msabase.getCompanyContactDAO().list(company_tableview.getSelectionModel().getSelectedItem(), true));
+    }
+    
+    public void setContactTable(){
+        contactname_column.setCellValueFactory(new PropertyValueFactory("name"));
+        contactname_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        contactname_column.setOnEditCommit((TableColumn.CellEditEvent<CompanyContact, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setName(t.getNewValue());
+            msabase.getCompanyContactDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+        
+        position_column.setCellValueFactory(new PropertyValueFactory("position"));
+        position_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        position_column.setOnEditCommit((TableColumn.CellEditEvent<CompanyContact, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPosition(t.getNewValue());
+            msabase.getCompanyContactDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+        
+        email_column.setCellValueFactory(new PropertyValueFactory("email"));
+        email_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        email_column.setOnEditCommit((TableColumn.CellEditEvent<CompanyContact, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEmail(t.getNewValue());
+            msabase.getCompanyContactDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+        
+        phonenumber_column.setCellValueFactory(new PropertyValueFactory("phone_number"));
+        phonenumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        phonenumber_column.setOnEditCommit((TableColumn.CellEditEvent<CompanyContact, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhone_number(t.getNewValue());
+            msabase.getCompanyContactDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+    }
+    
+    public void setAddressTable(){
+        address_column.setCellValueFactory(new PropertyValueFactory("address"));
+        address_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        address_column.setOnEditCommit((TableColumn.CellEditEvent<CompanyAddress, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress(t.getNewValue());
+            msabase.getCompanyAddressDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+    }
+    
+    public void disableCompany(){
+        company_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getCompanyDAO().update(company_tableview.getSelectionModel().getSelectedItem());
+    }
+    
+    public void createCompany(){
+        Company company = new Company();
+        company.setName("N/A");
+        company.setRfc("N/A");
+        company.setTax_id("N/A");
+        company.setPayment_terms("N/A");
+        company.setActive(true);
+        company.setClient(true);
+        company.setSupplier(true);
+        msabase.getCompanyDAO().create(company);
+    }
+    
+    public void setCompanyTable(){
+        companyname_column.setCellValueFactory(new PropertyValueFactory("name"));
+        companyname_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        companyname_column.setOnEditCommit((TableColumn.CellEditEvent<Company, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setName(t.getNewValue());
+            msabase.getCompanyDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+        
+        rfc_column.setCellValueFactory(new PropertyValueFactory("rfc"));
+        rfc_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        rfc_column.setOnEditCommit((TableColumn.CellEditEvent<Company, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setRfc(t.getNewValue());
+            msabase.getCompanyDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+        
+        taxid_column.setCellValueFactory(new PropertyValueFactory("tax_id"));
+        taxid_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        taxid_column.setOnEditCommit((TableColumn.CellEditEvent<Company, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setTax_id(t.getNewValue());
+            msabase.getCompanyDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+        
+        paymentterms_column.setCellValueFactory(new PropertyValueFactory("payment_terms"));
+        paymentterms_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        paymentterms_column.setOnEditCommit((TableColumn.CellEditEvent<Company, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPayment_terms(t.getNewValue());
+            msabase.getCompanyDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+        });
+        
+        supplier_column.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        supplier_column.setCellFactory(column -> new CheckBoxTableCell<>());
+        supplier_column.setCellValueFactory(cellData -> {
+            Company cellValue = cellData.getValue();
+            BooleanProperty property = new SimpleBooleanProperty(cellValue.isSupplier());
+            // Add listener to handler change
+            property.addListener((observable, oldValue, newValue) -> {
+                cellValue.setSupplier(newValue);
+                msabase.getCompanyDAO().update(cellValue);
+            });
+            return property;
+        });
+        
+        client_column.setCellValueFactory(new PropertyValueFactory<>("client"));
+        client_column.setCellFactory(column -> new CheckBoxTableCell<>());
+        client_column.setCellValueFactory(cellData -> {
+            Company cellValue = cellData.getValue();
+            BooleanProperty property = new SimpleBooleanProperty(cellValue.isClient());
+            // Add listener to handler change
+            property.addListener((observable, oldValue, newValue) -> {
+                cellValue.setClient(newValue);
+                msabase.getCompanyDAO().update(cellValue);
+            });
+            return property;
+        });
+        
+    }
+    
+    public void updateCompanyTable(){
+        company_tableview.getItems().clear();
+        switch (companytype_combo.getSelectionModel().getSelectedIndex()){
+            case 0: //Clientes y Proveedores
+                company_tableview.getItems().setAll(msabase.getCompanyDAO().listActive(true));
                 break;
-            case "Solo Clientes":
-                comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
-                comp_listview.getItems().addAll(msabase.getCompanyDAO().listClient(false));
+            case 1: //Clientes
+                company_tableview.getItems().setAll(msabase.getCompanyDAO().listClient(true));
                 break;
-            case "Solo Proveedores":
-                comp_listview.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listSupplier(true)));
-                comp_listview.getItems().addAll(msabase.getCompanyDAO().listSupplier(false));
+            case 2: //Proveedores
+                company_tableview.getItems().setAll(msabase.getCompanyDAO().listSupplier(true));
+                break;
+            default:
+                company_tableview.getItems().setAll(msabase.getCompanyDAO().listActive(true));
                 break;
         }
        
-    }
-    
-    public static Integer getCompanyId(){
-        return company_id;
     }
     
 }
