@@ -97,12 +97,6 @@ public class OrderPurchaseFX implements Initializable {
     @FXML
     private TextField total_field;
     @FXML
-    private TextField mxnsubtotal_field;
-    @FXML
-    private TextField mxniva_field;
-    @FXML
-    private TextField mxntotal_field;
-    @FXML
     private TextArea comments_area;
     @FXML
     private ComboBox<String> exchangetype_combo;
@@ -161,9 +155,6 @@ public class OrderPurchaseFX implements Initializable {
                 subtotal_field.clear();
                 iva_field.clear();
                 total_field.clear();
-                mxnsubtotal_field.clear();
-                mxniva_field.clear();
-                mxntotal_field.clear();
                 comments_area.clear();
                 status_combo.getSelectionModel().clearSelection();
                 setExchangeType();

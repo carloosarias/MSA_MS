@@ -123,8 +123,6 @@ public class QuoteFX implements Initializable {
     private Button add_button;
     @FXML
     private Button pdf_button;
-    @FXML
-    private Tab invoicequote_tab;
     
     private static PartRevision partrevision_selection;
     
@@ -135,7 +133,6 @@ public class QuoteFX implements Initializable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        setInvoiceQuoteTab();
         add_button.disableProperty().bind(partrev_combo.getSelectionModel().selectedItemProperty().isNull());
         partrev_combo.disableProperty().bind(partrev_combo.itemsProperty().isNull());
         status_combo.disableProperty().bind(status_checkbox.selectedProperty().not());
@@ -181,14 +178,6 @@ public class QuoteFX implements Initializable {
             showAddStage();
             setQuoteItems();
         });
-    }
-    
-    public void setInvoiceQuoteTab(){
-        try {
-            invoicequote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceQuoteFX.fxml")));
-        } catch (IOException ex) {
-            Logger.getLogger(QuoteFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public void showAddStage(){

@@ -16,14 +16,14 @@
    <rowConstraints>
       <RowConstraints vgrow="SOMETIMES" />
       <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-            <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -34,14 +34,10 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="addtocart_button" disable="true" mnemonicParsing="false" text="Agregar a Carrito de Compra" GridPane.columnIndex="3">
+            <Button fx:id="addtocart_button" disable="true" mnemonicParsing="false" text="Agregar a Carrito de Compra" GridPane.columnIndex="2">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin></Button>
-            <Separator orientation="VERTICAL" GridPane.columnIndex="2">
-               <GridPane.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </GridPane.margin></Separator>
             <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -51,19 +47,19 @@
       </GridPane>
       <TableView fx:id="productsupplier_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="200.0" text="Descripción" />
+            <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="200.0" text="Descripción del Producto" />
             <TableColumn fx:id="serialnumber_column" minWidth="-Infinity" prefWidth="150.0" text="Número de Serie" />
-            <TableColumn fx:id="supplier_column" minWidth="-Infinity" prefWidth="220.0" text="Proveedor" />
+            <TableColumn fx:id="supplier_column" minWidth="-Infinity" prefWidth="250.0" text="Proveedor" />
+            <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="-1.0" text="Presentación">
+               <columns>
+                  <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="40.0" />
+                  <TableColumn fx:id="unitmeasure_column" minWidth="-Infinity" prefWidth="75.0" />
+               </columns>
+            </TableColumn>
             <TableColumn minWidth="-Infinity" prefWidth="-1.0" text="Cotización">
                <columns>
-                  <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="-1.0" text="Presentación">
-                     <columns>
-                        <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="40.0" />
-                        <TableColumn fx:id="unitmeasure_column" minWidth="-Infinity" prefWidth="75.0" />
-                     </columns>
-                  </TableColumn>
                   <TableColumn fx:id="unitmeasureprice_column" minWidth="-Infinity" prefWidth="100.0" text="Valor Unitario" />
-                  <TableColumn fx:id="unitprice_column" minWidth="-Infinity" prefWidth="150.0" text="Precio Cotizado" />
+                  <TableColumn fx:id="unitprice_column" minWidth="-Infinity" prefWidth="100.0" text="Precio Cotizado" />
                </columns>
             </TableColumn>
          </columns>
@@ -71,5 +67,10 @@
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
          </GridPane.margin>
       </TableView>
+      <Separator prefWidth="200.0" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
    </children>
 </GridPane>

@@ -53,6 +53,7 @@
                   <Tab fx:id="depart_tab" closable="false" text="Remisiones" />
                   <Tab fx:id="invoice_tab" closable="false" text="Facturación" />
                   <Tab fx:id="quote_tab" closable="false" text="Cotización" />
+                  <Tab fx:id="invoicequote_tab" closable="false" text="Historial de Ventas" />
                   <Tab fx:id="invoicepayment_tab" closable="false" text="Pago de Facturas" />
                   <Tab fx:id="process_tab" closable="false" text="Producción" />
                   <Tab fx:id="transactionhistory_tab" closable="false" text="Historial de Transacciones" />

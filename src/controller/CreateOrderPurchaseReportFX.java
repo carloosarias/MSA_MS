@@ -30,6 +30,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -48,7 +49,7 @@ import msa_ms.MainApp;
 public class CreateOrderPurchaseReportFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private DatePicker reportdate_picker;
     @FXML
@@ -132,7 +133,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         });
                 
         cancel_button.setOnAction((ActionEvent) -> {
-            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
         });
         
@@ -141,7 +142,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
                 return;
             }
             saveOrderPurchase();
-            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
         });
     }

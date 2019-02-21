@@ -317,7 +317,6 @@
                   </GridPane>
                </content>
             </Tab>
-            <Tab fx:id="invoicequote_tab" text="Resumen de Ventas" />
          </tabs>
       </TabPane>
    </children>

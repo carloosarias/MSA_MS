@@ -6,57 +6,80 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OrderPurchaseCartFX">
+<GridPane fx:id="root_gridpane" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OrderPurchaseCartFX">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <VBox alignment="CENTER">
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" percentWidth="0.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <TableView fx:id="purchaseitem_tableview" editable="true">
-              <columns>
-                  <TableColumn fx:id="description_column" editable="false" prefWidth="200.0" resizable="false" text="Descripción de Producto" />
-                <TableColumn fx:id="serialnumber_column" editable="false" prefWidth="120.0" resizable="false" text="Número de Serie" />
-                  <TableColumn fx:id="supplier_column" editable="false" prefWidth="220.0" resizable="false" text="Proveedor" />
-                  <TableColumn editable="false" prefWidth="-1.0" resizable="false" text="Cotización">
-                     <columns>
-                        <TableColumn fx:id="quantity_column" editable="false" prefWidth="100.0" resizable="false" text="Presentación" />
-                        <TableColumn fx:id="unitmeasure_column" editable="false" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
-                        <TableColumn fx:id="unitmeasureprice_column" editable="false" prefWidth="100.0" resizable="false" text="Valor Unitario" />
-                        <TableColumn fx:id="unitprice_column" editable="false" prefWidth="120.0" resizable="false" text="Precio Por Bulto" />
-                     </columns>
-                  </TableColumn>
-                  <TableColumn fx:id="unitsordered_column" prefWidth="120.0" resizable="false" text="Cantidad a ordenar" />
-              </columns>
-               <VBox.margin>
+            <Button fx:id="delete_button" minWidth="-Infinity" mnemonicParsing="false" prefWidth="120.0" text="Eliminar del Carrito">
+               <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TableView>
-            <HBox alignment="CENTER">
-               <children>
-                  <Button fx:id="delete_button" mnemonicParsing="false" text="Eliminar selección">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Separator orientation="VERTICAL">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Separator>
-                  <ComboBox fx:id="company_combo" prefWidth="150.0" promptText="Proveedor">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </ComboBox>
-                  <Button fx:id="create_button" mnemonicParsing="false" text="Generar Orden de Compra">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="create_button" minWidth="-Infinity" mnemonicParsing="false" prefWidth="100.0" text="Generar" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <ComboBox fx:id="company_combo" minWidth="-Infinity" prefWidth="200.0" promptText="Proveedor" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </ComboBox>
          </children>
-      </VBox>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </GridPane>
+      <TableView fx:id="purchaseitem_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="description_column" editable="false" minWidth="-Infinity" prefWidth="200.0" text="Descripción del Producto" />
+            <TableColumn fx:id="serialnumber_column" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Serie" />
+            <TableColumn fx:id="supplier_column" editable="false" minWidth="-Infinity" prefWidth="250.0" text="Proveedor" />
+            <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Presentación">
+               <columns>
+                  <TableColumn fx:id="quantity_column" editable="false" minWidth="-Infinity" prefWidth="40.0" resizable="false" />
+                  <TableColumn fx:id="unitmeasure_column" editable="false" minWidth="-Infinity" prefWidth="75.0" resizable="false" />
+               </columns>
+            </TableColumn>
+            <TableColumn editable="false" minWidth="-1.0" prefWidth="-1.0" resizable="false" text="Cotización">
+               <columns>
+                  <TableColumn fx:id="unitmeasureprice_column" editable="false" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Valor Unitario" />
+                  <TableColumn fx:id="unitprice_column" editable="false" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Precio por Bulto" />
+               </columns>
+            </TableColumn>
+            <TableColumn fx:id="unitsordered_column" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Bultos a Ordenar" />
+         </columns>
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Separator prefWidth="200.0" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
    </children>
-</HBox>
+</GridPane>

@@ -40,6 +40,10 @@ public class MainFX implements Initializable {
     @FXML
     private GridPane root_gridpane;
     @FXML
+    private TabPane root_tabpane;
+    @FXML
+    private ListView<Module> menu_listview;
+    @FXML
     private Tab employee_tab;
     @FXML
     private Tab company_tab;
@@ -55,6 +59,8 @@ public class MainFX implements Initializable {
     private Tab invoice_tab;
     @FXML
     private Tab quote_tab;
+    @FXML
+    private Tab invoicequote_tab;
     @FXML
     private Tab invoicepayment_tab;
     @FXML
@@ -87,12 +93,8 @@ public class MainFX implements Initializable {
     private List<Module> modules;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    @FXML
-    private ListView<Module> menu_listview;
-    @FXML
-    private TabPane root_tabpane;
 
-    private Stage wait_stage = new Stage();
+
     /**
      * Initializes the controller class.
      */
@@ -125,7 +127,7 @@ public class MainFX implements Initializable {
                         company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
                         product_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
                         productsupplier_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
-                        orderpurchasecart_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
+                        orderpurchasecart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
                         orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
                         root_tabpane.getTabs().setAll(company_tab, product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
                         break;
@@ -146,7 +148,8 @@ public class MainFX implements Initializable {
                         break;
                     case "Cotización":
                         quote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));
-                        root_tabpane.getTabs().setAll(quote_tab);
+                        invoicequote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceQuoteFX.fxml")));
+                        root_tabpane.getTabs().setAll(quote_tab, invoicequote_tab);
                         break;
                     case "Producción":
                         process_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProcessReportFX.fxml")));
