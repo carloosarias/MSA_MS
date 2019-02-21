@@ -50,6 +50,10 @@ public class MainFX implements Initializable {
     @FXML
     private Tab productpart_tab;
     @FXML
+    private Tab partrevision_tab;
+    @FXML
+    private Tab metal_tab;
+    @FXML
     private Tab orderpurchase_tab;
     @FXML
     private Tab incoming_tab;
@@ -101,6 +105,8 @@ public class MainFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         modules = msabase.getModuleEmployeeDAO().list(MainApp.current_employee);
+        modules.remove(msabase.getModuleDAO().find("Historial de Producción"));
+        
         menu_listview.setItems(FXCollections.observableArrayList(modules));
         
         menu_listview.getSelectionModel().clearAndSelect(0);
@@ -128,12 +134,14 @@ public class MainFX implements Initializable {
                         product_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
                         productsupplier_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
                         orderpurchasecart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
-                        orderpurchase_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
+                        orderpurchase_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
                         root_tabpane.getTabs().setAll(company_tab, product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
                         break;
                     case "Partes y Revisiones":
-                        productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
-                        root_tabpane.getTabs().setAll(productpart_tab);
+                        //productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
+                        partrevision_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
+                        metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));
+                        root_tabpane.getTabs().setAll(partrevision_tab, metal_tab);
                         break;
                     case "Reciba":
                         incoming_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));

@@ -16,6 +16,7 @@ public class Metal implements Serializable{
     private Integer id;
     private String metal_name;
     private double density;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
     
@@ -41,6 +42,14 @@ public class Metal implements Serializable{
     
     public void setDensity(double density) {
         this.density = density;
+    }
+    
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active){
+        this.active = active;
     }
     
     // Object overrides ---------------------------------------------------------------------------

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductPartFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MetalFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -19,11 +19,10 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <TableView fx:id="productpart_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+      <TableView fx:id="metal_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="productpartid_column" minWidth="-Infinity" prefWidth="75.0" text="# de Folio" />
-            <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="200.0" text="# de Parte" />
-            <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="500.0" text="Descripción" />
+            <TableColumn fx:id="metalname_column" minWidth="-Infinity" prefWidth="150.0" text="Metal" />
+            <TableColumn fx:id="density_column" minWidth="-Infinity" prefWidth="150.0" text="Densidad" />
          </columns>
          <GridPane.margin>
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -32,6 +31,11 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
+      <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
       <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -41,22 +45,17 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="addproductpart_button" mnemonicParsing="false" text="Registrar Número de Parte">
+            <Button fx:id="add_button" mnemonicParsing="false" text="Registrar Metal">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Button>
-            <Button disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+            <Button fx:id="disable_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Button>
          </children>
       </GridPane>
-      <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
-         <GridPane.margin>
-            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-         </GridPane.margin>
-      </Separator>
    </children>
 </GridPane>

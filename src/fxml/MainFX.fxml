@@ -42,7 +42,9 @@
                <tabs>
                   <Tab fx:id="employee_tab" closable="false" text="Empleados" />
                   <Tab fx:id="company_tab" closable="false" text="Compañías" />
-                  <Tab fx:id="productpart_tab" closable="false" text="Partes y Revisiones" />
+                  <Tab fx:id="productpart_tab" closable="false" text="Números de Parte" />
+                  <Tab fx:id="partrevision_tab" closable="false" text="Revisiones" />
+                  <Tab fx:id="metal_tab" closable="false" text="Lista de Metales y Densidades" />
                   <Tab fx:id="product_tab" closable="false" text="Productos" />
                   <Tab fx:id="productsupplier_tab" closable="false" text="Cotizaciones de Productos" />
                   <Tab fx:id="tank_tab" closable="false" text="Tanques" />

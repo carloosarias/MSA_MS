@@ -36,21 +36,15 @@ public class AddPartRevisionFX implements Initializable {
     @FXML
     private DatePicker revdate_picker;
     @FXML
-    private TextField rev_field;
-    @FXML
     private ComboBox<ProductPart> productpart_combo;
     @FXML
     private ComboBox<Metal> metal_combo;
     @FXML
     private ComboBox<Specification> specification_combo;
     @FXML
-    private TextField area_field;
-    @FXML
-    private TextField baseweight_field;
-    @FXML
-    private TextField finalweight_field;
-    @FXML
     private Button save_button;
+    
+    public static PartRevision part_revision;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
@@ -59,20 +53,15 @@ public class AddPartRevisionFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        productpart_combo.setItems(FXCollections.observableArrayList(ProductPartFX.getProductpart_selection()));
-        metal_combo.setItems(FXCollections.observableArrayList(msabase.getMetalDAO().list()));
+        productpart_combo.getItems().setAll(msabase.getProductPartDAO().listActive(true));
+        metal_combo.getItems().setAll(msabase.getMetalDAO().list());
         specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list()));
         revdate_picker.setValue(LocalDate.now());
-        productpart_combo.getSelectionModel().selectFirst();
-        area_field.setText("0.0");
-        baseweight_field.setText("0.0");
-        finalweight_field.setText("0.0");
         
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){
                 return;
             }
-            
             savePartRevision();
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
@@ -81,14 +70,13 @@ public class AddPartRevisionFX implements Initializable {
     }
     
     public void savePartRevision(){
-        PartRevision part_revision = new PartRevision();
-        
-        part_revision.setActive(true);
+        part_revision = new PartRevision();
         part_revision.setRev_date(DAOUtil.toUtilDate(revdate_picker.getValue()));
-        part_revision.setRev(rev_field.getText());
-        part_revision.setArea(Double.parseDouble(area_field.getText()));
-        part_revision.setBase_weight(Double.parseDouble(baseweight_field.getText()));
-        part_revision.setFinal_weight(Double.parseDouble(finalweight_field.getText()));
+        part_revision.setRev("N/A");
+        part_revision.setArea(0.0);
+        part_revision.setBase_weight(0.0);
+        part_revision.setFinal_weight(0.0);
+        part_revision.setActive(true);
         
         msabase.getPartRevisionDAO().create(productpart_combo.getSelectionModel().getSelectedItem(), specification_combo.getSelectionModel().getSelectedItem(), metal_combo.getSelectionModel().getSelectedItem(), part_revision);
     }
@@ -98,10 +86,6 @@ public class AddPartRevisionFX implements Initializable {
         clearStyle();
         if(revdate_picker.getValue() == null){
             revdate_picker.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        if(rev_field.getText().replace(" ", "").equals("")){
-            rev_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         if(productpart_combo.getSelectionModel().isEmpty()){
@@ -116,38 +100,13 @@ public class AddPartRevisionFX implements Initializable {
             specification_combo.setStyle("-fx-background-color: lightpink ;");
             b = false;
         }
-        try{
-            Double.parseDouble(area_field.getText());
-        } catch(Exception e){
-            area_field.setText("0.0");
-            area_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        try{
-            Double.parseDouble(baseweight_field.getText());
-        } catch(Exception e){
-            baseweight_field.setText("0.0");
-            baseweight_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        try{
-            Double.parseDouble(finalweight_field.getText());
-        } catch(Exception e){
-            finalweight_field.setText("0.0");
-            finalweight_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
         return b;
     }
     
     public void clearStyle(){
         revdate_picker.setStyle(null);
-        rev_field.setStyle(null);
         productpart_combo.setStyle(null);
         metal_combo.setStyle(null);
         specification_combo.setStyle(null);
-        area_field.setStyle(null);
-        baseweight_field.setStyle(null);
-        finalweight_field.setStyle(null);
     }
 }

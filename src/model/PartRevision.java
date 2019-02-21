@@ -24,6 +24,7 @@ public class PartRevision implements Serializable{
     private boolean active;
     
     //INNER JOIN
+    private String part_number;
     private String metal_metalname;
     private String specification_process;
     private String specification_specificationnumber;
@@ -87,6 +88,15 @@ public class PartRevision implements Serializable{
     }
     
     //INNER JOINS
+    
+    public String getPart_number() {
+        return part_number;
+    }
+
+    public void setPart_number(String part_number) {
+        this.part_number = part_number;
+    }
+    
     public String getMetal_metalname() {
         return metal_metalname;
     }

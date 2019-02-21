@@ -28,17 +28,19 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
             + "FROM PART_REVISION "
-            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE PART_REVISION.id = ?";
     private static final String SQL_FIND_BY_PART_REV = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
             + "FROM PART_REVISION "
-            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PART_REVISION.rev = ?";
     private static final String SQL_FIND_PRODUCT_PART_BY_ID = 
             "SELECT PRODUCT_PART_ID FROM PART_REVISION WHERE id = ?";
@@ -48,39 +50,48 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             "SELECT BASE_METAL_ID FROM PART_REVISION WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
             + "FROM PART_REVISION "
-            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
-            + "ORDER BY PART_REVISION.id";
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
             + "FROM PART_REVISION "
-            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.active = ? ORDER BY PART_REVISION.id";
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.active = ? "
+            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
     private static final String SQL_LIST_OF_PART_ORDER_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
             + "FROM PART_REVISION "
-            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? ORDER BY PART_REVISION.id";
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? "
+            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
     private static final String SQL_LIST_ACTIVE_OF_PART_ORDER_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
             + "FROM PART_REVISION "
-            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PART_REVISION.active = ? ORDER BY PART_REVISION.id";
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PART_REVISION.active = ? "
+            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
     private static final String SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
+            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
             + "FROM PART_REVISION "
-            + "INNER JOIN METAL ON BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.SPECIFICATION_ID = ? ORDER BY PART_REVISION.id";
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE PART_REVISION.SPECIFICATION_ID = ? "
+            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
     private static final String SQL_INSERT = 
             "INSERT INTO PART_REVISION (PRODUCT_PART_ID, SPECIFICATION_ID, BASE_METAL_ID, rev, rev_date, area, base_weight, final_weight, active) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -470,6 +481,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         revision.setActive(resultSet.getBoolean("PART_REVISION.active"));
         
         //INNER JOINS
+        revision.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
         revision.setMetal_metalname(resultSet.getString("METAL.metal_name"));
         revision.setSpecification_specificationnumber(resultSet.getString("SPECIFICATION.specification_number"));
         revision.setSpecification_process(resultSet.getString("SPECIFICATION.process"));

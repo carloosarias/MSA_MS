@@ -24,14 +24,16 @@ import model.Specification;
 public class MetalDAOJDBC implements MetalDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, metal_name, density FROM METAL WHERE id = ?";
+            "SELECT id, metal_name, density, active FROM METAL WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, metal_name, density FROM METAL ORDER BY id";
+            "SELECT id, metal_name, density, active FROM METAL ORDER BY metal_name, density";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT id, metal_name, density, active FROM METAL WHERE active = ? ORDER BY metal_name, density";
     private static final String SQL_INSERT = 
-            "INSERT INTO METAL (metal_name, density) "
-            + "VALUES(?, ?)";
+            "INSERT INTO METAL (metal_name, density, active) "
+            + "VALUES(?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE METAL SET  metal_name = ?, density = ? WHERE id = ?";
+            "UPDATE METAL SET  metal_name = ?, density = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM METAL WHERE id = ?";
     
@@ -99,7 +101,30 @@ public class MetalDAOJDBC implements MetalDAO {
         
         return metals;
     }
-
+    
+    @Override
+    public List<Metal> list(boolean active) throws DAOException {
+        List<Metal> metals = new ArrayList<>();
+        
+        Object[] values = {
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                metals.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return metals;
+    }
+    
     @Override
     public void create(Metal metal) throws IllegalArgumentException, DAOException {
         if(metal.getId() != null){
@@ -108,7 +133,8 @@ public class MetalDAOJDBC implements MetalDAO {
         
         Object[] values = {
             metal.getMetal_name(),
-            metal.getDensity()
+            metal.getDensity(),
+            metal.isActive()
         };
         
         try(
@@ -192,6 +218,7 @@ public class MetalDAOJDBC implements MetalDAO {
         metal.setId(resultSet.getInt("id"));
         metal.setMetal_name(resultSet.getString("metal_name"));
         metal.setDensity(resultSet.getDouble("density"));
+        metal.setActive(resultSet.getBoolean("active"));
         return metal;
     }
 }
