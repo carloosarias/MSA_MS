@@ -24,18 +24,18 @@ import model.Employee;
 public class EmployeeDAOJDBC implements EmployeeDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active FROM EMPLOYEE WHERE id = ?";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_FIND_BY_USER_AND_PASSWORD =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
     private static final String SQL_LIST_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active FROM EMPLOYEE ORDER BY id";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin FROM EMPLOYEE ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active FROM EMPLOYEE WHERE active = ? ORDER BY id";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin FROM EMPLOYEE WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active) "
-            +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin) "
+            +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, entry_time = ?, end_time = ?, birth_date = ?, curp = ?, address = ?, active = ? WHERE id = ?";
+            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, entry_time = ?, end_time = ?, birth_date = ?, curp = ?, address = ?, active = ?, admin = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_EXIST_USER =
@@ -159,7 +159,8 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             toSqlDate(employee.getBirth_date()),
             employee.getCurp(),
             employee.getAddress(),
-            employee.isActive()
+            employee.isActive(),
+            employee.isAdmin()
         };
         
         try(
@@ -201,6 +202,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             employee.getCurp(),
             employee.getAddress(),
             employee.isActive(),
+            employee.isAdmin(),
             employee.getId()
         };
         
@@ -330,6 +332,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         employee.setCurp(resultSet.getString("curp"));
         employee.setAddress(resultSet.getString("address"));
         employee.setActive(resultSet.getBoolean("active"));
+        employee.setAdmin(resultSet.getBoolean("admin"));
         return employee;
     }
     

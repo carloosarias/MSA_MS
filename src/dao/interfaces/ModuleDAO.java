@@ -7,6 +7,7 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
+import model.Employee;
 import model.Module;
 
 /**
@@ -38,7 +39,7 @@ public interface ModuleDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<Module> list() throws DAOException;
-    
+    public List<Module> list(Employee employee) throws IllegalArgumentException, DAOException;
     /**
      * Create the given Module in the database. The Module ID must be null, otherwise it will throw
      * IllegalArgumentException. After creating, the DAO will set the obtained ID in the given Module.

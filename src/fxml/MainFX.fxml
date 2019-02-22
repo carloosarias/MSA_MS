@@ -45,6 +45,7 @@
                   <Tab fx:id="productpart_tab" closable="false" text="Números de Parte" />
                   <Tab fx:id="partrevision_tab" closable="false" text="Revisiones" />
                   <Tab fx:id="metal_tab" closable="false" text="Lista de Metales y Densidades" />
+                  <Tab fx:id="specification_tab" closable="false" text="Especificaciones" />
                   <Tab fx:id="product_tab" closable="false" text="Productos" />
                   <Tab fx:id="productsupplier_tab" closable="false" text="Cotizaciones de Productos" />
                   <Tab fx:id="tank_tab" closable="false" text="Tanques" />

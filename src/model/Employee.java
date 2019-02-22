@@ -28,6 +28,7 @@ public class Employee implements Serializable {
     private String curp;
     private String address;
     private boolean active;
+    private boolean admin;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -125,6 +126,13 @@ public class Employee implements Serializable {
         this.active = active;
     }
     
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
     // Object overrides ---------------------------------------------------------------------------
 
     /**

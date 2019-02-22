@@ -23,16 +23,18 @@ import model.Specification;
 public class SpecificationDAOJDBC implements SpecificationDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, specification_number, specification_name, process FROM SPECIFICATION WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, specification_number, specification_name, process FROM SPECIFICATION ORDER BY id";
-    private static final String SQL_LIST_PROCESS_ORDER_BY_ID = 
-            "SELECT id, specification_number, specification_name, process FROM SPECIFICATION WHERE process = ? ORDER BY id";
+            "SELECT id, specification_number, specification_name, process, active FROM SPECIFICATION WHERE id = ?";
+    private static final String SQL_LIST_ORDER_BY_PROCESS = 
+            "SELECT id, specification_number, specification_name, process, active FROM SPECIFICATION ORDER BY process, specification_number";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_PROCESS = 
+            "SELECT id, specification_number, specification_name, process, active FROM SPECIFICATION WHERE active = ? ORDER BY process, specification_number";
+    private static final String SQL_LIST_PROCESS_ORDER_BY_PROCESS = 
+            "SELECT id, specification_number, specification_name, process FROM SPECIFICATION WHERE process = ? ORDER BY process, specification_number";
     private static final String SQL_INSERT = 
-            "INSERT INTO SPECIFICATION (specification_number, specification_name, process) "
-            + "VALUES(?, ?, ?)";
+            "INSERT INTO SPECIFICATION (specification_number, specification_name, process, active) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SPECIFICATION SET specification_number = ?, specification_name = ?, process = ? WHERE id = ?";
+            "UPDATE SPECIFICATION SET specification_number = ?, specification_name = ?, process = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM SPECIFICATION WHERE id = ?";
     
@@ -88,7 +90,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
 
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_PROCESS);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -100,7 +102,30 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         
         return specifications;
     }
+    
+    @Override
+    public List<Specification> list(boolean active) throws DAOException {
+        List<Specification> specifications = new ArrayList<>();
 
+        Object[] values = {
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_PROCESS, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                specifications.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return specifications;
+    }
+    
     @Override
     public List<Specification> listByProcess(String process) throws DAOException {
         List<Specification> specifications = new ArrayList<>();
@@ -111,7 +136,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PROCESS_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PROCESS_ORDER_BY_PROCESS, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -133,7 +158,8 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         Object[] values = {
             specification.getSpecification_number(),
             specification.getSpecification_name(),
-            specification.getProcess()
+            specification.getProcess(),
+            specification.isActive()
         };
         
         try(
@@ -168,6 +194,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
             specification.getSpecification_number(),
             specification.getSpecification_name(),
             specification.getProcess(),
+            specification.isActive(),
             specification.getId()
         };
         
@@ -219,6 +246,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         specification.setSpecification_number(resultSet.getString("specification_number"));
         specification.setSpecification_name(resultSet.getString("specification_name"));
         specification.setProcess(resultSet.getString("process"));
+        specification.setActive(resultSet.getBoolean("active"));
         return specification;
     }
 }

@@ -54,6 +54,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab metal_tab;
     @FXML
+    private Tab specification_tab;
+    @FXML
     private Tab orderpurchase_tab;
     @FXML
     private Tab incoming_tab;
@@ -94,8 +96,6 @@ public class MainFX implements Initializable {
     @FXML
     private MenuItem logout;
     
-    private List<Module> modules;
-    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
 
@@ -104,12 +104,9 @@ public class MainFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        modules = msabase.getModuleEmployeeDAO().list(MainApp.current_employee);
-        modules.remove(msabase.getModuleDAO().find("Historial de Producción"));
+        menu_listview.getItems().setAll(msabase.getModuleDAO().list(MainApp.current_employee));
+        menu_listview.getSelectionModel().selectFirst();
         
-        menu_listview.setItems(FXCollections.observableArrayList(modules));
-        
-        menu_listview.getSelectionModel().clearAndSelect(0);
         setTabs(menu_listview.getSelectionModel().getSelectedItem());
         
         menu_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
@@ -127,22 +124,25 @@ public class MainFX implements Initializable {
                 switch(module.getName()){
                     case "Recursos Humanos":
                         employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
-                        root_tabpane.getTabs().setAll(employee_tab);
+                        company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
+                        root_tabpane.getTabs().setAll(employee_tab, company_tab);
                         break;
                     case "Compras":
-                        company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
                         product_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
                         productsupplier_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
                         orderpurchasecart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
                         orderpurchase_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
-                        root_tabpane.getTabs().setAll(company_tab, product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
+                        root_tabpane.getTabs().setAll(product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
                         break;
-                    case "Partes y Revisiones":
+                    case "Números de Parte":
                         //productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
                         partrevision_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
-                        metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));
-                        root_tabpane.getTabs().setAll(partrevision_tab, metal_tab);
+                        root_tabpane.getTabs().setAll(partrevision_tab);
                         break;
+                    case "Especificaciones":
+                        specification_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/SpecificationFX.fxml")));
+                        metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));
+                        root_tabpane.getTabs().setAll(specification_tab, metal_tab);
                     case "Reciba":
                         incoming_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
                         orderpurchaseincomingreport_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));

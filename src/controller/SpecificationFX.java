@@ -5,6 +5,7 @@
  */
 package controller;
 
+import static controller.AddSpecificationItemFX.specification_item;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -66,10 +67,16 @@ public class SpecificationFX implements Initializable {
     private Button add_button;
     @FXML
     private Button disable_button;
+    @FXML
+    private Button additem_button;
+    @FXML
+    private Button disableitem_button;
     
     private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
+    public static Specification specification;
     
     /**
      * Initializes the controller class.
@@ -82,6 +89,8 @@ public class SpecificationFX implements Initializable {
         updateSpecificationTable();
         
         details_tab.disableProperty().bind(specification_tableview.getSelectionModel().selectedItemProperty().isNull());
+        disable_button.disableProperty().bind(specification_tableview.getSelectionModel().selectedItemProperty().isNull());
+        disableitem_button.disableProperty().bind(specificationitem_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         specification_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Specification> observable, Specification oldValue, Specification newValue) -> {
             try{
@@ -93,38 +102,71 @@ public class SpecificationFX implements Initializable {
         
         add_button.setOnAction((ActionEvent) -> {
             int current_size = specification_tableview.getItems().size();
-            showAdd_stage();
-            updateSpecificationItemTable();
+            createSpecification();
+            updateSpecificationTable();
             if(current_size < specification_tableview.getItems().size()){
                 specification_tableview.requestFocus();
-                //specification_tableview.getSelectionModel().select(AddSpecificationFX.specification);
+                specification_tableview.getSelectionModel().select(specification);
+            }
+        });
+        
+        disable_button.setOnAction((ActionEvent) -> {
+            disableSpecification();
+            updateSpecificationTable();
+        });
+        
+        additem_button.setOnAction((ActionEvent) -> {
+            int current_size = specificationitem_tableview.getItems().size();
+            specification = specification_tableview.getSelectionModel().getSelectedItem();
+            showAddStage();
+            updateSpecificationItemTable();
+            if(current_size < specificationitem_tableview.getItems().size()){
+                specificationitem_tableview.requestFocus();
+                specificationitem_tableview.getSelectionModel().select(specification_item);
             }
         });
         
     }
-    public void showAdd_stage(){
+    
+    public void showAddStage(){
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateSpecificationFX.fxml"));
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddSpecificationItemFX.fxml"));
             Scene scene = new Scene(root);
             
-            add_stage.setTitle("Nueva Especificación");
+            add_stage.setTitle("Agregar Proceso");
             add_stage.setResizable(false);
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SpecificationFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void disableSpecification(){
+        specification_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getSpecificationDAO().update(specification_tableview.getSelectionModel().getSelectedItem());
+    }
+    
+    public void createSpecification(){
+        specification = new Specification();
+        specification.setSpecification_number("N/A");
+        specification.setSpecification_name("N/A");
+        specification.setProcess("N/A");
+        specification.setActive(true);
+        
+        msabase.getSpecificationDAO().create(specification);
+    }
+    
     public void updateSpecificationItemTable(){
-        specificationitem_tableview.getItems().setAll(msabase.getSpecificationItemDAO().list(specification_tableview.getSelectionModel().getSelectedItem()));
+        specificationitem_tableview.getItems().setAll(msabase.getSpecificationItemDAO().list(specification_tableview.getSelectionModel().getSelectedItem(), true));
     }
     
     public void updateSpecificationTable(){
-        specification_tableview.getItems().setAll(msabase.getSpecificationDAO().list());
+        specification_tableview.getItems().setAll(msabase.getSpecificationDAO().list(true));
     }
     
     public void setSpecificationTable(){
@@ -155,8 +197,38 @@ public class SpecificationFX implements Initializable {
     
     public void setSpecificationItemTable(){
         metal_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMetal_name()));
+        metal_column.setOnEditStart((TableColumn.CellEditEvent<SpecificationItem, String> t) -> {
+            System.out.println("TESTING");
+        });
         minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())+" IN"));
+        minimumthickness_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        minimumthickness_column.setOnEditCommit((TableColumn.CellEditEvent<SpecificationItem, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setMinimum_thickness(getMinimum_thicknessValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getSpecificationItemDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            specificationitem_tableview.refresh();
+        });
         maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())+" IN"));
+        maximumthickness_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        maximumthickness_column.setOnEditCommit((TableColumn.CellEditEvent<SpecificationItem, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setMaximum_thickness(getMaximum_thicknessValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getSpecificationItemDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            specificationitem_tableview.refresh();
+        });
     }
     
+    public Double getMinimum_thicknessValue(SpecificationItem specification, String minimum_thickness){
+        try{
+            return Double.parseDouble(minimum_thickness);
+        }catch(Exception e){
+            return specification.getMinimum_thickness();
+        }
+    }
+    
+    public Double getMaximum_thicknessValue(SpecificationItem specification, String maximum_thickness){
+        try{
+            return Double.parseDouble(maximum_thickness);
+        }catch(Exception e){
+            return specification.getMaximum_thickness();
+        }
+    }
 }

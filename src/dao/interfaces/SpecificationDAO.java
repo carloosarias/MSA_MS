@@ -31,6 +31,7 @@ public interface SpecificationDAO {
      * @throws DAOException If something fails at database level.
      */        
     public List<Specification> list() throws DAOException;
+    public List<Specification> list(boolean active) throws DAOException;
     
     /**
      * Returns a list of all Specification matching process from the database ordered by Specification ID. 

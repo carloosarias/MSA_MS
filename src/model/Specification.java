@@ -17,6 +17,7 @@ public class Specification implements Serializable {
     private String specification_number;
     private String specification_name;
     private String process;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
     
@@ -52,6 +53,14 @@ public class Specification implements Serializable {
         this.process = process;
     }
     
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -83,6 +92,6 @@ public class Specification implements Serializable {
     @Override
     public String toString() {
         return String.format("%s: %s",
-                specification_number, specification_name);
+                specification_number, process);
     }
 }

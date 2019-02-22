@@ -16,6 +16,7 @@ public class SpecificationItem implements Serializable {
     private Integer id;
     private double minimum_thickness;
     private double maximum_thickness;
+    private boolean active;
     private Metal temp_metal;
     
     //INNER JOINS
@@ -53,6 +54,14 @@ public class SpecificationItem implements Serializable {
     
     public void setTemp_metal(Metal temp_metal){
         this.temp_metal = temp_metal;
+    }
+    
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
     //INNER JOINS
@@ -105,4 +114,5 @@ public class SpecificationItem implements Serializable {
         return String.format("%s",
                 id);
     }
+    
 }

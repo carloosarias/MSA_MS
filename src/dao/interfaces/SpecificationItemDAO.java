@@ -55,7 +55,8 @@ public interface SpecificationItemDAO {
      * @return A list of all Specification matching Specification ID from the database ordered by SpecificationItem ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<SpecificationItem> list(Specification specification) throws DAOException;
+    public List<SpecificationItem> list(Specification specification) throws IllegalArgumentException, DAOException;
+    public List<SpecificationItem> list(Specification specification, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given Specification in the database. The Specification ID must not be null, 

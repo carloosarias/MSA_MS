@@ -6,14 +6,15 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.interfaces.ModuleDAO;
 import static dao.DAOUtil.prepareStatement;
+import dao.interfaces.ModuleDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Employee;
 import model.Module;
 
 /**
@@ -28,6 +29,11 @@ public class ModuleDAOJDBC implements ModuleDAO {
             "SELECT id, name FROM MODULE WHERE name = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, name FROM MODULE ORDER BY id";
+    private static final String SQL_LIST_MODULE_ORDER_BY_ID = 
+            "SELECT MODULE.id, MODULE.name "
+            + "FROM MODULE_EMPLOYEE "
+            + "INNER JOIN MODULE ON MODULE_EMPLOYEE.MODULE_ID = MODULE.id "
+            + "WHERE MODULE_EMPLOYEE.EMPLOYEE_ID = ? ORDER BY MODULE.id";
     private static final String SQL_INSERT =
             "INSERT INTO MODULE (name) "
             + "VALUES (?)";
@@ -95,6 +101,33 @@ public class ModuleDAOJDBC implements ModuleDAO {
         try(
             Connection connection = daoFactory.getConnection();
             PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                modules.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return modules;
+    }
+    
+    @Override
+    public List<Module> list(Employee employee) throws IllegalArgumentException, DAOException {
+        if (employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        
+        List<Module> modules = new ArrayList<>();
+        
+        Object[] values = {
+            employee.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_MODULE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){

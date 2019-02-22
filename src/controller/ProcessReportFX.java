@@ -116,7 +116,9 @@ public class ProcessReportFX implements Initializable {
         employee_combo.getSelectionModel().select(MainApp.current_employee);
         startdate_picker.setValue(LocalDate.now());
         enddate_picker.setValue(LocalDate.now().plusDays(1));
-        setFilterHBox();
+        
+        filter_hbox.setDisable(!MainApp.current_employee.isAdmin());
+        
         setProcessReportTable();
         updateProcessReportTable();
         
@@ -134,15 +136,7 @@ public class ProcessReportFX implements Initializable {
         });
         
     }
-    public void setFilterHBox(){
-        modules = msabase.getModuleEmployeeDAO().list(MainApp.current_employee);
-        for(Module module : modules){
-            if(module.getName().equals("Historial Producción")){
-                filter_hbox.setDisable(false);
-                return;
-            }
-        }
-    }
+
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
