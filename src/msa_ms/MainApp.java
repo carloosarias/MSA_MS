@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -24,9 +25,15 @@ import model.Employee;
  * @author Pavilion Mini
  */
 public class MainApp extends Application{
+    
     public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", new Locale("es","ES"));
-    public static DecimalFormat df = new DecimalFormat("#"); 
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    
+    public static String getFormattedDate(Date date){
+        return dateFormat.format(date).toUpperCase();
+    }
+    
+    public static DecimalFormat df = new DecimalFormat("#");
     
     //CONTROLLER LISTENER SETUP VARIABLES
     public static boolean CreateEquipmentTypeFX_setup = true;
@@ -75,6 +82,7 @@ public class MainApp extends Application{
     
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Locale.setDefault(new Locale("es","ES"));
         df.setMaximumFractionDigits(6);
         TimeZone.setDefault(TimeZone.getTimeZone("CST"));
         BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));

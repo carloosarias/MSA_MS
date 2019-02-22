@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PartRevisionFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PartRevisionFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -21,14 +21,14 @@
    <children>
       <TableView fx:id="partrevision_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="200.0" text="Número de Parte" />
-            <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="75.0" text="Rev" />
-            <TableColumn fx:id="revdate_column" minWidth="-Infinity" prefWidth="125.0" text="Fecha de Revisión" />
+            <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="100.0" text="Núm. de Parte" />
+            <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="50.0" text="Rev." />
+            <TableColumn fx:id="revdate_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha de Rev." />
             <TableColumn fx:id="basemetal_column" minWidth="-Infinity" prefWidth="100.0" text="Metal Base" />
             <TableColumn fx:id="finalprocess_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso Final" />
-            <TableColumn fx:id="specnumber_column" minWidth="-Infinity" prefWidth="150.0" text="# de Specificación" />
+            <TableColumn fx:id="specnumber_column" minWidth="-Infinity" prefWidth="100.0" text="Especificación" />
             <TableColumn fx:id="area_column" minWidth="-Infinity" prefWidth="75.0" text="Área" />
-            <TableColumn minWidth="-1.0" prefWidth="75.0" text="Peso">
+            <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Peso">
                <columns>
                   <TableColumn fx:id="baseweight_column" minWidth="-Infinity" prefWidth="75.0" text="Base" />
                   <TableColumn fx:id="finalweight_column" minWidth="-Infinity" prefWidth="75.0" text="Final" />
