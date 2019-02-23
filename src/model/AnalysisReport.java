@@ -21,7 +21,16 @@ public class AnalysisReport implements Serializable{
     private double result;
     private double estimated_adjust;
     private double applied_adjust;
-   
+    private boolean active;
+    
+    //INNER JOINS
+    private String employee_name;
+    private String tank;
+    private double volume;
+    private String analysis_type;
+    private double factor;
+    private double optimal;
+    
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -71,6 +80,62 @@ public class AnalysisReport implements Serializable{
         this.applied_adjust = applied_adjust;
     }
     
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
+    //INNER JOINS
+    public String getEmployee_name() {
+        return employee_name;
+    }
+
+    public void setEmployee_name(String employee_name) {
+        this.employee_name = employee_name;
+    }
+
+    public String getTank() {
+        return tank;
+    }
+
+    public void setTank(String tank) {
+        this.tank = tank;
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
+    }
+    
+    public String getAnalysis_type() {
+        return analysis_type;
+    }
+
+    public void setAnalysis_type(String analysis_type) {
+        this.analysis_type = analysis_type;
+    }
+    
+    public double getFactor() {
+        return factor;
+    }
+
+    public void setFactor(double factor) {
+        this.factor = factor;
+    }
+
+    public double getOptimal() {
+        return optimal;
+    }
+
+    public void setOptimal(double optimal) {
+        this.optimal = optimal;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -104,4 +169,5 @@ public class AnalysisReport implements Serializable{
         return String.format("%d",
                 id);
     }
+
 }

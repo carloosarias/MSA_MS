@@ -109,9 +109,9 @@ public class AnalysisReportFX implements Initializable {
     public void setAnalysisReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
-        employee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findEmployee(c.getValue()).toString()));
-        tank_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findTank(c.getValue()).toString()));
-        type_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findAnalysisType(c.getValue()).getName()));
+        employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
+        tank_column.setCellValueFactory(new PropertyValueFactory<>("tank_name"));
+        type_column.setCellValueFactory(new PropertyValueFactory<>("analysis_type"));
         quantityused_column.setCellValueFactory(new PropertyValueFactory<>("quantity_used"));
         result_column.setCellValueFactory(new PropertyValueFactory<>("result"));
         estimatedadjust_column.setCellValueFactory(new PropertyValueFactory<>("estimated_adjust"));
@@ -119,10 +119,7 @@ public class AnalysisReportFX implements Initializable {
     }
     
     public void updateAnalysisReportTable(){
-        if(tank_combo.getSelectionModel().isEmpty()){
-            return;
-        }
-        analysisreport_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisReportDAO().listTankDateRange(tank_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()))));
+        analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), true, tank_filter.isSelected(), date_filter.isSelected()));
     }
     
     public void showAddAnalysisReportStage(){

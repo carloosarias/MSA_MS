@@ -64,7 +64,7 @@ public interface AnalysisReportDAO {
      * @return A list of all AnalysisReport from the database ordered by AnalysisReport ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<AnalysisReport> list() throws DAOException;
+    public List<AnalysisReport> list(boolean active) throws DAOException;
     
     /**
      * Returns a list of all AnalysisReport matching Tank ID from the database ordered by AnalysisReport ID. 
@@ -73,11 +73,14 @@ public interface AnalysisReportDAO {
      * @param tank The Tank ID to be searched for.
      * @param start The start date of the range.
      * @param end the end date of the range.
+     * @param active
+     * @param tank_filter
+     * @param date_filter
      * @return A list of all AnalysisReport matching Tank ID from the database ordered by AnalysisReport ID.
      * @throws IllegalArgumentException If Tank ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<AnalysisReport> listTankDateRange(Tank tank, Date start, Date end) throws IllegalArgumentException, DAOException;
+    public List<AnalysisReport> list(Tank tank, Date start, Date end, boolean active, boolean tank_filter, boolean date_filter) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given AnalysisReport in the database.

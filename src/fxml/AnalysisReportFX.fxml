@@ -66,12 +66,12 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Label>
-            <CheckBox fx:id="tank_filter" mnemonicParsing="false" text="Filtrar Por Tanque" GridPane.columnIndex="3">
+            <CheckBox fx:id="tank_filter" mnemonicParsing="false" selected="true" text="Filtrar Por Tanque" GridPane.columnIndex="3">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </CheckBox>
-            <CheckBox fx:id="date_filter" mnemonicParsing="false" text="Filtrar Por Fecha" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <CheckBox fx:id="date_filter" mnemonicParsing="false" selected="true" text="Filtrar Por Fecha" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>

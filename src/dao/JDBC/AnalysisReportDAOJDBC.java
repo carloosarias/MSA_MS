@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import model.AnalysisReport;
 import model.AnalysisType;
@@ -27,22 +28,42 @@ import model.Tank;
 public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, report_date, quantity_used, result, estimated_adjust, applied_adjust FROM ANALYSIS_REPORT WHERE id = ?";
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.result, ANALYSIS_REPORT.estimated_adjust, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
+            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ANALYSIS_REPORT "
+            + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
+            + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "WHERE id = ?";
     private static final String SQL_FIND_TANK_BY_ID = 
             "SELECT TANK_ID FROM ANALYSIS_REPORT WHERE id = ?";
     private static final String SQL_FIND_ANALYSIS_TYPE_BY_ID = 
             "SELECT ANALYSIS_TYPE_ID FROM ANALYSIS_REPORT WHERE id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM ANALYSIS_REPORT WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, quantity_used, result, estimated_adjust, applied_adjust FROM ANALYSIS_REPORT ORDER BY id";
-    private static final String SQL_LIST_TANK_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date, quantity_used, result, estimated_adjust, applied_adjust FROM ANALYSIS_REPORT WHERE TANK_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.result, ANALYSIS_REPORT.estimated_adjust, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
+            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ANALYSIS_REPORT "
+            + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
+            + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "WHERE ANALYSIS_REPORT.active = ?"
+            + "ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_TANK_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.result, ANALYSIS_REPORT.estimated_adjust, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
+            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "FROM ANALYSIS_REPORT "
+            + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
+            + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.report_date BETWEEN ? AND ? OR ? = 0) AND ANALYSIS_REPORT.active = ?"
+            + "ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, quantity_used, result, estimated_adjust, applied_adjust) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, quantity_used, result, estimated_adjust, applied_adjust, active) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ANALYSIS_REPORT SET report_date = ?, quantity_used = ?, result = ?, estimated_adjust = ?, applied_adjust = ? WHERE id = ?";
+            "UPDATE ANALYSIS_REPORT SET report_date = ?, quantity_used = ?, result = ?, estimated_adjust = ?, applied_adjust = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM ANALYSIS_REPORT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -174,12 +195,16 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     }
 
     @Override
-    public List<AnalysisReport> list() throws DAOException {
+    public List<AnalysisReport> list(boolean active) throws DAOException {
         List<AnalysisReport> analysis_report = new ArrayList<>();
-
+        
+        Object[] values = {
+            active
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -193,7 +218,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     }
 
     @Override
-    public List<AnalysisReport> listTankDateRange(Tank tank, Date start, Date end) throws IllegalArgumentException, DAOException {
+    public List<AnalysisReport> list(Tank tank, Date start, Date end, boolean active, boolean tank_filter, boolean date_filter) throws IllegalArgumentException, DAOException {
         if(tank.getId() == null) {
             throw new IllegalArgumentException("Tank is not created yet, the Tank ID is null.");
         }
@@ -202,13 +227,16 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         
         Object[] values = {
             tank.getId(),
+            tank_filter,
             start,
-            end
+            end,
+            date_filter,
+            active
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_TANK_DATE_RANGE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_TANK_DATE_RANGE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -248,6 +276,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             analysis_report.getResult(),
             analysis_report.getEstimated_adjust(),
             analysis_report.getApplied_adjust(),
+            analysis_report.isActive()
         };
         
         try(
@@ -284,6 +313,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             analysis_report.getResult(),
             analysis_report.getEstimated_adjust(),
             analysis_report.getApplied_adjust(),
+            analysis_report.isActive(),
             analysis_report.getId()
         };
         
@@ -331,12 +361,22 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
      */
     public static AnalysisReport map(ResultSet resultSet) throws SQLException{
         AnalysisReport analysis_report = new AnalysisReport();
-        analysis_report.setId(resultSet.getInt("id"));
-        analysis_report.setReport_date(resultSet.getDate("report_date"));
-        analysis_report.setQuantity_used(resultSet.getDouble("quantity_used"));
-        analysis_report.setResult(resultSet.getDouble("result"));
-        analysis_report.setEstimated_adjust(resultSet.getDouble("estimated_adjust"));
-        analysis_report.setApplied_adjust(resultSet.getDouble("applied_adjust"));
+        analysis_report.setId(resultSet.getInt("ANALYSIS_REPORT.id"));
+        analysis_report.setReport_date(resultSet.getDate("ANALYSIS_REPORT.report_date"));
+        analysis_report.setQuantity_used(resultSet.getDouble("ANALYSIS_REPORT.quantity_used"));
+        analysis_report.setResult(resultSet.getDouble("ANALYSIS_REPORT.result"));
+        analysis_report.setEstimated_adjust(resultSet.getDouble("ANALYSIS_REPORT.estimated_adjust"));
+        analysis_report.setApplied_adjust(resultSet.getDouble("ANALYSIS_REPORT.applied_adjust"));
+        analysis_report.setActive(resultSet.getBoolean("ANALYSIS_REPORT.active"));
+        
+        //INNER JOINS
+        analysis_report.setTank(resultSet.getString("TANK.tank_name"));
+        analysis_report.setVolume(resultSet.getDouble("TANK.volume"));
+        analysis_report.setAnalysis_type(resultSet.getString("ANALYSIS_TYPE.name"));
+        analysis_report.setFactor(resultSet.getDouble("ANALYSIS_TYPE.factor"));
+        analysis_report.setOptimal(resultSet.getDouble("ANALYSIS_TYPE.optimal"));
+        analysis_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
+        
         return analysis_report;
     }
 }
