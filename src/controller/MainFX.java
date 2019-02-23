@@ -133,14 +133,12 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
                         break;
                     case "Números de Parte":
-                        //productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
+                        productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
                         partrevision_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
-                        root_tabpane.getTabs().setAll(partrevision_tab);
-                        break;
-                    case "Especificaciones":
                         specification_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/SpecificationFX.fxml")));
                         metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));
-                        root_tabpane.getTabs().setAll(specification_tab, metal_tab);
+                        root_tabpane.getTabs().setAll(productpart_tab, partrevision_tab, specification_tab, metal_tab);
+                        break;
                     case "Reciba":
                         incoming_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
                         orderpurchaseincomingreport_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));

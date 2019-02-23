@@ -8,13 +8,9 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,17 +19,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.ProductPart;
-import model.Specification;
-import model.SpecificationItem;
-import static msa_ms.MainApp.df;
 
 /**
  * FXML Controller class
@@ -47,76 +40,50 @@ public class ProductPartFX implements Initializable {
     @FXML
     private TableView<ProductPart> productpart_tableview;
     @FXML
-    private TableColumn<ProductPart, Integer> productpartid_column;
-    @FXML
     private TableColumn<ProductPart, String> partnumber_column;
     @FXML
     private TableColumn<ProductPart, String> description_column;
     @FXML
-    private TableColumn<ProductPart, String> productpartstatus_column;
+    private Button add_button;
     @FXML
-    private TableView<Specification> specification_tableview;
-    @FXML
-    private TableColumn<Specification, Integer> specificationid_column;
-    @FXML
-    private TableColumn<Specification, String> specificationnumber_column;
-    @FXML
-    private TableColumn<Specification, String> specificationname_column;
-    @FXML
-    private TableColumn<Specification, String> process_column;
-    @FXML
-    private TableView<SpecificationItem> specificationitem_tableview;
-    @FXML
-    private TableColumn<SpecificationItem, String> specificationitemid_column;
-    @FXML
-    private TableColumn<SpecificationItem, String> metal_column;
-    @FXML
-    private TableColumn<SpecificationItem, String> minimumthickness_column;
-    @FXML
-    private TableColumn<SpecificationItem, String> maximumthickness_column;
-    @FXML
-    private Button addproductpart_button;
-    @FXML
-    private Button addspecification_button;
+    private Button disable_button;
     
-    private static ProductPart productpart_selection;
+    private ProductPart product_part;
     
     private Stage add_stage = new Stage();
     
-    private List<String> status_items = Arrays.asList("Activo", "Inactivo");
-    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        df.setMaximumFractionDigits(6);
         setProductPartTable();
-        setSpecificationTable();
-        setSpecificationItemTable();
-        setSpecificationItems();
-        setProductPartItems();
+        updateProductPartTable();
         
-        specification_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Specification> observable, Specification oldValue, Specification newValue) -> {
-            if(!specification_tableview.getSelectionModel().isEmpty()){
-                setSpecificationItemItems(specification_tableview.getSelectionModel().getSelectedItem());
-            }
+        add_button.setOnAction((ActionEvent) -> {
+            int current_size = productpart_tableview.getItems().size();
+            createProductPart();
+            updateProductPartTable();
+            productpart_tableview.getSelectionModel().select(product_part);
         });
         
-        addproductpart_button.setOnAction((ActionEvent) -> {
-            showAddProductPartStage();
-            setProductPartItems();
-        });
-        
-        addspecification_button.setOnAction((ActionEvent) -> {
-            showAddSpecificationStage();
-            setSpecificationItems();
+        disable_button.setOnAction((ActionEvent) -> {
+            disableProductPart();
+            updateProductPartTable();
         });
         
     }
     
-    public void showAddProductPartStage(){
+    public void createProductPart(){
+        product_part = new ProductPart();
+        product_part.setPart_number("N/A");
+        product_part.setDescription("N/A");
+        msabase.getProductPartDAO().create(product_part);
+    }
+    
+    public void showAdd_stage(){
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
@@ -124,25 +91,7 @@ public class ProductPartFX implements Initializable {
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddProductPartFX.fxml"));
             Scene scene = new Scene(root);
             
-            add_stage.setTitle("Nuevo Número de Parte");
-            add_stage.setResizable(false);
-            add_stage.initStyle(StageStyle.UTILITY);
-            add_stage.setScene(scene);
-            add_stage.showAndWait();
-        } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void showAddSpecificationStage(){
-        try {
-            add_stage = new Stage();
-            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
-            add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateSpecificationFX.fxml"));
-            Scene scene = new Scene(root);
-            
-            add_stage.setTitle("Nueva Especificación");
+            add_stage.setTitle("Registrar Número de Parte");
             add_stage.setResizable(false);
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
@@ -153,61 +102,30 @@ public class ProductPartFX implements Initializable {
     }
     
     public void setProductPartTable(){
-        productpartid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        
         partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
-        description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
-        productpartstatus_column.setCellValueFactory(c -> new SimpleStringProperty(getStatus(c.getValue().isActive())));
-        productpartstatus_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
-        productpartstatus_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, String> t) -> {
-            t.getTableView().getItems().get(t.getTablePosition().getRow()).setActive(getActive(t.getNewValue()));
+        partnumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        partnumber_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPart_number(t.getNewValue());
             msabase.getProductPartDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            setProductPartItems();
+            productpart_tableview.refresh();
+        });
+        
+        description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
+        description_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        description_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setDescription(t.getNewValue());
+            msabase.getProductPartDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            productpart_tableview.refresh();
         });
     }
     
-    public void setSpecificationTable(){
-        specificationid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        specificationnumber_column.setCellValueFactory(new PropertyValueFactory<>("specification_number"));
-        specificationname_column.setCellValueFactory(new PropertyValueFactory<>("specification_name"));
-        process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
+    public void updateProductPartTable(){
+        productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
     }
     
-    public void setSpecificationItemTable(){
-        specificationitemid_column.setCellValueFactory(c -> new SimpleStringProperty(""+(specificationitem_tableview.getItems().indexOf(c.getValue())+1)));
-        metal_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMetal_name()));
-        minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())+" IN"));
-        maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMaximum_thickness())+" IN"));
-    }
-    
-    public void setProductPartItems(){
-        productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
-    }
-    
-    public void setSpecificationItems(){
-        specification_tableview.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list()));
-    }
-    
-    public void setSpecificationItemItems(Specification specification){
-        specificationitem_tableview.setItems(FXCollections.observableArrayList(msabase.getSpecificationItemDAO().list(specification)));
-    }
-    
-    public boolean getActive(String productpart_status){
-        if(productpart_status.equals("Activo")){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
-    public String getStatus(Boolean active){
-        if(active){
-            return "Activo";
-        }else{
-            return "Inactivo";
-        }
-    }
-    
-    public static ProductPart getProductpart_selection(){
-        return productpart_selection;
+    public void disableProductPart(){
+        productpart_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getProductPartDAO().update(productpart_tableview.getSelectionModel().getSelectedItem());
     }
 }
