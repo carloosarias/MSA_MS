@@ -30,7 +30,7 @@ public interface AnalysisTypeDAO {
      * @return A list of all AnalysisType from the database ordered by AnalysisType ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<AnalysisType> list() throws DAOException;
+    public List<AnalysisType> list(boolean active) throws DAOException;
     
     /**
      * Create the given AnalysisType in the database.

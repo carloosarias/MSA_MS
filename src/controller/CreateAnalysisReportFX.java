@@ -75,7 +75,7 @@ public class CreateAnalysisReportFX implements Initializable {
         employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         employee_combo.getSelectionModel().selectFirst();
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
-        analysistype_combo.setItems(FXCollections.observableArrayList(msabase.getAnalysisTypeDAO().list()));
+        analysistype_combo.setItems(FXCollections.observableArrayList(msabase.getAnalysisTypeDAO().list(true)));
         setResult();
         
         tank_combo.setOnAction((ActionEvent) -> {

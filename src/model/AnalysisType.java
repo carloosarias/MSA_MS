@@ -19,6 +19,7 @@ public class AnalysisType implements Serializable {
     private String description;
     private double factor;
     private double optimal;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -60,6 +61,14 @@ public class AnalysisType implements Serializable {
     
     public void setOptimal(double optimal){
         this.optimal = optimal;
+    }
+    
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
     // Object overrides ---------------------------------------------------------------------------

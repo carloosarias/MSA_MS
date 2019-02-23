@@ -23,14 +23,14 @@ import model.AnalysisType;
 public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, name, description, factor, optimal FROM ANALYSIS_TYPE WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, description, factor, optimal FROM ANALYSIS_TYPE ORDER BY id";
+            "SELECT id, name, description, factor, optimal, active FROM ANALYSIS_TYPE WHERE id = ?";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_NAME = 
+            "SELECT id, name, description, factor, optimal, active FROM ANALYSIS_TYPE WHERE active = ? ORDER BY name";
     private static final String SQL_INSERT =
-            "INSERT INTO ANALYSIS_TYPE (name, description, factor, optimal) "
-            + "VALUES (?, ?, ?, ?)";
+            "INSERT INTO ANALYSIS_TYPE (name, description, factor, optimal, active) "
+            + "VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ANALYSIS_TYPE SET name = ?, description = ?, factor = ?, optimal = ? WHERE id = ?";
+            "UPDATE ANALYSIS_TYPE SET name = ?, description = ?, factor = ?, optimal = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM ANALYSIS_TYPE WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -81,12 +81,16 @@ public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
     }
     
     @Override
-    public List<AnalysisType> list() throws DAOException {
+    public List<AnalysisType> list(boolean active) throws DAOException {
         List<AnalysisType> analysis_type = new ArrayList<>();
-
+        
+        Object[] values = {
+            active
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_NAME, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -108,7 +112,8 @@ public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
             analysis_type.getName(),
             analysis_type.getDescription(),
             analysis_type.getFactor(),
-            analysis_type.getOptimal()
+            analysis_type.getOptimal(),
+            analysis_type.isActive()
         };
         
         try(
@@ -144,6 +149,7 @@ public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
             analysis_type.getDescription(),
             analysis_type.getFactor(),
             analysis_type.getOptimal(),
+            analysis_type.isActive(),
             analysis_type.getId()
         };
         
@@ -195,6 +201,7 @@ public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
         analysis_type.setDescription(resultSet.getString("description"));
         analysis_type.setFactor(resultSet.getDouble("factor"));
         analysis_type.setOptimal(resultSet.getDouble("optimal"));
+        analysis_type.setActive(resultSet.getBoolean("active"));
         return analysis_type;
     }
 }

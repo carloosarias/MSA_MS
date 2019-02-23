@@ -20,20 +20,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.AnalysisReport;
-import model.AnalysisType;
 import model.Tank;
-import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.setDatePicker;
 
 
 /**
@@ -42,51 +43,43 @@ import static msa_ms.MainApp.getFormattedDate;
  * @author Pavilion Mini
  */
 public class AnalysisReportFX implements Initializable {
-    @FXML
-    private HBox root_hbox;
-    @FXML
-    private TableView<AnalysisType> analysistype_tableview;
-    @FXML
-    private TableColumn<AnalysisType, Integer> analysistypeid_column;
-    @FXML
-    private TableColumn<AnalysisType, String> analysistypename_column;
-    @FXML
-    private TableColumn<AnalysisType, String> analysistypedescription_column;
-    @FXML
-    private TableColumn<AnalysisType, Double> analysistypefactor_column;
-    @FXML
-    private TableColumn<AnalysisType, Double> analysistypeoptimal_column;
-    @FXML
-    private Button addanalysistype_button;
     
     @FXML
-    private TableView<AnalysisReport> analysisreport_tableview;
-    @FXML
-    private TableColumn<AnalysisReport, Integer> analysisreportid_column;
-    @FXML
-    private TableColumn<AnalysisReport, String> analysisreportdate_column;
-    @FXML
-    private TableColumn<AnalysisReport, String> analysisreportemployee_column;
-    @FXML
-    private TableColumn<AnalysisReport, String> analysisreporttank_column;
-    @FXML
-    private TableColumn<AnalysisReport, String> analysisreporttype_column;
-    @FXML
-    private TableColumn<AnalysisReport, Double> analysisreportquantityused_column;
-    @FXML
-    private TableColumn<AnalysisReport, Double> analysisreportresult_column;
-    @FXML
-    private TableColumn<AnalysisReport, Double> analysisreportestimatedadjust_column;
-    @FXML
-    private TableColumn<AnalysisReport, Double> analysisreportappliedadjust_column;
-    @FXML
-    private Button addanalysisreport_button;
+    private GridPane root_gridpane;
     @FXML
     private ComboBox<Tank> tank_combo;
     @FXML
     private DatePicker startdate_picker;
     @FXML
     private DatePicker enddate_picker;
+    @FXML
+    private CheckBox tank_filter;
+    @FXML
+    private CheckBox date_filter;
+    @FXML
+    private TableView<AnalysisReport> analysisreport_tableview;
+    @FXML
+    private TableColumn<AnalysisReport, Integer> id_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> reportdate_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> employee_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> tank_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> type_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> quantityused_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> result_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> estimatedadjust_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> appliedadjust_column;
+    @FXML
+    private Button add_button;
+    @FXML
+    private Button disable_button;
     
     private Stage add_stage = new Stage();
     
@@ -101,46 +94,28 @@ public class AnalysisReportFX implements Initializable {
         tank_combo.getSelectionModel().selectFirst();
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
-        
-        setAnalysisTypeTable();
-        updateAnalysisTypeTable();
-        
-        addanalysistype_button.setOnAction((ActionEvent) -> {
-            showAddAnalysisTypeStage();
-            updateAnalysisTypeTable();
-        });
+        setDatePicker(startdate_picker);
+        setDatePicker(enddate_picker);
         
         setAnalysisReportTable();
         updateAnalysisReportTable();
         
-        addanalysisreport_button.setOnAction((ActionEvent) -> {
+        add_button.setOnAction((ActionEvent) -> {
             showAddAnalysisReportStage();
             updateAnalysisReportTable();
         });
     }
     
     public void setAnalysisReportTable(){
-        analysisreportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        analysisreportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
-        analysisreportemployee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findEmployee(c.getValue()).toString()));
-        analysisreporttank_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findTank(c.getValue()).toString()));
-        analysisreporttype_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findAnalysisType(c.getValue()).getName()));
-        analysisreportquantityused_column.setCellValueFactory(new PropertyValueFactory<>("quantity_used"));
-        analysisreportresult_column.setCellValueFactory(new PropertyValueFactory<>("result"));
-        analysisreportestimatedadjust_column.setCellValueFactory(new PropertyValueFactory<>("estimated_adjust"));
-        analysisreportappliedadjust_column.setCellValueFactory(new PropertyValueFactory<>("applied_adjust"));
-    }
-    
-    public void setAnalysisTypeTable(){
-        analysistypeid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        analysistypename_column.setCellValueFactory(new PropertyValueFactory<>("name"));
-        analysistypedescription_column.setCellValueFactory(new PropertyValueFactory<>("description"));
-        analysistypefactor_column.setCellValueFactory(new PropertyValueFactory<>("factor"));
-        analysistypeoptimal_column.setCellValueFactory(new PropertyValueFactory<>("optimal"));
-    }
-    
-    public void updateAnalysisTypeTable(){
-        analysistype_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisTypeDAO().list()));
+        id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        employee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findEmployee(c.getValue()).toString()));
+        tank_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findTank(c.getValue()).toString()));
+        type_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findAnalysisType(c.getValue()).getName()));
+        quantityused_column.setCellValueFactory(new PropertyValueFactory<>("quantity_used"));
+        result_column.setCellValueFactory(new PropertyValueFactory<>("result"));
+        estimatedadjust_column.setCellValueFactory(new PropertyValueFactory<>("estimated_adjust"));
+        appliedadjust_column.setCellValueFactory(new PropertyValueFactory<>("applied_adjust"));
     }
     
     public void updateAnalysisReportTable(){
@@ -150,28 +125,10 @@ public class AnalysisReportFX implements Initializable {
         analysisreport_tableview.setItems(FXCollections.observableArrayList(msabase.getAnalysisReportDAO().listTankDateRange(tank_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()))));
     }
     
-    public void showAddAnalysisTypeStage(){
-        try {
-            add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
-            add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddAnalysisTypeFX.fxml"));
-            Scene scene = new Scene(root);
-            
-            add_stage.setTitle("Nuevo Tipo de Análisis");
-            add_stage.setResizable(false);
-            add_stage.initStyle(StageStyle.UTILITY);
-            add_stage.setScene(scene);
-            add_stage.showAndWait();
-        } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     public void showAddAnalysisReportStage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateAnalysisReportFX.fxml"));
             Scene scene = new Scene(root);

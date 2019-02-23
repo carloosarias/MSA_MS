@@ -2,129 +2,127 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisReportFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisReportFX">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <VBox alignment="CENTER">
+      <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <TabPane tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Reportes De Análisis">
-                     <content>
-                        <HBox alignment="CENTER">
-                           <children>
-                              <VBox>
-                                 <children>
-                                    <HBox>
-                                       <children>
-                                          <VBox alignment="BOTTOM_LEFT">
-                                             <children>
-                                                <ComboBox fx:id="tank_combo" prefWidth="150.0" promptText="Tanque">
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </ComboBox>
-                                             </children>
-                                          </VBox>
-                                          <VBox>
-                                             <children>
-                                                <Label text="Desde:">
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </Label>
-                                                <DatePicker fx:id="startdate_picker" prefWidth="150.0">
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </DatePicker>
-                                             </children>
-                                          </VBox>
-                                          <VBox>
-                                             <children>
-                                                <Label text="Hasta:">
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </Label>
-                                                <DatePicker fx:id="enddate_picker" prefWidth="150.0">
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </DatePicker>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </HBox>
-                                    <TableView fx:id="analysisreport_tableview" prefHeight="500.0">
-                                      <columns>
-                                        <TableColumn fx:id="analysisreportid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
-                                        <TableColumn fx:id="analysisreportdate_column" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
-                                          <TableColumn fx:id="analysisreportemployee_column" prefWidth="120.0" resizable="false" text="Empleado" />
-                                          <TableColumn fx:id="analysisreporttank_column" prefWidth="100.0" resizable="false" text="Tanque" />
-                                          <TableColumn fx:id="analysisreporttype_column" prefWidth="120.0" resizable="false" text="Tipo de Análisis" />
-                                          <TableColumn fx:id="analysisreportquantityused_column" prefWidth="130.0" resizable="false" text="Cantidad Gastada (ml)" />
-                                          <TableColumn fx:id="analysisreportresult_column" prefWidth="100.0" resizable="false" text="Resultado (gr/lt)" />
-                                          <TableColumn fx:id="analysisreportestimatedadjust_column" prefWidth="130.0" resizable="false" text="Ajuste Estimado (kg)" />
-                                          <TableColumn fx:id="analysisreportappliedadjust_column" prefWidth="130.0" resizable="false" text="Ajuste Agregado (kg)" />
-                                      </columns>
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TableView>
-                                 </children>
-                              </VBox>
-                           </children></HBox>
-                     </content></Tab>
-                <Tab text="Tipos de Análisis">
-                     <content>
-                        <HBox alignment="CENTER">
-                           <children>
-                              <VBox alignment="CENTER">
-                                 <children>
-                                    <TableView fx:id="analysistype_tableview" prefHeight="500.0">
-                                      <columns>
-                                        <TableColumn fx:id="analysistypeid_column" prefWidth="100.0" resizable="false" text="No. de ID" />
-                                        <TableColumn fx:id="analysistypename_column" prefWidth="120.0" resizable="false" text="Nombre" />
-                                          <TableColumn fx:id="analysistypedescription_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                                          <TableColumn fx:id="analysistypefactor_column" prefWidth="120.0" resizable="false" text="Factor" />
-                                          <TableColumn fx:id="analysistypeoptimal_column" prefWidth="120.0" resizable="false" text="Óptimo (gr/lt)" />
-                                      </columns>
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TableView>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                     </content></Tab>
-              </tabs>
-            </TabPane>
-            <HBox>
-               <children>
-                  <Button fx:id="addanalysisreport_button" mnemonicParsing="false" text="Nuevo Reporte De Análisis">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="addanalysistype_button" mnemonicParsing="false" text="Agregar Tipo de Análisis">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
+            <ComboBox fx:id="tank_combo" prefWidth="150.0" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label text="Desde:" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="startdate_picker" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <Label text="Hasta:" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="enddate_picker" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <Label text="Tanque:">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <CheckBox fx:id="tank_filter" mnemonicParsing="false" text="Filtrar Por Tanque" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </CheckBox>
+            <CheckBox fx:id="date_filter" mnemonicParsing="false" text="Filtrar Por Fecha" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </CheckBox>
          </children>
-      </VBox>
+      </GridPane>
+      <TableView fx:id="analysisreport_tableview" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="40.0" resizable="false" text="#" />
+            <TableColumn fx:id="reportdate_column" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
+            <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="150.0" resizable="false" text="Empleado" />
+            <TableColumn fx:id="tank_column" minWidth="-Infinity" prefWidth="150.0" resizable="false" text="Tanque" />
+            <TableColumn fx:id="type_column" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Tipo de Análisis" />
+            <TableColumn fx:id="quantityused_column" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Cantidad Gastada" />
+            <TableColumn fx:id="result_column" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Resultado" />
+            <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Ajuste">
+               <columns>
+                  <TableColumn fx:id="estimatedadjust_column" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Estimado" />
+                  <TableColumn fx:id="appliedadjust_column" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Agregado" />
+               </columns>
+            </TableColumn>
+         </columns>
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </TableView>
+      <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button fx:id="add_button" mnemonicParsing="false" text="Generar Reporte de Análisis Químicos">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="disable_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+      </GridPane>
    </children>
-</HBox>
+</GridPane>

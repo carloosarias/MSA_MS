@@ -61,7 +61,8 @@
                   <Tab fx:id="process_tab" closable="false" text="Producción" />
                   <Tab fx:id="transactionhistory_tab" closable="false" text="Historial de Transacciones" />
                   <Tab fx:id="scrap_tab" closable="false" text="Scrap" />
-                  <Tab fx:id="analysis_tab" closable="false" text="Análisis" />
+                  <Tab fx:id="analysistype_tab" closable="false" text="Tipos de Análisis" />
+                  <Tab fx:id="analysisreport_tab" closable="false" text="Reportes de Análisis Químicos" />
                   <Tab fx:id="equipment_tab" closable="false" text="Equipo" />
                   <Tab fx:id="mantainance_tab" closable="false" text="Mantenimiento" />
                   <Tab fx:id="activityreport_tab" closable="false" text="Reporte de Trabajos" />

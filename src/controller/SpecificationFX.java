@@ -105,7 +105,7 @@ public class SpecificationFX implements Initializable {
             createSpecification();
             updateSpecificationTable();
             if(current_size < specification_tableview.getItems().size()){
-                specification_tableview.requestFocus();
+                specification_tableview.scrollTo(specification);
                 specification_tableview.getSelectionModel().select(specification);
             }
         });
@@ -121,7 +121,7 @@ public class SpecificationFX implements Initializable {
             showAddStage();
             updateSpecificationItemTable();
             if(current_size < specificationitem_tableview.getItems().size()){
-                specificationitem_tableview.requestFocus();
+                specificationitem_tableview.scrollTo(specification_item);
                 specificationitem_tableview.getSelectionModel().select(specification_item);
             }
         });

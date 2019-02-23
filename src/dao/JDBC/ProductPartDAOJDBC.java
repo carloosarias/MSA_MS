@@ -26,8 +26,6 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE id = ?";
     private static final String SQL_FIND_BY_PART_NUMBER = 
             "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE part_number = ?";
-    private static final String SQL_LIST_ORDER_BY_PART_NUMBER = 
-            "SELECT id, part_number, description, active FROM PRODUCT_PART ORDER BY part_number";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_PART_NUMBER = 
             "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE active = ? ORDER BY part_number";
     private static final String SQL_INSERT =

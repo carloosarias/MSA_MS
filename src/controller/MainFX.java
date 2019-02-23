@@ -76,7 +76,9 @@ public class MainFX implements Initializable {
     @FXML
     private Tab scrap_tab;
     @FXML
-    private Tab analysis_tab;
+    private Tab analysistype_tab;
+    @FXML
+    private Tab analysisreport_tab;
     @FXML
     private Tab equipment_tab;
     @FXML
@@ -168,8 +170,9 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(scrap_tab);
                         break;
                     case "Análisis":
-                        analysis_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/AnalysisReportFX.fxml")));
-                        root_tabpane.getTabs().setAll(analysis_tab);
+                        analysisreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/AnalysisReportFX.fxml")));
+                        analysistype_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/AnalysisTypeFX.fxml")));
+                        root_tabpane.getTabs().setAll(analysisreport_tab, analysistype_tab);
                         break;
                     case "Equipo":
                         equipment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
