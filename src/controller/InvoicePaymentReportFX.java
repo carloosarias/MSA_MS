@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -30,6 +31,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.InvoicePaymentItem;
 import model.InvoicePaymentReport;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -47,7 +49,7 @@ public class InvoicePaymentReportFX implements Initializable {
     @FXML
     private TableColumn<InvoicePaymentReport, String> client_column;
     @FXML
-    private TableColumn<InvoicePaymentReport, Date> reportdate_column;
+    private TableColumn<InvoicePaymentReport, String> reportdate_column;
     @FXML
     private TableColumn<InvoicePaymentReport, Double> ammountpaid_column;
     @FXML
@@ -120,7 +122,7 @@ public class InvoicePaymentReportFX implements Initializable {
     
     public void setInvoicePaymentItemTable(){
         invoiceid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getInvoice_id()));
-        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getInvoice_date().toString()));
+        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getInvoice_date()))));
         invoicetotal_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getInvoiceDAO().findTotal(msabase.getInvoiceDAO().find(c.getValue().getInvoice_id()))));
         terms_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getInvoice_terms()));
     }
@@ -151,7 +153,7 @@ public class InvoicePaymentReportFX implements Initializable {
     public void setInvoicePaymentReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         client_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCompany_name()));
-        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         ammountpaid_column.setCellValueFactory(new PropertyValueFactory<>("ammount_paid"));
         checknumber_column.setCellValueFactory(new PropertyValueFactory<>("check_number"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));

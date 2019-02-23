@@ -23,6 +23,8 @@ import model.InvoiceItem;
 import model.Quote;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.df;
+import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -72,6 +74,8 @@ public class InvoiceQuoteFX implements Initializable {
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
+        setDatePicker(startdate_picker);
+        setDatePicker(enddate_picker);
         updateQuoteTable();
         
         processfilter_checkbox.setOnAction((ActionEvent) -> {
@@ -96,7 +100,7 @@ public class InvoiceQuoteFX implements Initializable {
         rev_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_number()));
         process_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getSpec_process()));
         quoteid_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getId()));
-        quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getQuote_date().toString()));
+        quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getQuote_date()))));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+ df.format(c.getValue().getEstimated_total()) + " USD"));
         totalinvoiced_column.setCellValueFactory(c -> new SimpleStringProperty(""+getTotal_invoiced(c.getValue())));
         totalvalue_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(getTotal_value(c.getValue()))+" USD"));

@@ -32,6 +32,7 @@ import model.ActivityReport;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.dateTimeFormatter;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -159,7 +160,7 @@ public class ActivityReportFX implements Initializable {
     public void setActivityReportTable(){
         reportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         name_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));   
-        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(dateFormat.format(c.getValue().getReport_date()).toUpperCase()));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         
         starttime_column.setCellValueFactory(new PropertyValueFactory<>("start_time"));
         starttime_column.setCellFactory(TextFieldTableCell.forTableColumn());

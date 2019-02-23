@@ -8,8 +8,6 @@ package controller;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.time.Instant;
-import java.util.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +34,7 @@ import model.EquipmentTypeCheck;
 import model.MantainanceItem;
 import model.MantainanceReport;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -74,6 +73,7 @@ public class CreateMantainanceReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        setDatePicker(date_picker);
         fillComboBoxValues();
         setMantainanceItemTableView();
         setMantainanceitem_list();

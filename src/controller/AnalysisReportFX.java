@@ -32,6 +32,8 @@ import javafx.stage.StageStyle;
 import model.AnalysisReport;
 import model.AnalysisType;
 import model.Tank;
+import static msa_ms.MainApp.dateFormat;
+import static msa_ms.MainApp.getFormattedDate;
 
 
 /**
@@ -119,7 +121,7 @@ public class AnalysisReportFX implements Initializable {
     
     public void setAnalysisReportTable(){
         analysisreportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        analysisreportdate_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getReport_date().toString()));
+        analysisreportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         analysisreportemployee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findEmployee(c.getValue()).toString()));
         analysisreporttank_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findTank(c.getValue()).toString()));
         analysisreporttype_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getAnalysisReportDAO().findAnalysisType(c.getValue()).getName()));

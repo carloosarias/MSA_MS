@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -32,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.IncomingLot;
 import model.IncomingReport;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -51,7 +53,7 @@ public class IncomingReportFX implements Initializable {
     @FXML
     private TableColumn<IncomingReport, String> employee_column;
     @FXML
-    private TableColumn<IncomingReport, Date> reportdate_column;
+    private TableColumn<IncomingReport, String> reportdate_column;
     @FXML
     private TableColumn<IncomingReport, String> client_column;
     @FXML
@@ -202,7 +204,7 @@ public class IncomingReportFX implements Initializable {
     public void setIncomingReportTable(){
         reportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
-        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         client_column.setCellValueFactory(new PropertyValueFactory<>("client_name"));
         ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
         packinglist_column.setCellValueFactory(new PropertyValueFactory<>("packing_list"));

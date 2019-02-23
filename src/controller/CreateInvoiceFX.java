@@ -38,6 +38,7 @@ import model.CompanyAddress;
 import model.DepartLot;
 import model.Invoice;
 import model.InvoiceItem;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -104,6 +105,7 @@ public class CreateInvoiceFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         invoicedate_picker.setValue(LocalDate.now());
+        setDatePicker(invoicedate_picker);
         setInvoiceItemTable();
         client_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
         delete_button.disableProperty().bind(invoiceitem_tableview.getSelectionModel().selectedItemProperty().isNull());

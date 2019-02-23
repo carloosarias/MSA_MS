@@ -31,6 +31,8 @@ import model.IncomingLot;
 import model.ProcessReport;
 import model.ProductPart;
 import model.ScrapReport;
+import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -72,7 +74,7 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TableColumn<ProcessReport, Integer> processid_column;
     @FXML
-    private TableColumn<ProcessReport, Date> processdate_column;
+    private TableColumn<ProcessReport, String> processdate_column;
     @FXML
     private TableColumn<ProcessReport, String> processlotnumber_column;
     @FXML
@@ -131,9 +133,9 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TableView<weekly_summary> weekly_tableview;
     @FXML
-    private TableColumn<weekly_summary, Date> weeklystartdate_column;
+    private TableColumn<weekly_summary, String> weeklystartdate_column;
     @FXML
-    private TableColumn<weekly_summary, Date> weeklyenddate_column;
+    private TableColumn<weekly_summary, String> weeklyenddate_column;
     @FXML
     private TableColumn<weekly_summary, String> weeklyincomingtotal_column;
     @FXML
@@ -169,6 +171,8 @@ public class TransactionHistoryFX implements Initializable {
         partnumber_combo.setItems(FXCollections.observableList(msabase.getProductPartDAO().listActive(true)));
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
+        setDatePicker(startdate_picker);
+        setDatePicker(enddate_picker);
         
         partnumber_combo.setOnAction((ActionEvent) -> {
             updateList(partnumber_combo.getSelectionModel().getSelectedItem(), startdate_picker.getValue(), enddate_picker.getValue());
@@ -201,7 +205,7 @@ public class TransactionHistoryFX implements Initializable {
     
     public void setIncomingTableViewItems(){
         incomingid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingLotDAO().findIncomingReport(c.getValue()).getId() + ""));
-        incomingdate_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingLotDAO().findIncomingReport(c.getValue()).getReport_date().toString()));
+        incomingdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(msabase.getIncomingLotDAO().findIncomingReport(c.getValue()).getReport_date()))));
         incominglotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         incomingrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingLotDAO().findPartRevision(c.getValue()).getRev()));
         incomingquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
@@ -211,7 +215,7 @@ public class TransactionHistoryFX implements Initializable {
     
     public void setProcessReportTableViewItems(){
         processid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        processdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        processdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         processlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         processrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findPartRevision(c.getValue()).getRev()));
         processquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
@@ -221,7 +225,7 @@ public class TransactionHistoryFX implements Initializable {
     
     public void setDepartTableViewItems(){
         departid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartLotDAO().findDepartReport(c.getValue()).getId() + ""));
-        departdate_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartLotDAO().findDepartReport(c.getValue()).getReport_date().toString()));
+        departdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(msabase.getDepartLotDAO().findDepartReport(c.getValue()).getReport_date()))));
         departlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         departrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartLotDAO().findPartRevision(c.getValue()).getRev()));
         departquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
@@ -231,8 +235,8 @@ public class TransactionHistoryFX implements Initializable {
     }
     
     public void setWeeklyTableViewItems(){
-        weeklystartdate_column.setCellValueFactory(new PropertyValueFactory<>("start_date"));
-        weeklyenddate_column.setCellValueFactory(new PropertyValueFactory<>("end_date"));
+        weeklystartdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getStart_date()))));
+        weeklyenddate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getEnd_date()))));
         weeklyincomingtotal_column.setCellValueFactory(new PropertyValueFactory<>("incoming_total"));
         weeklyincomingnew_column.setCellValueFactory(new PropertyValueFactory<>("incoming_new"));
         weeklyincomingrejected_column.setCellValueFactory(new PropertyValueFactory<>("incoming_rejected"));

@@ -50,6 +50,7 @@ import model.EquipmentType;
 import model.MantainanceItem;
 import model.MantainanceReport;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -87,7 +88,7 @@ public class MantainanceReportFX implements Initializable {
     @FXML
     private TableColumn<MantainanceReport, Integer> reportid_column;
     @FXML
-    private TableColumn<MantainanceReport, Date> reportdate_column;
+    private TableColumn<MantainanceReport, String> reportdate_column;
     @FXML
     private TableColumn<MantainanceReport, String> employeeid_column;
     @FXML
@@ -205,7 +206,7 @@ public class MantainanceReportFX implements Initializable {
     
     public void setMantainanceReportTableview(){
         reportid_column.setCellValueFactory(new PropertyValueFactory("id"));
-        reportdate_column.setCellValueFactory(new PropertyValueFactory("report_date"));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         employeeid_column.setCellValueFactory(c -> new SimpleStringProperty(""+msabase.getMantainanceReportDAO().findEmployee(c.getValue()).getId()));
         employeename_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getMantainanceReportDAO().findEmployee(c.getValue()).toString()));
     }

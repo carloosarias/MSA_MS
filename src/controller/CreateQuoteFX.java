@@ -35,6 +35,7 @@ import model.Quote;
 import model.QuoteItem;
 import model.Specification;
 import model.SpecificationItem;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -101,6 +102,8 @@ public class CreateQuoteFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         quotedate_picker.setValue(LocalDate.now());
+        setDatePicker(quotedate_picker);
+        
         client_combo.getItems().setAll(msabase.getCompanyDAO().listClient(true));
         part_combo.getItems().setAll(msabase.getPartRevisionDAO().findProductPart(QuoteFX.getPartrevision_selection()));
         part_combo.getSelectionModel().selectFirst();

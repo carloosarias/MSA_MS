@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.Date;
@@ -23,6 +24,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Invoice;
 import model.InvoicePaymentItem;
+import static msa_ms.MainApp.dateFormat;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -38,7 +41,7 @@ public class AddInvoicePaymentItemFX implements Initializable {
     @FXML
     private TableColumn<Invoice, Integer> id_column;
     @FXML
-    private TableColumn<Invoice, Date> invoicedate_column;
+    private TableColumn<Invoice, String> invoicedate_column;
     @FXML
     private TableColumn<Invoice, String> client_column;
     @FXML
@@ -77,7 +80,7 @@ public class AddInvoicePaymentItemFX implements Initializable {
     
     public void setInvoiceTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
+        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getInvoice_date()))));
         client_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCompany_name()));
         shippingaddress_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getShipping_address()));
     }

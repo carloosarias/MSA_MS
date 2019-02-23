@@ -10,6 +10,7 @@ import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +43,7 @@ import javafx.scene.layout.GridPane;
 import model.OrderPurchase;
 import model.PurchaseItem;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.getFormattedDate;
 
 
 /**
@@ -57,7 +59,7 @@ public class OrderPurchaseFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchase, Integer> orderid_column;
     @FXML
-    private TableColumn<OrderPurchase, Date> orderdate_column;
+    private TableColumn<OrderPurchase, String> orderdate_column;
     @FXML
     private TableColumn<OrderPurchase, String> company_column;
     @FXML
@@ -191,7 +193,7 @@ public class OrderPurchaseFX implements Initializable {
     
     public void setOrderPurchaseTable(){
         orderid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        orderdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        orderdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         company_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
         companyaddress_column.setCellValueFactory(new PropertyValueFactory<>("companyaddress_address"));
         exchangerate_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getExchange_rate())+" MXN"));

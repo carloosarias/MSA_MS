@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.OrderPurchaseIncomingItem;
 import model.OrderPurchaseIncomingReport;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -46,7 +49,7 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, String> company_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingReport, Date> reportdate_column;
+    private TableColumn<OrderPurchaseIncomingReport, String> reportdate_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, Integer> employeeid_column1;
     @FXML
@@ -110,7 +113,7 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
         orderpurchaseincomingreportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         orderpurchaseid_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_id"));
         company_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_companyname"));
-        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         employeeid_column1.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
         employeename_column.setCellValueFactory(new PropertyValueFactory<>("employee_employeename"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));

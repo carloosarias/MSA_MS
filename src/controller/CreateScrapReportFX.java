@@ -26,6 +26,7 @@ import model.ProcessReport;
 import model.ProductPart;
 import model.ScrapReport;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -70,6 +71,7 @@ public class CreateScrapReportFX implements Initializable {
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         employee_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
+        setDatePicker(reportdate_picker);
         
         partnumber_combo.setOnAction((ActionEvent) -> {
             partnumbercombo_text = partnumber_combo.getEditor().textProperty().getValue();

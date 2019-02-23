@@ -31,6 +31,7 @@ import javafx.scene.layout.BorderPane;
 import model.Employee;
 import model.Module;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -104,6 +105,8 @@ public class HrFX implements Initializable {
         filter_combo.setItems(filter_list);
         filter_combo.getSelectionModel().selectFirst();
         updateList();
+        setDatePicker(dob_picker);
+        setDatePicker(hire_picker);
 
         entry_hour.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,23,0));
         entry_min.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,59,0));

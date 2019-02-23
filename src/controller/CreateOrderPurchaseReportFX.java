@@ -12,8 +12,6 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,19 +25,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import model.Company;
 import model.CompanyAddress;
 import model.OrderPurchase;
 import model.PurchaseItem;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -110,6 +106,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         df.setMaximumFractionDigits(4);
         
         reportdate_picker.setValue(LocalDate.now());
+        setDatePicker(reportdate_picker);
         
         company_combo.getItems().setAll(company_selection);
         company_combo.getSelectionModel().selectFirst();

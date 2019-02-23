@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -27,8 +28,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.PartRevision;
-import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.df;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -124,7 +125,7 @@ public class PartRevisionFX implements Initializable {
     
     public void setPartRevisionTable(){
         partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
-        revdate_column.setCellValueFactory(c -> new SimpleStringProperty(dateFormat.format(c.getValue().getRev_date()).toUpperCase()));
+        revdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getRev_date()))));
         finalprocess_column.setCellValueFactory(new PropertyValueFactory<>("specification_process"));
         specnumber_column.setCellValueFactory(new PropertyValueFactory<>("specification_specificationnumber"));
         basemetal_column.setCellValueFactory(new PropertyValueFactory<>("metal_metalname"));

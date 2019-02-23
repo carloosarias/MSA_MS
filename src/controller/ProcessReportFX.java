@@ -42,6 +42,8 @@ import model.Employee;
 import model.Module;
 import model.ProcessReport;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -73,7 +75,7 @@ public class ProcessReportFX implements Initializable {
     @FXML
     private TableColumn<ProcessReport, String> employee_column;
     @FXML
-    private TableColumn<ProcessReport, Date> reportdate_column;
+    private TableColumn<ProcessReport, String> reportdate_column;
     @FXML
     private TableColumn<ProcessReport, String> partnumber_column;
     @FXML
@@ -116,6 +118,8 @@ public class ProcessReportFX implements Initializable {
         employee_combo.getSelectionModel().select(MainApp.current_employee);
         startdate_picker.setValue(LocalDate.now());
         enddate_picker.setValue(LocalDate.now().plusDays(1));
+        setDatePicker(startdate_picker);
+        setDatePicker(enddate_picker);
         
         filter_hbox.setDisable(!MainApp.current_employee.isAdmin());
         
@@ -201,7 +205,7 @@ public class ProcessReportFX implements Initializable {
     public void setProcessReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         employee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findEmployee(c.getValue()).toString()));
-        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getProcessReportDAO().findPartRevision(c.getValue())).getPart_number()));
         revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findPartRevision(c.getValue()).getRev()));
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));

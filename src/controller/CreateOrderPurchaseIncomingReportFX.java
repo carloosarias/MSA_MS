@@ -11,7 +11,6 @@ import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -33,6 +32,7 @@ import model.OrderPurchaseIncomingItem;
 import model.OrderPurchaseIncomingReport;
 import model.PurchaseItem;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -80,6 +80,7 @@ public class CreateOrderPurchaseIncomingReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         reportdate_picker.setValue(LocalDate.now());
+        setDatePicker(reportdate_picker);
         comments_area.setText("N/A");
         employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         employee_combo.getSelectionModel().selectFirst();

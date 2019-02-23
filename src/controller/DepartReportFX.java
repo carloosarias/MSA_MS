@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -46,6 +47,7 @@ import model.CompanyContact;
 import model.DepartLot;
 import model.DepartReport;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -63,7 +65,7 @@ public class DepartReportFX implements Initializable {
     @FXML
     private TableColumn<DepartReport, String> employee_column;
     @FXML
-    private TableColumn<DepartReport, Date> reportdate_column;
+    private TableColumn<DepartReport, String> reportdate_column;
     @FXML
     private TableColumn<DepartReport, String> client_column;
     @FXML
@@ -267,7 +269,7 @@ public class DepartReportFX implements Initializable {
     public void setDepartReportTable(){
         reportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
-        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
         address_column.setCellValueFactory(new PropertyValueFactory<>("company_address"));
     }

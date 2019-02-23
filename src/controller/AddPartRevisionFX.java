@@ -9,6 +9,7 @@ import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -18,10 +19,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import model.Metal;
 import model.PartRevision;
 import model.ProductPart;
 import model.Specification;
+import static msa_ms.MainApp.dateFormat;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -56,6 +60,7 @@ public class AddPartRevisionFX implements Initializable {
         metal_combo.getItems().setAll(msabase.getMetalDAO().list(true));
         specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
         revdate_picker.setValue(LocalDate.now());
+        setDatePicker(revdate_picker);
         
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){

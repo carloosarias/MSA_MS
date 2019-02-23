@@ -14,8 +14,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Properties;
 
 /**
@@ -80,10 +82,14 @@ public final class DAOUtil {
 
     public static java.sql.Time toSqlTime(LocalTime time){
         return Time.valueOf(time);
-}
+    }
     
     public static LocalTime toLocalTime(java.sql.Time time) {
         return time.toLocalTime();
+    }
+    
+    public static LocalDate toLocalDate(java.util.Date date){
+        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
     }
     
     public static java.util.Date toUtilDate(LocalDate date){

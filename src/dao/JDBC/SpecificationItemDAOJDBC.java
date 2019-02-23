@@ -52,7 +52,7 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
             "INSERT INTO SPECIFICATION_ITEM (SPECIFICATION_ID, METAL_ID, minimum_thickness, maximum_thickness, active) "
             + "VALUES(?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SPECIFICATION_ITEM SET specification_number = ?, process = ?, active = ? WHERE id = ?";
+            "UPDATE SPECIFICATION_ITEM SET minimum_thickness = ?, maximum_thickness = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM SPECIFICATION_ITEM WHERE id = ?";
     

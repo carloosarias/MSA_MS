@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -32,6 +33,7 @@ import javafx.stage.StageStyle;
 import model.IncomingReport;
 import model.ProductPart;
 import model.ScrapReport;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -53,7 +55,7 @@ public class ScrapReportFX implements Initializable {
     @FXML
     private TableColumn<ScrapReport, String> employee_column;
     @FXML
-    private TableColumn<ScrapReport, Date> reportdate_column;
+    private TableColumn<ScrapReport, String> reportdate_column;
     @FXML
     private TableColumn<ScrapReport, String> partnumber_column;
     @FXML
@@ -127,7 +129,7 @@ public class ScrapReportFX implements Initializable {
     public void setScrapReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         employee_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getScrapReportDAO().findEmployee(c.getValue()).toString()));
-        reportdate_column.setCellValueFactory(new PropertyValueFactory<>("report_date"));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getPartRevisionDAO().findProductPart(msabase.getScrapReportDAO().findPartRevision(c.getValue())).getPart_number()));
         revision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getScrapReportDAO().findPartRevision(c.getValue()).getRev()));
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));

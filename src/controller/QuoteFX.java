@@ -10,6 +10,7 @@ import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +56,7 @@ import model.QuoteItem;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.df;
+import static msa_ms.MainApp.getFormattedDate;
 
 
 
@@ -254,7 +256,7 @@ public class QuoteFX implements Initializable {
     public void setQuoteTableView(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         contact_column.setCellValueFactory(new PropertyValueFactory<>("contact_name"));
-        quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(dateFormat.format(c.getValue().getQuote_date())));
+        quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getQuote_date()))));
         eau_column.setCellValueFactory(new PropertyValueFactory<>("estimated_annual_usage"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         status_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getApproved()));

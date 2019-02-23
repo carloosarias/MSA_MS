@@ -33,6 +33,7 @@ import model.ProcessReport;
 import model.ProductPart;
 import model.Tank;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -106,6 +107,7 @@ public class CreateProcessReportFX implements Initializable {
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         employee_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
+        setDatePicker(reportdate_picker);
         
         equipmenttype_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EquipmentType> observable, EquipmentType oldValue, EquipmentType newValue) -> {
             equipment_combo.getSelectionModel().clearSelection();

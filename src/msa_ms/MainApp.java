@@ -5,19 +5,20 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 import model.Employee;
 
 /**
@@ -27,9 +28,9 @@ import model.Employee;
 public class MainApp extends Application{
     
     public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    public static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
     
-    public static String getFormattedDate(Date date){
+    public static String getFormattedDate(LocalDate date){
         return dateFormat.format(date).toUpperCase();
     }
     
@@ -78,6 +79,28 @@ public class MainApp extends Application{
 
     public static void openPDF(File file) throws IOException{
         Desktop.getDesktop().open(file);
+    }
+    
+    public static void setDatePicker(DatePicker date_picker){
+        date_picker.setConverter(new StringConverter<LocalDate>(){
+            @Override
+            public String toString(LocalDate localDate){
+                if(localDate==null){
+                    return "";
+                }
+                return getFormattedDate(localDate);
+            }
+
+            @Override
+            public LocalDate fromString(String dateString)
+            {
+                if(dateString==null || dateString.trim().isEmpty())
+                {
+                    return null;
+                }
+                return LocalDate.parse(dateString, dateFormat);
+            }
+        });
     }
     
     @Override

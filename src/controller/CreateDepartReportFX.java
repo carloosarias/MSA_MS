@@ -40,6 +40,7 @@ import model.Employee;
 import model.PartRevision;
 import model.ProductPart;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -127,7 +128,7 @@ public class CreateDepartReportFX implements Initializable {
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         reportdate_picker.setValue(LocalDate.now());
-        
+        setDatePicker(reportdate_picker);
         lotnumber_field.setOnAction((ActionEvent) -> {
             part_combo.requestFocus();
             ActionEvent.consume();

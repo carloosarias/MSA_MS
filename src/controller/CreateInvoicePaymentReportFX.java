@@ -39,6 +39,8 @@ import model.Company;
 import model.Invoice;
 import model.InvoicePaymentItem;
 import model.InvoicePaymentReport;
+import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -54,7 +56,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     @FXML
     private TableColumn<InvoicePaymentItem, Integer> invoiceid_column;
     @FXML
-    private TableColumn<InvoicePaymentItem, Date> invoicedate_column;
+    private TableColumn<InvoicePaymentItem, String> invoicedate_column;
     @FXML
     private TableColumn<InvoicePaymentItem, String> invoicetotal_column;
     @FXML
@@ -90,6 +92,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         reportdate_picker.setValue(LocalDate.now());
+        setDatePicker(reportdate_picker);
         clientcombo_selection = new Company();
         invoice_list = new ArrayList();
         invoicepaymentitem_queue = new ArrayList();
@@ -215,7 +218,7 @@ public class CreateInvoicePaymentReportFX implements Initializable {
     
     public void setInvoicePaymentItemTable(){
         invoiceid_column.setCellValueFactory(new PropertyValueFactory<>("invoice_id"));
-        invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
+        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getInvoice_date()))));
         invoicetotal_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+msabase.getInvoiceDAO().findTotal(c.getValue().getTemp_invoice())+" USD"));
     }
 

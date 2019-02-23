@@ -19,11 +19,14 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import model.AnalysisReport;
 import model.AnalysisType;
 import model.Employee;
 import model.Tank;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.dateFormat;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -67,6 +70,8 @@ public class CreateAnalysisReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         reportdate_picker.setValue(LocalDate.now());
+        setDatePicker(reportdate_picker);
+        
         employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         employee_combo.getSelectionModel().selectFirst();
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));

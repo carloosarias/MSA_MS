@@ -47,6 +47,7 @@ import model.IncomingReport;
 import model.PartRevision;
 import model.ProductPart;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.setDatePicker;
 
 /**
  * FXML Controller class
@@ -156,6 +157,7 @@ public class CreateIncomingReportFX implements Initializable {
         status_combo.setItems(FXCollections.observableArrayList(MainApp.materialstatus_list));
         status_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
+        setDatePicker(reportdate_picker);
         
         status_combo.setOnAction((ActionEvent) -> {
             if(status_combo.getSelectionModel().getSelectedItem().equals("Rechazo")){
