@@ -30,9 +30,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import model.ActivityReport;
 import msa_ms.MainApp;
-import static msa_ms.MainApp.dateFormat;
-import static msa_ms.MainApp.dateTimeFormatter;
 import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  * FXML Controller class
@@ -189,7 +188,7 @@ public class ActivityReportFX implements Initializable {
     
     public String getStart_time(ActivityReport report, String value){
         try{
-            dateTimeFormatter.parse(value);
+            timeFormat.parse(value.toUpperCase());
         }catch(Exception e){
             return report.getStart_time();
         }
@@ -198,7 +197,7 @@ public class ActivityReportFX implements Initializable {
     
     public String getEnd_time(ActivityReport report, String value){
         try{
-            dateTimeFormatter.parse(value);
+            timeFormat.parse(value.toUpperCase());
         }catch(Exception e){
             return report.getEnd_time();
         }
@@ -224,8 +223,8 @@ public class ActivityReportFX implements Initializable {
     public void createActivityReport(){
         ActivityReport activity_report = new ActivityReport();
         activity_report.setReport_date(DAOUtil.toUtilDate(LocalDate.now()));
-        activity_report.setStart_time(LocalTime.now().format(dateTimeFormatter));
-        activity_report.setEnd_time(LocalTime.now().format(dateTimeFormatter));
+        activity_report.setStart_time(LocalTime.now().format(timeFormat));
+        activity_report.setEnd_time(LocalTime.now().format(timeFormat));
         activity_report.setJob_description("N/A");
         activity_report.setPhysical_location("N/A");
         activity_report.setAction_taken("N/A");

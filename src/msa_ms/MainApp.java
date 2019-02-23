@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -27,8 +28,8 @@ import model.Employee;
  */
 public class MainApp extends Application{
     
-    public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
-    public static DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+    public static DateTimeFormatter timeFormat = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("hh:mm a").toFormatter();
+    public static DateTimeFormatter dateFormat = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("dd/MMM/yyyy").toFormatter();
     
     public static String getFormattedDate(LocalDate date){
         return dateFormat.format(date).toUpperCase();

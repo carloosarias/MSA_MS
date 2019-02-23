@@ -31,8 +31,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 import model.AnalysisReport;
 import model.Tank;
+import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.getFormattedDate;
 import static msa_ms.MainApp.setDatePicker;
 
@@ -119,7 +121,11 @@ public class AnalysisReportFX implements Initializable {
     }
     
     public void updateAnalysisReportTable(){
-        analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), true, tank_filter.isSelected(), date_filter.isSelected()));
+        try{
+            analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), true, tank_filter.isSelected(), date_filter.isSelected()));
+        } catch(Exception e){
+            analysisreport_tableview.getItems().clear();
+        }
     }
     
     public void showAddAnalysisReportStage(){
