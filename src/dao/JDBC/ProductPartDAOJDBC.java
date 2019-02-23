@@ -26,10 +26,10 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE id = ?";
     private static final String SQL_FIND_BY_PART_NUMBER = 
             "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE part_number = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, part_number, description, active FROM PRODUCT_PART ORDER BY id";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE active = ? ORDER BY id";
+    private static final String SQL_LIST_ORDER_BY_PART_NUMBER = 
+            "SELECT id, part_number, description, active FROM PRODUCT_PART ORDER BY part_number";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_PART_NUMBER = 
+            "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE active = ? ORDER BY part_number";
     private static final String SQL_INSERT =
             "INSERT INTO PRODUCT_PART (part_number, description, active) "
             + "VALUES (?, ?, ?)";
@@ -90,13 +90,13 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         return part;
     }
 
-    @Override
+    /*@Override
     public List<ProductPart> list() throws DAOException {
         List<ProductPart> part = new ArrayList<>();
 
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_PART_NUMBER);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -107,7 +107,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         }
         
         return part;
-    }    
+    }    */
     
     @Override
     public List<ProductPart> listActive(boolean active) throws DAOException {
@@ -119,7 +119,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_PART_NUMBER, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){

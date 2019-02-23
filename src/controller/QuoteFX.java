@@ -199,7 +199,7 @@ public class QuoteFX implements Initializable {
     }
     
     public void setPartRevisionItems(ProductPart product_part){
-        partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(product_part)));
+        partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(product_part, true)));
     }
     
     public void setQuoteFields(){

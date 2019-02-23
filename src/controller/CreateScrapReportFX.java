@@ -179,7 +179,7 @@ public class CreateScrapReportFX implements Initializable {
     
     public void updatePartrev_combo(){
         try{
-            revision_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partnumbercombo_selection)));
+            revision_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partnumbercombo_selection, true)));
         } catch(Exception e) {
             revision_combo.getItems().clear();
         }

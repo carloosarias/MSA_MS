@@ -48,14 +48,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             "SELECT SPECIFICATION_ID FROM PART_REVISION WHERE id = ?";
     private static final String SQL_FIND_BASE_METAL_BY_ID = 
             "SELECT BASE_METAL_ID FROM PART_REVISION WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
-            + "FROM PART_REVISION "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
             + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
@@ -64,15 +56,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE PART_REVISION.active = ? "
-            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
-    private static final String SQL_LIST_OF_PART_ORDER_BY_ID = 
-            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
-            + "FROM PART_REVISION "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? "
             + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
     private static final String SQL_LIST_ACTIVE_OF_PART_ORDER_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
@@ -83,14 +66,14 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PART_REVISION.active = ? "
             + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
-    private static final String SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID = 
+    private static final String SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID = 
             "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
             + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
             + "FROM PART_REVISION "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.SPECIFICATION_ID = ? "
+            + "WHERE PART_REVISION.SPECIFICATION_ID = ? AND PART_REVISION.active = ? "
             + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
     private static final String SQL_INSERT = 
             "INSERT INTO PART_REVISION (PRODUCT_PART_ID, SPECIFICATION_ID, BASE_METAL_ID, rev, rev_date, area, base_weight, final_weight, active) "
@@ -236,7 +219,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         return metal;
     }
     
-    @Override
+    /*@Override
     public List<PartRevision> list() throws DAOException {
         List<PartRevision> revisions = new ArrayList<>();
 
@@ -253,7 +236,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         }
         
         return revisions;
-    }
+    }*/
 
     @Override
     public List<PartRevision> list(boolean active) throws DAOException {
@@ -278,7 +261,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         return revisions;
     }
     
-    @Override
+    /*@Override
     public List<PartRevision> list(ProductPart part) throws IllegalArgumentException, DAOException {
         if(part.getId() == null) {
             throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
@@ -303,7 +286,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         }
         
         return revisions;
-    }
+    }*/
 
     @Override
     public List<PartRevision> list(ProductPart part, boolean active) throws IllegalArgumentException, DAOException {
@@ -334,7 +317,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public List<PartRevision> listOfSpecification(Specification specification) throws DAOException { 
+    public List<PartRevision> listOfSpecification(Specification specification, boolean active) throws DAOException { 
         if(specification.getId() == null) {
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
         }    
@@ -342,12 +325,13 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         List<PartRevision> revisions = new ArrayList<>();
         
         Object[] values = {
-            specification.getId()
+            specification.getId(),
+            active
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_SPECIFICATION_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){

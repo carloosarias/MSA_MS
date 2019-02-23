@@ -39,7 +39,7 @@ public interface ProductPartDAO {
      * @return A list of all ProductParts from the database ordered by ProductPart ID.
      * @throws DAOException If something fails at database level.
      */
-    public List<ProductPart> list() throws DAOException;
+    //public List<ProductPart> list() throws DAOException;
     
     /**
      * Returns a list of all active ProductParts from the database ordered by ProductPart ID. The list is never null and

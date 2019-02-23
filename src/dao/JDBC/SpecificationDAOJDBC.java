@@ -84,7 +84,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         return specification;
     }
     
-    @Override
+    /*@Override
     public List<Specification> list() throws DAOException {
         List<Specification> specifications = new ArrayList<>();
 
@@ -101,7 +101,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         }
         
         return specifications;
-    }
+    }*/
     
     @Override
     public List<Specification> list(boolean active) throws DAOException {

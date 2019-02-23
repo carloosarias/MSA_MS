@@ -74,7 +74,7 @@ public interface PartRevisionDAO {
      * @return A list of all PartRevisions from the database ordered by PartRevision ID.
      * @throws DAOException If something fails at database level.
      */    
-    public List<PartRevision> list() throws DAOException;
+    //public List<PartRevision> list() throws DAOException;
     
     /**
      * Returns a list of all active PartRevisions from the database ordered by PartRevision ID. The list is never null and
@@ -94,7 +94,7 @@ public interface PartRevisionDAO {
      * @throws IllegalArgumentException If the ProductPart ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public List<PartRevision> list(ProductPart part) throws IllegalArgumentException, DAOException;
+    //public List<PartRevision> list(ProductPart part) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all PartRevisions matching ProductPart ID and active from the database ordered by PartRevision ID. The ProductPart ID must not be null, otherwise it will throw
@@ -116,7 +116,7 @@ public interface PartRevisionDAO {
      * @return A list of all PartRevisions matching Specification from the database ordered by PartRevision ID.
      * @throws DAOException If something fails at database level.
      */    
-    public List<PartRevision> listOfSpecification(Specification specification) throws DAOException;
+    public List<PartRevision> listOfSpecification(Specification specification, boolean active) throws DAOException;
     
     /**
      * Create the given PartRevision in the database. The ProductPart ID must 

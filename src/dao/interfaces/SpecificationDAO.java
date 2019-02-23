@@ -30,7 +30,7 @@ public interface SpecificationDAO {
      * @return A list of all Specification from the database ordered by Specification ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<Specification> list() throws DAOException;
+    //public List<Specification> list() throws DAOException;
     public List<Specification> list(boolean active) throws DAOException;
     
     /**

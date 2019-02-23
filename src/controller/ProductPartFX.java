@@ -62,10 +62,13 @@ public class ProductPartFX implements Initializable {
         setProductPartTable();
         updateProductPartTable();
         
+        disable_button.disableProperty().bind(productpart_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
         add_button.setOnAction((ActionEvent) -> {
             int current_size = productpart_tableview.getItems().size();
             createProductPart();
             updateProductPartTable();
+            productpart_tableview.scrollTo(product_part);
             productpart_tableview.getSelectionModel().select(product_part);
         });
         
@@ -80,6 +83,7 @@ public class ProductPartFX implements Initializable {
         product_part = new ProductPart();
         product_part.setPart_number("N/A");
         product_part.setDescription("N/A");
+        product_part.setActive(true);
         msabase.getProductPartDAO().create(product_part);
     }
     
