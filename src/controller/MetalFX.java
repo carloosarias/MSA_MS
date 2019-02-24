@@ -53,6 +53,8 @@ public class MetalFX implements Initializable {
         setMetalTable();
         updateMetalTable();
         
+        disable_button.disableProperty().bind(metal_tableview.getSelectionModel().selectedItemProperty().isNull());
+                
         add_button.setOnAction((ActionEvent) -> {
             createMetal();
             updateMetalTable();

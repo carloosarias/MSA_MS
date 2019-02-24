@@ -47,7 +47,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE ANALYSIS_REPORT.active = ?"
+            + "WHERE ANALYSIS_REPORT.active = ? "
             + "ORDER BY id";
     private static final String SQL_LIST_ACTIVE_TANK_DATE_RANGE_ORDER_BY_ID = 
             "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
@@ -56,7 +56,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.report_date BETWEEN ? AND ? OR ? = 0) AND ANALYSIS_REPORT.active = ?"
+            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.report_date BETWEEN ? AND ? OR ? = 0) AND ANALYSIS_REPORT.active = ? "
             + "ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, quantity_used, applied_adjust, active) "
@@ -355,6 +355,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
      * @throws SQLException If something fails at database level.
      */
     public static AnalysisReport map(ResultSet resultSet) throws SQLException{
+        System.out.println("test");
         AnalysisReport analysis_report = new AnalysisReport();
         analysis_report.setId(resultSet.getInt("ANALYSIS_REPORT.id"));
         analysis_report.setReport_date(resultSet.getDate("ANALYSIS_REPORT.report_date"));

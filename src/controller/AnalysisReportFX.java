@@ -14,7 +14,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,6 +25,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.AnalysisReport;
 import model.Tank;
+import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.getFormattedDate;
 import static msa_ms.MainApp.setDatePicker;
 
@@ -67,7 +68,13 @@ public class AnalysisReportFX implements Initializable {
     @FXML
     private TableColumn<AnalysisReport, String> tank_column;
     @FXML
-    private TableColumn<AnalysisReport, String> type_column;
+    private TableColumn<AnalysisReport, String> volume_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> analysistype_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> factor_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> optimal_column;
     @FXML
     private TableColumn<AnalysisReport, String> quantityused_column;
     @FXML
@@ -90,8 +97,13 @@ public class AnalysisReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        df.setMaximumFractionDigits(6);
+        
+        disable_button.disableProperty().bind(analysisreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
         tank_combo.getItems().setAll(msabase.getTankDAO().list(true));
         tank_combo.getSelectionModel().selectFirst();
+        
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         setDatePicker(startdate_picker);
@@ -100,9 +112,41 @@ public class AnalysisReportFX implements Initializable {
         setAnalysisReportTable();
         updateAnalysisReportTable();
         
-        add_button.setOnAction((ActionEvent) -> {
-            showAddAnalysisReportStage();
+        tank_combo.setOnAction((ActionEvent) -> {
             updateAnalysisReportTable();
+        });
+        
+        startdate_picker.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        
+        enddate_picker.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        
+        tank_filter.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        
+        date_filter.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        
+        
+        
+        add_button.setOnAction((ActionEvent) -> {
+            int current_size = analysisreport_tableview.getItems().size();
+            showAdd_stage();
+            updateAnalysisReportTable();
+            if(current_size < analysisreport_tableview.getItems().size()){
+                analysisreport_tableview.scrollTo(CreateAnalysisReportFX.analysis_report);
+                analysisreport_tableview.getSelectionModel().select(CreateAnalysisReportFX.analysis_report);
+            }
+        });
+        
+        disable_button.setOnAction((ActionEvent) -> {
+            analysisreport_tableview.getSelectionModel().getSelectedItem().setActive(false);
+            msabase.getAnalysisReportDAO().update(analysisreport_tableview.getSelectionModel().getSelectedItem());
         });
     }
     
@@ -110,12 +154,30 @@ public class AnalysisReportFX implements Initializable {
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
-        tank_column.setCellValueFactory(new PropertyValueFactory<>("tank_name"));
-        type_column.setCellValueFactory(new PropertyValueFactory<>("analysis_type"));
-        quantityused_column.setCellValueFactory(new PropertyValueFactory<>("quantity_used"));
-        result_column.setCellValueFactory(new PropertyValueFactory<>("result"));
-        estimatedadjust_column.setCellValueFactory(new PropertyValueFactory<>("estimated_adjust"));
-        appliedadjust_column.setCellValueFactory(new PropertyValueFactory<>("applied_adjust"));
+        tank_column.setCellValueFactory(new PropertyValueFactory<>("tank"));
+        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" LT³"));
+        analysistype_column.setCellValueFactory(new PropertyValueFactory<>("analysis_type"));
+        factor_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getFactor())));
+        optimal_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getOptimal())+" G/L"));
+        
+        quantityused_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getQuantity_used())));
+        quantityused_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantityused_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity_used(getQuantity_usedValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getAnalysisReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            analysisreport_tableview.refresh();
+        });
+        
+        result_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getResult())));
+        estimatedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getEstimated_adjust())));
+        
+        appliedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getApplied_adjust())));
+        appliedadjust_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        appliedadjust_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setApplied_adjust(getApplied_adjustValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getAnalysisReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            analysisreport_tableview.refresh();
+        });
     }
     
     public void updateAnalysisReportTable(){
@@ -126,7 +188,7 @@ public class AnalysisReportFX implements Initializable {
         }
     }
     
-    public void showAddAnalysisReportStage(){
+    public void showAdd_stage(){
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
@@ -141,6 +203,22 @@ public class AnalysisReportFX implements Initializable {
             add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public Double getQuantity_usedValue(AnalysisReport analysis_report, String quantity_used){
+        try{
+            return Double.parseDouble(quantity_used);
+        }catch(Exception e){
+            return analysis_report.getQuantity_used();
+        }
+    }
+    
+    public Double getApplied_adjustValue(AnalysisReport analysis_report, String applied_adjust){
+        try{
+            return Double.parseDouble(applied_adjust);
+        }catch(Exception e){
+            return analysis_report.getApplied_adjust();
         }
     }
 }

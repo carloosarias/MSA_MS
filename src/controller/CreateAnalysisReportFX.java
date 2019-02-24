@@ -16,16 +16,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import model.AnalysisReport;
 import model.AnalysisType;
-import model.Employee;
 import model.Tank;
 import msa_ms.MainApp;
-import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.setDatePicker;
 
 /**
@@ -45,6 +41,8 @@ public class CreateAnalysisReportFX implements Initializable {
     private ComboBox<AnalysisType> analysistype_combo;
     @FXML
     private Button save_button;
+    
+    public static AnalysisReport analysis_report;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -95,11 +93,11 @@ public class CreateAnalysisReportFX implements Initializable {
     }
         
     public void createAnalysisReport(){
-        AnalysisReport item = new AnalysisReport();
-        item.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
-        item.setQuantity_used(0.0);
-        item.setApplied_adjust(0.0);
-        item.setActive(true);
-        msabase.getAnalysisReportDAO().create(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), MainApp.current_employee, item);
+        analysis_report = new AnalysisReport();
+        analysis_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
+        analysis_report.setQuantity_used(0.0);
+        analysis_report.setApplied_adjust(0.0);
+        analysis_report.setActive(true);
+        msabase.getAnalysisReportDAO().create(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), MainApp.current_employee, analysis_report);
     }
 }

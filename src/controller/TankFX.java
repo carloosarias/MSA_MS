@@ -59,10 +59,13 @@ public class TankFX implements Initializable {
         updateTankTable();        
         
         add_button.setOnAction((ActionEvent) -> {
+            int current_size = tank_tableview.getItems().size();
             createTank();
             updateTankTable();
-            tank_tableview.scrollTo(tank);
-            tank_tableview.getSelectionModel().select(tank);
+            if(current_size < tank_tableview.getItems().size()){
+                tank_tableview.scrollTo(tank);
+                tank_tableview.getSelectionModel().select(tank);
+            }
         });
         
         disable_button.setOnAction((ActionEvent) -> {
