@@ -23,14 +23,14 @@ import model.Tank;
 public class TankDAOJDBC implements TankDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, tank_name, description, volume FROM TANK WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, tank_name, description, volume FROM TANK ORDER BY id";
+            "SELECT id, tank_name, description, volume, active FROM TANK WHERE id = ?";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT id, tank_name, description, volume, active FROM TANK WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO TANK (tank_name, description, volume) "
-            + "VALUES (?,?,?)";
+            "INSERT INTO TANK (tank_name, description, volume, active) "
+            + "VALUES (?,?,?,?)";
     private static final String SQL_UPDATE = 
-            "UPDATE TANK SET tank_name = ?, description = ?, volume = ? WHERE id = ?";
+            "UPDATE TANK SET tank_name = ?, description = ?, volume = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM TANK WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -81,12 +81,16 @@ public class TankDAOJDBC implements TankDAO {
     }
     
     @Override
-    public List<Tank> list() throws DAOException {
+    public List<Tank> list(boolean active) throws DAOException {
         List<Tank> tank = new ArrayList<>();
+        
+        Object[] values = {
+            active
+        };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -109,7 +113,8 @@ public class TankDAOJDBC implements TankDAO {
         Object[] values = {
             tank.getTank_name(),
             tank.getDescription(),
-            tank.getVolume()
+            tank.getVolume(),
+            tank.getActive()
         };
         
         try(
@@ -144,6 +149,7 @@ public class TankDAOJDBC implements TankDAO {
             tank.getTank_name(),
             tank.getDescription(),
             tank.getVolume(),
+            tank.getActive(),
             tank.getId()
         };
         
@@ -195,6 +201,7 @@ public class TankDAOJDBC implements TankDAO {
         container.setTank_name(resultSet.getString("tank_name"));
         container.setDescription(resultSet.getString("description"));
         container.setVolume(resultSet.getDouble("volume"));
+        container.setActive(resultSet.getBoolean("active"));
         return container;
     }
 }

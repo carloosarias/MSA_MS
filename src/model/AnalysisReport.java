@@ -18,8 +18,6 @@ public class AnalysisReport implements Serializable{
     private Integer id;
     private Date report_date;
     private double quantity_used;
-    private double result;
-    private double estimated_adjust;
     private double applied_adjust;
     private boolean active;
     
@@ -55,21 +53,15 @@ public class AnalysisReport implements Serializable{
     public void setQuantity_used(double quantity_used) {
         this.quantity_used = quantity_used;
     }
-
+    
+    //Result = Quantity used * factor
     public double getResult() {
-        return result;
+        return quantity_used*factor;
     }
-
-    public void setResult(double result) {
-        this.result = result;
-    }
-
+    
+    //Estimated adjust = ((result * optimal) * volume) / 1000
     public double getEstimated_adjust() {
-        return estimated_adjust;
-    }
-
-    public void setEstimated_adjust(double estimated_adjust) {
-        this.estimated_adjust = estimated_adjust;
+        return ((getResult() * optimal) * volume)/1000;
     }
     
     public double getApplied_adjust(){

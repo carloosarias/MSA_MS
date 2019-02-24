@@ -56,7 +56,7 @@ public class MetalFX implements Initializable {
         add_button.setOnAction((ActionEvent) -> {
             createMetal();
             updateMetalTable();
-            metal_tableview.requestFocus();
+            metal_tableview.scrollTo(metal);
             metal_tableview.getSelectionModel().select(metal);
         });
         

@@ -6,25 +6,20 @@
 package controller;
 
 import dao.JDBC.DAOFactory;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.collections.FXCollections;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import model.Tank;
+import static msa_ms.MainApp.df;
 
 /**
  * FXML Controller class
@@ -32,9 +27,9 @@ import model.Tank;
  * @author Pavilion Mini
  */
 public class TankFX implements Initializable {
-
+    
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<Tank> tank_tableview;
     @FXML
@@ -44,9 +39,13 @@ public class TankFX implements Initializable {
     @FXML
     private TableColumn<Tank, String> description_column;
     @FXML
-    private TableColumn<Tank, Double> volume_column;
+    private TableColumn<Tank, String> volume_column;
     @FXML
     private Button add_button;
+    @FXML
+    private Button disable_button;
+    
+    private Tank tank;
     
     private Stage add_stage = new Stage();
     
@@ -57,39 +56,73 @@ public class TankFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setTankTable();        
+        updateTankTable();        
         
         add_button.setOnAction((ActionEvent) -> {
-            showAdd_stage();
-            updateContainerTable();
+            createTank();
+            updateTankTable();
+            tank_tableview.scrollTo(tank);
+            tank_tableview.getSelectionModel().select(tank);
+        });
+        
+        disable_button.setOnAction((ActionEvent) -> {
+            disableTank();
+            updateTankTable();
         });
     }
     
-    public void updateContainerTable(){
-        tank_tableview.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
+    public void disableTank(){
+        tank_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getTankDAO().update(tank_tableview.getSelectionModel().getSelectedItem());
     }
     
-    public void showAdd_stage(){
-        try {
-            add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
-            add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateTankFX.fxml"));
-            Scene scene = new Scene(root);
-            
-            add_stage.setTitle("Nuevo Tanque");
-            add_stage.setResizable(false);
-            add_stage.initStyle(StageStyle.UTILITY);
-            add_stage.setScene(scene);
-            add_stage.showAndWait();
-        } catch (IOException ex) {
-            Logger.getLogger(TankFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void createTank(){
+        tank = new Tank();
+        tank.setTank_name("N/A");
+        tank.setDescription("N/A");
+        tank.setVolume(0.0);
+        tank.setActive(true);
+        
+        msabase.getTankDAO().create(tank);
+    }
+    
+    public void updateTankTable(){
+        tank_tableview.getItems().setAll(msabase.getTankDAO().list(true));
     }
         
     public void setTankTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        
         tankname_column.setCellValueFactory(new PropertyValueFactory<>("tank_name"));
+        tankname_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        tankname_column.setOnEditCommit((TableColumn.CellEditEvent<Tank, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setTank_name(t.getNewValue());
+            msabase.getTankDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            tank_tableview.refresh();
+        });
+        
         description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
-        volume_column.setCellValueFactory(new PropertyValueFactory<>("volume"));
+        description_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        description_column.setOnEditCommit((TableColumn.CellEditEvent<Tank, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setDescription(t.getNewValue());
+            msabase.getTankDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            tank_tableview.refresh();
+        });
+        
+        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" LT³"));
+        volume_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        volume_column.setOnEditCommit((TableColumn.CellEditEvent<Tank, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setVolume(getVolumeValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getTankDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            tank_tableview.refresh();
+        });
+    }
+    
+    public Double getVolumeValue(Tank tank, String volume){
+        try{
+            return Double.parseDouble(volume);
+        }catch(Exception e){
+            return tank.getVolume();
+        }
     }
 }    

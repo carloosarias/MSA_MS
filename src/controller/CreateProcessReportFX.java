@@ -102,7 +102,7 @@ public class CreateProcessReportFX implements Initializable {
         setSpinnerValues();
         employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
-        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
+        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list(true)));
         equipmenttype_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list()));
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         employee_combo.getSelectionModel().selectFirst();

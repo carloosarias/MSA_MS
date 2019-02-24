@@ -18,6 +18,7 @@ public class Tank implements Serializable{
     private String tank_name;
     private String description;
     private double volume;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -53,6 +54,14 @@ public class Tank implements Serializable{
         this.volume = volume;
     }
     
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -83,7 +92,7 @@ public class Tank implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%d - %s",
-                id, tank_name);
+        return String.format("%s",
+                tank_name);
     }
 }

@@ -31,10 +31,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.StringConverter;
 import model.AnalysisReport;
 import model.Tank;
-import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.getFormattedDate;
 import static msa_ms.MainApp.setDatePicker;
 
@@ -92,7 +90,7 @@ public class AnalysisReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
+        tank_combo.getItems().setAll(msabase.getTankDAO().list(true));
         tank_combo.getSelectionModel().selectFirst();
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));

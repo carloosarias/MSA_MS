@@ -40,25 +40,9 @@ public class CreateAnalysisReportFX implements Initializable {
     @FXML
     private DatePicker reportdate_picker;
     @FXML
-    private ComboBox<Employee> employee_combo;
-    @FXML
     private ComboBox<Tank> tank_combo;
     @FXML
-    private TextField volume_field;
-    @FXML
     private ComboBox<AnalysisType> analysistype_combo;
-    @FXML
-    private TextField factor_field;
-    @FXML
-    private TextField optimal_field;
-    @FXML
-    private TextField quantityused_field;
-    @FXML
-    private TextField result_field;
-    @FXML
-    private TextField estimatedadjust_field;
-    @FXML
-    private TextField appliedadjust_field;
     @FXML
     private Button save_button;
     
@@ -72,49 +56,17 @@ public class CreateAnalysisReportFX implements Initializable {
         reportdate_picker.setValue(LocalDate.now());
         setDatePicker(reportdate_picker);
         
-        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
-        employee_combo.getSelectionModel().selectFirst();
-        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
+        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list(true)));
         analysistype_combo.setItems(FXCollections.observableArrayList(msabase.getAnalysisTypeDAO().list(true)));
-        setResult();
-        
-        tank_combo.setOnAction((ActionEvent) -> {
-            volume_field.setText(tank_combo.getSelectionModel().getSelectedItem().getVolume()+"");
-            setResult();
-        });
-        
-        analysistype_combo.setOnAction((ActionEvent) -> {
-           factor_field.setText(analysistype_combo.getSelectionModel().getSelectedItem().getFactor()+"");
-           optimal_field.setText(analysistype_combo.getSelectionModel().getSelectedItem().getOptimal()+"");
-            setResult();
-        });
-        
-        quantityused_field.setOnAction((ActionEvent) -> {
-            try{
-                Double.parseDouble(quantityused_field.getText());
-            }catch(Exception e){
-                quantityused_field.setText("0.0");
-            }
-            setResult();
-        });
         
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){
                 return;
             }
-            saveAnalysisReport();
+            createAnalysisReport();
             Stage stage = (Stage) root_hbox.getScene().getWindow();
             stage.close();
         });
-    }
-    
-    public void setResult(){
-        result_field.setText(""+(Double.parseDouble(quantityused_field.getText())*Double.parseDouble(factor_field.getText())));
-        setEstimatedAdjust();
-    }
-    
-    public void setEstimatedAdjust(){
-        estimatedadjust_field.setText(""+(((Double.parseDouble(result_field.getText())*Double.parseDouble(optimal_field.getText()))*Double.parseDouble(volume_field.getText()))/1000));
     }
     
     public boolean testFields(){
@@ -125,10 +77,6 @@ public class CreateAnalysisReportFX implements Initializable {
             b = false;
         }
         
-        if(employee_combo.getSelectionModel().isEmpty()){
-            employee_combo.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
         if(tank_combo.getSelectionModel().isEmpty()){
             tank_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
@@ -137,52 +85,21 @@ public class CreateAnalysisReportFX implements Initializable {
             analysistype_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
-        
-        try{
-            Double.parseDouble(quantityused_field.getText());
-        }catch(Exception e){
-            quantityused_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        try{
-            Double.parseDouble(result_field.getText());
-        }catch(Exception e){
-            result_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        try{
-            Double.parseDouble(estimatedadjust_field.getText());
-        }catch(Exception e){
-            estimatedadjust_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        try{
-            Double.parseDouble(appliedadjust_field.getText());
-        }catch(Exception e){
-            appliedadjust_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
         return b;
     }
     
     public void clearStyle(){
         reportdate_picker.setStyle(null);
-        employee_combo.setStyle(null);
         tank_combo.setStyle(null);
         analysistype_combo.setStyle(null);
-        quantityused_field.setStyle(null);
-        result_field.setStyle(null);
-        estimatedadjust_field.setStyle(null);
-        appliedadjust_field.setStyle(null);
     }
         
-    public void saveAnalysisReport(){
+    public void createAnalysisReport(){
         AnalysisReport item = new AnalysisReport();
         item.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
-        item.setQuantity_used(Double.parseDouble(quantityused_field.getText()));
-        item.setResult(Double.parseDouble(result_field.getText()));
-        item.setEstimated_adjust(Double.parseDouble(estimatedadjust_field.getText()));
-        item.setApplied_adjust(Double.parseDouble(appliedadjust_field.getText()));
-        msabase.getAnalysisReportDAO().create(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), employee_combo.getSelectionModel().getSelectedItem(), item);
+        item.setQuantity_used(0.0);
+        item.setApplied_adjust(0.0);
+        item.setActive(true);
+        msabase.getAnalysisReportDAO().create(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), MainApp.current_employee, item);
     }
 }

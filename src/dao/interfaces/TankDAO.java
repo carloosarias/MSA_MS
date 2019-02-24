@@ -27,10 +27,11 @@ public interface TankDAO {
     /**
      * Returns a list of all Tank from the database ordered by Tank ID. The list is never null and
      * is empty when the database does not contain any Tank.
+     * @param active
      * @return A list of all Container from the database ordered by Tank ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<Tank> list() throws DAOException;
+    public List<Tank> list(boolean active) throws DAOException;
     
     /**
      * Create the given Tank in the database.

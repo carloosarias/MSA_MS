@@ -176,7 +176,7 @@ public class MainFX implements Initializable {
                         break;
                     case "Equipo":
                         equipment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
-                        tank_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TankFX.fxml")));
+                        tank_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/TankFX.fxml")));
                         root_tabpane.getTabs().setAll(equipment_tab, tank_tab);
                         break;
                     case "Mantenimiento":
