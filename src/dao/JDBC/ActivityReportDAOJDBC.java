@@ -26,45 +26,32 @@ import model.Employee;
 public class ActivityReportDAOJDBC implements ActivityReportDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
+            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, ACTIVITY_REPORT.active, "
             + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ACTIVITY_REPORT "
             + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "WHERE ACTIVITY_REPORT.id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM ACTIVITY_REPORT WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, ACTIVITY_REPORT.active, "
             + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ACTIVITY_REPORT "
             + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "WHERE ACTIVITY_REPORT.active = ? "
             + "ORDER BY ACTIVITY_REPORT.id";
-    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
+    private static final String SQL_LIST_ACTIVE_DATERANGE_ORDER_BY_ID = 
+            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, ACTIVITY_REPORT.active, "
             + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ACTIVITY_REPORT "
             + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE ACTIVITY_REPORT.EMPLOYEE_ID = ? "
-            + "ORDER BY ACTIVITY_REPORT.id";
-    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
-            + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
-            + "FROM ACTIVITY_REPORT "
-            + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE ACTIVITY_REPORT.report_date BETWEEN ? AND ? "
-            + "ORDER BY ACTIVITY_REPORT.id";
-    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT ACTIVITY_REPORT.id, ACTIVITY_REPORT.report_date, ACTIVITY_REPORT.start_time, ACTIVITY_REPORT.end_time, ACTIVITY_REPORT.job_description, ACTIVITY_REPORT.physical_location, ACTIVITY_REPORT.action_taken, ACTIVITY_REPORT.comments, "
-            + "EMPLOYEE.id, EMPLOYEE.first_name, EMPLOYEE.last_name "
-            + "FROM ACTIVITY_REPORT "
-            + "INNER JOIN EMPLOYEE ON ACTIVITY_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE ACTIVITY_REPORT.EMPLOYEE_ID = ? AND ACTIVITY_REPORT.report_date BETWEEN ? AND ? "
+            + "WHERE (ACTIVITY_REPORT.report_date BETWEEN ? AND ? OR ? = 0) AND ACTIVITY_REPORT.active = ? "
             + "ORDER BY ACTIVITY_REPORT.id";  
     private static final String SQL_INSERT = 
-            "INSERT INTO ACTIVITY_REPORT (EMPLOYEE_ID, report_date, start_time, end_time, job_description, physical_location, action_taken, comments) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO ACTIVITY_REPORT (EMPLOYEE_ID, report_date, start_time, end_time, job_description, physical_location, action_taken, comments, active) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ACTIVITY_REPORT SET report_date = ?, start_time = ?, end_time = ?, job_description = ?, physical_location = ?, action_taken = ?, comments = ? WHERE id = ?";
+            "UPDATE ACTIVITY_REPORT SET report_date = ?, start_time = ?, end_time = ?, job_description = ?, physical_location = ?, action_taken = ?, comments = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM ACTIVITY_REPORT WHERE id = ?";
     
@@ -142,39 +129,16 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
     }
 
     @Override
-    public List<ActivityReport> list() throws DAOException {
-        List<ActivityReport> activity_report = new ArrayList<>();
-
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                activity_report.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return activity_report;
-    }
-
-    @Override
-    public List<ActivityReport> listEmployee(Employee employee) throws IllegalArgumentException, DAOException {
-        if(employee.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
-        }    
-        
+    public List<ActivityReport> list(boolean active) throws DAOException {
         List<ActivityReport> activity_report = new ArrayList<>();
         
         Object[] values = {
-            employee.getId()
+            active
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -188,46 +152,20 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
     }
 
     @Override
-    public List<ActivityReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException {
+    public List<ActivityReport> list(Date start, Date end, boolean date_filter, boolean active) throws DAOException {
+   
         List<ActivityReport> activity_report = new ArrayList<>();
         
         Object[] values = {
             start,
-            end
+            end,
+            date_filter,
+            active
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_DATE_RANGE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                activity_report.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return activity_report;
-    }
-
-    @Override
-    public List<ActivityReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException {
-        if(employee.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
-        }    
-        
-        List<ActivityReport> activity_report = new ArrayList<>();
-        
-        Object[] values = {
-            employee.getId(),
-            start,
-            end
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_DATERANGE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -257,7 +195,8 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
             activity_report.getJob_description(),
             activity_report.getPhysical_location(),
             activity_report.getAction_taken(),
-            activity_report.getComments()
+            activity_report.getComments(),
+            activity_report.isActive()
         };
         
         try(
@@ -296,6 +235,7 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
             activity_report.getPhysical_location(),
             activity_report.getAction_taken(),
             activity_report.getComments(),
+            activity_report.isActive(),
             activity_report.getId()
         };
         
@@ -351,6 +291,7 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
         activity_report.setPhysical_location(resultSet.getString("ACTIVITY_REPORT.physical_location"));
         activity_report.setAction_taken(resultSet.getString("ACTIVITY_REPORT.action_taken"));
         activity_report.setComments(resultSet.getString("ACTIVITY_REPORT.comments"));
+        activity_report.setActive(resultSet.getBoolean("ACTIVITY_REPORT.active"));
         
         //INNER JOINS
         activity_report.setEmployee_id(resultSet.getInt("EMPLOYEE.id"));

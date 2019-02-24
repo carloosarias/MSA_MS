@@ -56,10 +56,13 @@ public class MetalFX implements Initializable {
         disable_button.disableProperty().bind(metal_tableview.getSelectionModel().selectedItemProperty().isNull());
                 
         add_button.setOnAction((ActionEvent) -> {
+            int current_size = metal_tableview.getItems().size();
             createMetal();
             updateMetalTable();
-            metal_tableview.scrollTo(metal);
-            metal_tableview.getSelectionModel().select(metal);
+            if(current_size < metal_tableview.getItems().size()){
+                metal_tableview.scrollTo(metal);
+                metal_tableview.getSelectionModel().select(metal);
+            }
         });
         
         disable_button.setOnAction((ActionEvent) -> {

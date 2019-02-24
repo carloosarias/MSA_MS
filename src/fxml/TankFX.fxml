@@ -24,7 +24,7 @@
             <TableColumn fx:id="id_column" minWidth="-1.0" prefWidth="40.0" text="#" />
             <TableColumn fx:id="tankname_column" minWidth="-Infinity" prefWidth="150.0" text="Tanque" />
             <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="250.0" text="Descripción" />
-            <TableColumn fx:id="volume_column" minWidth="-Infinity" prefWidth="100.0" text="Volumen (lt³)" />
+            <TableColumn fx:id="volume_column" minWidth="-Infinity" prefWidth="100.0" text="Volumen" />
          </columns>
          <GridPane.margin>
             <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

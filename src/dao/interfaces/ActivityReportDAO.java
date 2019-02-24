@@ -39,45 +39,25 @@ public interface ActivityReportDAO {
     /**
      * Returns a list of all ActivityReport from the database ordered by ActivityReport ID. The list is never null and
      * is empty when the database does not contain any ActivityReport.
+     * @param active
      * @return A list of all ActivityReport from the database ordered by ActivityReport ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<ActivityReport> list() throws DAOException;
+    public List<ActivityReport> list(boolean active) throws DAOException;
     
     /**
      * Returns a list of all ActivityReport matching Employee ID from the database ordered by ActivityReport ID. 
      * The Employee ID must not be null, otherwise it will throw IllegalArgumentException.
      * The list is never null and is empty when the database does not contain any ActivityReport matching Employee ID.
-     * @param employee The Employee ID to be searched for.
-     * @return A list of all ActivityReport matching Employee ID from the database ordered by ActivityReport ID.
-     * @throws IllegalArgumentException If Employee ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<ActivityReport> listEmployee(Employee employee) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns a list of all ActivityReport matching a range of dates from the database ordered by ActivityReport ID.
-     * The list is never null and is empty when the database does not contain any ActivityReport matching the range of dates.
      * @param start The start date of the range.
      * @param end the end date of the range.
+     * @param date_filter
+     * @param active
      * @return A list of all ActivityReport matching Employee ID from the database ordered by ActivityReport ID.
      * @throws IllegalArgumentException If Employee ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<ActivityReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns a list of all ActivityReport matching Employee ID from the database ordered by ActivityReport ID. 
-     * The Employee ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any ActivityReport matching Employee ID.
-     * @param employee The Employee ID to be searched for.
-     * @param start The start date of the range.
-     * @param end the end date of the range.
-     * @return A list of all ActivityReport matching Employee ID from the database ordered by ActivityReport ID.
-     * @throws IllegalArgumentException If Employee ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<ActivityReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException;
+    public List<ActivityReport> list(Date start, Date end, boolean date_filter, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given ActivityReport in the database.

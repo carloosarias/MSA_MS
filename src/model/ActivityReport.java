@@ -22,6 +22,7 @@ public class ActivityReport implements Serializable{
     private String physical_location;
     private String action_taken;
     private String comments;
+    private boolean active;
     
     //INNER JOINS
     private Integer employee_id;
@@ -91,6 +92,15 @@ public class ActivityReport implements Serializable{
     public void setComments(String comments) {
         this.comments = comments;
     }
+    
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active){
+        this.active = active;
+    }
+    
     //INNER JOINS
     public Integer getEmployee_id() {
         return employee_id;

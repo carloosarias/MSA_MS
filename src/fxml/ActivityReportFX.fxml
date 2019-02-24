@@ -1,32 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ActivityReportFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ActivityReportFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE">
+      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <tabs>
-            <Tab text="Historial de Actividades">
+            <Tab text="Reporte de Actividades">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TableView fx:id="activityreport_tableview" editable="true">
+                           <columns>
+                              <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                              <TableColumn fx:id="name_column" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
+                              <TableColumn fx:id="physicallocation_column" minWidth="-Infinity" prefWidth="150.0" text="Ubicación" />
+                              <TableColumn fx:id="reportdate_column" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                              <TableColumn fx:id="starttime_column" minWidth="-Infinity" prefWidth="100.0" text="Hora de Inicio" />
+                              <TableColumn fx:id="endtime_column" minWidth="-Infinity" prefWidth="100.0" text="Hora Final" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Detalles de Actividades">
                <content>
                   <GridPane>
                      <columnConstraints>
@@ -34,151 +62,91 @@
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                            <RowConstraints vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label minWidth="-Infinity" text="Desde:">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <DatePicker fx:id="startdate_picker" minWidth="-Infinity" prefWidth="150.0" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </DatePicker>
-                              <Label minWidth="-Infinity" text="Hasta:" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <DatePicker fx:id="enddate_picker" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </DatePicker>
-                              <Button fx:id="add_button" minWidth="-Infinity" mnemonicParsing="false" prefWidth="120.0" text="Generar Reporte" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Button>
-                              <Button fx:id="delete_button" disable="true" mnemonicParsing="false" prefWidth="120.0" text="Eliminar Selección" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Button>
-                              <CheckBox fx:id="datefilter_checkbox" minWidth="-Infinity" mnemonicParsing="false" selected="true" text="Filtrar Por Fecha" GridPane.columnIndex="2">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </CheckBox>
-                           </children>
-                        </GridPane>
-                        <GridPane GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                            <RowConstraints vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <TableView fx:id="activityreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                 <columns>
-                                    <TableColumn fx:id="reportid_column" minWidth="-Infinity" prefWidth="100.0" text="# de Reporte" />
-                                    <TableColumn fx:id="name_column" minWidth="-Infinity" prefWidth="120.0" text="Empleado" />
-                                    <TableColumn fx:id="physicallocation_column" minWidth="-Infinity" prefWidth="120.0" text="Ubicación" />
-                                    <TableColumn fx:id="reportdate_column" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                                    <TableColumn fx:id="starttime_column" minWidth="-Infinity" prefWidth="100.0" text="Hora de Inicio" />
-                                    <TableColumn fx:id="endtime_column" minWidth="-Infinity" prefWidth="100.0" text="Hora Final" />
-                                 </columns>
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TableView>
-                              <Accordion fx:id="details_accordion" disable="true" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
-                                <panes>
-                                  <TitledPane animated="false" text="Descripción del Trabajo">
-                                       <content>
-                                          <GridPane>
-                                            <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                              <RowConstraints vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                             <children>
-                                                <TextArea fx:id="job_area" wrapText="true">
-                                                   <GridPane.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </GridPane.margin>
-                                                </TextArea>
-                                             </children>
-                                          </GridPane>
-                                       </content>
-                                  </TitledPane>
-                                  <TitledPane animated="false" text="Acciones Realizadas">
-                                       <content>
-                                          <GridPane>
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <TextArea fx:id="actiontaken_area" wrapText="true">
-                                                   <GridPane.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </GridPane.margin>
-                                                </TextArea>
-                                             </children>
-                                          </GridPane>
-                                       </content>
-                                  </TitledPane>
-                                  <TitledPane animated="false" text="Comentarios">
-                                       <content>
-                                          <GridPane>
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <TextArea fx:id="comments_area" wrapText="true">
-                                                   <GridPane.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </GridPane.margin>
-                                                </TextArea>
-                                             </children>
-                                          </GridPane>
-                                       </content>
-                                  </TitledPane>
-                                </panes>
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Accordion>
-                           </children>
-                        </GridPane>
+                        <TableView fx:id="activityreport_tableview1" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                              <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="250.0" text="Descripción del Trabajo" />
+                              <TableColumn fx:id="action_column" minWidth="-Infinity" prefWidth="200.0" text="Accion Realizada" />
+                              <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
                      </children>
                   </GridPane>
                </content>
             </Tab>
          </tabs>
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
       </TabPane>
+      <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="SOMETIMES" />
+          <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label minWidth="-Infinity" text="Desde:">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="startdate_picker" minWidth="-Infinity" prefWidth="150.0" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <Label minWidth="-Infinity" text="Hasta:" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="enddate_picker" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <CheckBox fx:id="date_filter" minWidth="-Infinity" mnemonicParsing="false" selected="true" text="Filtrar Por Fecha" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </CheckBox>
+         </children>
+      </GridPane>
+      <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" />
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="disable_button" disable="true" mnemonicParsing="false" prefWidth="120.0" text="Eliminar Selección" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="add_button" minWidth="-Infinity" mnemonicParsing="false" prefWidth="120.0" text="Generar Reporte">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+      </GridPane>
    </children>
 </GridPane>
