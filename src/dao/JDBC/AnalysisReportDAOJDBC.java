@@ -6,12 +6,14 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.AnalysisReportDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +21,7 @@ import model.AnalysisReport;
 import model.AnalysisType;
 import model.Employee;
 import model.Tank;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  *
@@ -27,7 +30,7 @@ import model.Tank;
 public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
             + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
@@ -41,28 +44,28 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM ANALYSIS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
             + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "WHERE ANALYSIS_REPORT.active = ? "
-            + "ORDER BY id";
+            + "ORDER BY report_date, report_time";
     private static final String SQL_LIST_ACTIVE_TANK_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
             + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.report_date BETWEEN ? AND ? OR ? = 0) AND ANALYSIS_REPORT.active = ? "
-            + "ORDER BY id";
+            + "ORDER BY report_date, report_time";
     private static final String SQL_INSERT =
-            "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, quantity_used, applied_adjust, active) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, report_time, quantity_used, applied_adjust, active) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ANALYSIS_REPORT SET report_date = ?, quantity_used = ?, applied_adjust = ?, active = ? WHERE id = ?";
+            "UPDATE ANALYSIS_REPORT SET report_date = ?, report_time = ?, quantity_used = ?, applied_adjust = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM ANALYSIS_REPORT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -271,6 +274,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             analysis_type.getId(),
             employee.getId(),
             analysis_report.getReport_date(),
+            DAOUtil.toSqlTime(LocalTime.parse(analysis_report.getReport_time(), timeFormat)),
             analysis_report.getQuantity_used(),
             analysis_report.getApplied_adjust(),
             analysis_report.isActive()
@@ -306,6 +310,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         
         Object[] values = {
             analysis_report.getReport_date(),
+            DAOUtil.toSqlTime(LocalTime.parse(analysis_report.getReport_time(), timeFormat)),
             analysis_report.getQuantity_used(),
             analysis_report.getApplied_adjust(),
             analysis_report.isActive(),
@@ -358,6 +363,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         AnalysisReport analysis_report = new AnalysisReport();
         analysis_report.setId(resultSet.getInt("ANALYSIS_REPORT.id"));
         analysis_report.setReport_date(resultSet.getDate("ANALYSIS_REPORT.report_date"));
+        analysis_report.setReport_time(resultSet.getTime("ANALYSIS_REPORT.report_time").toLocalTime().format(timeFormat));
         analysis_report.setQuantity_used(resultSet.getDouble("ANALYSIS_REPORT.quantity_used"));
         analysis_report.setApplied_adjust(resultSet.getDouble("ANALYSIS_REPORT.applied_adjust"));
         analysis_report.setActive(resultSet.getBoolean("ANALYSIS_REPORT.active"));

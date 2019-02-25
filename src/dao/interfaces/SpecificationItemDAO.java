@@ -10,6 +10,7 @@ import java.util.List;
 import model.Metal;
 import model.PartRevision;
 import model.ProductPart;
+import model.Quote;
 import model.Specification;
 import model.SpecificationItem;
 
@@ -52,11 +53,12 @@ public interface SpecificationItemDAO {
      * Returns a list of all SpecificationItem matching Specification ID from the database ordered by SpecificationItem ID. 
      * The list is never null and is empty when the database does not contain any SpecificationItem matching Specification ID.
      * @param specification the Specification to be searched for.
+     * @param active
      * @return A list of all Specification matching Specification ID from the database ordered by SpecificationItem ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<SpecificationItem> list(Specification specification) throws IllegalArgumentException, DAOException;
     public List<SpecificationItem> list(Specification specification, boolean active) throws IllegalArgumentException, DAOException;
+    public List<SpecificationItem> list(Quote quote, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given Specification in the database. The Specification ID must not be null, 

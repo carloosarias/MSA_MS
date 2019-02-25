@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TankFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TankFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -21,7 +21,6 @@
    <children>
       <TableView fx:id="tank_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="id_column" minWidth="-1.0" prefWidth="40.0" text="#" />
             <TableColumn fx:id="tankname_column" minWidth="-Infinity" prefWidth="150.0" text="Tanque" />
             <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="250.0" text="Descripción" />
             <TableColumn fx:id="volume_column" minWidth="-Infinity" prefWidth="100.0" text="Volumen" />

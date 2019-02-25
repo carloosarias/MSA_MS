@@ -65,6 +65,7 @@ public class PartRevisionFX implements Initializable {
     @FXML
     private Button disable_button;
     
+    
     private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -85,7 +86,7 @@ public class PartRevisionFX implements Initializable {
             showAdd_stage();
             updatePartRevisionTable();
             if(current_size < partrevision_tableview.getItems().size()){
-                partrevision_tableview.requestFocus();
+                partrevision_tableview.scrollTo(AddPartRevisionFX.part_revision);
                 partrevision_tableview.getSelectionModel().select(AddPartRevisionFX.part_revision);
             }
         });

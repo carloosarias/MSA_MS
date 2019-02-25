@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Metal;
+import model.Quote;
 import model.Specification;
 import model.SpecificationItem;
 
@@ -34,19 +35,21 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
             "SELECT SPECIFICATION_ID FROM SPECIFICATION_ITEM WHERE id = ?";
     private static final String SQL_FIND_METAL_BY_ID = 
             "SELECT METAL_ID FROM SPECIFICATION_ITEM WHERE id = ?";
-    private static final String SQL_LIST_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT SPECIFICATION_ITEM.id, SPECIFICATION_ITEM.minimum_thickness, SPECIFICATION_ITEM.maximum_thickness, SPECIFICATION_ITEM.active, "
-            + "METAL.metal_name, METAL.density "
-            + "FROM SPECIFICATION_ITEM "
-            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
-            + "WHERE SPECIFICATION_ITEM.SPECIFICATION_ID = ? "
-            + "ORDER BY SPECIFICATION_ITEM.id";
-    private static final String SQL_LIST_ACTIVE_SPECIFICATION_ORDER_BY_ID = 
+    private static final String SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID = 
             "SELECT SPECIFICATION_ITEM.id, SPECIFICATION_ITEM.minimum_thickness, SPECIFICATION_ITEM.maximum_thickness, SPECIFICATION_ITEM.active, "
             + "METAL.metal_name, METAL.density "
             + "FROM SPECIFICATION_ITEM "
             + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
             + "WHERE SPECIFICATION_ITEM.SPECIFICATION_ID = ? AND SPECIFICATION_ITEM.active = ? "
+            + "ORDER BY SPECIFICATION_ITEM.id";
+    private static final String SQL_LIST_ACTIVE_OF_QUOTE_ORDER_BY_ID = 
+            "SELECT SPECIFICATION_ITEM.id, SPECIFICATION_ITEM.minimum_thickness, SPECIFICATION_ITEM.maximum_thickness, SPECIFICATION_ITEM.active, "
+            + "METAL.metal_name, METAL.density "
+            + "FROM SPECIFICATION_ITEM "
+            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
+            + "INNER JOIN QUOTE ON ? = QUOTE.id "
+            + "INNER JOIN PART_REVISION ON QUOTE.PART_REVISION_ID = PART_REVISION.id "
+            + "WHERE PART_REVISION.SPECIFICATION_ID = SPECIFICATION_ITEM.SPECIFICATION_ID AND SPECIFICATION_ITEM.active = ? "
             + "ORDER BY SPECIFICATION_ITEM.id";
     private static final String SQL_INSERT = 
             "INSERT INTO SPECIFICATION_ITEM (SPECIFICATION_ID, METAL_ID, minimum_thickness, maximum_thickness, active) "
@@ -157,33 +160,6 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
     }
     
     @Override
-    public List<SpecificationItem> list(Specification specification) throws IllegalArgumentException, DAOException {
-        if(specification.getId() == null){
-            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
-        }
-        
-        List<SpecificationItem> specification_items = new ArrayList<>();
-        
-        Object[] values = {
-            specification.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_SPECIFICATION_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                specification_items.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return specification_items;
-    }
-    
-    @Override
     public List<SpecificationItem> list(Specification specification, boolean active) throws IllegalArgumentException, DAOException {
         if(specification.getId() == null){
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
@@ -198,7 +174,7 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_SPECIFICATION_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -210,7 +186,35 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
         
         return specification_items;
     }
-
+    
+    @Override
+    public List<SpecificationItem> list(Quote quote, boolean active) throws IllegalArgumentException, DAOException {
+        if(quote.getId() == null){
+            throw new IllegalArgumentException("Quote is not created yet, the Quote ID is null.");
+        }
+        
+        List<SpecificationItem> specification_items = new ArrayList<>();
+        
+        Object[] values = {
+            quote.getId(),
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_QUOTE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                specification_items.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return specification_items;
+    }
+    
     @Override
     public void create(Specification specification, Metal metal,SpecificationItem specification_item) throws IllegalArgumentException, DAOException {
         if(specification.getId() == null){

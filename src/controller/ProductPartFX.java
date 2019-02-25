@@ -68,8 +68,10 @@ public class ProductPartFX implements Initializable {
             int current_size = productpart_tableview.getItems().size();
             createProductPart();
             updateProductPartTable();
-            productpart_tableview.scrollTo(product_part);
-            productpart_tableview.getSelectionModel().select(product_part);
+            if(current_size < productpart_tableview.getItems().size()){
+                productpart_tableview.scrollTo(product_part);
+                productpart_tableview.getSelectionModel().select(product_part);
+            }
         });
         
         disable_button.setOnAction((ActionEvent) -> {

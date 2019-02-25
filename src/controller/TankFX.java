@@ -33,8 +33,6 @@ public class TankFX implements Initializable {
     @FXML
     private TableView<Tank> tank_tableview;
     @FXML
-    private TableColumn<Tank, Integer> id_column;
-    @FXML
     private TableColumn<Tank, String> tankname_column;
     @FXML
     private TableColumn<Tank, String> description_column;
@@ -93,9 +91,7 @@ public class TankFX implements Initializable {
         tank_tableview.getItems().setAll(msabase.getTankDAO().list(true));
     }
         
-    public void setTankTable(){
-        id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        
+    public void setTankTable(){   
         tankname_column.setCellValueFactory(new PropertyValueFactory<>("tank_name"));
         tankname_column.setCellFactory(TextFieldTableCell.forTableColumn());
         tankname_column.setOnEditCommit((TableColumn.CellEditEvent<Tank, String> t) -> {

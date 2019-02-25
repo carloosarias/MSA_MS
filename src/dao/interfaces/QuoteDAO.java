@@ -50,10 +50,11 @@ public interface QuoteDAO {
     /**
      * Returns a list of all Quote from the database ordered by Quote ID. The list is never null and
      * is empty when the database does not contain any Quote.
+     * @param active
      * @return A list of all Quote from the database ordered by Quote ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<Quote> list() throws DAOException;
+    public List<Quote> list(boolean active) throws DAOException;
     
     /**
      * Returns a list of all Quote matching PartRevision ID and String approved from the database ordered by Quote ID. 
@@ -61,25 +62,13 @@ public interface QuoteDAO {
      * The list is never null and is empty when the database does not 
      * contain any Quote matching PartRevision ID and String approved.
      * @param part_revision The PartRevision ID to be searched for.
-     * @param approved The status of the Quote to be searched for
+     * @param active The status of the Quote to be searched for
      * @return A list of all Quote matching PartRevision ID and String approved from the database ordered by Quote ID.
      * @throws IllegalArgumentException If PartRevision ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<Quote> list(PartRevision part_revision, String approved) throws IllegalArgumentException, DAOException;
-    public List<Quote> list(DepartLot depart_lot, String approved) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns a list of all Quote matching PartRevision ID from the database ordered by Quote ID. 
-     * PartRevision ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not 
-     * contain any Quote matching PartRevision ID.
-     * @param part_revision The PartRevision ID to be searched for.
-     * @return A list of all Quote matching PartRevision ID from the database ordered by Quote ID.
-     * @throws IllegalArgumentException If PartRevision ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<Quote> list(PartRevision part_revision) throws IllegalArgumentException, DAOException;
+    public List<Quote> list(PartRevision part_revision, boolean active) throws IllegalArgumentException, DAOException;
+    public List<Quote> list(DepartLot depart_lot, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given Quote in the database. The PartRevision ID must not be null,

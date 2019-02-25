@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisReportFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisReportFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -82,6 +82,7 @@
          <columns>
             <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
             <TableColumn fx:id="reportdate_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
+            <TableColumn fx:id="reporttime_column" minWidth="-Infinity" prefWidth="75.0" text="Hora" />
             <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
             <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Tanque">
                <columns>

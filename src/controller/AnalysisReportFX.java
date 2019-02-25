@@ -31,6 +31,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.ActivityReport;
 import model.AnalysisReport;
 import model.Tank;
 import static msa_ms.MainApp.df;
@@ -63,6 +64,8 @@ public class AnalysisReportFX implements Initializable {
     private TableColumn<AnalysisReport, Integer> id_column;
     @FXML
     private TableColumn<AnalysisReport, String> reportdate_column;
+    @FXML
+    private TableColumn<AnalysisReport, String> reporttime_column;
     @FXML
     private TableColumn<AnalysisReport, String> employee_column;
     @FXML
@@ -153,6 +156,7 @@ public class AnalysisReportFX implements Initializable {
     public void setAnalysisReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        reporttime_column.setCellValueFactory(new PropertyValueFactory<>("report_time"));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
         tank_column.setCellValueFactory(new PropertyValueFactory<>("tank"));
         volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" LT³"));

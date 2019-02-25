@@ -13,11 +13,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import model.ActivityReport;
 import model.Employee;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  *
@@ -190,8 +194,8 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
         Object[] values = {
             employee.getId(),
             DAOUtil.toSqlDate(activity_report.getReport_date()),
-            activity_report.getStart_time(),
-            activity_report.getEnd_time(),
+            DAOUtil.toSqlTime(LocalTime.parse(activity_report.getStart_time(), timeFormat)),
+            DAOUtil.toSqlTime(LocalTime.parse(activity_report.getEnd_time(), timeFormat)),
             activity_report.getJob_description(),
             activity_report.getPhysical_location(),
             activity_report.getAction_taken(),
@@ -229,8 +233,8 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
         
         Object[] values = {
             DAOUtil.toSqlDate(activity_report.getReport_date()),
-            activity_report.getStart_time(),
-            activity_report.getEnd_time(),
+            DAOUtil.toSqlTime(LocalTime.parse(activity_report.getStart_time(), timeFormat)),
+            DAOUtil.toSqlTime(LocalTime.parse(activity_report.getEnd_time(), timeFormat)),
             activity_report.getJob_description(),
             activity_report.getPhysical_location(),
             activity_report.getAction_taken(),
@@ -285,8 +289,8 @@ public class ActivityReportDAOJDBC implements ActivityReportDAO{
         ActivityReport activity_report = new ActivityReport();
         activity_report.setId(resultSet.getInt("ACTIVITY_REPORT.id"));
         activity_report.setReport_date(resultSet.getDate("ACTIVITY_REPORT.report_date"));
-        activity_report.setStart_time(resultSet.getString("ACTIVITY_REPORT.start_time"));
-        activity_report.setEnd_time(resultSet.getString("ACTIVITY_REPORT.end_time"));
+        activity_report.setStart_time(resultSet.getTime("ACTIVITY_REPORT.start_time").toLocalTime().format(timeFormat));
+        activity_report.setEnd_time(resultSet.getTime("ACTIVITY_REPORT.end_time").toLocalTime().format(timeFormat));
         activity_report.setJob_description(resultSet.getString("ACTIVITY_REPORT.job_description"));
         activity_report.setPhysical_location(resultSet.getString("ACTIVITY_REPORT.physical_location"));
         activity_report.setAction_taken(resultSet.getString("ACTIVITY_REPORT.action_taken"));

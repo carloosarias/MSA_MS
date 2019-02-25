@@ -5,7 +5,6 @@
  */
 package model;
 
-import dao.JDBC.DAOFactory;
 import java.io.Serializable;
 
 /**
@@ -14,11 +13,8 @@ import java.io.Serializable;
  */
 public class QuoteItem implements Serializable {
     // Properties ---------------------------------------------------------------------------------
-    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     private Integer id;
     private Double unit_price;
-    
-    private SpecificationItem temp_specificationitem;
     
     //INNER JOINS
     private Double specitem_maximumthickness;
@@ -43,14 +39,6 @@ public class QuoteItem implements Serializable {
 
     public void setUnit_price(Double unit_price) {
         this.unit_price = unit_price;
-    }
-    
-    public SpecificationItem getTemp_specificationitem(){
-        return temp_specificationitem;
-    }
-    
-    public void setTemp_specificationitem(SpecificationItem temp_specificationitem){
-        this.temp_specificationitem = temp_specificationitem;
     }
     
     //Calculates the volume using the area(mm2) and the thickness(mm)

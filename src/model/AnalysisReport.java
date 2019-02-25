@@ -17,6 +17,7 @@ public class AnalysisReport implements Serializable{
 
     private Integer id;
     private Date report_date;
+    private String report_time;
     private double quantity_used;
     private double applied_adjust;
     private boolean active;
@@ -38,12 +39,21 @@ public class AnalysisReport implements Serializable{
     public void setId(Integer id) {
         this.id = id;
     }
+    
     public Date getReport_date() {
         return report_date;
     }
 
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
+    }
+    
+    public String getReport_time(){
+        return report_time;
+    }
+    
+    public void setReport_time(String report_time){
+        this.report_time = report_time;
     }
 
     public double getQuantity_used() {

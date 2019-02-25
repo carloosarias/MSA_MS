@@ -145,7 +145,7 @@ public class ActivityReportFX implements Initializable {
         starttime_column.setCellValueFactory(new PropertyValueFactory<>("start_time"));
         starttime_column.setCellFactory(TextFieldTableCell.forTableColumn());
         starttime_column.setOnEditCommit((TableColumn.CellEditEvent<ActivityReport, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setStart_time(getStart_time(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setStart_time(getStart_timeValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getActivityReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             activityreport_tableview.refresh();
         });
@@ -153,7 +153,7 @@ public class ActivityReportFX implements Initializable {
         endtime_column.setCellValueFactory(new PropertyValueFactory<>("end_time"));
         endtime_column.setCellFactory(TextFieldTableCell.forTableColumn());
         endtime_column.setOnEditCommit((TableColumn.CellEditEvent<ActivityReport, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEnd_time(getEnd_time(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEnd_time(getEnd_timeValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getActivityReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             activityreport_tableview.refresh();
         });
@@ -214,21 +214,21 @@ public class ActivityReportFX implements Initializable {
         msabase.getActivityReportDAO().create(MainApp.current_employee, activity_report);
     }
     
-    public String getStart_time(ActivityReport report, String value){
+    public String getStart_timeValue(ActivityReport report, String start_time){
         try{
-            timeFormat.parse(value.toUpperCase());
+            timeFormat.parse(start_time.toUpperCase());
         }catch(Exception e){
             return report.getStart_time();
         }
-        return value;
+        return start_time;
     }
     
-    public String getEnd_time(ActivityReport report, String value){
+    public String getEnd_timeValue(ActivityReport report, String end_time){
         try{
-            timeFormat.parse(value.toUpperCase());
+            timeFormat.parse(end_time.toUpperCase());
         }catch(Exception e){
             return report.getEnd_time();
         }
-        return value;
+        return end_time;
     }
 }

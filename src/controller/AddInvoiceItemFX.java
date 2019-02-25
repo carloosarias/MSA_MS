@@ -104,7 +104,7 @@ public class AddInvoiceItemFX implements Initializable {
         if(depart_lot == null){
             quote_combo.getItems().clear();
         }else{
-            quote_combo.getItems().setAll(msabase.getQuoteDAO().list(depart_lot, "Aprovado"));
+            quote_combo.getItems().setAll(msabase.getQuoteDAO().list(depart_lot, true));
             if(!quote_combo.getItems().isEmpty()){
                 quote_combo.getSelectionModel().selectFirst();
             }

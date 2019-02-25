@@ -19,9 +19,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -35,14 +32,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -54,7 +49,6 @@ import model.ProductPart;
 import model.Quote;
 import model.QuoteItem;
 import msa_ms.MainApp;
-import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.getFormattedDate;
 
@@ -74,13 +68,7 @@ public class QuoteFX implements Initializable {
     @FXML
     private ComboBox<PartRevision> partrev_combo;
     @FXML
-    private CheckBox status_checkbox;
-    @FXML
-    private ComboBox<String> status_combo;
-    @FXML
     private TableView<Quote> quote_tableview;
-    @FXML
-    private TableColumn<Quote, Integer> id_column;
     @FXML
     private TableColumn<Quote, String> quotedate_column;
     @FXML
@@ -90,7 +78,11 @@ public class QuoteFX implements Initializable {
     @FXML
     private TableColumn<Quote, String> comments_column;
     @FXML
-    private TableColumn<Quote, String> status_column;
+    private TableColumn<Quote, String> quotemargin_column;
+    @FXML
+    private TableColumn<Quote, String> actualprice_column;
+    @FXML
+    private TableColumn<Quote, String> estimatedtotal_column;
     @FXML
     private TableView<QuoteItem> quoteitem_tableview;
     @FXML
@@ -110,61 +102,43 @@ public class QuoteFX implements Initializable {
     @FXML
     private TableColumn<QuoteItem, String> estimatedprice_column;
     @FXML
-    private ComboBox<String> specification_combo;
+    private Label specification_label;
     @FXML
-    private TextField specificationprocess_field;
+    private Label process_label;
     @FXML
-    private TextField revisionarea_field;
-    @FXML
-    private TextField quotemargin_field;
-    @FXML
-    private TextField actualprice_field;
-    @FXML
-    private TextField estimatedtotal_field;
+    private Label area_label;
     @FXML
     private Button add_button;
     @FXML
+    private Button disable_button;
+    @FXML
     private Button pdf_button;
-    
-    private static PartRevision partrevision_selection;
     
     private Stage add_stage = new Stage();
     
-    private List<String> status_items = Arrays.asList("Aprovado", "Descartado", "Pendiente");
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        add_button.disableProperty().bind(partrev_combo.getSelectionModel().selectedItemProperty().isNull());
-        partrev_combo.disableProperty().bind(partrev_combo.itemsProperty().isNull());
-        status_combo.disableProperty().bind(status_checkbox.selectedProperty().not());
-        pdf_button.disableProperty().bind(quote_tableview.getSelectionModel().selectedItemProperty().isNull());
+        setQuoteTable();
+        setQuoteItemTable();
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
-        status_combo.setItems(FXCollections.observableArrayList(status_items));
-        status_combo.getSelectionModel().selectFirst();
         
-        setQuoteTableView();
-        setQuoteItemTableView();
+        partrev_combo.disableProperty().bind(partrev_combo.itemsProperty().isNull());
+        pdf_button.disableProperty().bind(quote_tableview.getSelectionModel().selectedItemProperty().isNull());
+        disable_button.disableProperty().bind(quote_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
         part_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
-            setPartRevisionItems(newValue);
+            partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(newValue, true)));
+            updateQuoteTable();
         });
         
         partrev_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {
-           setQuoteItems();
-           partrevision_selection = partrev_combo.getSelectionModel().getSelectedItem();
-        });
-        
-        status_combo.setOnAction((ActionEvent) -> {
-            setQuoteItems();
-        });
-        
-        status_checkbox.setOnAction((ActionEvent) -> {
-            setQuoteItems();
+            updateQuoteTable();
         });
         
         quote_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Quote> observable, Quote oldValue, Quote newValue) -> {
-            setQuoteItemItems();
-            setQuoteFields();
+            updateQuoteItemTable();
         });
         
         pdf_button.setOnAction((ActionEvent) -> {
@@ -176,13 +150,28 @@ public class QuoteFX implements Initializable {
             }
         });
         
+        disable_button.setOnAction((ActionEvent) -> {
+            disableQuote();
+            updateQuoteTable();
+        });
+        
         add_button.setOnAction((ActionEvent) -> {
-            showAddStage();
-            setQuoteItems();
+            int current_size = quote_tableview.getItems().size();
+            showAdd_stage();
+            updateQuoteTable();
+            if(current_size < quote_tableview.getItems().size()){
+                quote_tableview.scrollTo(CreateQuoteFX.quote);
+                quote_tableview.getSelectionModel().select(CreateQuoteFX.quote);
+            }
         });
     }
     
-    public void showAddStage(){
+    public void disableQuote(){
+        quote_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getQuoteDAO().update(quote_tableview.getSelectionModel().getSelectedItem());
+    }
+    
+    public void showAdd_stage(){
         try {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
@@ -200,71 +189,80 @@ public class QuoteFX implements Initializable {
         }
     }
     
-    public void setPartRevisionItems(ProductPart product_part){
-        partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(product_part, true)));
-    }
-    
-    public void setQuoteFields(){
-        if(quote_tableview.getSelectionModel().getSelectedItem() == null){
-            specification_combo.getItems().clear();
-            specificationprocess_field.clear();
-            revisionarea_field.clear();
-            quotemargin_field.clear();
-            estimatedtotal_field.clear();
-        }else{
-            specification_combo.getItems().setAll(quote_tableview.getSelectionModel().getSelectedItem().getSpec_number());
-            specification_combo.getSelectionModel().selectFirst();
-            specificationprocess_field.setText(quote_tableview.getSelectionModel().getSelectedItem().getSpec_process());
-            revisionarea_field.setText(df.format(quote_tableview.getSelectionModel().getSelectedItem().getPartrev_area()));
-            quotemargin_field.setText(df.format(quote_tableview.getSelectionModel().getSelectedItem().getMargin()));
-            actualprice_field.setText(df.format(quote_tableview.getSelectionModel().getSelectedItem().getActualprice()));
-            estimatedtotal_field.setText(df.format(quote_tableview.getSelectionModel().getSelectedItem().getEstimated_total()));
-        }
-    }
-    
-    public void setQuoteItems(){
-        if(partrev_combo.getSelectionModel().getSelectedItem() == null){
+    public void updateQuoteTable(){
+        try{
+            quote_tableview.getItems().setAll(msabase.getQuoteDAO().list(partrev_combo.getSelectionModel().getSelectedItem(), true));
+        }catch(Exception e){
             quote_tableview.getItems().clear();
-        }else{
-            if(status_checkbox.isSelected()){
-                quote_tableview.setItems(FXCollections.observableArrayList(msabase.getQuoteDAO().list(partrev_combo.getSelectionModel().getSelectedItem(), status_combo.getSelectionModel().getSelectedItem())));
-            }else{
-                quote_tableview.setItems(FXCollections.observableArrayList(msabase.getQuoteDAO().list(partrev_combo.getSelectionModel().getSelectedItem())));
-            }
         }
     }
     
-    public void setQuoteItemItems(){
-        if(quote_tableview.getSelectionModel().getSelectedItem() == null){
+    public void updateQuoteItemTable(){
+        try{
+            quoteitem_tableview.getItems().setAll(msabase.getQuoteItemDAO().list(quote_tableview.getSelectionModel().getSelectedItem()));
+            specification_label.setText(quote_tableview.getSelectionModel().getSelectedItem().getSpec_number());
+            process_label.setText(quote_tableview.getSelectionModel().getSelectedItem().getSpec_process());
+            area_label.setText(df.format(quote_tableview.getSelectionModel().getSelectedItem().getPartrev_area())+" IN²");
+        }catch(Exception e){
             quoteitem_tableview.getItems().clear();
-        }else{
-            quoteitem_tableview.setItems(FXCollections.observableArrayList(msabase.getQuoteItemDAO().list(quote_tableview.getSelectionModel().getSelectedItem())));
+            specification_label.setText("N/A");
+            process_label.setText("N/A");
+            area_label.setText("N/A");
         }
     }
     
-    public void setQuoteItemTableView(){
+    public void setQuoteItemTable(){
         listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(quoteitem_tableview.getItems().indexOf(c.getValue())+1)));
         metal_name_column.setCellValueFactory(new PropertyValueFactory<>("metal_name"));
         density_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMetal_densityGMM())+" G/MM³"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getUnit_price())+" USD"));
+        unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<QuoteItem, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnit_price(getUnit_priceValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getQuoteItemDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            quote_tableview.refresh();
+        });
         maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getSpecitem_maximumthicknessMM())+" MM"));
         volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" MM³"));
         weight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getWeight())+" G"));
         estimatedprice_column.setCellValueFactory(c -> new SimpleStringProperty("$"+df.format(c.getValue().getEstimatedPrice())+" USD"));
     }
     
-    public void setQuoteTableView(){
-        id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+    public void setQuoteTable(){
         contact_column.setCellValueFactory(new PropertyValueFactory<>("contact_name"));
         quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getQuote_date()))));
+        actualprice_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getActualprice())+" USD"));
+        
         eau_column.setCellValueFactory(new PropertyValueFactory<>("estimated_annual_usage"));
-        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
-        status_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getApproved()));
-        status_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(status_items)));
-        status_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
-            t.getTableView().getItems().get(t.getTablePosition().getRow()).setApproved(t.getNewValue());
+        eau_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        eau_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, Integer> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEstimated_annual_usage(t.getNewValue());
             msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-             setQuoteItems();
+            quote_tableview.refresh();
+        });
+        
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        comments_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setComments(t.getNewValue());
+            msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            quote_tableview.refresh();
+        });
+        
+        quotemargin_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMargin())+"%"));
+        quotemargin_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        quotemargin_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setMargin(getMarginValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            quote_tableview.refresh();
+        });
+        
+        estimatedtotal_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getEstimated_total())+" USD"));
+        estimatedtotal_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        estimatedtotal_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEstimated_total(getEstimated_totalValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            quote_tableview.refresh();
         });
     }
     
@@ -313,7 +311,27 @@ public class QuoteFX implements Initializable {
         return output.toFile();
     }
     
-    public static PartRevision getPartrevision_selection(){
-        return partrevision_selection;
+    public Double getUnit_priceValue(QuoteItem quote_item, String unit_price){
+        try{
+           return Double.parseDouble(unit_price);
+        }catch(Exception e){
+            return quote_item.getUnit_price();
+        }
+    }
+    
+    public Double getMarginValue(Quote quote, String margin){
+        try{
+           return Double.parseDouble(margin);
+        }catch(Exception e){
+            return quote.getMargin();
+        }
+    }
+    
+    public Double getEstimated_totalValue(Quote quote, String estimated_total){
+        try{
+           return Double.parseDouble(estimated_total);
+        }catch(Exception e){
+            return quote.getMargin();
+        }
     }
 }

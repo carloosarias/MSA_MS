@@ -27,7 +27,7 @@ import model.Quote;
 public class QuoteDAOJDBC implements QuoteDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.approved, "
+            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.active, "
             + "SPECIFICATION.specification_number, SPECIFICATION.process, PART_REVISION.area, PART_REVISION.rev, COMPANY.id, COMPANY.name, COMPANY_CONTACT.name, COMPANY_CONTACT.email, "
             + "COMPANY_CONTACT.phone_number, PRODUCT_PART.part_number, PRODUCT_PART.description "
             + "FROM QUOTE "
@@ -41,8 +41,8 @@ public class QuoteDAOJDBC implements QuoteDAO {
             "SELECT PART_REVISION_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_CONTACT_BY_ID = 
             "SELECT COMPANY_CONTACT_ID FROM QUOTE WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.approved, "
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_DATE = 
+            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.active, "
             + "SPECIFICATION.specification_number, SPECIFICATION.process, PART_REVISION.area, PART_REVISION.rev, COMPANY.id, COMPANY.name, COMPANY_CONTACT.name, COMPANY_CONTACT.email, "
             + "COMPANY_CONTACT.phone_number, PRODUCT_PART.part_number, PRODUCT_PART.description "
             + "FROM QUOTE "
@@ -51,9 +51,10 @@ public class QuoteDAOJDBC implements QuoteDAO {
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN COMPANY_CONTACT ON QUOTE.COMPANY_CONTACT_ID = COMPANY_CONTACT.id "
             + "INNER JOIN COMPANY ON COMPANY_CONTACT.COMPANY_ID = COMPANY.id "
-            + "ORDER BY QUOTE.id";
-    private static final String SQL_LIST_OF_DEPART_LOT_PART_REVISION_APPROVED_ORDER_BY_DATE = 
-            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.approved, "
+            + "WHERE QUOTE.active = ? "
+            + "ORDER BY QUOTE.quote_date DESC";
+    private static final String SQL_LIST_ACTIVE_OF_DEPARTLOT_PARTREVISION_ORDER_BY_DATE = 
+            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.active, "
             + "SPECIFICATION.specification_number, SPECIFICATION.process, PART_REVISION.area, PART_REVISION.rev, COMPANY.id, COMPANY.name, COMPANY_CONTACT.name, COMPANY_CONTACT.email, "
             + "COMPANY_CONTACT.phone_number, PRODUCT_PART.part_number, PRODUCT_PART.description "
             + "FROM QUOTE "
@@ -63,10 +64,10 @@ public class QuoteDAOJDBC implements QuoteDAO {
             + "INNER JOIN COMPANY_CONTACT ON QUOTE.COMPANY_CONTACT_ID = COMPANY_CONTACT.id "
             + "INNER JOIN COMPANY ON COMPANY_CONTACT.COMPANY_ID = COMPANY.id "
             + "INNER JOIN DEPART_LOT ON ? = DEPART_LOT.id "
-            + "WHERE QUOTE.PART_REVISION_ID = DEPART_LOT.PART_REVISION_ID and QUOTE.approved = ? "
-            + "ORDER BY QUOTE.quote_date DESC, QUOTE.id DESC";
-    private static final String SQL_LIST_OF_PART_REVISION_APPROVED_ORDER_BY_DATE = 
-            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.approved, "
+            + "WHERE QUOTE.PART_REVISION_ID = DEPART_LOT.PART_REVISION_ID AND QUOTE.active = ? "
+            + "ORDER BY QUOTE.quote_date DESC";
+    private static final String SQL_LIST_ACTIVE_OF_PARTREVISION_ORDER_BY_DATE = 
+            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.active, "
             + "SPECIFICATION.specification_number, SPECIFICATION.process, PART_REVISION.area, PART_REVISION.rev, COMPANY.id, COMPANY.name, COMPANY_CONTACT.name, COMPANY_CONTACT.email, "
             + "COMPANY_CONTACT.phone_number, PRODUCT_PART.part_number, PRODUCT_PART.description "
             + "FROM QUOTE "
@@ -75,25 +76,13 @@ public class QuoteDAOJDBC implements QuoteDAO {
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN COMPANY_CONTACT ON QUOTE.COMPANY_CONTACT_ID = COMPANY_CONTACT.id "
             + "INNER JOIN COMPANY ON COMPANY_CONTACT.COMPANY_ID = COMPANY.id "
-            + "WHERE QUOTE.PART_REVISION_ID = ? and QUOTE.approved = ? "
-            + "ORDER BY QUOTE.quote_date DESC, QUOTE.id DESC";
-    private static final String SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE = 
-            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.margin, QUOTE.estimated_total, QUOTE.approved, "
-            + "SPECIFICATION.specification_number, SPECIFICATION.process, PART_REVISION.area, PART_REVISION.rev, COMPANY.id, COMPANY.name, COMPANY_CONTACT.name, COMPANY_CONTACT.email, "
-            + "COMPANY_CONTACT.phone_number, PRODUCT_PART.part_number, PRODUCT_PART.description "
-            + "FROM QUOTE "
-            + "INNER JOIN PART_REVISION ON QUOTE.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN COMPANY_CONTACT ON QUOTE.COMPANY_CONTACT_ID = COMPANY_CONTACT.id "
-            + "INNER JOIN COMPANY ON COMPANY_CONTACT.COMPANY_ID = COMPANY.id "
-            + "WHERE QUOTE.PART_REVISION_ID = ? "
-            + "ORDER BY QUOTE.quote_date DESC, QUOTE.id DESC";
+            + "WHERE QUOTE.PART_REVISION_ID = ? AND QUOTE.active = ? "
+            + "ORDER BY QUOTE.quote_date DESC";
     private static final String SQL_INSERT =
-            "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, estimated_annual_usage, comments, margin, estimated_total, approved) "
+            "INSERT INTO QUOTE (PART_REVISION_ID, COMPANY_CONTACT_ID, quote_date, estimated_annual_usage, comments, margin, estimated_total, active) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE QUOTE SET quote_date = ?, estimated_annual_usage = ?, comments = ?, margin = ?, estimated_total = ?, approved = ? WHERE id = ?";
+            "UPDATE QUOTE SET quote_date = ?, estimated_annual_usage = ?, comments = ?, margin = ?, estimated_total = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM QUOTE WHERE id = ?";
     
@@ -199,12 +188,16 @@ public class QuoteDAOJDBC implements QuoteDAO {
     }
 
     @Override
-    public List<Quote> list() throws DAOException {
+    public List<Quote> list(boolean active) throws DAOException {
         List<Quote> quote = new ArrayList<>();
-
+        
+        Object[] values = {
+            active
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_DATE, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -218,7 +211,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
     }
     
     @Override
-    public List<Quote> list(PartRevision part_revision, String approved) throws IllegalArgumentException, DAOException {
+    public List<Quote> list(PartRevision part_revision, boolean active) throws IllegalArgumentException, DAOException {
         if(part_revision.getId() == null) {
             throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }    
@@ -227,12 +220,12 @@ public class QuoteDAOJDBC implements QuoteDAO {
         
         Object[] values = {
             part_revision.getId(),
-            approved
+            active
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PART_REVISION_APPROVED_ORDER_BY_DATE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_PARTREVISION_ORDER_BY_DATE, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -246,7 +239,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
     }
     
     @Override
-    public List<Quote> list(DepartLot depart_lot, String approved) throws IllegalArgumentException, DAOException {
+    public List<Quote> list(DepartLot depart_lot, boolean active) throws IllegalArgumentException, DAOException {
         if(depart_lot.getId() == null) {
             throw new IllegalArgumentException("DepartLot is not created yet, the DepartLot ID is null.");
         }    
@@ -255,39 +248,12 @@ public class QuoteDAOJDBC implements QuoteDAO {
         
         Object[] values = {
             depart_lot.getId(),
-            approved
+            active
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_DEPART_LOT_PART_REVISION_APPROVED_ORDER_BY_DATE, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                quote.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return quote;
-    }
-    
-    @Override
-    public List<Quote> list(PartRevision part_revision) throws IllegalArgumentException, DAOException {
-        if(part_revision.getId() == null) {
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }    
-        
-        List<Quote> quote = new ArrayList<>();
-        
-        Object[] values = {
-            part_revision.getId(),
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_PART_REVISION_ORDER_BY_DATE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_DEPARTLOT_PARTREVISION_ORDER_BY_DATE, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -322,7 +288,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
             quote.getComments(),
             quote.getMargin(),
             quote.getEstimated_total(),
-            quote.getApproved()
+            quote.isActive()
         };
         
         try(
@@ -359,7 +325,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
             quote.getComments(),
             quote.getMargin(),
             quote.getEstimated_total(),
-            quote.getApproved(),
+            quote.isActive(),
             quote.getId()
         };
         
@@ -413,7 +379,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
         quote.setComments(resultSet.getString("comments"));
         quote.setMargin(resultSet.getDouble("margin"));
         quote.setEstimated_total(resultSet.getDouble("estimated_total"));
-        quote.setApproved(resultSet.getString("approved"));
+        quote.setActive(resultSet.getBoolean("active"));
         
         //INNER JOINS
         quote.setSpec_number(resultSet.getString("SPECIFICATION.specification_number"));

@@ -9,6 +9,7 @@ import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -23,6 +24,7 @@ import model.AnalysisType;
 import model.Tank;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.setDatePicker;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  * FXML Controller class
@@ -95,6 +97,7 @@ public class CreateAnalysisReportFX implements Initializable {
     public void createAnalysisReport(){
         analysis_report = new AnalysisReport();
         analysis_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
+        analysis_report.setReport_time(LocalTime.now().format(timeFormat));
         analysis_report.setQuantity_used(0.0);
         analysis_report.setApplied_adjust(0.0);
         analysis_report.setActive(true);

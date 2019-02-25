@@ -20,7 +20,7 @@ public class Quote implements Serializable{
     private String comments;
     private double margin;
     private double estimated_total;
-    private String approved;
+    private boolean active;
     
     //INNER JOINS
     private String spec_number;
@@ -85,12 +85,12 @@ public class Quote implements Serializable{
         this.estimated_total = estimated_total;
     }
     
-    public String getApproved() {
-        return approved;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setApproved(String approved) {
-        this.approved = approved;
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
     public double getActualprice(){
