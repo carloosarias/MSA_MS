@@ -355,7 +355,6 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
      * @throws SQLException If something fails at database level.
      */
     public static AnalysisReport map(ResultSet resultSet) throws SQLException{
-        System.out.println("test");
         AnalysisReport analysis_report = new AnalysisReport();
         analysis_report.setId(resultSet.getInt("ANALYSIS_REPORT.id"));
         analysis_report.setReport_date(resultSet.getDate("ANALYSIS_REPORT.report_date"));
