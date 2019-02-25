@@ -21,7 +21,6 @@ public class QuoteItem implements Serializable {
     private Double partrev_area;
     private String metal_name;
     private Double metal_density;
-    private Double quote_margin;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -53,7 +52,7 @@ public class QuoteItem implements Serializable {
     
     //Calculates the estimated price using the Weight, Unit Price and Margin
     public Double getEstimatedPrice(){
-        return (getWeight() * unit_price * (quote_margin/100));
+        return (getWeight() * unit_price);
     }
     
     //Converts specification maximum_thickness from in to mm
@@ -104,13 +103,6 @@ public class QuoteItem implements Serializable {
         this.metal_density = metal_density;
     }
     
-    public Double getQuote_margin() {
-        return quote_margin;
-    }
-
-    public void setQuote_margin(Double quote_margin) {
-        this.quote_margin = quote_margin;
-    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**

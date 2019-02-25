@@ -24,9 +24,11 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -74,11 +76,9 @@ public class QuoteFX implements Initializable {
     @FXML
     private TableColumn<Quote, String> contact_column;
     @FXML
-    private TableColumn<Quote, Integer> eau_column;
+    private TableColumn<Quote, String> eau_column;
     @FXML
     private TableColumn<Quote, String> comments_column;
-    @FXML
-    private TableColumn<Quote, String> quotemargin_column;
     @FXML
     private TableColumn<Quote, String> actualprice_column;
     @FXML
@@ -120,8 +120,10 @@ public class QuoteFX implements Initializable {
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+            
         setQuoteTable();
         setQuoteItemTable();
+        
         part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
         
         partrev_combo.disableProperty().bind(partrev_combo.itemsProperty().isNull());
@@ -215,13 +217,15 @@ public class QuoteFX implements Initializable {
         listnumber_column.setCellValueFactory(c -> new SimpleStringProperty(""+(quoteitem_tableview.getItems().indexOf(c.getValue())+1)));
         metal_name_column.setCellValueFactory(new PropertyValueFactory<>("metal_name"));
         density_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMetal_densityGMM())+" G/MM³"));
+        
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getUnit_price())+" USD"));
         unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
         unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<QuoteItem, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnit_price(getUnit_priceValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getQuoteItemDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            quote_tableview.refresh();
+            quoteitem_tableview.refresh();
         });
+        
         maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getSpecitem_maximumthicknessMM())+" MM"));
         volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" MM³"));
         weight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getWeight())+" G"));
@@ -231,12 +235,12 @@ public class QuoteFX implements Initializable {
     public void setQuoteTable(){
         contact_column.setCellValueFactory(new PropertyValueFactory<>("contact_name"));
         quotedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getQuote_date()))));
-        actualprice_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getActualprice())+" USD"));
+        actualprice_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getCalculatedPrice())+" USD"));
         
-        eau_column.setCellValueFactory(new PropertyValueFactory<>("estimated_annual_usage"));
+        eau_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getEstimated_annual_usage())));
         eau_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        eau_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, Integer> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEstimated_annual_usage(t.getNewValue());
+        eau_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEstimated_annual_usage(getEstimated_annual_usageValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             quote_tableview.refresh();
         });
@@ -245,14 +249,6 @@ public class QuoteFX implements Initializable {
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
         comments_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setComments(t.getNewValue());
-            msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            quote_tableview.refresh();
-        });
-        
-        quotemargin_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMargin())+"%"));
-        quotemargin_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        quotemargin_column.setOnEditCommit((TableColumn.CellEditEvent<Quote, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setMargin(getMarginValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getQuoteDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             quote_tableview.refresh();
         });
@@ -313,25 +309,25 @@ public class QuoteFX implements Initializable {
     
     public Double getUnit_priceValue(QuoteItem quote_item, String unit_price){
         try{
-           return Double.parseDouble(unit_price);
+            return Double.parseDouble(unit_price);
         }catch(Exception e){
             return quote_item.getUnit_price();
         }
     }
     
-    public Double getMarginValue(Quote quote, String margin){
+    public Double getEstimated_totalValue(Quote quote, String estimated_total){
         try{
-           return Double.parseDouble(margin);
+            return Double.parseDouble(estimated_total);
         }catch(Exception e){
-            return quote.getMargin();
+            return quote.getEstimated_total();
         }
     }
     
-    public Double getEstimated_totalValue(Quote quote, String estimated_total){
+    public Integer getEstimated_annual_usageValue(Quote quote, String estimated_annual_usage){
         try{
-           return Double.parseDouble(estimated_total);
+            return Integer.parseInt(estimated_annual_usage);
         }catch(Exception e){
-            return quote.getMargin();
+            return quote.getEstimated_annual_usage();
         }
     }
 }

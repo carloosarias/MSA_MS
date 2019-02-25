@@ -42,8 +42,7 @@
                               <TableColumn fx:id="contact_column" minWidth="-Infinity" prefWidth="150.0" text="Contacto" />
                               <TableColumn fx:id="eau_column" minWidth="-Infinity" prefWidth="120.0" text="E.A.U." />
                               <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
-                              <TableColumn fx:id="quotemargin_column" minWidth="-Infinity" prefWidth="100.0" text="Margen %" />
-                              <TableColumn fx:id="actualprice_column" minWidth="-Infinity" prefWidth="100.0" text="Costo Est." />
+                              <TableColumn fx:id="actualprice_column" minWidth="-Infinity" prefWidth="100.0" text="Costo Estimado" />
                               <TableColumn fx:id="estimatedtotal_column" minWidth="-Infinity" prefWidth="100.0" text="Precio Cotizado" />
                            </columns>
                            <GridPane.margin>

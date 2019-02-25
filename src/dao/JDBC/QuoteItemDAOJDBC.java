@@ -26,7 +26,7 @@ public class QuoteItemDAOJDBC implements QuoteItemDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT QUOTE_ITEM.id, QUOTE_ITEM.unit_price, "
-            + "SPECIFICATION_ITEM.maximum_thickness, PART_REVISION.area, METAL.metal_name, METAL.density, QUOTE.margin "
+            + "SPECIFICATION_ITEM.maximum_thickness, PART_REVISION.area, METAL.metal_name, METAL.density "
             + "FROM QUOTE_ITEM "
             + "INNER JOIN SPECIFICATION_ITEM ON QUOTE_ITEM.SPECIFICATION_ITEM_ID = SPECIFICATION_ITEM.id "
             + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
@@ -39,7 +39,7 @@ public class QuoteItemDAOJDBC implements QuoteItemDAO {
             "SELECT SPECIFICATION_ITEM_ID FROM QUOTE_ITEM WHERE id = ?";
     private static final String SQL_LIST_OF_QUOTE_ORDER_BY_ID = 
             "SELECT QUOTE_ITEM.id, QUOTE_ITEM.unit_price, "
-            + "SPECIFICATION_ITEM.maximum_thickness, PART_REVISION.area, METAL.metal_name, METAL.density, QUOTE.margin "
+            + "SPECIFICATION_ITEM.maximum_thickness, PART_REVISION.area, METAL.metal_name, METAL.density "
             + "FROM QUOTE_ITEM "
             + "INNER JOIN SPECIFICATION_ITEM ON QUOTE_ITEM.SPECIFICATION_ITEM_ID = SPECIFICATION_ITEM.id "
             + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
@@ -288,7 +288,6 @@ public class QuoteItemDAOJDBC implements QuoteItemDAO {
         quote_item.setPartrev_area(resultSet.getDouble("PART_REVISION.area"));
         quote_item.setMetal_name(resultSet.getString("METAL.metal_name"));
         quote_item.setMetal_density(resultSet.getDouble("METAL.density"));
-        quote_item.setQuote_margin(resultSet.getDouble("QUOTE.margin"));
         return quote_item;
     }
 }

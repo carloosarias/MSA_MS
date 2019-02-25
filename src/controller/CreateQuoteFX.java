@@ -101,7 +101,6 @@ public class CreateQuoteFX implements Initializable {
         quote.setQuote_date(DAOUtil.toUtilDate(quotedate_picker.getValue()));
         quote.setEstimated_annual_usage(0);
         quote.setComments("N/A");
-        quote.setMargin(100);
         quote.setEstimated_total(0);
         quote.setActive(true);
         

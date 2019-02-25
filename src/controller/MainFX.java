@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -117,10 +118,12 @@ public class MainFX implements Initializable {
             MainApp.current_employee = null;
             showLogin();
         });
+        
     }
-    
+        
     public void setTabs(Module module){
-            try {
+        
+        try {
                 switch(module.getName()){
                     case "Recursos Humanos":
                         employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));

@@ -5,6 +5,7 @@
  */
 package model;
 
+import dao.JDBC.DAOFactory;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,7 +19,6 @@ public class Quote implements Serializable{
     private Date quote_date;
     private int estimated_annual_usage;
     private String comments;
-    private double margin;
     private double estimated_total;
     private boolean active;
     
@@ -34,6 +34,8 @@ public class Quote implements Serializable{
     private String part_number;
     private String part_description;
     private String part_rev;
+    
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -68,14 +70,6 @@ public class Quote implements Serializable{
     public void setComments(String comments) {
         this.comments = comments;
     }
-    
-    public double getMargin(){
-        return margin;
-    }
-    
-    public void setMargin(double margin) {
-        this.margin = margin;
-    }
 
     public double getEstimated_total(){
         return estimated_total;
@@ -93,8 +87,12 @@ public class Quote implements Serializable{
         this.active = active;
     }
     
-    public double getActualprice(){
-        return (estimated_total * 100) / margin;
+    public double getCalculatedPrice(){
+        double calcultated_price = 0;
+        for(QuoteItem quote_item : msabase.getQuoteItemDAO().list(this)){
+            calcultated_price += quote_item.getEstimatedPrice();
+        }
+        return calcultated_price;
     }
     
     //INNER JOINS
