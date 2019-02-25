@@ -70,12 +70,13 @@ public class InvoiceQuoteFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setQuoteTable();
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         setDatePicker(startdate_picker);
         setDatePicker(enddate_picker);
+        
+        setQuoteTable();
         updateQuoteTable();
         
         processfilter_checkbox.setOnAction((ActionEvent) -> {
