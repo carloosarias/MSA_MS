@@ -4,71 +4,44 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddEquipmentFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddEquipmentFX">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <VBox fillWidth="false">
+      <Label text="Categoría:">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Label>
+      <ComboBox fx:id="equipmenttype_combobox" prefWidth="200.0" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </ComboBox>
+      <GridPane GridPane.rowIndex="2">
+         <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <Label text="Tipo de Equipo:">
-               <VBox.margin>
+            <Button fx:id="save_button" mnemonicParsing="false" text="Registrar Equipo">
+               <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Label>
-            <ComboBox fx:id="equipmenttype_combobox" prefWidth="150.0">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </ComboBox>
-            <Label text="Nombre:">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="name_field" prefWidth="150.0">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TextField>
-            <Label text="Número de Serie:">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="serialnumber_field">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TextField>
-            <Label text="Descripción:">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Label>
-            <TextArea fx:id="description_area" prefHeight="100.0" prefWidth="200.0" wrapText="true">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TextArea>
-            <Label text="Ubicación:">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </Label>
-            <TextField fx:id="physicallocation_field">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TextField>
-            <Button fx:id="save_button" mnemonicParsing="false" text="Guardar">
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
+               </GridPane.margin>
             </Button>
          </children>
-      </VBox>
+      </GridPane>
    </children>
-</HBox>
+</GridPane>

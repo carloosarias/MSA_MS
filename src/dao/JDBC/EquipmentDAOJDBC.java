@@ -6,7 +6,6 @@
 package dao.JDBC;
 
 import dao.DAOException;
-import dao.DAOUtil;
 import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.EquipmentDAO;
 import java.sql.Connection;
@@ -26,38 +25,39 @@ import model.EquipmentType;
 public class EquipmentDAOJDBC implements EquipmentDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, "
-            + "EQUIPMENT_TYPE.name "
+            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, EQUIPMENT.active, "
+            + "EQUIPMENT_TYPE.name, EQUIPMENT_TYPE.frequency "
             + "FROM EQUIPMENT "
             + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
             + "WHERE EQUIPMENT.id = ?";
     private static final String SQL_FIND_EQUIPMENT_TYPE_BY_ID = 
             "SELECT EQUIPMENT_TYPE_ID FROM EQUIPMENT WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, "
-            + "EQUIPMENT_TYPE.name "
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_TYPE = 
+            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, EQUIPMENT.active, "
+            + "EQUIPMENT_TYPE.name, EQUIPMENT_TYPE.frequency "
             + "FROM EQUIPMENT "
             + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
-            + "ORDER BY EQUIPMENT.id";
-    private static final String SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID = 
-            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, "
-            + "EQUIPMENT_TYPE.name "
+            + "WHERE EQUIPMENT.active = ? "
+            + "ORDER BY EQUIPMENT_TYPE.name, EQUIPMENT.name";
+    private static final String SQL_LIST_ACTIVE_OF_EQUIPMENTTYPE_ORDER_BY_TYPE = 
+            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, EQUIPMENT.active, "
+            + "EQUIPMENT_TYPE.name, EQUIPMENT_TYPE.frequency "
             + "FROM EQUIPMENT "
             + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
-            + "WHERE EQUIPMENT.EQUIPMENT_TYPE_ID = ? "
-            + "ORDER BY EQUIPMENT.id";
+            + "WHERE EQUIPMENT.EQUIPMENT_TYPE_ID = ? AND EQUIPMENT.active = ? "
+            + "ORDER BY EQUIPMENT_TYPE.name, EQUIPMENT.name";
     private static final String SQL_LIST_NEXT_MANTAINANCE_PENDING_ORDER_BY_ID = 
-            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, "
-            + "EQUIPMENT_TYPE.name "
+            "SELECT EQUIPMENT.id, EQUIPMENT.name, EQUIPMENT.description, EQUIPMENT.physical_location, EQUIPMENT.serial_number, EQUIPMENT.next_mantainance, EQUIPMENT.active, "
+            + "EQUIPMENT_TYPE.name, EQUIPMENT_TYPE.frequency "
             + "FROM EQUIPMENT "
             + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
             + "WHERE EQUIPMENT.next_mantainance <= ? "
             + "ORDER BY EQUIPMENT.id";
     private static final String SQL_INSERT = 
-            "INSERT INTO EQUIPMENT (EQUIPMENT_TYPE_ID, name, description, physical_location, serial_number, next_mantainance) "
-            + "VALUES(?, ?, ?, ?, ?, ?)";
+            "INSERT INTO EQUIPMENT (EQUIPMENT_TYPE_ID, name, description, physical_location, serial_number, next_mantainance, active) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EQUIPMENT SET name = ?, description = ?, physical_location = ?, serial_number = ?, next_mantainance = ? WHERE id = ?";
+            "UPDATE EQUIPMENT SET name = ?, description = ?, physical_location = ?, serial_number = ?, next_mantainance = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM EQUIPMENT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -134,12 +134,16 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
     }
 
     @Override
-    public List<Equipment> list() throws DAOException {
+    public List<Equipment> list(boolean active) throws DAOException {
         List<Equipment> equipment_list = new ArrayList<>();
-
+        
+        Object[] values = {
+            active
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_TYPE, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -153,7 +157,7 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
     }
 
     @Override
-    public List<Equipment> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException {
+    public List<Equipment> list(EquipmentType equipment_type, boolean active) throws IllegalArgumentException, DAOException {
     if(equipment_type.getId() == null) {
             throw new IllegalArgumentException("EquipmentType is not created yet, the EquipmentType ID is null.");
         }    
@@ -161,12 +165,13 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         List<Equipment> equipment = new ArrayList<>();
         
         Object[] values = {
-            equipment_type.getId()
+            equipment_type.getId(),
+            active
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_EQUIPMENTTYPE_ORDER_BY_TYPE, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -217,7 +222,8 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
             equipment.getDescription(),
             equipment.getPhysical_location(),
             equipment.getSerial_number(),
-            equipment.getNext_mantainance()
+            equipment.getNext_mantainance(),
+            equipment.isActive()
         };
         
         try(
@@ -254,6 +260,7 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
             equipment.getPhysical_location(),
             equipment.getSerial_number(),
             equipment.getNext_mantainance(),
+            equipment.isActive(),
             equipment.getId()
         };
         
@@ -307,9 +314,12 @@ public class EquipmentDAOJDBC implements EquipmentDAO {
         equipment.setPhysical_location(resultSet.getString("EQUIPMENT.physical_location"));
         equipment.setSerial_number(resultSet.getString("EQUIPMENT.serial_number"));
         equipment.setNext_mantainance(resultSet.getDate("EQUIPMENT.next_mantainance"));
+        equipment.setActive(resultSet.getBoolean("EQUIPMENT.active"));
         
         //INNER JOINS
         equipment.setEquipmenttype_name(resultSet.getString("EQUIPMENT_TYPE.name"));
+        equipment.setFrequency(resultSet.getInt("EQUIPMENT_TYPE.frequency"));
+        
         return equipment;
     }  
 }

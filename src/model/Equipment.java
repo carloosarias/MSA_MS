@@ -22,9 +22,11 @@ public class Equipment implements Serializable{
     private String physical_location;
     private String serial_number;
     private Date next_mantainance;
+    private boolean active;
     
     //INNER JOIN
     private String equipmenttype_name;
+    private Integer frequency;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -74,6 +76,14 @@ public class Equipment implements Serializable{
         this.next_mantainance = next_mantainance;
     }
     
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active){
+        this.active = active;
+    }
+    
     //INNER JOINS
     
     public String getEquipmenttype_name(){
@@ -82,6 +92,13 @@ public class Equipment implements Serializable{
     
     public void setEquipmenttype_name(String equipmenttype_name){
         this.equipmenttype_name = equipmenttype_name;
+    }
+    public Integer getFrequecy(){
+        return frequency;
+    }
+    
+    public void setFrequency(Integer frequency){
+        this.frequency = frequency;
     }
     
     // Object overrides ---------------------------------------------------------------------------

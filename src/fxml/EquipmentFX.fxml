@@ -2,46 +2,60 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EquipmentFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EquipmentFX">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <VBox alignment="TOP_CENTER">
+      <TableView fx:id="equipment_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="type_column" minWidth="-Infinity" prefWidth="150.0" text="Categoría" />
+            <TableColumn fx:id="name_column" minWidth="-Infinity" prefWidth="150.0" text="Equipo" />
+            <TableColumn fx:id="serialnumber_column" minWidth="-Infinity" prefWidth="150.0" text="Número de Serie" />
+            <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="300.0" text="Descripción" />
+            <TableColumn fx:id="physicallocation_column" minWidth="-Infinity" prefWidth="150.0" text="Ubicación" />
+         </columns>
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </TableView>
+      <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <TableView fx:id="equipment_tableview">
-              <columns>
-                <TableColumn fx:id="id_column" prefWidth="75.0" resizable="false" text="#" />
-                <TableColumn fx:id="equipmenttype_column" prefWidth="120.0" resizable="false" text="Tipo de Equipo" />
-                  <TableColumn fx:id="name_column" prefWidth="120.0" resizable="false" text="Nombre" />
-                  <TableColumn fx:id="serialnumber_column" prefWidth="100.0" text="No. de Serie" />
-                  <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                  <TableColumn fx:id="physicallocation_column" prefWidth="100.0" text="Ubicación" />
-                  <TableColumn fx:id="nextmantainance_column" prefWidth="175.0" resizable="false" text="Próximo Mantenimiento" />
-              </columns>
-               <VBox.margin>
+            <Button fx:id="add_button" mnemonicParsing="false" text="Registrar Equipo">
+               <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TableView>
-            <HBox>
-               <children>
-                  <VBox>
-                     <children>
-                        <Button fx:id="add_button" mnemonicParsing="false" text="Argegar Equipo">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </VBox>
-               </children>
-            </HBox>
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="disable_button" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
          </children>
-      </VBox>
+      </GridPane>
    </children>
-</HBox>
+</GridPane>

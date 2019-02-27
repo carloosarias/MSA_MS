@@ -8,11 +8,9 @@ package controller;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,6 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,13 +35,11 @@ import model.Equipment;
 public class EquipmentFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<Equipment> equipment_tableview;
     @FXML
-    private TableColumn<Equipment, Integer> id_column;
-    @FXML
-    private TableColumn<Equipment, String> equipmenttype_column;
+    private TableColumn<Equipment, String> type_column;
     @FXML
     private TableColumn<Equipment, String> name_column;
     @FXML
@@ -51,9 +49,9 @@ public class EquipmentFX implements Initializable {
     @FXML
     private TableColumn<Equipment, String> physicallocation_column;
     @FXML
-    private TableColumn<Equipment, Date> nextmantainance_column;
-    @FXML
     private Button add_button;
+    @FXML
+    private Button disable_button;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -64,44 +62,87 @@ public class EquipmentFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setEquipmentTableview();
-        setEquipmentItems();
+        setEquipmentTable();
+        updateEquipmentTable();
+        
+        disable_button.disableProperty().bind(equipment_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         add_button.setOnAction((ActionEvent) -> {
-            showAddStage();
-            setEquipmentItems();
+            int current_size = equipment_tableview.getItems().size();
+            showAdd_stage();
+            updateEquipmentTable();
+            if(current_size < equipment_tableview.getItems().size()){
+                equipment_tableview.scrollTo(AddEquipmentFX.equipment);
+                equipment_tableview.getSelectionModel().select(AddEquipmentFX.equipment);
+            }
+        });
+        
+        disable_button.setOnAction((ActionEvent) -> {
+           disableEquipment();
+           updateEquipmentTable();
         });
     }
     
-    public void showAddStage(){
+    public void disableEquipment(){
+        equipment_tableview.getSelectionModel().getSelectedItem().setActive(false);
+        msabase.getEquipmentDAO().update(equipment_tableview.getSelectionModel().getSelectedItem());
+    }
+    
+    public void showAdd_stage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddEquipmentFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/AddEquipmentFX.fxml"));
             Scene scene = new Scene(root);
             
-            add_stage.setTitle("Agregar Nuevo Equipo");
+            add_stage.setTitle("Registrar Equipo");
             add_stage.setResizable(false);
             add_stage.initStyle(StageStyle.UTILITY);
             add_stage.setScene(scene);
             add_stage.showAndWait();
         } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EquipmentFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void setEquipmentTableview(){
-        id_column.setCellValueFactory(new PropertyValueFactory("id"));
+    public void setEquipmentTable(){
+        type_column.setCellValueFactory(new PropertyValueFactory("equipmenttype_name"));
+        
         name_column.setCellValueFactory(new PropertyValueFactory("name"));
+        name_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        name_column.setOnEditCommit((TableColumn.CellEditEvent<Equipment, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setName(t.getNewValue());
+            msabase.getEquipmentDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            equipment_tableview.refresh();
+        });
+        
         serialnumber_column.setCellValueFactory(new PropertyValueFactory("serial_number"));
-        equipmenttype_column.setCellValueFactory(new PropertyValueFactory("equipmenttype_name"));
+        serialnumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        serialnumber_column.setOnEditCommit((TableColumn.CellEditEvent<Equipment, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setSerial_number(t.getNewValue());
+            msabase.getEquipmentDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            equipment_tableview.refresh();
+        });
+        
         description_column.setCellValueFactory(new PropertyValueFactory("description"));
+        description_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        description_column.setOnEditCommit((TableColumn.CellEditEvent<Equipment, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setDescription(t.getNewValue());
+            msabase.getEquipmentDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            equipment_tableview.refresh();
+        });
         physicallocation_column.setCellValueFactory(new PropertyValueFactory("physical_location"));
-        nextmantainance_column.setCellValueFactory(new PropertyValueFactory("next_mantainance"));
+        physicallocation_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        physicallocation_column.setOnEditCommit((TableColumn.CellEditEvent<Equipment, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhysical_location(t.getNewValue());
+            msabase.getEquipmentDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            equipment_tableview.refresh();
+        });
+        
     }
     
-    public void setEquipmentItems(){
-        equipment_tableview.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().list()));
+    public void updateEquipmentTable(){
+        equipment_tableview.getItems().setAll(msabase.getEquipmentDAO().list(true));
     }
 }

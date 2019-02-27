@@ -111,7 +111,7 @@ public class CreateProcessReportFX implements Initializable {
         
         equipmenttype_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends EquipmentType> observable, EquipmentType oldValue, EquipmentType newValue) -> {
             equipment_combo.getSelectionModel().clearSelection();
-            equipment_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().list(newValue)));
+            equipment_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().list(newValue, true)));
             equipment_combo.setDisable(equipment_combo.getItems().isEmpty());
         });
         

@@ -132,7 +132,7 @@ public class MantainanceReportFX implements Initializable {
         });
         
         equipmenttype_combo.setOnAction((ActionEvent) -> {
-            equipment_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().list(equipmenttype_combo.getSelectionModel().getSelectedItem())));
+            equipment_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentDAO().list(equipmenttype_combo.getSelectionModel().getSelectedItem(), true)));
             equipment_combo.setDisable(equipment_combo.getItems().isEmpty());
         });
         

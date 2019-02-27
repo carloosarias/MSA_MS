@@ -184,7 +184,7 @@ public class MainFX implements Initializable {
                     case "Mantenimiento":
                         //mantainance_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/MantainanceReportFX.fxml")));
                         activityreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ActivityReportFX.fxml")));
-                        //equipment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
+                        equipment_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
                         equipmenttype_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/EquipmentTypeFX.fxml")));
                         root_tabpane.getTabs().setAll(mantainance_tab, activityreport_tab, equipment_tab, equipmenttype_tab);
                         break;

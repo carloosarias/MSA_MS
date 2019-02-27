@@ -39,10 +39,11 @@ public interface EquipmentDAO {
     /**
      * Returns a list of all Equipment from the database ordered by Equipment ID. The list is never null and
      * is empty when the database does not contain any Equipment.
+     * @param active
      * @return A list of all Equipment from the database ordered by Equipment ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<Equipment> list() throws DAOException;
+    public List<Equipment> list(boolean active) throws DAOException;
     
     /**
      * Returns a list of all Equipment matching Invoice ID from the database ordered by EquipmentType ID. 
@@ -50,11 +51,12 @@ public interface EquipmentDAO {
      * The list is never null and is empty when the database does not 
      * contain any Equipment matching EquipmentType ID.
      * @param equipment_type The EquipmentType ID to be searched for.
+     * @param active
      * @return A list of all Equipment matching EquipmentType ID from the database ordered by Equipment ID.
      * @throws IllegalArgumentException If EquipmentType ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<Equipment> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException;
+    public List<Equipment> list(EquipmentType equipment_type, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all Equipment that are pending mantainance from the database ordered by EquipmentType ID. 

@@ -10,14 +10,11 @@ import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Equipment;
 import model.EquipmentType;
@@ -30,19 +27,13 @@ import model.EquipmentType;
 public class AddEquipmentFX implements Initializable {
     
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private ComboBox<EquipmentType> equipmenttype_combobox;
     @FXML
-    private TextField name_field;
-    @FXML
-    private TextField serialnumber_field;
-    @FXML
-    private TextField physicallocation_field;
-    @FXML
-    private TextArea description_area;
-    @FXML
     private Button save_button;
+    
+    public static Equipment equipment;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
@@ -52,14 +43,14 @@ public class AddEquipmentFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        equipmenttype_combobox.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list(true)));
+        equipmenttype_combobox.getItems().setAll(msabase.getEquipmentTypeDAO().list(true));
         
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){
                 return;
             }
-            saveEquipment();
-            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            createEquipment();
+            Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
         });
     }    
@@ -67,22 +58,6 @@ public class AddEquipmentFX implements Initializable {
     public boolean testFields(){
         boolean b = true;
         clearStyle();
-        if(name_field.getText().replace(" ", "").equals("")){
-            name_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        if(serialnumber_field.getText().replace(" ", "").equals("")){
-            serialnumber_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        if(physicallocation_field.getText().replace(" ", "").equals("")){
-            physicallocation_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        if(description_area.getText().replace(" ", "").equals("")){
-            description_area.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
         if(equipmenttype_combobox.getSelectionModel().getSelectedItem().getId() == null){
             equipmenttype_combobox.setStyle("-fx-background-color: lightpink ;");
             b = false;
@@ -91,20 +66,17 @@ public class AddEquipmentFX implements Initializable {
     }
     
     public void clearStyle(){
-        name_field.setStyle(null);
-        description_area.setStyle(null);
         equipmenttype_combobox.setStyle(null);
-        physicallocation_field.setStyle(null);
-        serialnumber_field.setStyle(null);
     }
         
-    public void saveEquipment(){
-        Equipment equipment = new Equipment();
-        equipment.setName(name_field.getText());
-        equipment.setDescription(description_area.getText());
+    public void createEquipment(){
+        equipment = new Equipment();
+        equipment.setName("N/A");
+        equipment.setSerial_number("N/A");
+        equipment.setDescription("N/A");
+        equipment.setPhysical_location("N/A");
         equipment.setNext_mantainance(DAOUtil.toUtilDate(LocalDate.now().plusDays(equipmenttype_combobox.getSelectionModel().getSelectedItem().getFrequency())));
-        equipment.setPhysical_location(physicallocation_field.getText());
-        equipment.setSerial_number(serialnumber_field.getText());
+        equipment.setActive(true);
         msabase.getEquipmentDAO().create(equipmenttype_combobox.getSelectionModel().getSelectedItem(), equipment);
     }
 }
