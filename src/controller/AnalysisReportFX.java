@@ -150,6 +150,7 @@ public class AnalysisReportFX implements Initializable {
         disable_button.setOnAction((ActionEvent) -> {
             analysisreport_tableview.getSelectionModel().getSelectedItem().setActive(false);
             msabase.getAnalysisReportDAO().update(analysisreport_tableview.getSelectionModel().getSelectedItem());
+            updateAnalysisReportTable();
         });
     }
     
