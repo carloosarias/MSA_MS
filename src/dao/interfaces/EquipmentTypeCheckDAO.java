@@ -34,14 +34,6 @@ public interface EquipmentTypeCheckDAO {
      * @throws DAOException If something fails at database level.
      */
     public EquipmentType findEquipmentType(EquipmentTypeCheck equipment_type_check) throws IllegalArgumentException, DAOException;
-
-    /**
-     * Returns a list of all EquipmentTypeCheck from the database ordered by EquipmentTypeCheck ID. The list is never null and
-     * is empty when the database does not contain any EquipmentTypeCheck.
-     * @return A list of all EquipmentTypeCheck from the database ordered by EquipmentTypeCheck ID.
-     * @throws DAOException If something fails at database level.
-     */        
-    public List<EquipmentTypeCheck> list() throws DAOException;
     
     /**
      * Returns a list of all EquipmentTypeCheck matching Invoice ID from the database ordered by EquipmentType ID. 
@@ -49,11 +41,12 @@ public interface EquipmentTypeCheckDAO {
      * The list is never null and is empty when the database does not 
      * contain any EquipmentTypeCheck matching EquipmentType ID.
      * @param equipment_type The EquipmentType ID to be searched for.
+     * @param active
      * @return A list of all EquipmentTypeCheck matching EquipmentType ID from the database ordered by EquipmentTypeCheck ID.
      * @throws IllegalArgumentException If EquipmentType ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<EquipmentTypeCheck> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException;
+    public List<EquipmentTypeCheck> list(EquipmentType equipment_type, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given EquipmentTypeCheck in the database.

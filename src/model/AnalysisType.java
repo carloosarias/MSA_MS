@@ -18,7 +18,7 @@ public class AnalysisType implements Serializable {
     private String name;
     private String description;
     private double factor;
-    private double optimal;
+    private double optimal; //G/L
     private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------

@@ -52,7 +52,7 @@ public class AddEquipmentFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        equipmenttype_combobox.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list()));
+        equipmenttype_combobox.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list(true)));
         
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){

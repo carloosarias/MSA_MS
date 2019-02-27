@@ -6,6 +6,7 @@
 package controller;
 
 
+import static com.itextpdf.kernel.pdf.PdfName.Image;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -23,6 +24,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -141,12 +143,13 @@ public class LoginFX implements Initializable {
             GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/MainFX.fxml"));
             Scene scene = new Scene(root);
             stage.setHeight(720);
-            stage.setWidth(1024);
+            stage.setWidth(1200);
+            stage.getIcons().add(new Image("/MSA-icon.png"));
             stage.setTitle("MSA Manager");
             stage.setResizable(true);
             stage.setScene(scene);
-            stage.setMaximized(true);
             stage.show();
+            stage.setMaximized(true);
         } catch (IOException ex) {
             Logger.getLogger(LoginFX.class.getName()).log(Level.SEVERE, null, ex);
         }

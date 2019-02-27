@@ -21,6 +21,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -81,9 +82,11 @@ public class MainFX implements Initializable {
     @FXML
     private Tab analysisreport_tab;
     @FXML
+    private Tab mantainance_tab;
+    @FXML
     private Tab equipment_tab;
     @FXML
-    private Tab mantainance_tab;
+    private Tab equipmenttype_tab;
     @FXML
     private Tab product_tab;
     @FXML
@@ -179,10 +182,11 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(analysisreport_tab, analysistype_tab, tank_tab);
                         break;
                     case "Mantenimiento":
-                        mantainance_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/MantainanceReportFX.fxml")));
+                        //mantainance_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/MantainanceReportFX.fxml")));
                         activityreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ActivityReportFX.fxml")));
-                        equipment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
-                        root_tabpane.getTabs().setAll(mantainance_tab, activityreport_tab, equipment_tab);
+                        //equipment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentFX.fxml")));
+                        equipmenttype_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/EquipmentTypeFX.fxml")));
+                        root_tabpane.getTabs().setAll(mantainance_tab, activityreport_tab, equipment_tab, equipmenttype_tab);
                         break;
                 }
             } catch (IOException ex) {
@@ -198,9 +202,10 @@ public class MainFX implements Initializable {
             BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("/fxml/LoginFX.fxml"));
 
             Scene scene = new Scene(root);
+            stage.getIcons().add(new Image("/MSA-icon.png"));
             stage.setTitle("MSA Manager");
             stage.setResizable(false);
-            stage.initStyle(StageStyle.UTILITY);
+            stage.initStyle(StageStyle.UNIFIED);
             stage.setScene(scene);
             stage.show();
         } catch (IOException ex) {

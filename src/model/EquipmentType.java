@@ -19,6 +19,8 @@ public class EquipmentType implements Serializable{
     private String name;
     private String description;
     private Integer frequency;
+    private boolean active;
+            
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -54,6 +56,14 @@ public class EquipmentType implements Serializable{
         this.frequency = frequency;
     }
     
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -84,7 +94,8 @@ public class EquipmentType implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%d - %s",
-                id, name);
+        return String.format("%s",
+                name);
     }
+
 }

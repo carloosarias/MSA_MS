@@ -17,7 +17,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import model.Tank;
 import static msa_ms.MainApp.df;
 
@@ -45,8 +44,6 @@ public class TankFX implements Initializable {
     
     private Tank tank;
     
-    private Stage add_stage = new Stage();
-    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     /**
      * Initializes the controller class.
@@ -54,8 +51,10 @@ public class TankFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setTankTable();        
-        updateTankTable();        
+        updateTankTable();     
         
+        disable_button.disableProperty().bind(tank_tableview.getSelectionModel().selectedItemProperty().isNull());
+                
         add_button.setOnAction((ActionEvent) -> {
             int current_size = tank_tableview.getItems().size();
             createTank();
@@ -108,7 +107,7 @@ public class TankFX implements Initializable {
             tank_tableview.refresh();
         });
         
-        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" LT³"));
+        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" L"));
         volume_column.setCellFactory(TextFieldTableCell.forTableColumn());
         volume_column.setOnEditCommit((TableColumn.CellEditEvent<Tank, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setVolume(getVolumeValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));

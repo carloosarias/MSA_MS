@@ -63,8 +63,9 @@
                   <Tab fx:id="scrap_tab" closable="false" text="Scrap" />
                   <Tab fx:id="analysistype_tab" closable="false" text="Tipos de Análisis" />
                   <Tab fx:id="analysisreport_tab" closable="false" text="Reportes de Análisis Químicos" />
-                  <Tab fx:id="equipment_tab" closable="false" text="Equipo" />
-                  <Tab fx:id="mantainance_tab" closable="false" text="Mantenimiento" />
+                  <Tab fx:id="mantainance_tab" closable="false" text="Reportes de Mantenimiento" />
+                  <Tab fx:id="equipment_tab" closable="false" text="Equipos" />
+                  <Tab fx:id="equipmenttype_tab" closable="false" text="Categorías de Equipo" />
                   <Tab fx:id="activityreport_tab" closable="false" text="Reporte de Trabajos" />
                </tabs>
                <GridPane.margin>

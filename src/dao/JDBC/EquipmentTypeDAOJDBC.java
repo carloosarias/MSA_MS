@@ -23,14 +23,14 @@ import model.EquipmentType;
 public class EquipmentTypeDAOJDBC implements EquipmentTypeDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, name, description, frequency FROM EQUIPMENT_TYPE WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, description, frequency FROM EQUIPMENT_TYPE ORDER BY id";
+            "SELECT id, name, description, frequency, active FROM EQUIPMENT_TYPE WHERE id = ?";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_NAME = 
+            "SELECT id, name, description, frequency, active FROM EQUIPMENT_TYPE WHERE active = ? ORDER BY name";
     private static final String SQL_INSERT = 
-            "INSERT INTO EQUIPMENT_TYPE (name, description, frequency) "
-            + "VALUES(?, ?, ?)";
+            "INSERT INTO EQUIPMENT_TYPE (name, description, frequency, active) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EQUIPMENT_TYPE SET name = ?, description = ?, frequency = ? WHERE id = ?";
+            "UPDATE EQUIPMENT_TYPE SET name = ?, description = ?, frequency = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM EQUIPMENT_TYPE WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -80,12 +80,16 @@ public class EquipmentTypeDAOJDBC implements EquipmentTypeDAO {
     }
 
     @Override
-    public List<EquipmentType> list() throws DAOException {
+    public List<EquipmentType> list(boolean active) throws DAOException {
         List<EquipmentType> equipment_type = new ArrayList<>();
-
+        
+        Object[] values = {
+            active
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_NAME, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -107,12 +111,13 @@ public class EquipmentTypeDAOJDBC implements EquipmentTypeDAO {
         Object[] values = {
             equipment_type.getName(),
             equipment_type.getDescription(),
-            equipment_type.getFrequency()
+            equipment_type.getFrequency(),
+            equipment_type.isActive()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
@@ -142,6 +147,7 @@ public class EquipmentTypeDAOJDBC implements EquipmentTypeDAO {
             equipment_type.getName(),
             equipment_type.getDescription(),
             equipment_type.getFrequency(),
+            equipment_type.isActive(),
             equipment_type.getId()
         };
         
@@ -193,6 +199,7 @@ public class EquipmentTypeDAOJDBC implements EquipmentTypeDAO {
         equipment_type.setName(resultSet.getString("name"));
         equipment_type.setDescription(resultSet.getString("description"));
         equipment_type.setFrequency(resultSet.getInt("frequency"));
+        equipment_type.setActive(resultSet.getBoolean("active"));
         return equipment_type;
     }    
 }

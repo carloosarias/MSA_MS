@@ -2,61 +2,129 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EquipmentTypeFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EquipmentTypeFX">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <VBox alignment="TOP_CENTER">
-         <children>
-            <TableView fx:id="equipmenttype_tableview">
-              <columns>
-                  <TableColumn prefWidth="75.0" resizable="false" text="Tipos de Equipo">
-                     <columns>
-                      <TableColumn fx:id="id_column" prefWidth="75.0" text="ID" />
-                      <TableColumn fx:id="equipmenttypename_column" prefWidth="100.0" text="Nombre" />
-                        <TableColumn fx:id="equipmenttypedescription_column" prefWidth="200.0" text="Descripción" />
-                        <TableColumn fx:id="frequency_column" prefWidth="200.0" resizable="false" text="Freq. de Mantenimiento (Días)" />
-                     </columns>
-                  </TableColumn>
-              </columns>
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TableView>
-            <HBox>
-               <children>
-                  <VBox>
+      <TabPane tabClosingPolicy="UNAVAILABLE">
+         <tabs>
+            <Tab text="Categorías">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
-                        <Button fx:id="add_button" mnemonicParsing="false" text="Registrar Tipo de Equipo">
-                           <VBox.margin>
+                        <TableView fx:id="equipmenttype_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="typename_column" minWidth="-Infinity" prefWidth="150.0" text="Categoría" />
+                              <TableColumn fx:id="typedesc_column" minWidth="-Infinity" prefWidth="300.0" text="Descripción" />
+                              <TableColumn fx:id="typefreq_column" minWidth="-Infinity" prefWidth="150.0" text="Freq. Mantenimiento" />
+                           </columns>
+                           <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
+                           </GridPane.margin>
+                        </TableView>
+                        <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Button fx:id="addtype_button" mnemonicParsing="false" text="Registrar Categoría">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Button>
+                              <Button fx:id="disabletype_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Button>
+                           </children>
+                        </GridPane>
+                        <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </Separator>
                      </children>
-                  </VBox>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <VBox alignment="TOP_CENTER">
-         <children>
-            <TableView fx:id="equipmenttypecheck_tableview">
-              <columns>
-                  <TableColumn prefWidth="75.0" text="Checklist  de Mantenimiento">
-                     <columns>
-                      <TableColumn fx:id="equipmenttypecheckname_column" prefWidth="100.0" resizable="false" text="Nombre" />
-                      <TableColumn fx:id="equipmenttypecheckdescription_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                     </columns>
-                  </TableColumn>
-              </columns>
-               <VBox.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </VBox.margin>
-            </TableView>
-         </children>
-      </VBox>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab fx:id="check_tab" disable="true" text="Checks de Mantenimiento">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <TableView fx:id="equipmenttypecheck_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="checkname_column" minWidth="-Infinity" prefWidth="200.0" resizable="false" text="Check" />
+                              <TableColumn fx:id="checkdesc_column" minWidth="-Infinity" prefWidth="400.0" resizable="false" text="Descripción" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                        <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Button fx:id="addcheck_button" mnemonicParsing="false" text="Registrar Check de Mantenimiento">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Button>
+                              <Button fx:id="disablecheck_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Button>
+                           </children>
+                        </GridPane>
+                        <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </Separator>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
    </children>
-</HBox>
+</GridPane>

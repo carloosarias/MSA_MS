@@ -18,6 +18,7 @@ public class EquipmentTypeCheck implements Serializable{
     private Integer id;
     private String name;
     private String description;
+    private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -43,6 +44,14 @@ public class EquipmentTypeCheck implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
     // Object overrides ---------------------------------------------------------------------------
@@ -75,8 +84,8 @@ public class EquipmentTypeCheck implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%d - %s",
-                id, name);
+        return String.format("%s",
+                name);
     }
     
 }

@@ -31,7 +31,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.ActivityReport;
 import model.AnalysisReport;
 import model.Tank;
 import static msa_ms.MainApp.df;
@@ -160,12 +159,12 @@ public class AnalysisReportFX implements Initializable {
         reporttime_column.setCellValueFactory(new PropertyValueFactory<>("report_time"));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
         tank_column.setCellValueFactory(new PropertyValueFactory<>("tank"));
-        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" LT³"));
+        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" L"));
         analysistype_column.setCellValueFactory(new PropertyValueFactory<>("analysis_type"));
         factor_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getFactor())));
         optimal_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getOptimal())+" G/L"));
         
-        quantityused_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getQuantity_used())));
+        quantityused_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getQuantity_used())+" ML"));
         quantityused_column.setCellFactory(TextFieldTableCell.forTableColumn());
         quantityused_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReport, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity_used(getQuantity_usedValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
@@ -173,10 +172,10 @@ public class AnalysisReportFX implements Initializable {
             analysisreport_tableview.refresh();
         });
         
-        result_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getResult())));
-        estimatedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getEstimated_adjust())));
+        result_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getResult())+" ML"));
+        estimatedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getEstimated_adjust())+" KG"));
         
-        appliedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getApplied_adjust())));
+        appliedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getApplied_adjust())+" KG"));
         appliedadjust_column.setCellFactory(TextFieldTableCell.forTableColumn());
         appliedadjust_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReport, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setApplied_adjust(getApplied_adjustValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));

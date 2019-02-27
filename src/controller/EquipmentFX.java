@@ -18,7 +18,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -55,10 +54,9 @@ public class EquipmentFX implements Initializable {
     private TableColumn<Equipment, Date> nextmantainance_column;
     @FXML
     private Button add_button;
-    @FXML
-    private Tab equipmenttype_tab;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    
     private Stage add_stage = new Stage();
 
     /**
@@ -66,7 +64,6 @@ public class EquipmentFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setEquipmentTypeTab();
         setEquipmentTableview();
         setEquipmentItems();
         
@@ -91,14 +88,6 @@ public class EquipmentFX implements Initializable {
             add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void setEquipmentTypeTab(){
-        try {
-            equipmenttype_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/EquipmentTypeFX.fxml")));
-        } catch (IOException ex) {
-            Logger.getLogger(EquipmentFX.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

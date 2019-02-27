@@ -118,7 +118,7 @@ public class MantainanceReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         equipment_selection = new Equipment();
-        equipmenttype_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list()));
+        equipmenttype_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list(true)));
         setEquipmentTableview();
         setMantainanceReportTableview();
         setMantainanceItemTableview();

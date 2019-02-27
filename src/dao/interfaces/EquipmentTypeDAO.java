@@ -30,7 +30,7 @@ public interface EquipmentTypeDAO {
      * @return A list of all EquipmentType from the database ordered by EquipmentType ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<EquipmentType> list() throws DAOException;
+    public List<EquipmentType> list(boolean active) throws DAOException;
     
     /**
      * Create the given EquipmentType in the database.

@@ -148,7 +148,7 @@ public class CreateMantainanceReportFX implements Initializable {
     
     public void setMantainanceitem_list(){
         mantainanceitem_list = new ArrayList();
-        for(EquipmentTypeCheck check : msabase.getEquipmentTypeCheckDAO().list(msabase.getEquipmentDAO().findEquipmentType(equipment_combo.getSelectionModel().getSelectedItem()))){
+        for(EquipmentTypeCheck check : msabase.getEquipmentTypeCheckDAO().list(msabase.getEquipmentDAO().findEquipmentType(equipment_combo.getSelectionModel().getSelectedItem()), true)){
             MantainanceItem item = new MantainanceItem();
             item.setTemp_typecheck(check);
             mantainanceitem_list.add(item);

@@ -1,5 +1,6 @@
 package msa_ms;
 
+import static com.itextpdf.kernel.pdf.PdfName.Image;
 import eu.mihosoft.scaledfx.ScalableContentPane;
 import java.awt.Desktop;
 import java.io.File;
@@ -16,6 +17,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -105,7 +107,8 @@ public class MainApp extends Application{
     }
     
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception 
+    {
         Locale.setDefault(new Locale("es","ES"));
         df.setMaximumFractionDigits(6);
         TimeZone.setDefault(TimeZone.getTimeZone("CST"));
@@ -113,10 +116,12 @@ public class MainApp extends Application{
         ScalableContentPane scale = new ScalableContentPane();
         scale.setContent(root);
         Scene scene = new Scene(scale);
+        primaryStage.getIcons().add(new Image("/MSA-icon.png"));
         primaryStage.setTitle("MSA Manager");
         primaryStage.setResizable(false);
-        primaryStage.initStyle(StageStyle.UTILITY);
+        primaryStage.initStyle(StageStyle.UNIFIED);
         primaryStage.setScene(scene);
+        primaryStage.setAlwaysOnTop(true);
         primaryStage.show();
     }
     /**

@@ -2,8 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
@@ -13,53 +11,36 @@
    <children>
       <VBox alignment="TOP_CENTER">
          <children>
-            <TabPane tabClosingPolicy="UNAVAILABLE">
-              <tabs>
-                <Tab text="Lista de Equipos">
-                     <content>
-                        <HBox>
-                           <children>
-                              <VBox>
-                                 <children>
-                                    <TableView fx:id="equipment_tableview">
-                                      <columns>
-                                        <TableColumn fx:id="id_column" prefWidth="75.0" resizable="false" text="ID" />
-                                        <TableColumn fx:id="equipmenttype_column" prefWidth="120.0" resizable="false" text="Tipo de Equipo" />
-                                          <TableColumn fx:id="name_column" prefWidth="120.0" resizable="false" text="Nombre" />
-                                          <TableColumn fx:id="serialnumber_column" prefWidth="100.0" text="No. de Serie" />
-                                          <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                                          <TableColumn fx:id="physicallocation_column" prefWidth="100.0" text="Ubicación" />
-                                          <TableColumn fx:id="nextmantainance_column" prefWidth="175.0" resizable="false" text="Próximo Mantenimiento" />
-                                      </columns>
-                                       <VBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </VBox.margin>
-                                    </TableView>
-                                    <HBox>
-                                       <children>
-                                          <VBox>
-                                             <children>
-                                                <Button fx:id="add_button" mnemonicParsing="false" text="Argegar Equipo">
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </Button>
-                                             </children>
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </VBox>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                           </children>
-                        </HBox>
-                     </content>
-                  </Tab>
-                <Tab fx:id="equipmenttype_tab" text="Tipos de Equipo" />
-              </tabs>
-            </TabPane>
+            <TableView fx:id="equipment_tableview">
+              <columns>
+                <TableColumn fx:id="id_column" prefWidth="75.0" resizable="false" text="#" />
+                <TableColumn fx:id="equipmenttype_column" prefWidth="120.0" resizable="false" text="Tipo de Equipo" />
+                  <TableColumn fx:id="name_column" prefWidth="120.0" resizable="false" text="Nombre" />
+                  <TableColumn fx:id="serialnumber_column" prefWidth="100.0" text="No. de Serie" />
+                  <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
+                  <TableColumn fx:id="physicallocation_column" prefWidth="100.0" text="Ubicación" />
+                  <TableColumn fx:id="nextmantainance_column" prefWidth="175.0" resizable="false" text="Próximo Mantenimiento" />
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </VBox.margin>
+            </TableView>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
+                        <Button fx:id="add_button" mnemonicParsing="false" text="Argegar Equipo">
+                           <VBox.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </children>

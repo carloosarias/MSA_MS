@@ -24,18 +24,16 @@ import model.EquipmentTypeCheck;
 public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
+            "SELECT id, name, description, active FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_TYPE_BY_ID = 
             "SELECT EQUIPMENT_TYPE_ID FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT_TYPE_CHECK ORDER BY id";
-    private static final String SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID = 
-            "SELECT id, name, description FROM EQUIPMENT_TYPE_CHECK WHERE EQUIPMENT_TYPE_ID = ? ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_OF_EQUIPMENTTYPE_ORDER_BY_NAME = 
+            "SELECT id, name, description, active FROM EQUIPMENT_TYPE_CHECK WHERE EQUIPMENT_TYPE_ID = ? AND active = ? ORDER BY name";
     private static final String SQL_INSERT = 
-            "INSERT INTO EQUIPMENT_TYPE_CHECK (EQUIPMENT_TYPE_ID, name, description) "
-            + "VALUES(?, ?, ?)";
+            "INSERT INTO EQUIPMENT_TYPE_CHECK (EQUIPMENT_TYPE_ID, name, description, active) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EQUIPMENT_TYPE_CHECK SET name = ?, description = ? WHERE id = ?";
+            "UPDATE EQUIPMENT_TYPE_CHECK SET name = ?, description = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -112,26 +110,7 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
     }
 
     @Override
-    public List<EquipmentTypeCheck> list() throws DAOException {
-       List<EquipmentTypeCheck> equipment_type_list = new ArrayList<>();
-
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                equipment_type_list.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return equipment_type_list;
-    }
-
-    @Override
-    public List<EquipmentTypeCheck> list(EquipmentType equipment_type) throws IllegalArgumentException, DAOException {
+    public List<EquipmentTypeCheck> list(EquipmentType equipment_type, boolean active) throws IllegalArgumentException, DAOException {
         if(equipment_type.getId() == null) {
             throw new IllegalArgumentException("EquipmentType is not created yet, the EquipmentType ID is null.");
         }    
@@ -139,12 +118,13 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
         List<EquipmentTypeCheck> equipment_type_check = new ArrayList<>();
         
         Object[] values = {
-            equipment_type.getId()
+            equipment_type.getId(),
+            active
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_EQUIPMENT_TYPE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_EQUIPMENTTYPE_ORDER_BY_NAME, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -168,7 +148,8 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
         Object[] values = {
             equipment_type.getId(),
             equipment_type_check.getName(),
-            equipment_type_check.getDescription()
+            equipment_type_check.getDescription(),
+            equipment_type_check.isActive()
         };
         
         try(
@@ -202,6 +183,7 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
         Object[] values = {
             equipment_type_check.getName(),
             equipment_type_check.getDescription(),
+            equipment_type_check.isActive(),
             equipment_type_check.getId()
         };
         
@@ -251,6 +233,7 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
         equipment_type_check.setId(resultSet.getInt("id"));
         equipment_type_check.setName(resultSet.getString("name"));
         equipment_type_check.setDescription(resultSet.getString("description"));
+        equipment_type_check.setActive(resultSet.getBoolean("active"));
         return equipment_type_check;
     }  
 }

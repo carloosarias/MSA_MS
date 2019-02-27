@@ -18,8 +18,8 @@ public class AnalysisReport implements Serializable{
     private Integer id;
     private Date report_date;
     private String report_time;
-    private double quantity_used;
-    private double applied_adjust;
+    private double quantity_used; //ML
+    private double applied_adjust; //KG
     private boolean active;
     
     //INNER JOINS
@@ -69,9 +69,10 @@ public class AnalysisReport implements Serializable{
         return quantity_used*factor;
     }
     
-    //Estimated adjust = ((result * optimal) * volume) / 1000
+    //Estimated adjust = ((result - optimal) * volume) / 1000
+    //KG
     public double getEstimated_adjust() {
-        return ((getResult() * optimal) * volume)/1000;
+        return ((getResult() - optimal) * volume)/1000;
     }
     
     public double getApplied_adjust(){

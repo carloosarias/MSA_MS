@@ -17,7 +17,7 @@ public class Tank implements Serializable{
     private Integer id;
     private String tank_name;
     private String description;
-    private double volume;
+    private double volume; //L
     private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
