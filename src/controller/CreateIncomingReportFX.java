@@ -197,7 +197,7 @@ public class CreateIncomingReportFX implements Initializable {
         });
         
         part_combo.setOnAction((ActionEvent) -> {
-            partcombo_text = part_combo.getEditor().textProperty().getValue();
+            partcombo_text = part_combo.getEditor().textProperty().getValue().replace(" ", "").toUpperCase();
             partcombo_selection = null;
             for(ProductPart product_part : part_combo.getItems()){
                 if(partcombo_text.equals(product_part.getPart_number())){
@@ -221,7 +221,7 @@ public class CreateIncomingReportFX implements Initializable {
                 ActionEvent.consume();
                 return;
             }
-                partrevcombo_text = partrev_combo.getEditor().textProperty().getValue();
+                partrevcombo_text = partrev_combo.getEditor().textProperty().getValue().replace(" ", "").toUpperCase();
                 partrevcombo_selection = null;
                 for(PartRevision part_revision : partrev_combo.getItems()){
                     if(partrevcombo_text.equals(part_revision.getRev())){

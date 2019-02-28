@@ -2,139 +2,166 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MantainanceReportFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MantainanceReportFXNEW">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
       <TabPane tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab text="Actividades Pendientes">
+         <tabs>
+            <Tab text="Reportes de Mantenimiento">
                <content>
-                  <HBox alignment="CENTER">
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
-                        <VBox>
+                        <TableView fx:id="mantainancereport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="reportdate_column" minWidth="-Infinity" prefWidth="150.0" text="Fecha" />
+                              <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Equipo">
+                                 <columns>
+                                    <TableColumn fx:id="name_column" minWidth="-Infinity" prefWidth="150.0" text="Equipo" />
+                                    <TableColumn fx:id="serialnumber_column" minWidth="-Infinity" prefWidth="125.0" text="Número de Serie" />
+                                    <TableColumn fx:id="type_column" minWidth="-Infinity" prefWidth="125.0" text="Categoría" />
+                                    <TableColumn fx:id="location_column" minWidth="-Infinity" prefWidth="100.0" text="Ubicación" />
+                                 </columns>
+                              </TableColumn>
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                        <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints vgrow="SOMETIMES" />
+                              <RowConstraints vgrow="SOMETIMES" />
+                           </rowConstraints>
                            <children>
-                              <TableView fx:id="equipment_tableview">
-                                <columns>
-                                  <TableColumn prefWidth="92.0" resizable="false" text="Equipo">
-                                       <columns>
-                                          <TableColumn fx:id="id_column" prefWidth="75.0" resizable="false" text="ID" />
-                                          <TableColumn fx:id="name_column" prefWidth="100.0" resizable="false" text="Nombre" />
-                                          <TableColumn fx:id="serialnumber_column" prefWidth="100.0" resizable="false" text="No. de Serie" />
-                                          <TableColumn fx:id="description_column" prefWidth="200.0" resizable="false" text="Descripción" />
-                                        <TableColumn fx:id="type_column" prefWidth="100.0" resizable="false" text="Tipo" />
-                                          <TableColumn fx:id="physicallocation_column" minWidth="100.0" prefWidth="75.0" resizable="false" text="Ubicación" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn fx:id="nextmantainance_column" prefWidth="150.0" resizable="false" text="Proximo Mantenimiento" />
-                                </columns>
-                                 <VBox.margin>
+                              <ComboBox fx:id="type_combo" disable="true" prefWidth="150.0" GridPane.rowIndex="1">
+                                 <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
-                              </TableView>
-                              <HBox>
-                                 <children>
-                                    <Button fx:id="add_button" disable="true" mnemonicParsing="false" text="Generar Reporte de Mantenimiento">
-                                       <HBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                    <Button fx:id="pdf_button" mnemonicParsing="false" text="Ver PDF">
-                                       <HBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                 </children>
-                              </HBox>
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <Label text="Categoría:">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ComboBox fx:id="equipment_combo" disable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <Label text="Equipo:" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <CheckBox fx:id="type_filter" mnemonicParsing="false" text="Filtrar por Categoría" GridPane.columnIndex="2">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <CheckBox mnemonicParsing="false" text="Filtrar por Equipo" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
+                              <Button fx:id="pdf_button" mnemonicParsing="false" text="Generar Calendario de Mantenimiento" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Button>
                            </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-               </content>
-          </Tab>
-          <Tab text="Historial de Mantenimiento">
-               <content>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <VBox>
+                        </GridPane>
+                        <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </Separator>
+                        <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
                            <children>
-                              <HBox>
-                                 <children>
-                                    <VBox>
-                                       <children>
-                                          <ComboBox fx:id="equipmenttype_combo" prefWidth="150.0" promptText="Tipo de Equipo">
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </ComboBox>
-                                       </children>
-                                    </VBox>
-                                    <ComboBox fx:id="equipment_combo" disable="true" prefWidth="150.0" promptText="Equipo">
-                                       <HBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
-                                    </ComboBox>
-                                    <Button fx:id="search_button" disable="true" mnemonicParsing="false" text="Ver Historial">
-                                       <HBox.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
-                                    </Button>
-                                 </children>
-                              </HBox>
-                              <HBox>
-                                 <children>
-                                    <VBox>
-                                       <children>
-                                          <TableView fx:id="mantainancereport_tableview">
-                                            <columns>
-                                              <TableColumn fx:id="reportid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
-                                              <TableColumn fx:id="reportdate_column" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
-                                                <TableColumn prefWidth="75.0" resizable="false" text="Empleado">
-                                                   <columns>
-                                                      <TableColumn fx:id="employeeid_column" prefWidth="75.0" resizable="false" text="ID" />
-                                                      <TableColumn fx:id="employeename_column" prefWidth="100.0" resizable="false" text="Nombre" />
-                                                   </columns>
-                                                </TableColumn>
-                                            </columns>
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </TableView>
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <TableView fx:id="mantainanceitem_tableview">
-                                            <columns>
-                                              <TableColumn prefWidth="75.0" resizable="false" text="Detalles de Mantenimiento">
-                                                   <columns>
-                                                    <TableColumn fx:id="checkdescription_column" prefWidth="150.0" text="Descripción" />
-                                                      <TableColumn fx:id="details_column" prefWidth="200.0" text="Detalles/Comentarios" />
-                                                   </columns>
-                                                </TableColumn>
-                                                <TableColumn fx:id="checkvalue_column" prefWidth="75.0" resizable="false" text="Aprovado" />
-                                            </columns>
-                                             <VBox.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </VBox.margin>
-                                          </TableView>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
+                              <Button fx:id="add_button" mnemonicParsing="false" text="Generar Reporte de Mantenimiento">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Button>
+                              <Button fx:id="disable_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Button>
                            </children>
-                        </VBox>
+                        </GridPane>
                      </children>
-                  </HBox>
+                  </GridPane>
                </content>
-          </Tab>
-        </tabs>
+            </Tab>
+            <Tab fx:id="details_tab" disable="true" text="Detalles de Reporte">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <TableView fx:id="mantainanceitem_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn minWidth="-Infinity" prefWidth="75.0" text="Checks de Mantenimiento">
+                                 <columns>
+                                    <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Check" />
+                                    <TableColumn fx:id="checkdescription_column" minWidth="-Infinity" prefWidth="300.0" text="Descripción" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="details_column" minWidth="-Infinity" prefWidth="300.0" text="Comentarios" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+         </tabs>
       </TabPane>
    </children>
-</HBox>
+</GridPane>

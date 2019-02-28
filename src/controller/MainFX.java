@@ -28,6 +28,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Module;
+import model.PartRevision;
+import model.ProductPart;
 import msa_ms.MainApp;
 
 /**
@@ -49,8 +51,6 @@ public class MainFX implements Initializable {
     private Tab company_tab;
     @FXML
     private Tab productpart_tab;
-    @FXML
-    private Tab partrevision_tab;
     @FXML
     private Tab metal_tab;
     @FXML
@@ -108,6 +108,7 @@ public class MainFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         menu_listview.getItems().setAll(msabase.getModuleDAO().list(MainApp.current_employee));
         menu_listview.getSelectionModel().selectFirst();
         
@@ -142,10 +143,9 @@ public class MainFX implements Initializable {
                         break;
                     case "Números de Parte":
                         productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
-                        partrevision_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
                         specification_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/SpecificationFX.fxml")));
                         metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));
-                        root_tabpane.getTabs().setAll(productpart_tab, partrevision_tab, specification_tab, metal_tab);
+                        root_tabpane.getTabs().setAll(productpart_tab, specification_tab, metal_tab);
                         break;
                     case "Reciba":
                         incoming_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));

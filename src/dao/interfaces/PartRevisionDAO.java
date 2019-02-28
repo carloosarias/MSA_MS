@@ -89,24 +89,13 @@ public interface PartRevisionDAO {
      * Returns a list of all PartRevisions matching ProductPart ID from the database ordered by PartRevision ID. The ProductPart ID must not be null, otherwise it will throw
      * IllegalArgumentException. The list is never null and
      * is empty when the database does not contain any PartRevision matching ProductPart.
-     * @param part The ProductPart to be searched for.
+     * @param product_part The ProductPart to be searched for.
+     * @param active
      * @return A list of all PartRevisions matching ProductPart from the database ordered by PartRevision ID.
      * @throws IllegalArgumentException If the ProductPart ID is null.
      * @throws DAOException If something fails at database level.
      */
-    //public List<PartRevision> list(ProductPart part) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns a list of all PartRevisions matching ProductPart ID and active from the database ordered by PartRevision ID. The ProductPart ID must not be null, otherwise it will throw
-     * IllegalArgumentException. The list is never null and
-     * is empty when the database does not contain any PartRevision matching ProductPart and active.
-     * @param part The ProductPart to be searched for.
-     * @param active The active to be searched for.
-     * @return A list of all PartRevisions matching ProductPart and active from the database ordered by PartRevision ID.
-     * @throws IllegalArgumentException If the ProductPart ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<PartRevision> list(ProductPart part, boolean active) throws IllegalArgumentException, DAOException;
+    public List<PartRevision> list(ProductPart product_part, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all PartRevisions matching Specification ID from the database ordered by PartRevision ID. The Specification ID must not be null, otherwise it will throw

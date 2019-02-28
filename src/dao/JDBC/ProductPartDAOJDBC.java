@@ -26,8 +26,10 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE id = ?";
     private static final String SQL_FIND_BY_PART_NUMBER = 
             "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE part_number = ?";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_PART_NUMBER = 
-            "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE active = ? ORDER BY part_number";
+    private static final String SQL_LIST_ACTIVE_LIKE_PARTNUMBER_ORDER_BY_ID = 
+            "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE (part_number LIKE ? OR ? = 0) AND active = ? ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
+            "SELECT id, part_number, description, active FROM PRODUCT_PART WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO PRODUCT_PART (part_number, description, active) "
             + "VALUES (?, ?, ?)";
@@ -88,24 +90,31 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         return part;
     }
 
-    /*@Override
-    public List<ProductPart> list() throws DAOException {
-        List<ProductPart> part = new ArrayList<>();
-
+    @Override
+    public List<ProductPart> list(String pattern, boolean partnumber_filter, boolean active) throws DAOException {
+        
+        List<ProductPart> productpart_list = new ArrayList<>();
+        
+        Object[] values = {
+            pattern+"%",
+            partnumber_filter,
+            active
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_PART_NUMBER);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_LIKE_PARTNUMBER_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                part.add(map(resultSet));
+                productpart_list.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return part;
-    }    */
+        return productpart_list;        
+    }
     
     @Override
     public List<ProductPart> listActive(boolean active) throws DAOException {
@@ -117,7 +126,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_PART_NUMBER, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
