@@ -5,8 +5,11 @@
  */
 package controller;
 
+import dao.DAOUtil;
+import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -15,11 +18,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import model.Equipment;
 import model.EquipmentType;
 import model.MantainanceItem;
 import model.MantainanceReport;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -51,6 +56,8 @@ public class MantainanceReportFXNEW implements Initializable {
     @FXML
     private CheckBox type_filter;
     @FXML
+    private CheckBox equipment_filter;
+    @FXML
     private Button pdf_button;
     @FXML
     private Button add_button;
@@ -64,13 +71,31 @@ public class MantainanceReportFXNEW implements Initializable {
     private TableColumn<MantainanceItem, String> checkdescription_column;
     @FXML
     private TableColumn<MantainanceItem, String> details_column;
-
+    
+    private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        setMantainanceReportTable();
+        updateMantainanceReportTable();
+    }
     
+    public void setMantainanceReportTable(){
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        employee_column.setCellValueFactory(new PropertyValueFactory("employee"));
+        name_column.setCellValueFactory(new PropertyValueFactory("equipment_name"));
+        serialnumber_column.setCellValueFactory(new PropertyValueFactory("serial_number"));
+        type_column.setCellValueFactory(new PropertyValueFactory("equipment_type"));
+        location_column.setCellValueFactory(new PropertyValueFactory("physical_location"));
+    }
+    
+    public void updateMantainanceReportTable(){
+        try{
+        mantainancereport_tableview.getItems().setAll(msabase.getMantainanceReportDAO().list(type_combo.getSelectionModel().getSelectedItem(), equipment_combo.getSelectionModel().getSelectedItem(), type_filter.isSelected(), equipment_filter.isSelected(), true));
+        }catch(Exception e) {
+            mantainancereport_tableview.getItems().clear();
+        }
+    }
 }

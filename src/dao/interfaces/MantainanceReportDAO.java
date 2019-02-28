@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import model.Employee;
 import model.Equipment;
+import model.EquipmentType;
 import model.MantainanceReport;
 
 /**
@@ -54,7 +55,7 @@ public interface MantainanceReportDAO {
      * @throws DAOException If something fails at database level.
      */        
     public List<MantainanceReport> list() throws DAOException;
-    
+    public List<MantainanceReport> list(EquipmentType equipment_type, Equipment equipment, boolean type_filter, boolean equipment_filter, boolean active) throws IllegalArgumentException, DAOException;
     /**
      * Returns a list of all MantainanceReport matching Employee ID from the database ordered by MantainanceReport ID. 
      * The Employee ID must not be null, otherwise it will throw IllegalArgumentException.

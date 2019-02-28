@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import model.Employee;
 import model.Equipment;
+import model.EquipmentType;
 import model.MantainanceReport;
 
 /**
@@ -33,6 +34,8 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
             "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT id, report_date FROM MANTAINANCE_REPORT ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_EQUIPMENTTYPE_EQUIPMENT_ORDER_BY_DATE = 
+            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE (EQUIPMENT.EQUIPMENT_TYPE_ID = ? OR ? = 0) AND (EQUIPMENT_ID = ? OR ? = 0) AND active = ? ORDER BY report_date";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
             "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
     private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
@@ -167,7 +170,41 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         
         return mantainancereport_list;
     }
-
+    
+    @Override
+    public List<MantainanceReport> list(EquipmentType equipment_type, Equipment equipment, boolean type_filter, boolean equipment_filter, boolean active) throws IllegalArgumentException, DAOException {
+        if(equipment_type.getId() == null) {
+            throw new IllegalArgumentException("EquipmentType is not created yet, the EquipmentType ID is null.");
+        }    
+        if(equipment.getId() == null) {
+            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
+        }
+        
+        List<MantainanceReport> mantainancereport_list = new ArrayList<>();
+        
+        Object[] values = {
+            equipment_type.getId(),
+            type_filter,
+            equipment.getId(),
+            equipment_filter,
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_EQUIPMENTTYPE_EQUIPMENT_ORDER_BY_DATE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                mantainancereport_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return mantainancereport_list;
+    }
+    
     @Override
     public List<MantainanceReport> listEmployee(Employee employee) throws IllegalArgumentException, DAOException {
         if(employee.getId() == null) {
