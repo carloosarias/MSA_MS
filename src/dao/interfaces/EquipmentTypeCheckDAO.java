@@ -7,6 +7,7 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
+import model.Equipment;
 import model.EquipmentType;
 import model.EquipmentTypeCheck;
 
@@ -47,6 +48,19 @@ public interface EquipmentTypeCheckDAO {
      * @throws DAOException If something fails at database level.
      */    
     public List<EquipmentTypeCheck> list(EquipmentType equipment_type, boolean active) throws IllegalArgumentException, DAOException;
+    
+    /**
+     * Returns a list of all EquipmentTypeCheck matching Invoice ID from the database ordered by EquipmentType ID. 
+     * The EquipmentType ID must not be null, otherwise it will throw IllegalArgumentException.
+     * The list is never null and is empty when the database does not 
+     * contain any EquipmentTypeCheck matching EquipmentType ID.
+     * @param equipment The EquipmentType ID to be searched for.
+     * @param active
+     * @return A list of all EquipmentTypeCheck matching EquipmentType ID from the database ordered by EquipmentTypeCheck ID.
+     * @throws IllegalArgumentException If EquipmentType ID is null.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<EquipmentTypeCheck> list(Equipment equipment, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given EquipmentTypeCheck in the database.

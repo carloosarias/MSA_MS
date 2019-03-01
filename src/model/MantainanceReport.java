@@ -18,7 +18,15 @@ public class MantainanceReport implements Serializable {
 
     private Integer id;
     private Date report_date;
+    private boolean active;
     
+    //INNER JOINS
+    private String employee_name;
+    private String equipment_name;
+    private String serial_number;
+    private String equipment_type;
+    private String physical_location;
+
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -35,6 +43,55 @@ public class MantainanceReport implements Serializable {
     
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
+    }
+    
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active){
+        this.active = active;
+    }
+    
+    //INNER JOINS
+    public String getEmployee_name() {
+        return employee_name;
+    }
+
+    public void setEmployee_name(String employee_name) {
+        this.employee_name = employee_name;
+    }
+
+    public String getEquipment_name() {
+        return equipment_name;
+    }
+
+    public void setEquipment_name(String equipment_name) {
+        this.equipment_name = equipment_name;
+    }
+
+    public String getSerial_number() {
+        return serial_number;
+    }
+
+    public void setSerial_number(String serial_number) {
+        this.serial_number = serial_number;
+    }
+
+    public String getEquipment_type() {
+        return equipment_type;
+    }
+
+    public void setEquipment_type(String equipment_type) {
+        this.equipment_type = equipment_type;
+    }
+
+    public String getPhysical_location() {
+        return physical_location;
+    }
+
+    public void setPhysical_location(String physical_location) {
+        this.physical_location = physical_location;
     }
     
     // Object overrides ---------------------------------------------------------------------------

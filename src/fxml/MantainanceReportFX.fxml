@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MantainanceReportFXNEW">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MantainanceReportFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -91,7 +91,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </CheckBox>
-                              <CheckBox mnemonicParsing="false" text="Filtrar por Equipo" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                              <CheckBox fx:id="equipment_filter" mnemonicParsing="false" text="Filtrar por Equipo" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>

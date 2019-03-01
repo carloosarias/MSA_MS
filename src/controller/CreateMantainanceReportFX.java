@@ -9,23 +9,12 @@ import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Employee;
@@ -33,7 +22,6 @@ import model.Equipment;
 import model.EquipmentTypeCheck;
 import model.MantainanceItem;
 import model.MantainanceReport;
-import msa_ms.MainApp;
 import static msa_ms.MainApp.setDatePicker;
 
 /**
@@ -44,7 +32,7 @@ import static msa_ms.MainApp.setDatePicker;
 public class CreateMantainanceReportFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private HBox root_gridpane;
     @FXML
     private DatePicker date_picker;
     @FXML
@@ -52,21 +40,11 @@ public class CreateMantainanceReportFX implements Initializable {
     @FXML
     private ComboBox<Equipment> equipment_combo;
     @FXML
-    private TableView<MantainanceItem> mantainancecheck_tableview;
-    @FXML
-    private TableColumn<MantainanceItem, String> name_column;
-    @FXML
-    private TableColumn<MantainanceItem, String> description_column;
-    @FXML
-    private TableColumn<MantainanceItem, String> details_column;
-    @FXML
-    private TableColumn<MantainanceItem, Boolean> checkvalue_column;
-    @FXML
-    private Button submit_button;
+    private Button save_button;
+    
+    public static MantainanceReport mantainance_report;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    
-    private List<MantainanceItem> mantainanceitem_list = new ArrayList();
     
     /**
      * Initializes the controller class.
@@ -74,85 +52,67 @@ public class CreateMantainanceReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setDatePicker(date_picker);
-        fillComboBoxValues();
-        setMantainanceItemTableView();
-        setMantainanceitem_list();
-        mantainancecheck_tableview.setItems(FXCollections.observableArrayList(mantainanceitem_list));
+        date_picker.setValue(LocalDate.now());
         
-        submit_button.setOnAction((ActionEvent) ->{
-            saveMantainanceReport();
-            Stage stage = (Stage) root_hbox.getScene().getWindow();
+        save_button.setOnAction((ActionEvent) -> {
+            if(!testFields()){
+                return;
+            }
+            createMantainanceReport();
+            Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
         });
     }
     
-    public void saveMantainanceReport(){
-        
-        for(MantainanceItem item: mantainancecheck_tableview.getItems()){
-            if(item.getDetails() == null){
-                item.setDetails("N/A");
-            }
+    public boolean testFields(){
+        boolean b = true;
+        clearStyle();
+        if(date_picker.getValue() == null){
+            date_picker.setStyle("-fx-background-color: lightpink;");
+            b = false;
         }
         
-        MantainanceReport report = new MantainanceReport();
-        report.setReport_date(DAOUtil.toUtilDate(date_picker.getValue()));
-        msabase.getMantainanceReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), equipment_combo.getSelectionModel().getSelectedItem(), report);
-        
-        saveMantainanceItems(report);
+        if(employee_combo.getSelectionModel().isEmpty()){
+            employee_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(equipment_combo.getSelectionModel().isEmpty()){
+            equipment_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        return b;
     }
     
-    public void saveMantainanceItems(MantainanceReport report){
-
-        for(MantainanceItem item : mantainancecheck_tableview.getItems()){
-            msabase.getMantainanceItemDAO().create(report, item.getTemp_typecheck(), item);
-        }
+    public void clearStyle(){
+        date_picker.setStyle(null);
+        employee_combo.setStyle(null);
+        equipment_combo.setStyle(null);
+    }
+    
+    public void createMantainanceReport(){
         
+        mantainance_report = new MantainanceReport();
+        mantainance_report.setReport_date(DAOUtil.toUtilDate(date_picker.getValue()));
+        mantainance_report.setActive(true);
+        msabase.getMantainanceReportDAO().create(employee_combo.getSelectionModel().getSelectedItem(), equipment_combo.getSelectionModel().getSelectedItem(), mantainance_report);
+        
+        createMantainanceItems();
         setNextMantainance();
     }
     
-    public void setNextMantainance(){
-        MantainanceReportFX.getEquipment_selection().setNext_mantainance(DAOUtil.toUtilDate(LocalDate.now().plusDays(msabase.getEquipmentDAO().findEquipmentType(MantainanceReportFX.getEquipment_selection()).getFrequency())));
-        msabase.getEquipmentDAO().update(MantainanceReportFX.getEquipment_selection());
-    }
-    
-    public void setMantainanceItemTableView(){
-        name_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_typecheck().getName()));
-        description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_typecheck().getDescription()));
-        details_column.setCellValueFactory(new PropertyValueFactory<>("details"));
-        checkvalue_column.setCellValueFactory(new PropertyValueFactory("check_value"));
-        
-        details_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        details_column.setOnEditCommit((TableColumn.CellEditEvent<MantainanceItem, String> t) -> {
-            t.getTableView().getItems().get(t.getTablePosition().getRow()).setDetails(t.getNewValue());
-        });
-        
-        checkvalue_column.setCellFactory(column -> new CheckBoxTableCell<>());
-        checkvalue_column.setCellValueFactory(cellData -> {
-            MantainanceItem cellValue = cellData.getValue();
-            BooleanProperty property = new SimpleBooleanProperty(cellValue.isCheck_value());
-            // Add listener to handler change
-            property.addListener((observable, oldValue, newValue) -> {
-                cellValue.setCheck_value(newValue);
-            });
-            return property;
-        });
-    }
-    
-    public void fillComboBoxValues(){
-        date_picker.setValue(LocalDate.now());
-        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
-        employee_combo.getSelectionModel().selectFirst();
-        equipment_combo.setItems(FXCollections.observableArrayList(MantainanceReportFX.getEquipment_selection()));
-        equipment_combo.getSelectionModel().selectFirst();
-    }
-    
-    public void setMantainanceitem_list(){
-        mantainanceitem_list = new ArrayList();
-        for(EquipmentTypeCheck check : msabase.getEquipmentTypeCheckDAO().list(msabase.getEquipmentDAO().findEquipmentType(equipment_combo.getSelectionModel().getSelectedItem()), true)){
-            MantainanceItem item = new MantainanceItem();
-            item.setTemp_typecheck(check);
-            mantainanceitem_list.add(item);
+    public void createMantainanceItems(){
+
+        for(EquipmentTypeCheck equipment_type_check : msabase.getEquipmentTypeCheckDAO().list(equipment_combo.getSelectionModel().getSelectedItem(), true)){
+            MantainanceItem mantainance_item = new MantainanceItem();
+            mantainance_item.setDetails("N/A");
+            mantainance_item.setActive(true);
+            msabase.getMantainanceItemDAO().create(mantainance_report, equipment_type_check, mantainance_item);
         }
+    }
+    
+    public void setNextMantainance(){
+        equipment_combo.getSelectionModel().getSelectedItem().setNext_mantainance(DAOUtil.toUtilDate(date_picker.getValue().plusDays(equipment_combo.getSelectionModel().getSelectedItem().getFrequecy())));
+        msabase.getEquipmentDAO().update(equipment_combo.getSelectionModel().getSelectedItem());
     }
     
 }

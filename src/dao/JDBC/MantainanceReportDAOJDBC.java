@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import model.Employee;
 import model.Equipment;
@@ -27,23 +26,35 @@ import model.MantainanceReport;
 public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE id = ?";
+            "SELECT MANTAINANCE_REPORT.id, MANTAINANCE_REPORT.report_date, MANTAINANCE_REPORT.active, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, EQUIPMENT.name, EQUIPMENT.serial_number, EQUIPMENT.physical_location, EQUIPMENT_TYPE.name "
+            + "FROM MANTAINANCE_REPORT "
+            + "INNER JOIN EMPLOYEE ON MANTAINANCE_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN EQUIPMENT ON MANTAINANCE_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
+            + "WHERE MANTAINANCE_REPORT.id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM MANTAINANCE_REPORT WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_BY_ID = 
             "SELECT EQUIPMENT_ID FROM MANTAINANCE_REPORT WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT ORDER BY id";
+    private static final String SQL_LIST_ACTIVE_ORDER_BY_DATE = 
+            "SELECT MANTAINANCE_REPORT.id, MANTAINANCE_REPORT.report_date, MANTAINANCE_REPORT.active, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, EQUIPMENT.name, EQUIPMENT.serial_number, EQUIPMENT.physical_location, EQUIPMENT_TYPE.name "
+            + "FROM MANTAINANCE_REPORT "
+            + "INNER JOIN EMPLOYEE ON MANTAINANCE_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN EQUIPMENT ON MANTAINANCE_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
+            + "WHERE MANTAINANCE_REPORT.active = ? "
+            + "ORDER BY MANTAINANCE_REPORT.report_date";
     private static final String SQL_LIST_ACTIVE_EQUIPMENTTYPE_EQUIPMENT_ORDER_BY_DATE = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE (EQUIPMENT.EQUIPMENT_TYPE_ID = ? OR ? = 0) AND (EQUIPMENT_ID = ? OR ? = 0) AND active = ? ORDER BY report_date";
-    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
-    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
-    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
-    private static final String SQL_LIST_EQUIPMENT_ORDER_BY_ID = 
-            "SELECT id, report_date FROM MANTAINANCE_REPORT WHERE EQUIPMENT_ID = ? ORDER BY id";
+            "SELECT MANTAINANCE_REPORT.id, MANTAINANCE_REPORT.report_date, MANTAINANCE_REPORT.active, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, EQUIPMENT.name, EQUIPMENT.serial_number, EQUIPMENT.physical_location, EQUIPMENT_TYPE.name "
+            + "FROM MANTAINANCE_REPORT "
+            + "INNER JOIN EMPLOYEE ON MANTAINANCE_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN EQUIPMENT ON MANTAINANCE_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "INNER JOIN EQUIPMENT_TYPE ON EQUIPMENT.EQUIPMENT_TYPE_ID = EQUIPMENT_TYPE.id "
+            + "WHERE (EQUIPMENT.EQUIPMENT_TYPE_ID = ? OR ? = 0) AND (MANTAINANCE_REPORT.EQUIPMENT_ID = ? OR ? = 0) AND MANTAINANCE_REPORT.active = ? "
+            + "ORDER BY MANTAINANCE_REPORT.report_date";
     private static final String SQL_INSERT = 
             "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
             + "VALUES(?, ?, ?)";
@@ -153,12 +164,16 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
     }
 
     @Override
-    public List<MantainanceReport> list() throws DAOException {
+    public List<MantainanceReport> list(boolean active) throws DAOException {
         List<MantainanceReport> mantainancereport_list = new ArrayList<>();
-
+        
+        Object[] values = {
+            active
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_DATE, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -204,113 +219,6 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         
         return mantainancereport_list;
     }
-    
-    @Override
-    public List<MantainanceReport> listEmployee(Employee employee) throws IllegalArgumentException, DAOException {
-        if(employee.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
-        }    
-        
-        List<MantainanceReport> mantainancereport_list = new ArrayList<>();
-        
-        Object[] values = {
-            employee.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                mantainancereport_list.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return mantainancereport_list;
-    }
-
-    @Override
-    public List<MantainanceReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException {
-        List<MantainanceReport> mantainancereport_list = new ArrayList<>();
-        
-        Object[] values = {
-            start,
-            end
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_DATE_RANGE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                mantainancereport_list.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return mantainancereport_list;
-    }
-
-    @Override
-    public List<MantainanceReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException {
-        if(employee.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
-        }    
-        
-        List<MantainanceReport> mantainancereport_list = new ArrayList<>();
-        
-        Object[] values = {
-            employee.getId(),
-            start,
-            end
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                mantainancereport_list.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return mantainancereport_list;
-    }
-
-    @Override
-    public List<MantainanceReport> listEquipment(Equipment equipment) throws IllegalArgumentException, DAOException {
-        if(equipment.getId() == null) {
-            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
-        }    
-        
-        List<MantainanceReport> mantainancereport_list = new ArrayList();
-        
-        Object[] values = {
-            equipment.getId(),
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EQUIPMENT_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                mantainancereport_list.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return mantainancereport_list;
-    }
 
     @Override
     public void create(Employee employee, Equipment equipment, MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
@@ -328,6 +236,7 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
             employee.getId(),
             equipment.getId(),
             mantainance_report.getReport_date(),
+            mantainance_report.isActive()
         };
         
         try(
@@ -360,6 +269,7 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
 
         Object[] values = {
             mantainance_report.getReport_date(),
+            mantainance_report.isActive(),
             mantainance_report.getId()
         };
         
@@ -409,6 +319,14 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
         MantainanceReport mantainance_report = new MantainanceReport();
         mantainance_report.setId(resultSet.getInt("id"));
         mantainance_report.setReport_date(resultSet.getDate("report_date"));
+        mantainance_report.setActive(resultSet.getBoolean("active"));
+        
+        //INNER JOINS
+        mantainance_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name") + resultSet.getString("EMPLOYEE.last_name"));
+        mantainance_report.setEquipment_name(resultSet.getString("EQUIPMENT.name"));
+        mantainance_report.setSerial_number(resultSet.getString("EQUIPMENT.serial_number"));
+        mantainance_report.setPhysical_location(resultSet.getString("EQUIPMENT.physical_location"));
+        mantainance_report.setEquipment_type(resultSet.getString("EQUIPMENT_TYPE.name"));
         return mantainance_report;
     }
 }

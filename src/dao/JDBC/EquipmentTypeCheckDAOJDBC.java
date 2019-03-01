@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Equipment;
 import model.EquipmentType;
 import model.EquipmentTypeCheck;
 
@@ -25,10 +26,16 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
             "SELECT id, name, description, active FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
-    private static final String SQL_FIND_EQUIPMENT_TYPE_BY_ID = 
+    private static final String SQL_FIND_EQUIPMENT_TYPE_BY_ID =
             "SELECT EQUIPMENT_TYPE_ID FROM EQUIPMENT_TYPE_CHECK WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_OF_EQUIPMENTTYPE_ORDER_BY_NAME = 
             "SELECT id, name, description, active FROM EQUIPMENT_TYPE_CHECK WHERE EQUIPMENT_TYPE_ID = ? AND active = ? ORDER BY name";
+    private static final String SQL_LIST_ACTIVE_OF_EQUIPMENT_ORDER_BY_NAME = 
+            "SELECT EQUIPMENT_TYPE_CHECK.id, EQUIPMENT_TYPE_CHECK.name, EQUIPMENT_TYPE_CHECK.description, EQUIPMENT_TYPE_CHECK.active "
+            + "FROM EQUIPMENT_TYPE_CHECK "
+            + "INNER JOIN EQUIPMENT ON ? = EQUIPMENT.id "
+            + "WHERE EQUIPMENT_TYPE_CHECK.EQUIPMENT_TYPE_ID = EQUIPMENT.EQUIPMENT_TYPE_ID AND EQUIPMENT_TYPE_CHECK.active = ? "
+            + "ORDER BY EQUIPMENT_TYPE_CHECK.name";
     private static final String SQL_INSERT = 
             "INSERT INTO EQUIPMENT_TYPE_CHECK (EQUIPMENT_TYPE_ID, name, description, active) "
             + "VALUES(?, ?, ?, ?)";
@@ -136,7 +143,34 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
         
         return equipment_type_check;
     }
-
+    @Override
+    public List<EquipmentTypeCheck> list(Equipment equipment, boolean active) throws IllegalArgumentException, DAOException {
+        if(equipment.getId() == null) {
+            throw new IllegalArgumentException("Equipment is not created yet, the Equipment ID is null.");
+        }    
+        
+        List<EquipmentTypeCheck> equipment_type_check = new ArrayList<>();
+        
+        Object[] values = {
+            equipment.getId(),
+            active
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_EQUIPMENT_ORDER_BY_NAME, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                equipment_type_check.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return equipment_type_check;
+    }
+    
     @Override
     public void create(EquipmentType equipment_type, EquipmentTypeCheck equipment_type_check) throws IllegalArgumentException, DAOException {
         if(equipment_type.getId() == null) {
@@ -234,6 +268,7 @@ public class EquipmentTypeCheckDAOJDBC implements EquipmentTypeCheckDAO{
         equipment_type_check.setName(resultSet.getString("name"));
         equipment_type_check.setDescription(resultSet.getString("description"));
         equipment_type_check.setActive(resultSet.getBoolean("active"));
+        
         return equipment_type_check;
     }  
 }

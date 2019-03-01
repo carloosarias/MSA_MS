@@ -51,11 +51,12 @@ public interface MantainanceItemDAO {
      * The MantainanceReport ID must not be null, otherwise it will throw IllegalArgumentException.
      * The list is never null and is empty when the database does not contain any MantainanceItem matching MantainanceReport ID.
      * @param mantainance_report The MantainanceReport ID to be searched for.
+     * @param active
      * @return A list of all MantainanceItem matching MantainanceReport ID from the database ordered by MantainanceItem ID.
      * @throws IllegalArgumentException If MantainanceReport ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<MantainanceItem> list(MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException;
+    public List<MantainanceItem> list(MantainanceReport mantainance_report, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given MantainanceItem in the database.

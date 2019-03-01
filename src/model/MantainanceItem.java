@@ -15,10 +15,11 @@ public class MantainanceItem implements Serializable {
     // Properties ---------------------------------------------------------------------------------
 
     private Integer id;
-    private boolean check_value;
     private String details;
-    private EquipmentTypeCheck temp_typecheck;
+    private boolean active;
     
+    //INNER JOIN
+    private String typecheck_name;
     // Getters/setters ----------------------------------------------------------------------------
 
     public Integer getId() {
@@ -29,14 +30,6 @@ public class MantainanceItem implements Serializable {
         this.id = id;
     }
     
-    public boolean isCheck_value(){
-        return check_value;
-    }
-    
-    public void setCheck_value(boolean check_value) {
-        this.check_value = check_value;
-    }
-    
     public String getDetails() {
         return details;
     }
@@ -44,14 +37,24 @@ public class MantainanceItem implements Serializable {
     public void setDetails(String details) {
         this.details = details;
     }
-
-    public EquipmentTypeCheck getTemp_typecheck() {
-        return temp_typecheck;
+    
+    public boolean isActive(){
+        return active;
+    }
+    
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
+    //INNER JOIN
+    public String getTypecheck_name() {
+        return typecheck_name;
     }
 
-    public void setTemp_typecheck(EquipmentTypeCheck temp_typecheck) {
-        this.temp_typecheck = temp_typecheck;
+    public void setTypecheck_name(String typecheck_name) {
+        this.typecheck_name = typecheck_name;
     }
+
     // Object overrides ---------------------------------------------------------------------------
     
     /**

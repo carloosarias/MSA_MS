@@ -25,18 +25,27 @@ import model.MantainanceReport;
 public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, check_value, details FROM MANTAINANCE_ITEM WHERE id = ?";
+            "SELECT MANTAINANCE_ITEM.id, MANTAINANCE_ITEM.details, MANTAINANCE_ITEM.active, "
+            + "EQUIPMENT_TYPE_CHECK.name "
+            + "FROM MANTAINANCE_ITEM "
+            + "INNER JOIN EQUIPMENT_TYPE_CHECK ON MANTAINANCE_ITEM.EQUIPMENT_TYPE_CHECK_ID = EQUIPMENT_TYPE_CHECK.id "
+            + "WHERE MANTAINANCE_ITEM.id = ?";
     private static final String SQL_FIND_MANTAINANCE_REPORT_BY_ID = 
             "SELECT MANTAINANCE_REPORT_ID FROM MANTAINANCE_ITEM WHERE id = ?";
     private static final String SQL_FIND_EQUIPMENT_TYPE_CHECK_BY_ID = 
             "SELECT EQUIPMENT_TYPE_CHECK_ID FROM MANTAINANCE_ITEM WHERE id = ?";
     private static final String SQL_LIST_MANTAINANCE_REPORT_ORDER_BY_ID = 
-            "SELECT id, check_value, details FROM MANTAINANCE_ITEM WHERE MANTAINANCE_REPORT_ID = ? ORDER BY id";
+            "SELECT MANTAINANCE_ITEM.id, MANTAINANCE_ITEM.details, MANTAINANCE_ITEM.active, "
+            + "EQUIPMENT_TYPE_CHECK.name "
+            + "FROM MANTAINANCE_ITEM "
+            + "INNER JOIN EQUIPMENT_TYPE_CHECK ON MANTAINANCE_ITEM.EQUIPMENT_TYPE_CHECK_ID = EQUIPMENT_TYPE_CHECK.id "
+            + "WHERE MANTAINANCE_ITEM.MANTAINANCE_REPORT_ID = ? AND MANTAINANCE_ITEM.active = ? "
+            + "ORDER BY MANTAINANCE_ITEM.id";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_ITEM (MANTAINANCE_REPORT_ID, EQUIPMENT_TYPE_CHECK_ID, check_value, details) "
+            "INSERT INTO MANTAINANCE_ITEM (MANTAINANCE_REPORT_ID, EQUIPMENT_TYPE_CHECK_ID, details, active) "
             + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE MANTAINANCE_ITEM SET check_value = ?, details = ? WHERE id = ?";
+            "UPDATE MANTAINANCE_ITEM SET details = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM MANTAINANCE_ITEM WHERE id = ?";
     
@@ -141,7 +150,7 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
     }
 
     @Override
-    public List<MantainanceItem> list(MantainanceReport mantainance_report) throws IllegalArgumentException, DAOException {
+    public List<MantainanceItem> list(MantainanceReport mantainance_report, boolean active) throws IllegalArgumentException, DAOException {
         if(mantainance_report.getId() == null) {
             throw new IllegalArgumentException("MantainanceReport is not created yet, the MantainanceReport ID is null.");
         }    
@@ -149,7 +158,8 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
         List<MantainanceItem> mantainanceitem_list = new ArrayList<>();
         
         Object[] values = {
-            mantainance_report.getId()
+            mantainance_report.getId(),
+            active
         };
         
         try(
@@ -182,8 +192,8 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
         Object[] values = {
             mantainance_report.getId(),
             equipment_type_check.getId(),
-            mantainance_item.isCheck_value(),
-            mantainance_item.getDetails()
+            mantainance_item.getDetails(),
+            mantainance_item.isActive()
         };
         
         try(
@@ -215,8 +225,8 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
         }
         
         Object[] values = {
-            mantainance_item.isCheck_value(),
             mantainance_item.getDetails(),
+            mantainance_item.isActive(),
             mantainance_item.getId()
         };
         
@@ -264,8 +274,11 @@ public class MantainanceItemDAOJDBC implements MantainanceItemDAO{
     public static MantainanceItem map(ResultSet resultSet) throws SQLException{
         MantainanceItem mantainance_item = new MantainanceItem();
         mantainance_item.setId(resultSet.getInt("id"));
-        mantainance_item.setCheck_value(resultSet.getBoolean("check_value"));
         mantainance_item.setDetails(resultSet.getString("details"));
+        mantainance_item.setActive(resultSet.getBoolean("active"));
+        
+        //INNER JOIN
+        mantainance_item.setTypecheck_name(resultSet.getString("EQUIPMENT_TYPE_CHECK.name"));
         return mantainance_item;
     }
 }

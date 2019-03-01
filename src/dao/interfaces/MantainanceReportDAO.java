@@ -54,53 +54,21 @@ public interface MantainanceReportDAO {
      * @return A list of all MantainanceReport from the database ordered by MantainanceReport ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<MantainanceReport> list() throws DAOException;
+    public List<MantainanceReport> list(boolean active) throws DAOException;
+    
+    /**
+     * 
+     * @param equipment_type
+     * @param equipment
+     * @param type_filter
+     * @param equipment_filter
+     * @param active
+     * @return
+     * @throws IllegalArgumentException
+     * @throws DAOException 
+     */
     public List<MantainanceReport> list(EquipmentType equipment_type, Equipment equipment, boolean type_filter, boolean equipment_filter, boolean active) throws IllegalArgumentException, DAOException;
-    /**
-     * Returns a list of all MantainanceReport matching Employee ID from the database ordered by MantainanceReport ID. 
-     * The Employee ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any MantainanceReport matching Employee ID.
-     * @param employee The Employee ID to be searched for.
-     * @return A list of all MantainanceReport matching Employee ID from the database ordered by MantainanceReport ID.
-     * @throws IllegalArgumentException If Employee ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<MantainanceReport> listEmployee(Employee employee) throws IllegalArgumentException, DAOException;
     
-    /**
-     * Returns a list of all ProcessReport matching a range of dates from the database ordered by ProcessReport ID.
-     * The list is never null and is empty when the database does not contain any ProcessReport matching the range of dates.
-     * @param start The start date of the range.
-     * @param end the end date of the range.
-     * @return A list of all ProcessReport matching Employee ID from the database ordered by ProcessReport ID.
-     * @throws IllegalArgumentException If Employee ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<MantainanceReport> listDateRange(Date start, Date end) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns a list of all MantainanceReport matching Employee ID from the database ordered by MantainanceReport ID. 
-     * The Employee ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any MantainanceReport matching Employee ID.
-     * @param employee The Employee ID to be searched for.
-     * @param start The start date of the range.
-     * @param end the end date of the range.
-     * @return A list of all MantainanceReport matching Employee ID from the database ordered by MantainanceReport ID.
-     * @throws IllegalArgumentException If Employee ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<MantainanceReport> listEmployeeDateRange(Employee employee, Date start, Date end) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns a list of all MantainanceReport matching Equipment ID from the database ordered by MantainanceReport ID. 
-     * The Equipment ID must not be null, otherwise it will throw IllegalArgumentException.
-     * The list is never null and is empty when the database does not contain any MantainanceReport matching Equipment ID.
-     * @param equipment The Equipment ID to be searched for.
-     * @return A list of all MantainanceReport matching Equipment ID from the database ordered by MantainanceReport ID.
-     * @throws IllegalArgumentException If Equipment ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<MantainanceReport> listEquipment(Equipment equipment) throws IllegalArgumentException, DAOException;
     /**
      * Create the given MantainanceReport in the database.
      * The Employee ID must not be null, The Equipment ID must not be null, and
