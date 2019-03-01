@@ -15,13 +15,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Employee;
 import model.Equipment;
 import model.EquipmentTypeCheck;
 import model.MantainanceItem;
 import model.MantainanceReport;
+import msa_ms.MainApp;
 import static msa_ms.MainApp.setDatePicker;
 
 /**
@@ -32,7 +33,7 @@ import static msa_ms.MainApp.setDatePicker;
 public class CreateMantainanceReportFX implements Initializable {
 
     @FXML
-    private HBox root_gridpane;
+    private GridPane root_gridpane;
     @FXML
     private DatePicker date_picker;
     @FXML
@@ -53,7 +54,9 @@ public class CreateMantainanceReportFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setDatePicker(date_picker);
         date_picker.setValue(LocalDate.now());
-        
+        employee_combo.getItems().setAll(msabase.getEmployeeDAO().listActive(true));
+        employee_combo.getSelectionModel().select(MainApp.current_employee);
+        equipment_combo.getItems().setAll(msabase.getEquipmentDAO().list(true));
         save_button.setOnAction((ActionEvent) -> {
             if(!testFields()){
                 return;

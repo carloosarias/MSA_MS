@@ -2,81 +2,115 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
 <HBox fx:id="root_hbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OrderPurchaseIncomingReportFX">
    <children>
-      <VBox alignment="TOP_CENTER">
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
             <TabPane tabClosingPolicy="UNAVAILABLE">
-               <tabs>
-                  <Tab text="Historial Reporte Reciba de Orden de Compra">
+              <tabs>
+                <Tab text="Reportes de Reciba">
                      <content>
-                        <VBox>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <TableView fx:id="orderpurchaseincomingreport_tableview">
+                              <TableView fx:id="orderpurchaseincomingreport_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                 <columns>
-                                  <TableColumn fx:id="orderpurchaseincomingreportid_column" editable="false" prefWidth="100.0" resizable="false" text="# de Reporte" />
-                                  <TableColumn fx:id="orderpurchaseid_column" editable="false" prefWidth="100.0" resizable="false" text="PO #" />
-                                    <TableColumn fx:id="company_column" editable="false" prefWidth="220.0" resizable="false" text="Proveedor" />
-                                    <TableColumn fx:id="reportdate_column" editable="false" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
-                                    <TableColumn editable="false" prefWidth="75.0" resizable="false" text="Empleado">
-                                       <columns>
-                                          <TableColumn fx:id="employeeid_column1" editable="false" prefWidth="75.0" resizable="false" text="# de ID" />
-                                          <TableColumn fx:id="employeename_column" editable="false" prefWidth="120.0" resizable="false" text="Nombre" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn fx:id="comments_column" editable="false" prefWidth="190.0" resizable="false" text="Comentarios" />
+                                    <TableColumn fx:id="reportdate_column" editable="false" prefWidth="120.0" text="Fecha de Reciba" />
+                                  <TableColumn fx:id="orderpurchaseid_column" editable="false" minWidth="-Infinity" prefWidth="50.0" text="PO #" />
+                                    <TableColumn fx:id="employee_column" editable="false" minWidth="-1.0" prefWidth="150.0" text="Empleado" />
+                                    <TableColumn fx:id="company_column" editable="false" minWidth="-Infinity" prefWidth="200.0" text="Proveedor" />
+                                    <TableColumn fx:id="comments_column" editable="false" minWidth="-Infinity" prefWidth="200.0" text="Comentarios" />
                                 </columns>
-                                 <VBox.margin>
+                                 <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
+                                 </GridPane.margin>
                               </TableView>
+                              <Separator prefWidth="200.0" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Separator>
+                              <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" />
+                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Button fx:id="add_button" mnemonicParsing="false" text="Reporte Reciba de PO#">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Button>
+                                    <Button fx:id="disable_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Button>
+                                 </children>
+                              </GridPane>
                            </children>
-                        </VBox>
+                        </GridPane>
                      </content>
                   </Tab>
-                  <Tab text="Detalles de Selección">
+                <Tab fx:id="details_tab" disable="true" text="Detalles de Selección">
                      <content>
-                        <VBox>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <TableView fx:id="orderpurchaseincomingitem_tableview">
+                              <TableView fx:id="orderpurchaseincomingitem_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                  <columns>
-                                    <TableColumn fx:id="description_column" prefWidth="220.0" resizable="false" text="Descripción de Producto" />
-                                    <TableColumn fx:id="serialnumber_column" prefWidth="120.0" resizable="false" text="Número de Serie" />
-                                    <TableColumn prefWidth="100.0" resizable="false" text="Presentación">
+                                    <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="150.0" text="Producto" />
+                                    <TableColumn fx:id="serialnumber_column" minWidth="-Infinity" prefWidth="150.0" text="Número de Serie" />
+                                    <TableColumn minWidth="-Infinity" prefWidth="150.0" text="Presentación" />
+                                    <TableColumn prefWidth="75.0" text="Cantidad">
                                        <columns>
-                                          <TableColumn fx:id="quantity_column" prefWidth="150.0" resizable="false" text="Cantidad" />
-                                          <TableColumn fx:id="unitmeasure_column" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
+                                          <TableColumn fx:id="unitsordered_column" minWidth="-Infinity" prefWidth="100.0" text="Ordenada" />
+                                          <TableColumn fx:id="unitsarrived_column" minWidth="-Infinity" prefWidth="100.0" text="Recibida" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="unitsordered_column" prefWidth="120.0" resizable="false" text="Cantidad Ordenada" />
-                                    <TableColumn fx:id="unitsarrived_column" prefWidth="120.0" resizable="false" text="Cantidad Recibida" />
                                  </columns>
-                                 <VBox.margin>
+                                 <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </VBox.margin>
+                                 </GridPane.margin>
                               </TableView>
                            </children>
-                        </VBox>
+                        </GridPane>
                      </content>
                   </Tab>
-               </tabs>
+              </tabs>
             </TabPane>
-            <HBox alignment="TOP_RIGHT">
-               <children>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Reciba">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-         </children></VBox>
+         </children>
+      </GridPane>
    </children>
 </HBox>
