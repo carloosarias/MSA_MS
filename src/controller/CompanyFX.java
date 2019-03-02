@@ -195,11 +195,19 @@ public class CompanyFX implements Initializable {
     }
     
     public void updateAddressTable(){
-        address_tableview.getItems().setAll(msabase.getCompanyAddressDAO().listActive(company_tableview.getSelectionModel().getSelectedItem(), true));
+        try{
+            address_tableview.getItems().setAll(msabase.getCompanyAddressDAO().listActive(company_tableview.getSelectionModel().getSelectedItem(), true));
+        }catch(Exception e){
+            address_tableview.getItems().clear();
+        }
     }
     
     public void updateContactTable(){
-        contact_tableview.getItems().setAll(msabase.getCompanyContactDAO().list(company_tableview.getSelectionModel().getSelectedItem(), true));
+        try{
+            contact_tableview.getItems().setAll(msabase.getCompanyContactDAO().list(company_tableview.getSelectionModel().getSelectedItem(), true));
+        }catch(Exception e){
+            contact_tableview.getItems().clear();
+        }
     }
     
     public void setContactTable(){

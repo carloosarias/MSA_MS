@@ -9,7 +9,6 @@ import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,9 +19,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -39,11 +40,9 @@ import static msa_ms.MainApp.getFormattedDate;
 public class OrderPurchaseIncomingReportFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<OrderPurchaseIncomingReport> orderpurchaseincomingreport_tableview;
-    @FXML
-    private TableColumn<OrderPurchaseIncomingReport, Integer> orderpurchaseincomingreportid_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, Integer> orderpurchaseid_column;
     @FXML
@@ -51,11 +50,11 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, String> reportdate_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingReport, Integer> employeeid_column1;
-    @FXML
-    private TableColumn<OrderPurchaseIncomingReport, String> employeename_column;
+    private TableColumn<OrderPurchaseIncomingReport, String> employee_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingReport, String> comments_column;
+    @FXML
+    private Tab details_tab;
     @FXML
     private TableView<OrderPurchaseIncomingItem> orderpurchaseincomingitem_tableview;
     @FXML
@@ -63,20 +62,20 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, String> description_column;
     @FXML
-    private TableColumn<OrderPurchaseIncomingItem, Double> quantity_column;
-    @FXML
-    private TableColumn<OrderPurchaseIncomingItem, String> unitmeasure_column;
+    private TableColumn<OrderPurchaseIncomingItem, String> quantity_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, Integer> unitsordered_column;
     @FXML
     private TableColumn<OrderPurchaseIncomingItem, Integer> unitsarrived_column;
     @FXML
     private Button add_button;
+    @FXML
+    private Button disable_button;
     
     private Stage add_stage = new Stage();
-    
-        
+       
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+
     /**
      * Initializes the controller class.
      */
@@ -87,12 +86,10 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
         setOrderPurchaseIncomingItemTable();
         updateOrderPurchaseIncomingReportTable();
         
+        details_tab.disableProperty().bind(orderpurchaseincomingreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
         orderpurchaseincomingreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends OrderPurchaseIncomingReport> observable, OrderPurchaseIncomingReport oldValue, OrderPurchaseIncomingReport newValue) -> {
-            try{
-                updateOrderPurchaseIncomingItemTable(newValue);
-            }catch(Exception e){
-                orderpurchaseincomingitem_tableview.getItems().clear();
-            }
+            updateOrderPurchaseIncomingItemTable(newValue);
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -102,7 +99,11 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     }
     
     public void updateOrderPurchaseIncomingItemTable(OrderPurchaseIncomingReport report){
-        orderpurchaseincomingitem_tableview.getItems().setAll(msabase.getOrderPurchaseIncomingItemDAO().list(report));
+        try{
+            orderpurchaseincomingitem_tableview.getItems().setAll(msabase.getOrderPurchaseIncomingItemDAO().list(report));
+        }catch(Exception e){
+            orderpurchaseincomingitem_tableview.getItems().clear();
+        }
     }
     
     public void updateOrderPurchaseIncomingReportTable(){
@@ -110,20 +111,17 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     }
     
     public void setOrderPurchaseIncomingReportTable(){
-        orderpurchaseincomingreportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         orderpurchaseid_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_id"));
         company_column.setCellValueFactory(new PropertyValueFactory<>("orderpurchase_companyname"));
         reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
-        employeeid_column1.setCellValueFactory(new PropertyValueFactory<>("employee_id"));
-        employeename_column.setCellValueFactory(new PropertyValueFactory<>("employee_employeename"));
+        employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_employeename"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
     
     public void setOrderPurchaseIncomingItemTable(){
         serialnumber_column.setCellValueFactory(new PropertyValueFactory<>("productsupplier_serialnumber"));
         description_column.setCellValueFactory(new PropertyValueFactory<>("product_description"));
-        quantity_column.setCellValueFactory(new PropertyValueFactory<>("productsupplier_quantity"));
-        unitmeasure_column.setCellValueFactory(new PropertyValueFactory<>("product_unitmeasure"));
+        quantity_column .setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProductsupplier_quantity()+" "+c.getValue().getProduct_unitmeasure()));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory<>("purchaseitem_unitsordered"));
         unitsarrived_column.setCellValueFactory(new PropertyValueFactory<>("units_arrived"));
     }
@@ -131,7 +129,7 @@ public class OrderPurchaseIncomingReportFX implements Initializable {
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateOrderPurchaseIncomingReportFX.fxml"));
             Scene scene = new Scene(root);
