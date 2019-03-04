@@ -323,7 +323,7 @@
                         </Label>
                      </children>
                   </GridPane>
-                  <TextArea prefHeight="83.0" promptText="Comentarios">
+                  <TextArea fx:id="comments_area" prefHeight="83.0" promptText="Comentarios">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>

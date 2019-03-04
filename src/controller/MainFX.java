@@ -154,7 +154,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(incoming_tab, orderpurchaseincomingreport_tab, depart_tab);
                         break;
                     case "Facturación":
-                        invoice_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
+                        invoice_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
                         invoicepayment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoicePaymentReportFX.fxml")));
                         root_tabpane.getTabs().setAll(invoice_tab, invoicepayment_tab);
                         break;
@@ -168,7 +168,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(process_tab);
                         break;
                     case "Historial de Transacciones":
-                        transactionhistory_tab.setContent( (HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
+                        transactionhistory_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
                         root_tabpane.getTabs().setAll(transactionhistory_tab);
                         break;
                     case "Scrap":

@@ -32,10 +32,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,6 +47,7 @@ import model.CompanyContact;
 import model.Invoice;
 import model.InvoiceItem;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.df;
 
 /**
  * FXML Controller class
@@ -53,7 +57,7 @@ import msa_ms.MainApp;
 public class InvoiceFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<Invoice> invoice_tableview;
     @FXML
@@ -63,15 +67,22 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TableColumn<Invoice, String> client_column;
     @FXML
-    private TableColumn<Invoice, String> billingaddress_column;
+    private TableColumn<Invoice, String> terms_column;
+    @FXML
+    private TableColumn<Invoice, String> shipping_column;
+    @FXML
+    private TableColumn<Invoice, String> fob_column;
+    
+    @FXML
+    private TableColumn<Invoice, String> address_column;
     @FXML
     private TableColumn<Invoice, String> pending_column;
     @FXML
-    private TextField terms_field;
+    private Button add_button;
     @FXML
-    private TextField shippingmethod_field;
+    private Button pdf_button;
     @FXML
-    private TextField fob_field;
+    private Tab details_tab;
     @FXML
     private TableView<InvoiceItem> invoiceitem_tableview;
     @FXML
@@ -85,36 +96,36 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TableColumn<InvoiceItem, String> comments_column;
     @FXML
-    private TableColumn<InvoiceItem, Integer> lot_qty;
+    private TableColumn<InvoiceItem, Integer> qty_column;
     @FXML
-    private TableColumn<InvoiceItem, Integer> lot_boxqty_column;
+    private TableColumn<InvoiceItem, Integer> boxqty_column;
     @FXML
-    private TableColumn<InvoiceItem, String> unitprice_column;
+    private TableColumn<InvoiceItem, String> quote_column;
     @FXML
-    private TableColumn<InvoiceItem, String> lotprice_column;
+    private TableColumn<InvoiceItem, String> total_column;
     @FXML
-    private TextField total_field;
-    @FXML
-    private Button add_button;
-    @FXML
-    private Button pdf_button;
+    private Label total_label;
     
     private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        df.setMaximumFractionDigits(6);
         setInvoiceTable();
         setInvoiceItemTable();
         updateInvoiceTable();
+        
         pdf_button.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
+        details_tab.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
         invoice_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> observable, Invoice oldValue, Invoice newValue) -> {
-            setInvoiceDetails(newValue);
-            setTotal();
+            updateInvoiceItemTable();
+            total_label.setText("$ "+df.format(getTotal())+" USD");
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -132,18 +143,18 @@ public class InvoiceFX implements Initializable {
         });
     }
     
-    public void setTotal(){
+    public Double getTotal(){
         double total = 0;
         for(InvoiceItem invoice_item : invoiceitem_tableview.getItems()){
             total += (invoice_item.getQuote_estimatedtotal()*invoice_item.getDepartlot_quantity());
         }
-        total_field.setText(total+"");
+        return total;
     }
     
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateInvoiceFX.fxml"));
             Scene scene = new Scene(root);
@@ -163,17 +174,11 @@ public class InvoiceFX implements Initializable {
         invoice_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoiceDAO().list()));
     }
     
-    public void setInvoiceDetails(Invoice invoice){
-        if(invoice == null){
+    public void updateInvoiceItemTable(){
+        try{
+            invoiceitem_tableview.getItems().setAll(msabase.getInvoiceItemDAO().list(invoice_tableview.getSelectionModel().getSelectedItem()));
+        }catch(Exception e){
             invoiceitem_tableview.getItems().clear();
-            terms_field.setText(null);
-            shippingmethod_field.setText(null);
-            fob_field.setText(null);
-        }else{
-            invoiceitem_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoiceItemDAO().list(invoice)));
-            terms_field.setText(invoice.getTerms());
-            shippingmethod_field.setText(invoice.getShipping_method());
-            fob_field.setText(invoice.getFob());
         }
     }
     
@@ -181,7 +186,7 @@ public class InvoiceFX implements Initializable {
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
         client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
-        billingaddress_column.setCellValueFactory(new PropertyValueFactory<>("billing_address"));
+        address_column.setCellValueFactory(new PropertyValueFactory<>("billing_address"));
         pending_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().pendingToString()));
     }
     
@@ -191,10 +196,10 @@ public class InvoiceFX implements Initializable {
         revision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
-        lot_qty.setCellValueFactory(new PropertyValueFactory<>("departlot_quantity"));
-        lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_boxquantity"));
-        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getQuote_estimatedtotal()+" USD"));
-        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+(c.getValue().getQuote_estimatedtotal()*c.getValue().getDepartlot_quantity())+" USD"));
+        qty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_quantity"));
+        boxqty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_boxquantity"));
+        quote_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuote_estimatedtotal())+" USD"));
+        total_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuote_estimatedtotal()*c.getValue().getDepartlot_quantity())+" USD"));
     }
 
     private File buildPDF(Invoice invoice) throws IOException {
@@ -233,10 +238,10 @@ public class InvoiceFX implements Initializable {
             fields.get("shipping_method").setValue(invoice.getShipping_method());
             fields.get("fob").setValue(invoice.getFob());
             
-            List<InvoiceItem> invoice_item_list = msabase.getInvoiceItemDAO().list(invoice);
+            List<InvoiceItem> invoiceitem_list = invoiceitem_tableview.getItems();
             int i = 0;
             double total_price = 0;
-            for(InvoiceItem invoice_item : invoice_item_list){
+            for(InvoiceItem invoice_item : invoiceitem_list){
                 int current_row = i+1;
                 double lot_price = 0;
                 double quantity = invoice_item.getDepartlot_quantity();
@@ -245,13 +250,13 @@ public class InvoiceFX implements Initializable {
                 fields.get("part_number"+current_row).setValue(invoice_item.getPart_number());
                 fields.get("quantity_box"+current_row).setValue(""+invoice_item.getDepartlot_boxquantity());
                 fields.get("quantity"+current_row).setValue(""+quantity);
-                fields.get("unit_price"+current_row).setValue("$ "+unit_price+" USD");
+                fields.get("unit_price"+current_row).setValue("$ "+df.format(unit_price)+" USD");
                 lot_price = unit_price * quantity;
-                fields.get("lot_price"+current_row).setValue("$ "+lot_price+" USD");
+                fields.get("lot_price"+current_row).setValue("$ "+df.format(lot_price)+" USD");
                 total_price += lot_price;
                 i++;
             }
-            fields.get("total_price").setValue("$ "+total_price);
+            fields.get("total_price").setValue("$ "+df.format(total_price)+" USD");
             
 
             form.flattenFields();
