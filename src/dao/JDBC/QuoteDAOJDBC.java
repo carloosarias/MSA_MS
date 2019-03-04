@@ -238,6 +238,9 @@ public class QuoteDAOJDBC implements QuoteDAO {
         
         return quote;
     }
+    ////////////////////////////////
+    @Override
+    public Quote
     
     @Override
     public List<Quote> list(DepartLot depart_lot, boolean active) throws IllegalArgumentException, DAOException {

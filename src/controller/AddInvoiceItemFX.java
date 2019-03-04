@@ -7,6 +7,8 @@ package controller;
 
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -63,13 +65,13 @@ public class AddInvoiceItemFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setDepartLotTable();
-        departlot_tableview.getItems().setAll(CreateInvoiceFX.getDepartlot_list());
+        updateDepartLotTable();
+        
+        
         save_button.disableProperty().bind(departlot_tableview.getSelectionModel().selectedItemProperty().isNull());
 
         departlot_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartLot> observable, DepartLot oldValue, DepartLot newValue) -> {
-            departlot_combo.getItems().setAll(departlot_tableview.getSelectionModel().getSelectedItem());
-            departlot_combo.getSelectionModel().selectFirst();
-            setQuoteCombo(newValue);
+            updateQuote_combo();
         });
         
         save_button.setOnAction((ActionEvent) -> {
@@ -100,14 +102,12 @@ public class AddInvoiceItemFX implements Initializable {
         return b;
     }
     
-    public void setQuoteCombo(DepartLot depart_lot){
-        if(depart_lot == null){
+    public void updateQuote_combo(){
+        try{
+            quote_combo.getItems().setAll(msabase.getQuoteDAO().getLatestQuote(departlot_tableview.getSelectionModel().getSelectedItem().getDepartreport_id(), departlot_tableview.getSelectionModel().getSelectedItem().getPartrevision_id(), true));
+            quote_combo.getSelectionModel().selectFirst();
+        }catch(Exception e){
             quote_combo.getItems().clear();
-        }else{
-            quote_combo.getItems().setAll(msabase.getQuoteDAO().list(depart_lot, true));
-            if(!quote_combo.getItems().isEmpty()){
-                quote_combo.getSelectionModel().selectFirst();
-            }
         }
     }
     
@@ -135,9 +135,41 @@ public class AddInvoiceItemFX implements Initializable {
         departreportid_column.setCellValueFactory(new PropertyValueFactory<>("departreport_id"));
         part_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         revision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
-        lot_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         lot_qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
     }
     
+    public void updateDepartLotTable(){
+        departlot_tableview.getItems().setAll(mergeByDepartreport_Partnumber(CreateInvoiceFX.getDepartlot_list()));
+    }
+    
+    public List<DepartLot> mergeByDepartreport_Partnumber(List<DepartLot> unfilteredList){
+        //find all part_number
+        ArrayList<Integer> departreport_id = new ArrayList();
+        ArrayList<String> partnumber = new ArrayList();
+        ArrayList<String> part_revision = new ArrayList();
+        ArrayList<DepartLot> mergedList = new ArrayList();
+        for(DepartLot depart_lot : unfilteredList){
+            if(departreport_id.contains(depart_lot.getDepartreport_id()) && partnumber.contains(depart_lot.getPart_number()) && part_revision.contains(depart_lot.getPart_revision())){
+                mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).setQuantity(mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).getQuantity() + depart_lot.getQuantity());
+                mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).setBox_quantity(mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).getBox_quantity() + depart_lot.getBox_quantity());
+            }
+            else{
+                departreport_id.add(depart_lot.getDepartreport_id());
+                partnumber.add(depart_lot.getPart_number());
+                part_revision.add(depart_lot.getPart_revision());
+                
+                DepartLot item = new DepartLot();
+                item.setPartrevision_id(depart_lot.getPartrevision_id());
+                item.setDepartreport_id(depart_lot.getDepartreport_id());
+                item.setPart_number(depart_lot.getPart_number());
+                item.setPart_revision(depart_lot.getPart_revision());
+                item.setQuantity(depart_lot.getQuantity());
+                item.setBox_quantity(depart_lot.getBox_quantity());
+                mergedList.add(item);
+            }
+        }
+        
+        return mergedList;
+    }
 }

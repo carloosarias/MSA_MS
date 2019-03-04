@@ -274,4 +274,5 @@ public class CreateInvoiceFX implements Initializable {
     public static List<InvoiceItem> getInvoiceitem_queue(){
         return invoiceitem_queue;
     }
+    
 }

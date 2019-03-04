@@ -5,7 +5,6 @@
  */
 package model;
 
-import dao.JDBC.DAOFactory;
 import java.io.Serializable;
 
 /**
@@ -30,6 +29,7 @@ public class DepartLot implements Serializable {
     private String part_number;
     private String part_revision;
     private Integer departreport_id;
+    private Integer partrevision_id;
 
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -147,6 +147,13 @@ public class DepartLot implements Serializable {
         this.departreport_id = departreport_id;
     }
     
+    public Integer getPartrevision_id() {
+        return partrevision_id;
+    }
+
+    public void setPartrevision_id(Integer partrevision_id) {
+        this.partrevision_id = partrevision_id;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**
