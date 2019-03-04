@@ -10,6 +10,7 @@ import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,9 @@ import model.CompanyContact;
 import model.Invoice;
 import model.InvoiceItem;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.dateFormat;
 import static msa_ms.MainApp.df;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  * FXML Controller class
@@ -63,7 +67,7 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TableColumn<Invoice, Integer> id_column;
     @FXML
-    private TableColumn<Invoice, Date> invoicedate_column;
+    private TableColumn<Invoice, String> invoicedate_column;
     @FXML
     private TableColumn<Invoice, String> client_column;
     @FXML
@@ -72,7 +76,6 @@ public class InvoiceFX implements Initializable {
     private TableColumn<Invoice, String> shipping_column;
     @FXML
     private TableColumn<Invoice, String> fob_column;
-    
     @FXML
     private TableColumn<Invoice, String> address_column;
     @FXML
@@ -184,9 +187,12 @@ public class InvoiceFX implements Initializable {
     
     public void setInvoiceTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        invoicedate_column.setCellValueFactory(new PropertyValueFactory<>("invoice_date"));
+        invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getInvoice_date()))));
         client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
         address_column.setCellValueFactory(new PropertyValueFactory<>("billing_address"));
+        terms_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTerms()));
+        shipping_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getShipping_method()));
+        fob_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFob()));
         pending_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().pendingToString()));
     }
     
@@ -220,7 +226,7 @@ public class InvoiceFX implements Initializable {
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
             Map<String, PdfFormField> fields = form.getFormFields();
             fields.get("invoice_id").setValue(""+invoice.getId());
-            fields.get("date").setValue(invoice.getInvoice_date().toString());
+            fields.get("date").setValue(getFormattedDate(DAOUtil.toLocalDate(invoice.getInvoice_date())));
             fields.get("client").setValue(invoice.getCompany_name());
             fields.get("billing_address").setValue(invoice.getBilling_address());
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getInvoiceDAO().findCompany(invoice), true);

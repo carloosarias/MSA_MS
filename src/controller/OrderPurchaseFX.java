@@ -33,6 +33,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -43,6 +44,7 @@ import javafx.scene.layout.GridPane;
 import model.OrderPurchase;
 import model.PurchaseItem;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.getFormattedDate;
 
 
@@ -72,6 +74,8 @@ public class OrderPurchaseFX implements Initializable {
     private TableColumn<OrderPurchase, String> status_column;
     @FXML
     private ComboBox<String> status_combo;
+    @FXML
+    private Tab details_tab;
     @FXML
     private Button changestatus_button;
     @FXML
@@ -116,53 +120,35 @@ public class OrderPurchaseFX implements Initializable {
     private static ObservableList<OrderPurchase> orderpurchase_list = FXCollections.observableArrayList();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-
-    DecimalFormat df = new DecimalFormat("#");
-
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        df.setMaximumFractionDigits(4);
+        
+        status_combo.setItems(FXCollections.observableArrayList(MainApp.orderpurchase_status));
         exchangetype_combo.getItems().setAll("USD","MXN");
         exchangetype_combo.getSelectionModel().selectFirst();
         
-        exchangetype_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            setExchangeType();
-            calculateTotals();
-            purchaseitem_tableview.refresh();
-        });
-        
-        df.setMaximumFractionDigits(4);
-        
         setOrderPurchaseTable();
-        updateOrderPurchaseList(msabase);
+        setPurchaseItemTable();
         orderpurchase_tableview.setItems(orderpurchase_list);
+        updateOrderPurchaseList(msabase);
         
+        details_tab.disableProperty().bind(orderpurchase_tableview.getSelectionModel().selectedItemProperty().isNull());
         status_combo.disableProperty().bind(orderpurchase_tableview.getSelectionModel().selectedItemProperty().isNull());
         pdf_button.disableProperty().bind(orderpurchase_tableview.getSelectionModel().selectedItemProperty().isNull());
         changestatus_button.disableProperty().bind(status_combo.getSelectionModel().selectedItemProperty().isNull());
         
-        setPurchaseItemTable();
-        
-        status_combo.setItems(FXCollections.observableArrayList(MainApp.orderpurchase_status));
+        exchangetype_combo.setOnAction((ActionEvent) -> {
+            setExchangeType();
+            updatePurchaseItemTable();
+        });
         
         orderpurchase_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends OrderPurchase> observable, OrderPurchase oldValue, OrderPurchase newValue) -> {
-            if(!orderpurchase_tableview.getSelectionModel().isEmpty()){
-                purchaseitem_tableview.setItems(FXCollections.observableArrayList(msabase.getPurchaseItemDAO().list(newValue)));
-                calculateTotals();
-                comments_area.setText(newValue.getComments());
-                setExchangeType();
-                status_combo.getSelectionModel().clearSelection();
-            }else{
-                purchaseitem_tableview.getItems().clear();
-                subtotal_field.clear();
-                iva_field.clear();
-                total_field.clear();
-                comments_area.clear();
-                status_combo.getSelectionModel().clearSelection();
-                setExchangeType();
-            }
+            updatePurchaseItemTable();
         });
         
         changestatus_button.setOnAction((ActionEvent) -> {
@@ -212,8 +198,7 @@ public class OrderPurchaseFX implements Initializable {
         unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<PurchaseItem, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPrice_updated(getPrice_Unitvalue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getPurchaseItemDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            purchaseitem_tableview.refresh();
-            calculateTotals();
+            updatePurchaseItemTable();
         });
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         price_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getPrice_total()*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem()));
@@ -223,26 +208,49 @@ public class OrderPurchaseFX implements Initializable {
         orderpurchase_list.setAll(msabase.getOrderPurchaseDAO().list());
     }
     
-    public void setSubtotal(){
+    public void updatePurchaseItemTable(){
+        try{
+            purchaseitem_tableview.getItems().setAll(msabase.getPurchaseItemDAO().list(orderpurchase_tableview.getSelectionModel().getSelectedItem()));
+            subtotal_field.setText(df.format(getSubtotal()));
+            iva_field.setText(df.format(getIva()));
+            total_field.setText(df.format(getTotal()));
+            comments_area.setText(orderpurchase_tableview.getSelectionModel().getSelectedItem().getComments());
+            status_combo.getSelectionModel().select(orderpurchase_tableview.getSelectionModel().getSelectedItem().getStatus());
+        }catch(Exception e){
+            purchaseitem_tableview.getItems().clear();
+            subtotal_field.setText(df.format(getSubtotal()));
+            iva_field.setText(df.format(getIva()));
+            total_field.setText(df.format(getTotal()));
+            comments_area.clear();
+            status_combo.getSelectionModel().clearSelection();
+        }
+    }
+    
+    public Double getSubtotal(){
         Double subtotal = 0.0;
-        
         for(PurchaseItem item : purchaseitem_tableview.getItems()){
             subtotal += item.getPrice_total();
         }
-        
-        subtotal_field.setText(df.format(subtotal*exchangetype_multiplier));
+        return subtotal*exchangetype_multiplier;
     }
-    public void calculateTotals(){
-        setSubtotal();
-        setIva();
-        setTotal();
-    }
-    public void setIva(){
-        iva_field.setText(df.format((Double.parseDouble(subtotal_field.getText())*orderpurchase_tableview.getSelectionModel().getSelectedItem().getIva_rate()/100)));
+    public Double getIva(){
+        Double iva = 0.0;
+        try{
+            iva = getSubtotal()*(orderpurchase_tableview.getSelectionModel().getSelectedItem().getIva_rate()/100);
+        }catch(Exception e){
+            iva = 0.0;
+        }
+        return iva;
     }
     
-    public void setTotal(){
-        total_field.setText(df.format(Double.parseDouble(subtotal_field.getText())+Double.parseDouble(iva_field.getText())));
+    public Double getTotal(){
+        Double total = 0.0;
+        try{
+            total = getSubtotal()+getIva();
+        }catch(Exception e){
+            total = 0.0;
+        }
+        return total;
     }
     
     public File buildPDF(OrderPurchase order_purchase) throws IOException{
@@ -280,14 +288,14 @@ public class OrderPurchaseFX implements Initializable {
             fields.get("description"+current_row).setValue(purchase_item.getProduct_description());
             fields.get("quantity"+current_row).setValue(df.format(purchase_item.getProductsupplier_quantity()));
             fields.get("unit_measure"+current_row).setValue(purchase_item.getProduct_unitmeasure());
-            fields.get("unitmeasure_price"+current_row).setValue("$"+df.format((purchase_item.getPrice_unit()/purchase_item.getProductsupplier_quantity())*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
-            fields.get("unit_price"+current_row).setValue("$"+(df.format(purchase_item.getPrice_unit()*exchangetype_multiplier))+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
-            fields.get("price_lot"+current_row).setValue("$ "+(df.format(purchase_item.getPrice_total()*exchangetype_multiplier))+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
+            fields.get("unitmeasure_price"+current_row).setValue("$ "+df.format((purchase_item.getPrice_unit()/purchase_item.getProductsupplier_quantity())*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
+            fields.get("unit_price"+current_row).setValue("$ "+df.format(purchase_item.getPrice_unit()*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
+            fields.get("price_lot"+current_row).setValue("$ "+df.format(purchase_item.getPrice_total()*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
             i++;
         }
-        fields.get("subtotal").setValue("$ "+subtotal_field.getText()+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
-        fields.get("iva").setValue("$ "+iva_field.getText()+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
-        fields.get("total").setValue("$ "+total_field.getText()+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
+        fields.get("subtotal").setValue("$ "+df.format(getSubtotal())+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
+        fields.get("iva").setValue("$ "+df.format(getIva())+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
+        fields.get("total").setValue("$ "+df.format(getTotal())+" "+exchangetype_combo.getSelectionModel().getSelectedItem());
 
         form.flattenFields();
         pdf.close();

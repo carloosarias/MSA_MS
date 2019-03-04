@@ -37,13 +37,13 @@
                      <children>
                         <TableView fx:id="orderpurchase_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                            <columns>
-                              <TableColumn fx:id="orderid_column" editable="false" prefWidth="100.0" resizable="false" text="PO #" />
-                              <TableColumn fx:id="orderdate_column" editable="false" prefWidth="120.0" resizable="false" text="Fecha de Reporte" />
-                              <TableColumn fx:id="company_column" editable="false" prefWidth="220.0" resizable="false" text="Proveedor" />
-                              <TableColumn fx:id="companyaddress_column" editable="false" prefWidth="260.0" resizable="false" text="Dirección" />
-                              <TableColumn fx:id="exchangerate_column" editable="false" prefWidth="100.0" resizable="false" text="Valor del Dólar" />
-                              <TableColumn fx:id="ivarate_column" prefWidth="100.0" text="IVA" />
-                              <TableColumn fx:id="status_column" editable="false" prefWidth="120.0" resizable="false" text="Estado" />
+                              <TableColumn fx:id="orderid_column" editable="false" minWidth="-Infinity" prefWidth="50.0" text="PO #" />
+                              <TableColumn fx:id="orderdate_column" editable="false" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                              <TableColumn fx:id="company_column" editable="false" minWidth="-Infinity" prefWidth="200.0" text="Proveedor" />
+                              <TableColumn fx:id="companyaddress_column" editable="false" minWidth="-Infinity" prefWidth="250.0" text="Dirección" />
+                              <TableColumn fx:id="exchangerate_column" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Valor del Dólar" />
+                              <TableColumn fx:id="ivarate_column" minWidth="-Infinity" prefWidth="100.0" text="IVA" />
+                              <TableColumn fx:id="status_column" editable="false" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -80,7 +80,7 @@
                   </GridPane>
                </content>
             </Tab>
-            <Tab text="Detalles de Selección">
+            <Tab fx:id="details_tab" disable="true" text="Detalles de Selección">
                <content>
                   <GridPane>
                      <columnConstraints>
@@ -223,7 +223,7 @@
                                     </ComboBox>
                                  </children>
                               </GridPane>
-                              <TextArea fx:id="comments_area" disable="true" editable="false" prefHeight="50.0" promptText="Comentarios" wrapText="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                              <TextArea fx:id="comments_area" disable="true" editable="false" prefHeight="50.0" prefWidth="400.0" promptText="Comentarios" wrapText="true">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
@@ -246,7 +246,7 @@
                                     <TableColumn fx:id="unitprice_column" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Precio Por Bulto" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn fx:id="unitsordered_column" editable="false" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Bultos Ordenados" />
+                              <TableColumn fx:id="unitsordered_column" editable="false" minWidth="-Infinity" prefWidth="50.0" resizable="false" text="Bultos" />
                               <TableColumn fx:id="price_column" editable="false" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Total" />
                            </columns>
                            <GridPane.margin>
