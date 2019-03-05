@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -23,14 +22,13 @@
                <children>
                   <TableView fx:id="departlot_tableview">
                      <columns>
-                        <TableColumn fx:id="departreportid_column" prefWidth="100.0" resizable="false" text="No. de Remisión" />
-                        <TableColumn fx:id="part_column" prefWidth="120.0" resizable="false" text="Número de Parte" />
-                        <TableColumn fx:id="revision_column" prefWidth="75.0" resizable="false" text="Revisión" />
-                        <TableColumn fx:id="lot_column" prefWidth="100.0" resizable="false" text="Número de Lote" />
-                        <TableColumn prefWidth="160.0" resizable="false" text="Cantidad">
+                        <TableColumn fx:id="departreportid_column" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="# de Remisión" />
+                        <TableColumn fx:id="part_column" minWidth="-Infinity" prefWidth="150.0" resizable="false" text="Número de Parte" />
+                        <TableColumn fx:id="revision_column" minWidth="-Infinity" prefWidth="50.0" resizable="false" text="Rev" />
+                        <TableColumn minWidth="-1.0" prefWidth="-1.0" resizable="false" text="Cantidad">
                            <columns>
-                              <TableColumn fx:id="lot_qty" prefWidth="75.0" resizable="false" text="Piezas" />
-                              <TableColumn fx:id="lot_boxqty_column" prefWidth="75.0" resizable="false" text="Cajas" />
+                              <TableColumn fx:id="lot_qty" minWidth="-Infinity" prefWidth="75.0" resizable="false" text="Piezas" />
+                              <TableColumn fx:id="lot_boxqty_column" minWidth="-Infinity" prefWidth="50.0" resizable="false" text="Cajas" />
                            </columns>
                         </TableColumn>
                      </columns>
@@ -40,56 +38,6 @@
                   </TableView>
                </children>
             </HBox>
-            <HBox alignment="CENTER">
-               <children>
-                  <VBox>
-                     <children>
-                        <Label text="Selección:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="departlot_combo" disable="true" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Cotización:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="quote_combo" disable="true" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Comentarios:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <HBox>
-                           <children>
-                              <TextField fx:id="comments_field">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
             <HBox>
                <children>
                   <VBox>
@@ -97,15 +45,22 @@
                         <HBox />
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER_LEFT">
-                     <children>
-                        <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Aceptar">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
+                  <VBox alignment="CENTER_LEFT" />
+                  <Label text="Precio Cotizado:">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ComboBox fx:id="quote_combo" prefWidth="150.0">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </ComboBox>
+                  <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Agregar a factura">
+                     <HBox.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
             </HBox>
          </children>

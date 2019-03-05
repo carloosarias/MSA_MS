@@ -153,7 +153,8 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
             contact.getName(),
             contact.getPosition(),
             contact.getEmail(),
-            contact.getPhone_number()
+            contact.getPhone_number(),
+            contact.isActive()
         };
         
         try(

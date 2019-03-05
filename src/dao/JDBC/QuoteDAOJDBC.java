@@ -37,6 +37,18 @@ public class QuoteDAOJDBC implements QuoteDAO {
             + "INNER JOIN COMPANY_CONTACT ON QUOTE.COMPANY_CONTACT_ID = COMPANY_CONTACT.id "
             + "INNER JOIN COMPANY ON COMPANY_CONTACT.COMPANY_ID = COMPANY.id "
             + "WHERE QUOTE.id = ?";
+    private static final String SQL_FIND_LATEST = 
+            "SELECT QUOTE.id, QUOTE.quote_date, QUOTE.estimated_annual_usage, QUOTE.comments, QUOTE.estimated_total, QUOTE.active, "
+            + "SPECIFICATION.specification_number, SPECIFICATION.process, PART_REVISION.area, PART_REVISION.rev, COMPANY.id, COMPANY.name, COMPANY_CONTACT.name, COMPANY_CONTACT.email, "
+            + "COMPANY_CONTACT.phone_number, PRODUCT_PART.part_number, PRODUCT_PART.description "
+            + "FROM QUOTE "
+            + "INNER JOIN DEPART_REPORT ON ? = DEPART_REPORT.id "
+            + "INNER JOIN PART_REVISION ON QUOTE.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY_CONTACT ON QUOTE.COMPANY_CONTACT_ID = COMPANY_CONTACT.id "
+            + "INNER JOIN COMPANY ON COMPANY_CONTACT.COMPANY_ID = COMPANY.id "
+            + "WHERE COMPANY.id = DEPART_REPORT.COMPANY_ID AND QUOTE.PART_REVISION_ID = ? AND QUOTE.active = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM QUOTE WHERE id = ?";
     private static final String SQL_FIND_COMPANY_CONTACT_BY_ID = 
@@ -108,6 +120,11 @@ public class QuoteDAOJDBC implements QuoteDAO {
         return find(SQL_FIND_BY_ID, id);
     }
     
+    @Override
+    public Quote findLatest(Integer depart_report_id, Integer part_revision_id, boolean active) throws DAOException{
+        return find(SQL_FIND_LATEST, depart_report_id, part_revision_id, active);
+    }
+    
     /**
      * Returns the Quote from the database matching the given SQL query with the given values.
      * @param sql The SQL query to be executed in the database.
@@ -132,7 +149,7 @@ public class QuoteDAOJDBC implements QuoteDAO {
 
         return quote;
     }
-    
+            
     @Override
     public PartRevision findPartRevision(Quote quote) throws IllegalArgumentException, DAOException {
         if(quote.getId() == null) {
@@ -238,9 +255,6 @@ public class QuoteDAOJDBC implements QuoteDAO {
         
         return quote;
     }
-    ////////////////////////////////
-    @Override
-    public Quote
     
     @Override
     public List<Quote> list(DepartLot depart_lot, boolean active) throws IllegalArgumentException, DAOException {

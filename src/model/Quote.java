@@ -8,6 +8,7 @@ package model;
 import dao.JDBC.DAOFactory;
 import java.io.Serializable;
 import java.util.Date;
+import static msa_ms.MainApp.df;
 
 /**
  *
@@ -214,8 +215,11 @@ public class Quote implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("$ %f USD",
-                estimated_total);
+        try{
+            return "$ "+df.format(getEstimated_total())+" USD";
+        }catch(Exception e){
+            return "N/A";
+        }
     
     }
 }

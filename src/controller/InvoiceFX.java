@@ -149,7 +149,7 @@ public class InvoiceFX implements Initializable {
     public Double getTotal(){
         double total = 0;
         for(InvoiceItem invoice_item : invoiceitem_tableview.getItems()){
-            total += (invoice_item.getQuote_estimatedtotal()*invoice_item.getDepartlot_quantity());
+            total += (invoice_item.getQuote_estimatedtotal()*invoice_item.getQuantity());
         }
         return total;
     }
@@ -205,7 +205,7 @@ public class InvoiceFX implements Initializable {
         qty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_quantity"));
         boxqty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_boxquantity"));
         quote_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuote_estimatedtotal())+" USD"));
-        total_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuote_estimatedtotal()*c.getValue().getDepartlot_quantity())+" USD"));
+        total_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuote_estimatedtotal()*c.getValue().getQuantity())+" USD"));
     }
 
     private File buildPDF(Invoice invoice) throws IOException {
@@ -250,11 +250,11 @@ public class InvoiceFX implements Initializable {
             for(InvoiceItem invoice_item : invoiceitem_list){
                 int current_row = i+1;
                 double lot_price = 0;
-                double quantity = invoice_item.getDepartlot_quantity();
+                double quantity = invoice_item.getQuantity();
                 double unit_price = invoice_item.getQuote_estimatedtotal();
                 fields.get("depart_report_id"+current_row).setValue(""+invoice_item.getDepartreport_id());
                 fields.get("part_number"+current_row).setValue(invoice_item.getPart_number());
-                fields.get("quantity_box"+current_row).setValue(""+invoice_item.getDepartlot_boxquantity());
+                fields.get("quantity_box"+current_row).setValue(""+invoice_item.getBox_quantity());
                 fields.get("quantity"+current_row).setValue(""+quantity);
                 fields.get("unit_price"+current_row).setValue("$ "+df.format(unit_price)+" USD");
                 lot_price = unit_price * quantity;

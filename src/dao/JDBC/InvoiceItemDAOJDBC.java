@@ -466,8 +466,8 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
         invoice_item.setPart_revision(resultSet.getString("PART_REVISION.rev"));
         invoice_item.setDepartreport_id(resultSet.getInt("DEPART_LOT.DEPART_REPORT_ID"));
         invoice_item.setLot_number(resultSet.getString("DEPART_LOT.lot_number"));
-        invoice_item.setDepartlot_quantity(resultSet.getInt("DEPART_LOT.quantity"));
-        invoice_item.setDepartlot_boxquantity(resultSet.getInt("DEPART_LOT.box_quantity"));
+        invoice_item.setQuantity(resultSet.getInt("DEPART_LOT.quantity"));
+        invoice_item.setBox_quantity(resultSet.getInt("DEPART_LOT.box_quantity"));
         invoice_item.setQuote_estimatedtotal(resultSet.getDouble("QUOTE.id"));
         invoice_item.setQuote_estimatedtotal(resultSet.getDouble("QUOTE.estimated_total"));
         return invoice_item;

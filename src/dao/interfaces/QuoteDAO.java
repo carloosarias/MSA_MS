@@ -26,7 +26,12 @@ public interface QuoteDAO {
      * @throws DAOException If something fails at database level.
      */
     public Quote find(Integer id) throws DAOException;
-    
+    /**
+     * @param depart_report_id
+     * @param part_revision_id
+     * @param active
+     */
+    public Quote findLatest(Integer depart_report_id, Integer part_revision_id, boolean active) throws DAOException;
     /**
      * Returns the PartRevision from the database matching the given Quote ID, otherwise null.
      * Invoice ID must not be null, otherwise it will throw IllegalArgumentException.

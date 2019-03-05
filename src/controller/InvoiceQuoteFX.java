@@ -115,7 +115,7 @@ public class InvoiceQuoteFX implements Initializable {
     public Integer getTotal_invoiced(Quote quote){
         temp_totalinvoiced = 0;
         for(InvoiceItem item : msabase.getInvoiceItemDAO().list(quote, DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()))){
-            temp_totalinvoiced += item.getDepartlot_quantity();
+            temp_totalinvoiced += item.getQuantity();
         }
         return temp_totalinvoiced;
     }

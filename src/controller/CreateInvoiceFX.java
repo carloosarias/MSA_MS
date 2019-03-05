@@ -38,6 +38,7 @@ import model.CompanyAddress;
 import model.DepartLot;
 import model.Invoice;
 import model.InvoiceItem;
+import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.setDatePicker;
 
 /**
@@ -104,6 +105,7 @@ public class CreateInvoiceFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        df.setMaximumFractionDigits(6);
         invoicedate_picker.setValue(LocalDate.now());
         setDatePicker(invoicedate_picker);
         setInvoiceItemTable();
@@ -205,7 +207,7 @@ public class CreateInvoiceFX implements Initializable {
         }
     }
     public void updateInvoiceItemTable(){
-        invoiceitem_tableview.setItems(FXCollections.observableArrayList(invoiceitem_queue));
+        invoiceitem_tableview.getItems().setAll(mergeByDepartreport_Partnumber(invoiceitem_queue));
         save_button.setDisable(invoiceitem_queue.isEmpty());
         setTotal();
     }
@@ -213,7 +215,7 @@ public class CreateInvoiceFX implements Initializable {
     public void setTotal(){
         double total = 0;
         for(InvoiceItem invoice_item : invoiceitem_queue){
-            total += (invoice_item.getQuote_estimatedtotal()*invoice_item.getDepartlot_quantity());
+            total += (invoice_item.getQuote_estimatedtotal()*invoice_item.getQuantity());
         }
         total_field.setText(""+total);
     }
@@ -259,12 +261,10 @@ public class CreateInvoiceFX implements Initializable {
         departreportid_column.setCellValueFactory(new PropertyValueFactory<>("departreport_id"));
         partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         revision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
-        lot_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
-        lot_qty.setCellValueFactory(new PropertyValueFactory<>("departlot_quantity"));
-        lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("departlot_boxquantity"));
-        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getQuote_estimatedtotal()+" USD"));
-        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+(c.getValue().getQuote_estimatedtotal()*c.getValue().getDepartlot_quantity())+" USD"));
+        lot_qty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        lot_boxqty_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        unitprice_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_quote().toString()));
+        lotprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getTemp_quote().getEstimated_total()*c.getValue().getQuantity()))+" USD"));
     }
     
     public static List<DepartLot> getDepartlot_list(){
@@ -275,4 +275,41 @@ public class CreateInvoiceFX implements Initializable {
         return invoiceitem_queue;
     }
     
+    public List<InvoiceItem> mergeByDepartreport_Partnumber(List<InvoiceItem> unfilteredList){
+        //find all part_number
+        ArrayList<Integer> departreport_id = new ArrayList();
+        ArrayList<String> partnumber = new ArrayList();
+        ArrayList<String> part_revision = new ArrayList();
+        ArrayList<InvoiceItem> mergedList = new ArrayList();
+        for(InvoiceItem invoice_item : unfilteredList){
+            if(departreport_id.contains(invoice_item.getDepartreport_id()) && partnumber.contains(invoice_item.getPart_number()) && part_revision.contains(invoice_item.getPart_revision())){
+                for(InvoiceItem listitem : mergedList){
+                    if(invoice_item.getDepartreport_id().equals(listitem.getDepartreport_id()) && invoice_item.getPart_number().equals(listitem.getPart_number()) && invoice_item.getPart_revision().equals(listitem.getPart_revision())){
+                        mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + invoice_item.getQuantity());
+                        mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + invoice_item.getBox_quantity());
+                        break;
+                    }
+                }
+            }
+            else{
+                departreport_id.add(invoice_item.getDepartreport_id());
+                partnumber.add(invoice_item.getPart_number());
+                part_revision.add(invoice_item.getPart_revision());
+                
+                InvoiceItem item = new InvoiceItem();
+                item.setPart_revision(invoice_item.getPart_revision());
+                item.setDepartreport_id(invoice_item.getDepartreport_id());
+                item.setPart_number(invoice_item.getPart_number());
+                item.setPart_revision(invoice_item.getPart_revision());
+                item.setQuantity(invoice_item.getQuantity());
+                item.setBox_quantity(invoice_item.getBox_quantity());
+                item.setTemp_quote(invoice_item.getTemp_quote());
+                item.setQuote_id(invoice_item.getTemp_quote().getId());
+                item.setQuote_estimatedtotal(invoice_item.getTemp_quote().getEstimated_total());
+                mergedList.add(item);
+            }
+        }
+        
+        return mergedList;
+    }
 }

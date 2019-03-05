@@ -24,8 +24,8 @@ public class InvoiceItem implements Serializable{
     private String part_number;
     private String part_revision;
     private String lot_number;
-    private Integer departlot_quantity;
-    private Integer departlot_boxquantity;
+    private Integer quantity;
+    private Integer box_quantity;
     private Integer quote_id;
     private double quote_estimatedtotal;
     // Getters/setters ----------------------------------------------------------------------------
@@ -94,20 +94,20 @@ public class InvoiceItem implements Serializable{
         this.lot_number = lot_number;
     }
 
-    public Integer getDepartlot_quantity() {
-        return departlot_quantity;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setDepartlot_quantity(Integer departlot_quantity) {
-        this.departlot_quantity = departlot_quantity;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
-    public Integer getDepartlot_boxquantity() {
-        return departlot_boxquantity;
+    public Integer getBox_quantity() {
+        return box_quantity;
     }
 
-    public void setDepartlot_boxquantity(Integer departlot_boxquantity) {
-        this.departlot_boxquantity = departlot_boxquantity;
+    public void setBox_quantity(Integer box_quantity) {
+        this.box_quantity = box_quantity;
     }
     
     public Integer getQuote_id(){

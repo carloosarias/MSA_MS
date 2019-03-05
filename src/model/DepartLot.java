@@ -154,6 +154,7 @@ public class DepartLot implements Serializable {
     public void setPartrevision_id(Integer partrevision_id) {
         this.partrevision_id = partrevision_id;
     }
+    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -186,6 +187,6 @@ public class DepartLot implements Serializable {
     public String toString() {
             return String.format("%s %s %s - %d",
                 part_number, part_revision, lot_number, quantity);
-    }        
+    }
 
 }
