@@ -159,7 +159,7 @@ public class InvoiceFX implements Initializable {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateInvoiceFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/CreateInvoiceFX.fxml"));
             Scene scene = new Scene(root);
             
             add_stage.setTitle("Nueva Factura");
