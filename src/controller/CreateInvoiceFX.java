@@ -11,13 +11,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,10 +25,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -49,7 +51,7 @@ import static msa_ms.MainApp.setDatePicker;
 public class CreateInvoiceFX implements Initializable {
  
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private DatePicker invoicedate_picker;
     @FXML
@@ -73,8 +75,6 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private TableColumn<InvoiceItem, String> revision_column;
     @FXML
-    private TableColumn<InvoiceItem, String> lot_column;
-    @FXML
     private TableColumn<InvoiceItem, String> unitprice_column;
     @FXML
     private TableColumn<InvoiceItem, Integer> lot_qty;
@@ -83,15 +83,13 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private TableColumn<InvoiceItem, String> lotprice_column;
     @FXML
-    private TableColumn<InvoiceItem, String> comments_column;
-    @FXML
     private Button add_button;
     @FXML
     private Button delete_button;
     @FXML
-    private TextField total_field;
+    private Label total_label;
     @FXML
-    private Button save_button;
+    private Button create_button;
     
     private static List<DepartLot> departlot_list = new ArrayList<DepartLot>();
     
@@ -108,34 +106,64 @@ public class CreateInvoiceFX implements Initializable {
         df.setMaximumFractionDigits(6);
         invoicedate_picker.setValue(LocalDate.now());
         setDatePicker(invoicedate_picker);
+        client_combo.getItems().setAll(msabase.getCompanyDAO().listClient(true));
         setInvoiceItemTable();
-        client_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyDAO().listClient(true)));
-        delete_button.disableProperty().bind(invoiceitem_tableview.getSelectionModel().selectedItemProperty().isNull());
-        add_button.disableProperty().bind(client_combo.getSelectionModel().selectedItemProperty().isNull());
         
-        client_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Company> observable, Company oldValue, Company newValue) -> {
-            setClientList(newValue);
+        billingaddress_combo.disableProperty().bind(billingaddress_combo.itemsProperty().isNull());
+        shippingaddress_combo.disableProperty().bind(shippingaddress_combo.itemsProperty().isNull());
+        add_button.disableProperty().bind(client_combo.getSelectionModel().selectedItemProperty().isNull());
+        delete_button.disableProperty().bind(invoiceitem_tableview.getSelectionModel().selectedItemProperty().isNull());
+        create_button.disableProperty().bind(invoiceitem_tableview.itemsProperty().isNull().or(client_combo.getSelectionModel().selectedItemProperty().isNull()).or(
+        billingaddress_combo.getSelectionModel().selectedItemProperty().isNull()).or(shippingaddress_combo.getSelectionModel().selectedItemProperty().isNull()));
+        
+        client_combo.setOnAction((ActionEvent) -> {
+            updateClient_combo();
         });
         
         delete_button.setOnAction((ActionEvent) -> {
-            invoiceitem_queue.remove(invoiceitem_tableview.getSelectionModel().getSelectedItem());
-            departlot_list.add(invoiceitem_tableview.getSelectionModel().getSelectedItem().getTemp_departlot());
+            removeInvoiceItems();
             updateInvoiceItemTable();
         });
         
         add_button.setOnAction((ActionEvent) -> {
             showAdd_stage();
+            updateInvoiceItemTable();
         });
         
-        save_button.setOnAction((ActionEvent) -> {
+        create_button.setOnAction((ActionEvent) -> {
             if(!testFields()){
                 return;
             }
             saveInvoice();
-            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
         });
         
+    }
+    
+    public void removeInvoiceItems(){
+        ArrayList<InvoiceItem> remove_queue = new ArrayList();
+        for(InvoiceItem invoice_item : invoiceitem_queue){
+            if(invoice_item.getDepartreport_id().equals(invoiceitem_tableview.getSelectionModel().getSelectedItem().getDepartreport_id()) && invoice_item.getPart_revision().equals(invoiceitem_tableview.getSelectionModel().getSelectedItem().getPart_revision())){
+                departlot_list.add(invoice_item.getTemp_departlot());
+                remove_queue.add(invoice_item);
+            }
+        }
+        invoiceitem_queue.removeAll(remove_queue);
+    }
+    
+    public void sortQueues(){
+        Collections.sort(departlot_list, new Comparator<DepartLot>(){
+            public int compare(DepartLot lot1, DepartLot lot2) {
+               return lot1.getDepartreport_id().compareTo(lot2.getDepartreport_id());
+            }
+        });
+        
+        Collections.sort(invoiceitem_queue, new Comparator<InvoiceItem>(){
+            public int compare(InvoiceItem item1, InvoiceItem item2) {
+                return item1.getDepartreport_id().compareTo(item2.getDepartreport_id());
+            } 
+        });
     }
     
     public boolean testFields(){
@@ -202,14 +230,13 @@ public class CreateInvoiceFX implements Initializable {
         for(InvoiceItem invoice_item : invoiceitem_queue){
             invoice_item.getTemp_departlot().setPending(false);
             msabase.getDepartLotDAO().update(invoice_item.getTemp_departlot());
-            System.out.println(invoice_item.getTemp_departlot().isPending());
             msabase.getInvoiceItemDAO().create(invoice, invoice_item.getTemp_departlot(), invoice_item.getTemp_quote(), invoice_item);
         }
     }
     public void updateInvoiceItemTable(){
         invoiceitem_tableview.getItems().setAll(mergeByDepartreport_Partnumber(invoiceitem_queue));
-        save_button.setDisable(invoiceitem_queue.isEmpty());
         setTotal();
+        sortQueues();
     }
     
     public void setTotal(){
@@ -217,22 +244,19 @@ public class CreateInvoiceFX implements Initializable {
         for(InvoiceItem invoice_item : invoiceitem_queue){
             total += (invoice_item.getQuote_estimatedtotal()*invoice_item.getQuantity());
         }
-        total_field.setText(""+total);
+        total_label.setText("$ "+df.format(total)+" USD");
     }
     
-    public void setClientList(Company company){
-        if(company == null){
-            invoiceitem_queue.clear();
-            departlot_list.clear();
-            departlot_list = null;
-            billingaddress_combo.getItems().clear();
-            shippingaddress_combo.getItems().clear();
-            invoiceitem_tableview.getItems().clear();
-        }else{
-            invoiceitem_queue.clear();
+    public void updateClient_combo(){
+        invoiceitem_queue.clear();
+        billingaddress_combo.getItems().clear();
+        shippingaddress_combo.getItems().clear();
+        try{
             departlot_list = msabase.getDepartLotDAO().list(client_combo.getSelectionModel().getSelectedItem(), true, false);
-            billingaddress_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyAddressDAO().listActive(company, true)));
+            billingaddress_combo.getItems().setAll(msabase.getCompanyAddressDAO().listActive(client_combo.getSelectionModel().getSelectedItem(), true));
             shippingaddress_combo.setItems(billingaddress_combo.getItems());
+        }catch(Exception e){
+            departlot_list.clear();
         }
         updateInvoiceItemTable();
     }
@@ -240,7 +264,7 @@ public class CreateInvoiceFX implements Initializable {
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddInvoiceItemFX.fxml"));
             Scene scene = new Scene(root);
