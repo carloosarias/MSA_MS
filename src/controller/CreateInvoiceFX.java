@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -109,8 +110,8 @@ public class CreateInvoiceFX implements Initializable {
         client_combo.getItems().setAll(msabase.getCompanyDAO().listClient(true));
         setInvoiceItemTable();
         
-        billingaddress_combo.disableProperty().bind(billingaddress_combo.itemsProperty().isNull());
-        shippingaddress_combo.disableProperty().bind(shippingaddress_combo.itemsProperty().isNull());
+        billingaddress_combo.disableProperty().bind(Bindings.size(billingaddress_combo.getItems()).isEqualTo(0));
+        shippingaddress_combo.disableProperty().bind(billingaddress_combo.disabledProperty());
         add_button.disableProperty().bind(client_combo.getSelectionModel().selectedItemProperty().isNull());
         delete_button.disableProperty().bind(invoiceitem_tableview.getSelectionModel().selectedItemProperty().isNull());
         create_button.disableProperty().bind(invoiceitem_tableview.itemsProperty().isNull().or(client_combo.getSelectionModel().selectedItemProperty().isNull()).or(

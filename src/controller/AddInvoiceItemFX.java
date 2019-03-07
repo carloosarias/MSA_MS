@@ -116,7 +116,7 @@ public class AddInvoiceItemFX implements Initializable {
                 InvoiceItem invoice_item = new InvoiceItem();
                 invoice_item.setTemp_departlot(depart_lot);
                 invoice_item.setTemp_quote(quote_combo.getSelectionModel().getSelectedItem());
-                invoice_item.setComments("N/A");
+                invoice_item.setComments("");
                 invoice_item.setDepartreport_id(depart_lot.getDepartreport_id());
                 invoice_item.setPart_number(depart_lot.getPart_number());
                 invoice_item.setPart_revision(depart_lot.getPart_revision());
