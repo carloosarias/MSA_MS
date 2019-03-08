@@ -37,25 +37,8 @@ public interface InvoiceDAO {
      */
     public Company findCompany(Invoice invoice) throws IllegalArgumentException, DAOException;
     
-    /**
-     * Returns the BillingAddress from the database matching the given Invoice ID, otherwise null.
-     * Invoice ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param invoice The Invoice to get the BillingAddress from.
-     * @return The BillingAddress from the database matching the given Invoice ID, otherwise null.
-     * @throws IllegalArgumentException If Invoice ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public CompanyAddress findBillingAddress(Invoice invoice) throws IllegalArgumentException, DAOException;
+
     public Double findTotal(Invoice invoice);
-    /**
-     * Returns the ShippingAddress from the database matching the given Invoice ID, otherwise null.
-     * Invoice ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param invoice The Invoice to get the ShippingAddress from.
-     * @return The ShippingAddress from the database matching the given Invoice ID, otherwise null.
-     * @throws IllegalArgumentException If Invoice ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public CompanyAddress findShippingAddress(Invoice invoice) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all Invoice from the database ordered by Invoice ID. The list is never null and
@@ -85,14 +68,12 @@ public interface InvoiceDAO {
      * otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given Invoice.
      * @param company The Company to be assigned to this Invoice.
-     * @param billing_address The BillingAddress to be assigned to this Invoice.
-     * @param shipping_address The ShippingAddress to be assigned to this Invoice.
      * @param invoice The Invoice to be created.
      * @throws IllegalArgumentException If the Company ID is null.
      * @throws IllegalArgumentException If the Invoice ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Company company, CompanyAddress billing_address, CompanyAddress shipping_address, Invoice invoice) throws IllegalArgumentException, DAOException;
+    public void create(Company company, Invoice invoice) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given Invoice in the database. The Invoice ID must not be null, 

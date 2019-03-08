@@ -17,14 +17,14 @@ public class Invoice implements Serializable{
     private Integer id;
     private Date invoice_date;
     private String terms;
-    private String shipping_method;
-    private String fob;
+    private Date payment_date;
+    private String check_number;
+    private Double quantity_paid;
+    private String comments;
     private boolean pending;
     
     //INNER JOINS
     private String company_name;
-    private String billing_address;
-    private String shipping_address;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -51,21 +51,36 @@ public class Invoice implements Serializable{
     public void setTerms(String terms) {
         this.terms = terms;
     }
-
-    public String getShipping_method() {
-        return shipping_method;
+    public Date getPayment_date() {
+        return payment_date;
     }
 
-    public void setShipping_method(String shipping_method) {
-        this.shipping_method = shipping_method;
+    public void setPayment_date(Date payment_date) {
+        this.payment_date = payment_date;
     }
 
-    public String getFob() {
-        return fob;
+    public String getCheck_number() {
+        return check_number;
     }
 
-    public void setFob(String fob) {
-        this.fob = fob;
+    public void setCheck_number(String check_number) {
+        this.check_number = check_number;
+    }
+
+    public Double getQuantity_paid() {
+        return quantity_paid;
+    }
+
+    public void setQuantity_paid(Double quantity_paid) {
+        this.quantity_paid = quantity_paid;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
     
     public void setPending(boolean pending){
@@ -82,22 +97,6 @@ public class Invoice implements Serializable{
 
     public void setCompany_name(String company_name) {
         this.company_name = company_name;
-    }
-
-    public String getBilling_address() {
-        return billing_address;
-    }
-
-    public void setBilling_address(String billing_address) {
-        this.billing_address = billing_address;
-    }
-
-    public String getShipping_address() {
-        return shipping_address;
-    }
-
-    public void setShipping_address(String shipping_address) {
-        this.shipping_address = shipping_address;
     }
     
     public String pendingToString(){

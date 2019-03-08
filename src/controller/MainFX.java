@@ -155,8 +155,7 @@ public class MainFX implements Initializable {
                         break;
                     case "Facturación":
                         invoice_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
-                        invoicepayment_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/InvoicePaymentReportFX.fxml")));
-                        root_tabpane.getTabs().setAll(invoice_tab, invoicepayment_tab);
+                        root_tabpane.getTabs().setAll(invoice_tab);
                         break;
                     case "Cotización":
                         quote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));

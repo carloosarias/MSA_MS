@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateInvoiceFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateInvoiceFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -67,10 +67,6 @@
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
                         <Label text="Cliente:" GridPane.rowIndex="1">
@@ -93,62 +89,22 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </DatePicker>
-                        <Label text="Dir. de Facturación:" GridPane.rowIndex="2">
+                        <Label text="Terminos de pago:" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </Label>
-                        <ComboBox fx:id="billingaddress_combo" disable="true" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </ComboBox>
-                        <Label text="Dir. de Envío" GridPane.rowIndex="3">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <ComboBox fx:id="shippingaddress_combo" disable="true" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </ComboBox>
-                        <Label text="Terminos de pago:" GridPane.rowIndex="4">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <TextField fx:id="terms_field" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <TextField fx:id="terms_field" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <Label text="FOB:" GridPane.rowIndex="5">
+                        <Label text="Total:" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </Label>
-                        <TextField fx:id="fob_field" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </TextField>
-                        <Label text="Método de Envío:" GridPane.rowIndex="6">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <TextField fx:id="shippingmethod_field" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </TextField>
-                        <Label text="Total:" GridPane.rowIndex="7">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <Label fx:id="total_label" text="\$ 0 USD" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                        <Label fx:id="total_label" text="\$ 0 USD" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>

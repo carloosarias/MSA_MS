@@ -58,15 +58,7 @@ public class CreateInvoiceFX implements Initializable {
     @FXML
     private ComboBox<Company> client_combo;
     @FXML
-    private ComboBox<CompanyAddress> billingaddress_combo;
-    @FXML
-    private ComboBox<CompanyAddress> shippingaddress_combo;
-    @FXML
     private TextField terms_field;
-    @FXML
-    private TextField fob_field;
-    @FXML
-    private TextField shippingmethod_field;
     @FXML
     private TableView<InvoiceItem> invoiceitem_tableview;
     @FXML
@@ -110,12 +102,9 @@ public class CreateInvoiceFX implements Initializable {
         client_combo.getItems().setAll(msabase.getCompanyDAO().listClient(true));
         setInvoiceItemTable();
         
-        billingaddress_combo.disableProperty().bind(Bindings.size(billingaddress_combo.getItems()).isEqualTo(0));
-        shippingaddress_combo.disableProperty().bind(billingaddress_combo.disabledProperty());
         add_button.disableProperty().bind(client_combo.getSelectionModel().selectedItemProperty().isNull());
         delete_button.disableProperty().bind(invoiceitem_tableview.getSelectionModel().selectedItemProperty().isNull());
-        create_button.disableProperty().bind(invoiceitem_tableview.itemsProperty().isNull().or(client_combo.getSelectionModel().selectedItemProperty().isNull()).or(
-        billingaddress_combo.getSelectionModel().selectedItemProperty().isNull()).or(shippingaddress_combo.getSelectionModel().selectedItemProperty().isNull()));
+        create_button.disableProperty().bind(invoiceitem_tableview.itemsProperty().isNull().or(client_combo.getSelectionModel().selectedItemProperty().isNull()));
         
         client_combo.setOnAction((ActionEvent) -> {
             updateClient_combo();
@@ -135,7 +124,7 @@ public class CreateInvoiceFX implements Initializable {
             if(!testFields()){
                 return;
             }
-            saveInvoice();
+            createInvoice();
             Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
         });
@@ -177,25 +166,9 @@ public class CreateInvoiceFX implements Initializable {
             client_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
-        if(billingaddress_combo.getSelectionModel().isEmpty()){
-            billingaddress_combo.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        if(shippingaddress_combo.getSelectionModel().isEmpty()){
-            shippingaddress_combo.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
         if(terms_field.getText().replace(" ", "").equals("")){
             terms_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        if(fob_field.getText().replace(" ", "").equals("")){
-            fob_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        if(shippingmethod_field.getText().replace(" ", "").equals("")){
-            shippingmethod_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
+            terms_field.setText("N/A");
         }
         if(invoiceitem_tableview.getItems().isEmpty()){
             invoiceitem_tableview.setStyle("-fx-background-color: lightpink;");
@@ -208,26 +181,23 @@ public class CreateInvoiceFX implements Initializable {
     public void clearStyle(){
         invoicedate_picker.setStyle(null);
         client_combo.setStyle(null);
-        billingaddress_combo.setStyle(null);
-        shippingaddress_combo.setStyle(null);
         terms_field.setStyle(null);
-        fob_field.setStyle(null);
-        shippingmethod_field.setStyle(null);
         invoiceitem_tableview.setStyle(null);
     }
     
-    public void saveInvoice(){
+    public void createInvoice(){
         Invoice invoice = new Invoice();
         invoice.setInvoice_date(DAOUtil.toUtilDate(invoicedate_picker.getValue()));
         invoice.setTerms(terms_field.getText());
-        invoice.setShipping_method(shippingmethod_field.getText());
-        invoice.setFob(fob_field.getText());
+        invoice.setPayment_date(null);
+        invoice.setCheck_number("N/A");
+        invoice.setQuantity_paid(0.0);
         invoice.setPending(true);
-        msabase.getInvoiceDAO().create(client_combo.getSelectionModel().getSelectedItem(), billingaddress_combo.getSelectionModel().getSelectedItem(), shippingaddress_combo.getSelectionModel().getSelectedItem(), invoice);
-        saveInvoiceItems(invoice);
+        msabase.getInvoiceDAO().create(client_combo.getSelectionModel().getSelectedItem(), invoice);
+        createInvoiceItems(invoice);
     }
     
-    public void saveInvoiceItems(Invoice invoice){
+    public void createInvoiceItems(Invoice invoice){
         for(InvoiceItem invoice_item : invoiceitem_queue){
             invoice_item.getTemp_departlot().setPending(false);
             msabase.getDepartLotDAO().update(invoice_item.getTemp_departlot());
@@ -250,12 +220,8 @@ public class CreateInvoiceFX implements Initializable {
     
     public void updateClient_combo(){
         invoiceitem_queue.clear();
-        billingaddress_combo.getItems().clear();
-        shippingaddress_combo.getItems().clear();
         try{
             departlot_list = msabase.getDepartLotDAO().list(client_combo.getSelectionModel().getSelectedItem(), true, false);
-            billingaddress_combo.getItems().setAll(msabase.getCompanyAddressDAO().listActive(client_combo.getSelectionModel().getSelectedItem(), true));
-            shippingaddress_combo.setItems(billingaddress_combo.getItems());
         }catch(Exception e){
             departlot_list.clear();
         }

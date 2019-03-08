@@ -19,8 +19,6 @@ import dao.interfaces.IncomingLotDAO;
 import dao.interfaces.IncomingReportDAO;
 import dao.interfaces.InvoiceDAO;
 import dao.interfaces.InvoiceItemDAO;
-import dao.interfaces.InvoicePaymentItemDAO;
-import dao.interfaces.InvoicePaymentReportDAO;
 import dao.interfaces.MantainanceItemDAO;
 import dao.interfaces.MantainanceReportDAO;
 import dao.interfaces.MetalDAO;
@@ -308,22 +306,6 @@ public abstract class DAOFactory {
      */   
     public QuoteItemDAO getQuoteItemDAO(){
         return new QuoteItemDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the InvoicePaymentReport DAO associated with the current DAOFactory.
-     * @return The InvoicePaymentReport DAO associated with the current DAOFactory.
-     */   
-    public InvoicePaymentReportDAO getInvoicePaymentReportDAO(){
-        return new InvoicePaymentReportDAOJDBC(this);
-    }
-    
-    /**
-     * Returns the InvoicePaymentItem DAO associated with the current DAOFactory.
-     * @return The InvoicePaymentItem DAO associated with the current DAOFactory.
-     */   
-    public InvoicePaymentItemDAO getInvoicePaymentItemDAO(){
-        return new InvoicePaymentItemDAOJDBC(this);
     }
    
     /**

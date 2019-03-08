@@ -18,11 +18,13 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <TabPane tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab text="Facturas">
+            <Tab text="Historial de Facturas">
                <content>
                   <GridPane>
                      <columnConstraints>
@@ -30,51 +32,64 @@
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TableView fx:id="invoice_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                           <columns>
-                              <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                              <TableColumn fx:id="invoicedate_column" minWidth="-Infinity" prefWidth="150.0" text="Fecha de Facturación" />
-                              <TableColumn fx:id="client_column" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
-                              <TableColumn fx:id="terms_column" minWidth="-Infinity" prefWidth="120.0" text="Terminos de Pago" />
-                              <TableColumn fx:id="shipping_column" minWidth="-Infinity" prefWidth="120.0" text="Metodo de Envío" />
-                              <TableColumn fx:id="fob_column" minWidth="-Infinity" prefWidth="75.0" text="FOB" />
-                              <TableColumn fx:id="address_column" minWidth="-Infinity" prefWidth="205.0" text="Dirección" />
-                              <TableColumn fx:id="pending_column" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
-                           </columns>
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </TableView>
-                        <Separator prefWidth="200.0" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Separator>
-                        <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" />
-                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                              <Button fx:id="add_button" mnemonicParsing="false" text="Generar Factura">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Button>
-                              <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Button>
-                           </children>
-                        </GridPane>
+                        <TabPane tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab text="General">
+                                 <content>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <TableView fx:id="invoice_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                                             <columns>
+                                                <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                                <TableColumn fx:id="invoicedate_column" minWidth="-Infinity" prefWidth="150.0" text="Fecha de Facturación" />
+                                                <TableColumn fx:id="client_column" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
+                                                <TableColumn fx:id="terms_column" minWidth="-Infinity" prefWidth="150.0" text="Terminos de Pago" />
+                                                <TableColumn fx:id="pending_column" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
+                                             </columns>
+                                             <GridPane.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </GridPane.margin>
+                                          </TableView>
+                                       </children>
+                                    </GridPane>
+                                 </content>
+                              </Tab>
+                            <Tab text="Pagos">
+                                 <content>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <TableView fx:id="invoice_tableview1">
+                                            <columns>
+                                              <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                                <TableColumn fx:id="paymentdate_column" minWidth="-Infinity" prefWidth="150.0" text="Fecha de Pago" />
+                                                <TableColumn fx:id="checknumber_column" minWidth="-Infinity" prefWidth="120.0" text="Núm. de Cheque" />
+                                                <TableColumn fx:id="quantitypaid_column" minWidth="-Infinity" prefWidth="100.0" text="Monto" />
+                                                <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
+                                            </columns>
+                                             <GridPane.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </GridPane.margin>
+                                          </TableView>
+                                       </children>
+                                    </GridPane>
+                                 </content>
+                              </Tab>
+                          </tabs>
+                        </TabPane>
                      </children>
                   </GridPane>
                </content>
@@ -95,17 +110,15 @@
                            <columns>
                               <TableColumn fx:id="departreportid_column" minWidth="-Infinity" prefWidth="100.0" text="# de Remisión" />
                               <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
-                              <TableColumn fx:id="revision_column" minWidth="-Infinity" prefWidth="40.0" text="Rev" />
-                              <TableColumn fx:id="lotnumber_column" minWidth="-Infinity" prefWidth="150.0" text="Número de Lote" />
+                              <TableColumn fx:id="revision_column" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
                               <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                                  <columns>
                                     <TableColumn fx:id="qty_column" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
                                     <TableColumn fx:id="boxqty_column" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn fx:id="quote_column" minWidth="-Infinity" prefWidth="120.0" text="Precio Cotizado" />
-                              <TableColumn fx:id="total_column" minWidth="-Infinity" prefWidth="120.0" text="Total " />
-                              <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="200.0" text="Comentarios" />
+                              <TableColumn fx:id="quote_column" minWidth="-Infinity" prefWidth="100.0" text="Precio Cotizado" />
+                              <TableColumn fx:id="total_column" minWidth="-Infinity" prefWidth="100.0" text="Total " />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -118,8 +131,8 @@
                         </Separator>
                         <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
                            <columnConstraints>
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
                               <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints vgrow="SOMETIMES" />
@@ -143,5 +156,31 @@
             </Tab>
          </tabs>
       </TabPane>
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button fx:id="add_button" mnemonicParsing="false" text="Generar Factura">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+      </GridPane>
+      <Separator prefWidth="200.0" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
    </children>
 </GridPane>

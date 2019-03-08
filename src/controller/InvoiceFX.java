@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -69,13 +70,19 @@ public class InvoiceFX implements Initializable {
     @FXML
     private TableColumn<Invoice, String> terms_column;
     @FXML
-    private TableColumn<Invoice, String> shipping_column;
-    @FXML
-    private TableColumn<Invoice, String> fob_column;
-    @FXML
-    private TableColumn<Invoice, String> address_column;
-    @FXML
     private TableColumn<Invoice, String> pending_column;
+    @FXML
+    private TableView<Invoice> invoice_tableview1;
+    @FXML
+    private TableColumn<Invoice, Integer> id_column1;
+    @FXML
+    private TableColumn<Invoice, String> paymentdate_column;
+    @FXML
+    private TableColumn<Invoice, String> checknumber_column;
+    @FXML
+    private TableColumn<Invoice, String> quantitypaid_column;
+    @FXML
+    private TableColumn<Invoice, String> comments_column;
     @FXML
     private Button add_button;
     @FXML
@@ -90,10 +97,6 @@ public class InvoiceFX implements Initializable {
     private TableColumn<InvoiceItem, String> partnumber_column;
     @FXML
     private TableColumn<InvoiceItem, String> revision_column;
-    @FXML
-    private TableColumn<InvoiceItem, String> lotnumber_column;
-    @FXML
-    private TableColumn<InvoiceItem, String> comments_column;
     @FXML
     private TableColumn<InvoiceItem, Integer> qty_column;
     @FXML
@@ -169,13 +172,13 @@ public class InvoiceFX implements Initializable {
     }
     
     public void updateInvoiceTable(){
-        invoiceitem_tableview.getItems().clear();
-        invoice_tableview.setItems(FXCollections.observableArrayList(msabase.getInvoiceDAO().list()));
+        invoice_tableview.getItems().setAll(msabase.getInvoiceDAO().list());
+        invoice_tableview1.getItems().setAll(invoice_tableview.getItems());
     }
     
     public void updateInvoiceItemTable(){
         try{
-            invoiceitem_tableview.getItems().setAll(msabase.getInvoiceItemDAO().list(invoice_tableview.getSelectionModel().getSelectedItem()));
+            invoiceitem_tableview.getItems().setAll(mergeByDepartreport_Partnumber(msabase.getInvoiceItemDAO().list(invoice_tableview.getSelectionModel().getSelectedItem())));
         }catch(Exception e){
             invoiceitem_tableview.getItems().clear();
         }
@@ -185,19 +188,20 @@ public class InvoiceFX implements Initializable {
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getInvoice_date()))));
         client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
-        address_column.setCellValueFactory(new PropertyValueFactory<>("billing_address"));
         terms_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTerms()));
-        shipping_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getShipping_method()));
-        fob_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFob()));
         pending_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().pendingToString()));
+        
+        id_column1.setCellValueFactory(new PropertyValueFactory<>("id"));
+        paymentdate_column.setCellValueFactory(c -> new SimpleStringProperty(getPayment_dateValue(c.getValue().getPayment_date())));
+        checknumber_column.setCellValueFactory(new PropertyValueFactory<>("check_number"));
+        quantitypaid_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuantity_paid())+" USD"));
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
     
     public void setInvoiceItemTable(){
         departreportid_column.setCellValueFactory(new PropertyValueFactory<>("departreport_id"));
         partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         revision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
-        lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         qty_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         boxqty_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         quote_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuote_estimatedtotal())+" USD"));
@@ -224,7 +228,6 @@ public class InvoiceFX implements Initializable {
             fields.get("invoice_id").setValue(""+invoice.getId());
             fields.get("date").setValue(getFormattedDate(DAOUtil.toLocalDate(invoice.getInvoice_date())));
             fields.get("client").setValue(invoice.getCompany_name());
-            fields.get("billing_address").setValue(invoice.getBilling_address());
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getInvoiceDAO().findCompany(invoice), true);
             if(company_contact.isEmpty()){
                 fields.get("contact").setValue("n/a");
@@ -235,10 +238,7 @@ public class InvoiceFX implements Initializable {
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());
                 fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
             }
-            fields.get("shipping_address").setValue(invoice.getShipping_address());
             fields.get("payment_terms").setValue(invoice.getTerms());
-            fields.get("shipping_method").setValue(invoice.getShipping_method());
-            fields.get("fob").setValue(invoice.getFob());
             
             List<InvoiceItem> invoiceitem_list = mergeByDepartreport_Partnumber(invoiceitem_tableview.getItems());
             int i = 0;
@@ -302,5 +302,13 @@ public class InvoiceFX implements Initializable {
         }
         
         return mergedList;
+    }
+    
+    public String getPayment_dateValue(Date date){
+        try{
+            return getFormattedDate(DAOUtil.toLocalDate(date));
+        }catch(Exception e){
+            return "N/A";
+        }
     }
 }

@@ -28,57 +28,45 @@ import model.InvoiceItem;
 public class InvoiceDAOJDBC implements InvoiceDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
-            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.payment_date, INVOICE.check_number, INVOICE.quantity_paid, INVOICE.comments, INVOICE.pending, "
+            + "COMPANY.name "
             + "FROM INVOICE "
             + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
-            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
             + "WHERE INVOICE.id = ?";
     private static final String SQL_FIND_COMPANY_BY_ID = 
             "SELECT COMPANY_ID FROM INVOICE WHERE id = ?";
-    private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
-            "SELECT BILLING_ADDRESS_ID, SHIPPING_ADDRESS_ID FROM INVOICE WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
-            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.payment_date, INVOICE.check_number, INVOICE.quantity_paid, INVOICE.comments, INVOICE.pending, "
+            + "COMPANY.name "
             + "FROM INVOICE "
             + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
-            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
             + "ORDER BY INVOICE.id";
     private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
-            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.payment_date, INVOICE.check_number, INVOICE.quantity_paid, INVOICE.comments, INVOICE.pending, "
+            + "COMPANY.name "
             + "FROM INVOICE "
             + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
-            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
             + "WHERE INVOICE.COMPANY_ID = ? "
             + "ORDER BY INVOICE.id";
     private static final String SQL_LIST_OF_PENDING_ORDER_BY_ID = 
-            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
-            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.payment_date, INVOICE.check_number, INVOICE.quantity_paid, INVOICE.comments, INVOICE.pending, "
+            + "COMPANY.name "
             + "FROM INVOICE "
             + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
-            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
             + "WHERE INVOICE.pending = ? "
             + "ORDER BY INVOICE.id";
     private static final String SQL_LIST_OF_DATE_ORDER_BY_ID = 
-            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.shipping_method, INVOICE.fob, INVOICE.pending, "
-            + "COMPANY.name, BILLING_ADDRESS.address, SHIPPING_ADDRESS.address "
+            "SELECT INVOICE.id, INVOICE.invoice_date, INVOICE.terms, INVOICE.payment_date, INVOICE.check_number, INVOICE.quantity_paid, INVOICE.comments, INVOICE.pending, "
+            + "COMPANY.name "
             + "FROM INVOICE "
             + "INNER JOIN COMPANY ON INVOICE.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN COMPANY_ADDRESS BILLING_ADDRESS ON INVOICE.BILLING_ADDRESS_ID = BILLING_ADDRESS.id "
-            + "INNER JOIN COMPANY_ADDRESS SHIPPING_ADDRESS ON INVOICE.SHIPPING_ADDRESS_ID = SHIPPING_ADDRESS.id "
             + "WHERE INVOICE.invoice_date BETWEEN ? AND ? "
             + "ORDER BY INVOICE.id";
     private static final String SQL_INSERT =
-            "INSERT INTO INVOICE (COMPANY_ID, BILLING_ADDRESS_ID, SHIPPING_ADDRESS_ID, invoice_date, terms, shipping_method, fob, pending) "
+            "INSERT INTO INVOICE (COMPANY_ID, invoice_date, terms, payment_date, check_number, quantity_paid, comments, pending) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE INVOICE SET invoice_date = ?, terms = ?, shipping_method = ?, fob = ?, pending = ? WHERE id = ?";
+            "UPDATE INVOICE SET invoice_date = ?, terms = ?, payment_date = ?, check_number = ?, quantity_paid = ?, comments = ?, pending = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM INVOICE WHERE id = ?";
     
@@ -154,60 +142,6 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         }        
         
         return company;
-    }
-
-    @Override
-    public CompanyAddress findBillingAddress(Invoice invoice) throws IllegalArgumentException, DAOException {
-        if(invoice.getId() == null) {
-            throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
-        }
-        
-        CompanyAddress billing_address = null;
-        
-        Object[] values = {
-            invoice.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_ADDRESS_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                billing_address = daoFactory.getCompanyAddressDAO().find(resultSet.getInt("BILLING_ADDRESS_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return billing_address;
-    }
-
-    @Override
-    public CompanyAddress findShippingAddress(Invoice invoice) throws IllegalArgumentException, DAOException {
-        if(invoice.getId() == null) {
-            throw new IllegalArgumentException("Invoice is not created yet, the Invoice ID is null.");
-        }
-        
-        CompanyAddress shipping_address = null;
-        
-        Object[] values = {
-            invoice.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_ADDRESS_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                shipping_address = daoFactory.getCompanyAddressDAO().find(resultSet.getInt("SHIPPING_ADDRESS_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return shipping_address;
     }
 
     @Override
@@ -325,13 +259,9 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
     }
     
     @Override
-    public void create(Company company, CompanyAddress billing_address, CompanyAddress shipping_address, Invoice invoice) throws IllegalArgumentException, DAOException {
+    public void create(Company company, Invoice invoice) throws IllegalArgumentException, DAOException {
         if (company.getId() == null) {
             throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
-        }
-        
-        if(billing_address.getId() == null || shipping_address.getId() == null){
-            throw new IllegalArgumentException("CompanyAddress is not created yet, the CompanyAddress ID is null.");
         }
         
         if(invoice.getId() != null){
@@ -340,12 +270,11 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         
         Object[] values = {
             company.getId(),
-            billing_address.getId(),
-            shipping_address.getId(),
             DAOUtil.toSqlDate(invoice.getInvoice_date()),
             invoice.getTerms(),
-            invoice.getShipping_method(),
-            invoice.getFob(),
+            DAOUtil.toSqlDate(invoice.getPayment_date()),
+            invoice.getCheck_number(),
+            invoice.getQuantity_paid(),
             invoice.isPending()
         };
         
@@ -380,8 +309,9 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         Object[] values = {
             DAOUtil.toSqlDate(invoice.getInvoice_date()),
             invoice.getTerms(),
-            invoice.getShipping_method(),
-            invoice.getFob(),
+            DAOUtil.toSqlDate(invoice.getPayment_date()),
+            invoice.getCheck_number(),
+            invoice.getQuantity_paid(),
             invoice.isPending(),
             invoice.getId()
         };
@@ -433,14 +363,13 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         invoice.setId(resultSet.getInt("INVOICE.id"));
         invoice.setInvoice_date(resultSet.getDate("INVOICE.invoice_date"));
         invoice.setTerms(resultSet.getString("INVOICE.terms"));
-        invoice.setShipping_method(resultSet.getString("INVOICE.shipping_method"));
-        invoice.setFob(resultSet.getString("INVOICE.fob"));
+        invoice.setPayment_date(resultSet.getDate("INVOICE.payment_date"));
+        invoice.setCheck_number(resultSet.getString("INVOICE.check_number"));
+        invoice.setQuantity_paid(resultSet.getDouble("INVOICE.quantity_paid"));
         invoice.setPending(resultSet.getBoolean("INVOICE.pending"));
         
         //INNER JOINS
         invoice.setCompany_name(resultSet.getString("COMPANY.name"));
-        invoice.setBilling_address(resultSet.getString("BILLING_ADDRESS.address"));
-        invoice.setShipping_address(resultSet.getString("SHIPPING_ADDRESS.address"));
         return invoice;
     }
 }
