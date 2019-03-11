@@ -192,7 +192,7 @@ public class OrderPurchaseFX implements Initializable {
         description_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_description()));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("productsupplier_quantity"));
         unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_unitmeasure()));
-        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getPrice_unit()/c.getValue().getProductsupplier_quantity())*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem()));
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(getUnitmeasure_price(c.getValue())*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem()));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getPrice_unit()*exchangetype_multiplier)+" "+exchangetype_combo.getSelectionModel().getSelectedItem()));
         unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
         unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<PurchaseItem, String> t) -> {
@@ -224,6 +224,13 @@ public class OrderPurchaseFX implements Initializable {
             comments_area.clear();
             status_combo.getSelectionModel().clearSelection();
         }
+    }
+    
+    public Double getUnitmeasure_price(PurchaseItem purchase_item){
+        if(purchase_item.getPrice_unit() == 0 || purchase_item.getProductsupplier_quantity() == 0){
+            return 0.0;
+        }
+        return purchase_item.getPrice_unit()/purchase_item.getProductsupplier_quantity();
     }
     
     public Double getSubtotal(){

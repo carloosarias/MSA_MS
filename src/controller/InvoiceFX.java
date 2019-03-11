@@ -38,6 +38,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -86,6 +87,8 @@ public class InvoiceFX implements Initializable {
     @FXML
     private Button add_button;
     @FXML
+    private Button pay_button;
+    @FXML
     private Button pdf_button;
     @FXML
     private Tab details_tab;
@@ -108,7 +111,9 @@ public class InvoiceFX implements Initializable {
     @FXML
     private Label total_label;
     
-    private Stage add_stage = new Stage();
+    public static Invoice payment_invoice;
+    
+    private Stage stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
 
@@ -122,6 +127,7 @@ public class InvoiceFX implements Initializable {
         setInvoiceItemTable();
         updateInvoiceTable();
         
+        pay_button.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
         pdf_button.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
         details_tab.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
         
@@ -131,8 +137,21 @@ public class InvoiceFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
+            int current_size = invoice_tableview.getItems().size();
             showAdd_stage();
             updateInvoiceTable();
+            if(current_size < invoice_tableview.getItems().size()){
+                invoice_tableview.scrollTo(CreateInvoiceFX.invoice);
+                invoice_tableview.getSelectionModel().select(CreateInvoiceFX.invoice);
+            }
+        });
+        
+        pay_button.setOnAction((ActionEvent) -> {
+            payment_invoice = invoice_tableview.getSelectionModel().getSelectedItem();
+            showPay_stage();
+            updateInvoiceTable();
+            invoice_tableview1.scrollTo(payment_invoice);
+            invoice_tableview.getSelectionModel().select(payment_invoice);
         });
         
         pdf_button.setOnAction((ActionEvent) -> {
@@ -153,19 +172,37 @@ public class InvoiceFX implements Initializable {
         return total;
     }
     
+    public void showPay_stage(){
+        try {
+            stage = new Stage();
+            stage.initOwner((Stage) root_gridpane.getScene().getWindow());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/PaymentInvoiceFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            stage.setTitle("Información de Pago");
+            stage.setResizable(false);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void showAdd_stage(){
         try {
-            add_stage = new Stage();
-            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
-            add_stage.initModality(Modality.APPLICATION_MODAL);
+            stage = new Stage();
+            stage.initOwner((Stage) root_gridpane.getScene().getWindow());
+            stage.initModality(Modality.APPLICATION_MODAL);
             GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/CreateInvoiceFX.fxml"));
             Scene scene = new Scene(root);
             
-            add_stage.setTitle("Nueva Factura");
-            add_stage.setResizable(false);
-            add_stage.initStyle(StageStyle.UTILITY);
-            add_stage.setScene(scene);
-            add_stage.showAndWait();
+            stage.setTitle("Nueva Factura");
+            stage.setResizable(false);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setScene(scene);
+            stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -190,6 +227,12 @@ public class InvoiceFX implements Initializable {
         client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
         terms_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTerms()));
         pending_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().pendingToString()));
+        pending_column.setCellFactory(ComboBoxTableCell.forTableColumn("Pendiente", "Pagada"));
+        pending_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPending(t.getNewValue());
+            msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            invoice_tableview.refresh();
+        });
         
         id_column1.setCellValueFactory(new PropertyValueFactory<>("id"));
         paymentdate_column.setCellValueFactory(c -> new SimpleStringProperty(getPayment_dateValue(c.getValue().getPayment_date())));

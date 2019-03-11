@@ -290,7 +290,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         description_column.setCellValueFactory(new PropertyValueFactory("product_description"));
         quantity_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getProductsupplier_quantity())));
         unitmeasure_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProduct_unitmeasure()));
-        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getPrice_unit()/c.getValue().getProductsupplier_quantity()))+" USD"));
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(getUnitmeasure_price(c.getValue()))+" USD"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_unit()+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         price_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+c.getValue().getPrice_total()+" USD"));
@@ -304,5 +304,12 @@ public class CreateOrderPurchaseReportFX implements Initializable {
             purchaseitem_tableview.refresh();
             calculateTotals();
         });
+    }
+    
+    public Double getUnitmeasure_price(PurchaseItem purchase_item){
+        if(purchase_item.getPrice_unit() == 0 || purchase_item.getProductsupplier_quantity() == 0){
+            return 0.0;
+        }
+        return purchase_item.getPrice_unit()/purchase_item.getProductsupplier_quantity();
     }
 }

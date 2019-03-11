@@ -275,6 +275,7 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
             DAOUtil.toSqlDate(invoice.getPayment_date()),
             invoice.getCheck_number(),
             invoice.getQuantity_paid(),
+            invoice.getComments(),
             invoice.isPending()
         };
         
@@ -312,6 +313,7 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
             DAOUtil.toSqlDate(invoice.getPayment_date()),
             invoice.getCheck_number(),
             invoice.getQuantity_paid(),
+            invoice.getComments(),
             invoice.isPending(),
             invoice.getId()
         };
@@ -366,6 +368,7 @@ public class InvoiceDAOJDBC implements InvoiceDAO {
         invoice.setPayment_date(resultSet.getDate("INVOICE.payment_date"));
         invoice.setCheck_number(resultSet.getString("INVOICE.check_number"));
         invoice.setQuantity_paid(resultSet.getDouble("INVOICE.quantity_paid"));
+        invoice.setComments(resultSet.getString("INVOICE.comments"));
         invoice.setPending(resultSet.getBoolean("INVOICE.pending"));
         
         //INNER JOINS

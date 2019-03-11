@@ -166,7 +166,7 @@ public class ProductSupplierFX implements Initializable {
             msabase.getProductSupplierDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             productsupplier_tableview.refresh();
         });
-        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getUnit_price()/c.getValue().getQuantity()))+" USD"));
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(getUnitmeasure_price(c.getValue()))+" USD"));
         unitprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getUnit_price())+" USD"));
         unitprice_column.setCellFactory(TextFieldTableCell.forTableColumn());
         unitprice_column.setOnEditCommit((TableColumn.CellEditEvent<ProductSupplier, String> t) -> {
@@ -191,4 +191,12 @@ public class ProductSupplierFX implements Initializable {
             return revision.getQuantity();
         }
     }
+    
+    public Double getUnitmeasure_price(ProductSupplier product_supplier){
+        if(product_supplier.getUnit_price() == 0 || product_supplier.getQuantity() == 0){
+            return 0.0;
+        }
+        return product_supplier.getUnit_price()/product_supplier.getQuantity();
+    }
+    
 }

@@ -150,7 +150,7 @@ public class OrderPurchaseCartFX implements Initializable {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPrice_updated(getPrice_Unitvalue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             purchaseitem_tableview.refresh();
         });
-        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format((c.getValue().getPrice_unit()/c.getValue().getTemp_productsupplier().getQuantity()))+" USD"));
+        unitmeasureprice_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(getUnitmeasure_price(c.getValue()))+" USD"));
         unitsordered_column.setCellValueFactory(new PropertyValueFactory("units_ordered"));
         unitsordered_column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         unitsordered_column.setOnEditCommit((TableColumn.CellEditEvent<PurchaseItem, Integer> t) -> {
@@ -161,6 +161,13 @@ public class OrderPurchaseCartFX implements Initializable {
             purchaseitem_tableview.refresh();
         });
         
+    }
+    
+    public Double getUnitmeasure_price(PurchaseItem purchase_item){
+        if(purchase_item.getPrice_unit() == 0 || purchase_item.getTemp_productsupplier().getQuantity() == 0){
+            return 0.0;
+        }
+        return purchase_item.getPrice_unit()/purchase_item.getTemp_productsupplier().getQuantity();
     }
     
     public Double getPrice_Unitvalue(PurchaseItem item, String unit_price){

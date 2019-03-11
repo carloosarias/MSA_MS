@@ -100,10 +100,18 @@ public class Invoice implements Serializable{
     }
     
     public String pendingToString(){
-        if(pending){
-            return "Pendiente";
-        }else{
+        if(!pending){
             return "Pagada";
+        }else{
+            return "Pendiente";
+        }
+    }
+    
+    public void setPending(String string){
+        if(string.equals("Pagada")){
+            pending = true;
+        }else{
+            pending = false;
         }
     }
     

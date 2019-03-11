@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +36,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Company;
-import model.CompanyAddress;
 import model.DepartLot;
 import model.Invoice;
 import model.InvoiceItem;
@@ -83,6 +81,8 @@ public class CreateInvoiceFX implements Initializable {
     private Label total_label;
     @FXML
     private Button create_button;
+    
+    public static Invoice invoice;
     
     private static List<DepartLot> departlot_list = new ArrayList<DepartLot>();
     
@@ -161,6 +161,7 @@ public class CreateInvoiceFX implements Initializable {
         clearStyle();
         if(invoicedate_picker.getValue() == null){
             invoicedate_picker.setStyle("-fx-background-color: lightpink;");
+            b = false;
         }
         if(client_combo.getSelectionModel().isEmpty()){
             client_combo.setStyle("-fx-background-color: lightpink;");
@@ -186,7 +187,7 @@ public class CreateInvoiceFX implements Initializable {
     }
     
     public void createInvoice(){
-        Invoice invoice = new Invoice();
+        invoice = new Invoice();
         invoice.setInvoice_date(DAOUtil.toUtilDate(invoicedate_picker.getValue()));
         invoice.setTerms(terms_field.getText());
         invoice.setPayment_date(null);

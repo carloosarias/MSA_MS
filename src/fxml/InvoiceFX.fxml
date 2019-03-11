@@ -62,7 +62,7 @@
                                     </GridPane>
                                  </content>
                               </Tab>
-                            <Tab text="Pagos">
+                            <Tab text="Información de Pagos">
                                  <content>
                                     <GridPane>
                                       <columnConstraints>
@@ -158,8 +158,9 @@
       </TabPane>
       <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" />
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints vgrow="SOMETIMES" />
@@ -170,7 +171,12 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF" GridPane.columnIndex="1">
+            <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="pay_button" disable="true" mnemonicParsing="false" text="Pago de Factura" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
