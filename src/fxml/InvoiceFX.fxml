@@ -46,7 +46,7 @@
                                         <RowConstraints vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <TableView fx:id="invoice_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                                          <TableView fx:id="invoice_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                              <columns>
                                                 <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
                                                 <TableColumn fx:id="invoicedate_column" minWidth="-Infinity" prefWidth="150.0" text="Fecha de Facturación" />
@@ -72,7 +72,7 @@
                                         <RowConstraints vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <TableView fx:id="invoice_tableview1">
+                                          <TableView fx:id="invoice_tableview1" editable="true">
                                             <columns>
                                               <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
                                                 <TableColumn fx:id="paymentdate_column" minWidth="-Infinity" prefWidth="150.0" text="Fecha de Pago" />

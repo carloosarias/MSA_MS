@@ -27,12 +27,15 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.IncomingLot;
 import model.IncomingReport;
+import model.Tank;
 import static msa_ms.MainApp.getFormattedDate;
 
 /**
@@ -43,7 +46,7 @@ import static msa_ms.MainApp.getFormattedDate;
 public class IncomingReportFX implements Initializable {
     
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private Tab details_tab;
     @FXML
@@ -89,9 +92,9 @@ public class IncomingReportFX implements Initializable {
     @FXML
     private TableColumn<IncomingLot, String> lotnumber_column2;
     @FXML
-    private TableColumn<IncomingLot, Integer> quantity_column3;
+    private TableColumn<IncomingLot, String> quantity_column3;
     @FXML
-    private TableColumn<IncomingLot, Integer> boxquantity_column3;
+    private TableColumn<IncomingLot, String> boxquantity_column3;
     @FXML
     private TableColumn<IncomingLot, String> status_column;
     @FXML
@@ -133,7 +136,7 @@ public class IncomingReportFX implements Initializable {
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
             HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateIncomingReportFX.fxml"));
             Scene scene = new Scene(root);
@@ -220,12 +223,39 @@ public class IncomingReportFX implements Initializable {
         lotnumber_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column2.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        quantity_column3.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
+        quantity_column3.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantity_column3.setOnEditCommit((TableColumn.CellEditEvent<IncomingLot, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity(getQuantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getIncomingLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateIncomingLotTable();
+        });
         boxquantity_column1.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         boxquantity_column2.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
-        boxquantity_column3.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        boxquantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBox_quantity()));
+        boxquantity_column3.setCellFactory(TextFieldTableCell.forTableColumn());
+        boxquantity_column3.setOnEditCommit((TableColumn.CellEditEvent<IncomingLot, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity(getBox_quantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getIncomingLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateIncomingLotTable();
+        });
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
     
+    public Integer getQuantityValue(IncomingLot incoming_lot, String quantity){
+        try{
+            return Integer.parseInt(quantity);
+        }catch(Exception e){
+            return incoming_lot.getQuantity();
+        }
+    }
+    
+    public Integer getBox_quantityValue(IncomingLot incoming_lot, String box_quantity){
+        try{
+            return Integer.parseInt(box_quantity);
+        }catch(Exception e){
+            return incoming_lot.getBox_quantity();
+        }
+    }
 }
