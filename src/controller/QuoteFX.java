@@ -72,6 +72,8 @@ public class QuoteFX implements Initializable {
     @FXML
     private TableColumn<Quote, String> quotedate_column;
     @FXML
+    private TableColumn<Quote, String> company_column;
+    @FXML
     private TableColumn<Quote, String> contact_column;
     @FXML
     private TableColumn<Quote, String> eau_column;
@@ -126,11 +128,11 @@ public class QuoteFX implements Initializable {
         
         partrev_combo.disableProperty().bind(partrev_combo.itemsProperty().isNull());
         pdf_button.disableProperty().bind(quote_tableview.getSelectionModel().selectedItemProperty().isNull());
-        disable_button.disableProperty().bind(quote_tableview.getSelectionModel().selectedItemProperty().isNull());
+        disable_button.disableProperty().bind(quote_tableview.getSelectionModel().selectedItemProperty().isNull()); 
         
         part_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
             partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(newValue, true)));
-            updateQuoteTable();
+            partrev_combo.getSelectionModel().selectFirst();
         });
         
         partrev_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends PartRevision> observable, PartRevision oldValue, PartRevision newValue) -> {

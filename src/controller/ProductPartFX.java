@@ -191,7 +191,7 @@ public class ProductPartFX implements Initializable {
         rev_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
         rev_column.setCellFactory(TextFieldTableCell.forTableColumn());
         rev_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setRev(t.getNewValue().replace(" ", "").toUpperCase());
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setRev(getRevValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             partrevision_tableview.refresh();
         });
@@ -255,6 +255,16 @@ public class ProductPartFX implements Initializable {
         }
         return part_number.replace(" ", "").toUpperCase();
     }
+    
+    public String getRevValue(PartRevision part_revision, String rev){
+        for(PartRevision item : partrevision_tableview.getItems()){
+            if(item.getRev().replace(" ", "").equalsIgnoreCase(rev.replace(" ", "")) && item.getPart_number().equalsIgnoreCase(part_revision.getPart_number())){
+                return part_revision.getRev().replace(" ", "").toUpperCase();
+            }
+        }
+        return rev.replace(" ", "").toUpperCase();
+    }
+        
     public Double getAreaValue(PartRevision revision, String area){
         try{
             return Double.parseDouble(area);

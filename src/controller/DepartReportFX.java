@@ -39,7 +39,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -57,7 +58,7 @@ import static msa_ms.MainApp.getFormattedDate;
 public class DepartReportFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<DepartReport> departreport_tableview;
     @FXML
@@ -101,9 +102,9 @@ public class DepartReportFX implements Initializable {
     @FXML
     private TableColumn<DepartLot, String> lotnumber_column2;
     @FXML
-    private TableColumn<DepartLot, Integer> quantity_column3;
+    private TableColumn<DepartLot, String> quantity_column3;
     @FXML
-    private TableColumn<DepartLot, Integer> boxquantity_column3;
+    private TableColumn<DepartLot, String> boxquantity_column3;
     @FXML
     private TableColumn<DepartLot, String> process_column2;
     @FXML
@@ -168,9 +169,9 @@ public class DepartReportFX implements Initializable {
     public void showAdd_stage(){
         try {
             add_stage = new Stage();
-            add_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateDepartReportFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/CreateDepartReportFX.fxml"));
             Scene scene = new Scene(root);
             
             add_stage.setTitle("Nueva Remisión");
@@ -187,9 +188,9 @@ public class DepartReportFX implements Initializable {
         EditDepartReportFX.departreport_selection = departreport_tableview.getSelectionModel().getSelectedItem();
         try {
             edit_stage = new Stage();
-            edit_stage.initOwner((Stage) root_hbox.getScene().getWindow());
+            edit_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             edit_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/EditDepartReportFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/EditDepartReportFX.fxml"));
             Scene scene = new Scene(root);
             
             edit_stage.setTitle("Agregar Nuevo Lote a Remisión");
@@ -283,10 +284,22 @@ public class DepartReportFX implements Initializable {
         lotnumber_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column2.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        quantity_column3.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
+        quantity_column3.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantity_column3.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setQuantity(getQuantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateDepartLotTable();
+        });
         boxquantity_column1.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         boxquantity_column2.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
-        boxquantity_column3.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        boxquantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBox_quantity()));
+        boxquantity_column3.setCellFactory(TextFieldTableCell.forTableColumn());
+        boxquantity_column3.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setBox_quantity(getBox_quantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateDepartLotTable();
+        });
         process_column1.setCellValueFactory(new PropertyValueFactory<>("process"));
         process_column2.setCellValueFactory(new PropertyValueFactory<>("process"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
@@ -356,5 +369,21 @@ public class DepartReportFX implements Initializable {
             pdf.close();
             
             return output.toFile();
+    }
+    
+    public Integer getQuantityValue(DepartLot depart_lot, String quantity){
+        try{
+            return Integer.parseInt(quantity);
+        }catch(Exception e){
+            return depart_lot.getQuantity();
+        }
+    }
+    
+    public Integer getBox_quantityValue(DepartLot depart_lot, String box_quantity){
+        try{
+            return Integer.parseInt(box_quantity);
+        }catch(Exception e){
+            return depart_lot.getBox_quantity();
+        }
     }
 }

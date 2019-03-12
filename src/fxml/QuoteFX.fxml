@@ -39,6 +39,7 @@
                         <TableView fx:id="quote_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="quotedate_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
+                              <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
                               <TableColumn fx:id="contact_column" minWidth="-Infinity" prefWidth="150.0" text="Contacto" />
                               <TableColumn fx:id="eau_column" minWidth="-Infinity" prefWidth="120.0" text="E.A.U." />
                               <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
@@ -66,7 +67,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Label>
-                              <ComboBox fx:id="part_combo" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1">
+                              <ComboBox fx:id="part_combo" minWidth="-Infinity" prefWidth="200.0" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
