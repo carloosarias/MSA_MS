@@ -8,24 +8,14 @@ package controller;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Company;
@@ -34,7 +24,6 @@ import model.PartRevision;
 import model.ProductPart;
 import model.Quote;
 import model.QuoteItem;
-import model.Specification;
 import model.SpecificationItem;
 import static msa_ms.MainApp.setDatePicker;
 
@@ -60,6 +49,8 @@ public class CreateQuoteFX implements Initializable {
     @FXML
     private Button save_button;
     
+    public static ProductPart quote_part;
+    public static PartRevision quote_rev;
     public static Quote quote;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -68,6 +59,7 @@ public class CreateQuoteFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        quote = null;
         quotedate_picker.setValue(LocalDate.now());
         setDatePicker(quotedate_picker);
         
@@ -103,6 +95,8 @@ public class CreateQuoteFX implements Initializable {
         quote.setComments("N/A");
         quote.setEstimated_total(0);
         quote.setActive(true);
+        quote_part = part_combo.getSelectionModel().getSelectedItem();
+        quote_rev = partrev_combo.getSelectionModel().getSelectedItem();
         
         msabase.getQuoteDAO().create(partrev_combo.getSelectionModel().getSelectedItem(), contact_combo.getSelectionModel().getSelectedItem(), quote);
         

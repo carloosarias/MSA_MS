@@ -24,11 +24,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -158,12 +156,16 @@ public class QuoteFX implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
-            int current_size = quote_tableview.getItems().size();
             showAdd_stage();
-            updateQuoteTable();
-            if(current_size < quote_tableview.getItems().size()){
+            try{
+                CreateQuoteFX.quote.getId();
+                part_combo.getSelectionModel().select(CreateQuoteFX.quote_part);
+                partrev_combo.getSelectionModel().select(CreateQuoteFX.quote_rev);
                 quote_tableview.scrollTo(CreateQuoteFX.quote);
                 quote_tableview.getSelectionModel().select(CreateQuoteFX.quote);
+            }catch(Exception e){
+                System.out.println("quote is empty");
+                updateQuoteTable();
             }
         });
     }
