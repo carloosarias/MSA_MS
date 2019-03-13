@@ -68,8 +68,6 @@ public class MainFX implements Initializable {
     @FXML
     private Tab invoicequote_tab;
     @FXML
-    private Tab invoicepayment_tab;
-    @FXML
     private Tab tank_tab;
     @FXML
     private Tab process_tab;
@@ -171,7 +169,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(transactionhistory_tab);
                         break;
                     case "Scrap":
-                        scrap_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
+                        scrap_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
                         root_tabpane.getTabs().setAll(scrap_tab);
                         break;
                     case "Análisis":

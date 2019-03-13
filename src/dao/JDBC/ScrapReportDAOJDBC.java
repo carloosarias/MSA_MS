@@ -28,30 +28,48 @@ import model.ScrapReport;
 public class ScrapReportDAOJDBC implements ScrapReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, report_date, lot_number, quantity, comments FROM SCRAP_REPORT WHERE id = ?";
+            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.quantity, SCRAP_REPORT.comments, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev "
+            + "FROM SCRAP_REPORT "
+            + "INNER JOIN EMPLOYEE ON SCRAP_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "WHERE SCRAP_REPORT.id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM SCRAP_REPORT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM SCRAP_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, report_date, lot_number, quantity, comments FROM SCRAP_REPORT ORDER BY id";
-    private static final String SQL_LIST_PRODUCT_PART_ORDER_BY_ID = 
-            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.lot_number, SCRAP_REPORT.quantity, SCRAP_REPORT.comments "
+            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.quantity, SCRAP_REPORT.comments, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev "
             + "FROM SCRAP_REPORT "
+            + "INNER JOIN EMPLOYEE ON SCRAP_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "ORDER BY SCRAP_REPORT.report_date, SCRAP_REPORT.id";
+    private static final String SQL_LIST_PRODUCT_PART_ORDER_BY_ID = 
+            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.quantity, SCRAP_REPORT.comments, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev "
+            + "FROM SCRAP_REPORT "
+            + "INNER JOIN EMPLOYEE ON SCRAP_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "WHERE PART_REVISION.PRODUCT_PART_ID = ? "
             + "ORDER BY SCRAP_REPORT.report_date, SCRAP_REPORT.id";
     private static final String SQL_INSERT = 
-            "INSERT INTO SCRAP_REPORT (EMPLOYEE_ID, PART_REVISION_ID, report_date, lot_number, quantity, comments) "
-            + "VALUES(?, ?, ?, ?, ?, ?)";
+            "INSERT INTO SCRAP_REPORT (EMPLOYEE_ID, PART_REVISION_ID, report_date, quantity, comments) "
+            + "VALUES(?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SCRAP_REPORT SET report_date = ?, lot_number = ?, quantity = ?, comments = ? WHERE id = ?";
+            "UPDATE SCRAP_REPORT SET report_date = ?, quantity = ?, comments = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM SCRAP_REPORT WHERE id = ?";
     private static final String LIST_SCRAP_REPORT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.lot_number, SCRAP_REPORT.quantity, SCRAP_REPORT.comments "
+            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.quantity, SCRAP_REPORT.comments, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev "
             + "FROM SCRAP_REPORT "
+            + "INNER JOIN EMPLOYEE ON SCRAP_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND SCRAP_REPORT.report_date BETWEEN ? AND ? "
             + "ORDER BY SCRAP_REPORT.report_date, SCRAP_REPORT.id";
     
@@ -219,7 +237,6 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
             employee.getId(),
             part_revision.getId(),
             DAOUtil.toSqlDate(scrap_report.getReport_date()),
-            scrap_report.getLot_number(),
             scrap_report.getQuantity(),
             scrap_report.getComments(),
         };
@@ -254,7 +271,6 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
         
         Object[] values = {
             DAOUtil.toSqlDate(scrap_report.getReport_date()),
-            scrap_report.getLot_number(),
             scrap_report.getQuantity(),
             scrap_report.getComments(),
             scrap_report.getId()
@@ -328,11 +344,15 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
      */
     public static ScrapReport map(ResultSet resultSet) throws SQLException{
         ScrapReport scrap_report = new ScrapReport();
-        scrap_report.setId(resultSet.getInt("id"));
-        scrap_report.setReport_date(resultSet.getDate("report_date"));
-        scrap_report.setLot_number(resultSet.getString("lot_number"));
-        scrap_report.setQuantity(resultSet.getInt("quantity"));
-        scrap_report.setComments(resultSet.getString("comments"));
+        scrap_report.setId(resultSet.getInt("SCRAP_REPORT.id"));
+        scrap_report.setReport_date(resultSet.getDate("SCRAP_REPORT.report_date"));
+        scrap_report.setQuantity(resultSet.getInt("SCRAP_REPORT.quantity"));
+        scrap_report.setComments(resultSet.getString("SCRAP_REPORT.comments"));
+        
+        //INNER JOINS
+        scrap_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name") + resultSet.getString("EMPLOYEE.last_name"));
+        scrap_report.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
+        scrap_report.setPart_revision(resultSet.getString("PART_REVISION.rev"));
         return scrap_report;
     }
     

@@ -16,9 +16,13 @@ public class ScrapReport implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date report_date;
-    private String lot_number;
     private Integer quantity;
     private String comments;
+    
+    //INNER JOINS
+    private String employee_name;
+    private String part_number;
+    private String part_revision;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -38,14 +42,6 @@ public class ScrapReport implements Serializable{
         this.report_date = report_date;
     }
 
-    public String getLot_number() {
-        return lot_number;
-    }
-
-    public void setLot_number(String lot_number) {
-        this.lot_number = lot_number;
-    }
-
     public Integer getQuantity() {
         return quantity;
     }
@@ -60,6 +56,31 @@ public class ScrapReport implements Serializable{
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+    
+    //INNER JOINS
+    public String getEmployee_name() {
+        return employee_name;
+    }
+
+    public void setEmployee_name(String employee_name) {
+        this.employee_name = employee_name;
+    }
+
+    public String getPart_number() {
+        return part_number;
+    }
+
+    public void setPart_number(String part_number) {
+        this.part_number = part_number;
+    }
+
+    public String getPart_revision() {
+        return part_revision;
+    }
+
+    public void setPart_revision(String part_revision) {
+        this.part_revision = part_revision;
     }
     
     // Object overrides ---------------------------------------------------------------------------

@@ -41,12 +41,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.CompanyContact;
 import model.DepartLot;
 import model.DepartReport;
+import model.ProductPart;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
 
@@ -171,7 +173,7 @@ public class DepartReportFX implements Initializable {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/CreateDepartReportFX.fxml"));
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateDepartReportFX.fxml"));
             Scene scene = new Scene(root);
             
             add_stage.setTitle("Nueva Remisión");
@@ -190,7 +192,7 @@ public class DepartReportFX implements Initializable {
             edit_stage = new Stage();
             edit_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             edit_stage.initModality(Modality.APPLICATION_MODAL);
-            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/EditDepartReportFX.fxml"));
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/EditDepartReportFX.fxml"));
             Scene scene = new Scene(root);
             
             edit_stage.setTitle("Agregar Nuevo Lote a Remisión");
@@ -282,6 +284,13 @@ public class DepartReportFX implements Initializable {
         partrevision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
         lotnumber_column1.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         lotnumber_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        lotnumber_column2.setCellFactory(TextFieldTableCell.forTableColumn());
+        lotnumber_column2.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setLot_number(t.getNewValue().replace(" ", "").toUpperCase());
+            msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateDepartLotTable();
+        });
+        
         quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column2.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
@@ -291,6 +300,7 @@ public class DepartReportFX implements Initializable {
             msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             updateDepartLotTable();
         });
+        
         boxquantity_column1.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         boxquantity_column2.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         boxquantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBox_quantity()));
@@ -300,9 +310,16 @@ public class DepartReportFX implements Initializable {
             msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             updateDepartLotTable();
         });
+        
         process_column1.setCellValueFactory(new PropertyValueFactory<>("process"));
         process_column2.setCellValueFactory(new PropertyValueFactory<>("process"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        comments_column.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setComments(t.getNewValue());
+            msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateDepartLotTable();
+        });
     }
     
     private File buildPDF(DepartReport depart_report, List<DepartLot> departlot_list) throws Exception{

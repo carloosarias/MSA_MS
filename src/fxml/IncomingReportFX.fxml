@@ -159,14 +159,14 @@
                                              <columns>
                                                 <TableColumn fx:id="partnumber_column3" editable="false" minWidth="-Infinity" prefWidth="150.0" text="# De Parte" />
                                                 <TableColumn fx:id="partrevision_column" editable="false" minWidth="-Infinity" prefWidth="150.0" text="# De Revisión" />
-                                                <TableColumn fx:id="lotnumber_column2" editable="false" minWidth="-Infinity" prefWidth="150.0" text="# De Lote" />
+                                                <TableColumn fx:id="lotnumber_column2" minWidth="-Infinity" prefWidth="150.0" text="# De Lote" />
                                                 <TableColumn editable="false" minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                                                    <columns>
                                                       <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="100.0" text="# De Piezas" />
                                                       <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="100.0" text="# De Cajas" />
                                                    </columns>
                                                 </TableColumn>
-                                                <TableColumn fx:id="comments_column" editable="false" minWidth="-Infinity" prefWidth="200.0" text="Comentarios" />
+                                                <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="200.0" text="Comentarios" />
                                                 <TableColumn fx:id="status_column" editable="false" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
                                              </columns>
                                              <GridPane.margin>

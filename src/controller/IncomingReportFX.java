@@ -33,6 +33,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.DepartLot;
 import model.IncomingLot;
 import model.IncomingReport;
 import model.Tank;
@@ -221,6 +222,12 @@ public class IncomingReportFX implements Initializable {
         partrevision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
         lotnumber_column1.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         lotnumber_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        lotnumber_column2.setCellFactory(TextFieldTableCell.forTableColumn());
+        lotnumber_column2.setOnEditCommit((TableColumn.CellEditEvent<IncomingLot, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setLot_number(t.getNewValue().replace(" ", "").toUpperCase());
+            msabase.getIncomingLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateIncomingLotTable();
+        });
         quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column2.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
@@ -241,6 +248,12 @@ public class IncomingReportFX implements Initializable {
         });
         status_column.setCellValueFactory(new PropertyValueFactory<>("status"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        comments_column.setOnEditCommit((TableColumn.CellEditEvent<IncomingLot, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setComments(t.getNewValue());
+            msabase.getIncomingLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateIncomingLotTable();
+        });
     }
     
     public Integer getQuantityValue(IncomingLot incoming_lot, String quantity){

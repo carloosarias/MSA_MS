@@ -16,13 +16,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import model.Employee;
 import model.PartRevision;
-import model.ProcessReport;
 import model.ProductPart;
 import model.ScrapReport;
 import msa_ms.MainApp;
@@ -36,21 +32,13 @@ import static msa_ms.MainApp.setDatePicker;
 public class CreateScrapReportFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
-    @FXML
-    private ComboBox<Employee> employee_combo;
+    private GridPane root_gridpane;
     @FXML
     private DatePicker reportdate_picker;
     @FXML
     private ComboBox<ProductPart> partnumber_combo;
     @FXML
     private ComboBox<PartRevision> revision_combo;
-    @FXML
-    private TextField lotnumber_field;
-    @FXML
-    private TextField quantity_field;
-    @FXML
-    private TextArea comments_area;
     @FXML
     private Button save_button;
 
@@ -67,9 +55,7 @@ public class CreateScrapReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
-        employee_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
         setDatePicker(reportdate_picker);
         
@@ -95,10 +81,6 @@ public class CreateScrapReportFX implements Initializable {
             if(revisioncombo_selection == null){
                 revision_combo.getEditor().selectAll();
             }
-            else{
-                lotnumber_field.requestFocus();
-                ActionEvent.consume();
-            }            
         });
         
         save_button.setOnAction((ActionEvent) -> {
@@ -106,30 +88,23 @@ public class CreateScrapReportFX implements Initializable {
                 return;
             }
             saveScrapReport();
-            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
         });
     }
     public void saveScrapReport(){
         ScrapReport scrap_report = new ScrapReport();
         scrap_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
-        scrap_report.setLot_number(lotnumber_field.getText());
-        scrap_report.setQuantity(Integer.parseInt(quantity_field.getText()));
-        scrap_report.setComments(comments_area.getText());
+        scrap_report.setQuantity(0);
+        scrap_report.setComments("N/A");
         
-        msabase.getScrapReportDAO().create(
-            employee_combo.getSelectionModel().getSelectedItem(),
-            revisioncombo_selection,
-            scrap_report);
+        msabase.getScrapReportDAO().create(MainApp.current_employee, revisioncombo_selection, scrap_report);
     }
     
     public void clearStyle(){
-        reportdate_picker.setStyle(null);
-        lotnumber_field.setStyle(null);        
-        quantity_field.setStyle(null);        
+        reportdate_picker.setStyle(null);      
         partnumber_combo.setStyle(null);        
         revision_combo.setStyle(null);
-        comments_area.setStyle(null);
     }
     
     public boolean testFields(){
@@ -137,18 +112,6 @@ public class CreateScrapReportFX implements Initializable {
         clearStyle();
         if(reportdate_picker.getValue() == null){
             reportdate_picker.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        
-        if(lotnumber_field.getText().replace(" ", "").equals("")){
-            lotnumber_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        
-        try{
-            Double.parseDouble(quantity_field.getText());
-        }catch(Exception e){
-            quantity_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         
@@ -170,10 +133,6 @@ public class CreateScrapReportFX implements Initializable {
             revision_combo.getSelectionModel().select(null);
             revision_combo.getEditor().setText(null);
             b = false;
-        }
-        
-        if(comments_area.getText().replace(" ", "").equals("")){
-            comments_area.setText("n/a");
         }
         
         return b;
