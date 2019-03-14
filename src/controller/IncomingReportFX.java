@@ -153,13 +153,13 @@ public class IncomingReportFX implements Initializable {
     }
     
     public void updateIncomingReportTable(){
-        incomingreport_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingReportDAO().list()));
+        incomingreport_tableview.getItems().setAll(msabase.getIncomingReportDAO().list());
     }
     
     public void updateIncomingLotTable(){
-        incominglot_tableview3.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().list(incomingreport_tableview.getSelectionModel().getSelectedItem())));
-        incominglot_tableview2.setItems(FXCollections.observableArrayList(mergeByLot_number(incominglot_tableview3.getItems())));
-        incominglot_tableview1.setItems(FXCollections.observableArrayList(mergeByPart_number(incominglot_tableview3.getItems())));
+        incominglot_tableview3.getItems().setAll(msabase.getIncomingLotDAO().list(incomingreport_tableview.getSelectionModel().getSelectedItem()));
+        incominglot_tableview2.getItems().setAll(mergeByLot_number(incominglot_tableview3.getItems()));
+        incominglot_tableview1.getItems().setAll(mergeByPart_number(incominglot_tableview3.getItems()));
     }
     
     public List<IncomingLot> mergeByLot_number(List<IncomingLot> unfilteredList){
@@ -211,7 +211,19 @@ public class IncomingReportFX implements Initializable {
         reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         client_column.setCellValueFactory(new PropertyValueFactory<>("client_name"));
         ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
+        ponumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        ponumber_column.setOnEditCommit((TableColumn.CellEditEvent<IncomingReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPo_number(t.getNewValue().replace(" ", "").toUpperCase());
+            msabase.getIncomingReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            incomingreport_tableview.refresh();
+        });
         packinglist_column.setCellValueFactory(new PropertyValueFactory<>("packing_list"));
+        packinglist_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        packinglist_column.setOnEditCommit((TableColumn.CellEditEvent<IncomingReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPacking_list(t.getNewValue().replace(" ", "").toUpperCase());
+            msabase.getIncomingReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            incomingreport_tableview.refresh();
+        });
         discrepancy_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDiscrepancyString()));
     }
     
@@ -228,6 +240,7 @@ public class IncomingReportFX implements Initializable {
             msabase.getIncomingLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             updateIncomingLotTable();
         });
+        
         quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column2.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
@@ -242,7 +255,7 @@ public class IncomingReportFX implements Initializable {
         boxquantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBox_quantity()));
         boxquantity_column3.setCellFactory(TextFieldTableCell.forTableColumn());
         boxquantity_column3.setOnEditCommit((TableColumn.CellEditEvent<IncomingLot, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity(getBox_quantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setBox_quantity(getBox_quantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getIncomingLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             updateIncomingLotTable();
         });

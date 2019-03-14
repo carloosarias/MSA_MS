@@ -106,7 +106,9 @@ public class ProcessReportFX implements Initializable {
     private Button add_button;
     
     private Stage add_stage = new Stage();
+    
     private List<Module> modules;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**

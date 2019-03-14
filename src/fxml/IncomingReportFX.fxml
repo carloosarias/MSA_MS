@@ -33,7 +33,7 @@
                         <RowConstraints vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TableView fx:id="incomingreport_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="incomingreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="reportid_column" minWidth="-Infinity" prefWidth="50.0" text="#" />
                               <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />

@@ -3,173 +3,162 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProcessReportFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProcessReportFXNEW">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <VBox alignment="CENTER">
+      <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <HBox fx:id="filter_hbox" disable="true">
-               <children>
-                  <VBox>
+            <Label text="Desde:">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="startdate_picker" prefWidth="150.0" promptText="DD/MMM/AAAA" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <Label text="Hasta:" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="enddate_picker" prefWidth="150.0" promptText="DD/MMM/AAAA" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <CheckBox fx:id="datefilter_check" mnemonicParsing="false" selected="true" text="Filtrar por Fecha" GridPane.columnIndex="4">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </CheckBox>
+         </children>
+      </GridPane>
+      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+         <tabs>
+            <Tab text="General">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
-                        <CheckBox fx:id="employeefilter_checkbox" mnemonicParsing="false" selected="true" text="Filtrar por Empleado">
-                           <VBox.margin>
-                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                           </VBox.margin>
-                        </CheckBox>
-                        <Label text="Empleado:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="employee_combo" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <CheckBox fx:id="datefilter_checkbox" mnemonicParsing="false" selected="true" text="Filtrar por Fecha">
-                           <VBox.margin>
-                              <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-                           </VBox.margin>
-                        </CheckBox>
-                        <Label text="Desde:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker fx:id="startdate_picker" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-                  <VBox alignment="BOTTOM_LEFT">
-                     <children>
-                        <Button fx:id="filter_button" mnemonicParsing="false" text="Filtrar Lista">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Button>
-                        <Label text="Hasta:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker fx:id="enddate_picker" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <VBox>
-                     <children>
-                        <TableView fx:id="processreport_tableview" editable="true">
+                        <TableView fx:id="processreport_tableview1" editable="true">
                            <columns>
-                              <TableColumn fx:id="id_column" prefWidth="96.0" text="No. de Reporte" />
-                              <TableColumn fx:id="employee_column" prefWidth="79.0" text="Empleado" />
-                              <TableColumn fx:id="reportdate_column" prefWidth="121.0" text="Fecha de Reporte" />
-                              <TableColumn fx:id="partnumber_column" prefWidth="92.0" text="No. de Parte" />
-                              <TableColumn fx:id="revision_column" prefWidth="84.0" text="Revisión" />
-                              <TableColumn fx:id="lotnumber_column" prefWidth="78.0" text="No. de Lote" />
-                              <TableColumn fx:id="tankid_column" prefWidth="103.0" text="No. Tanque" />
-                              <TableColumn fx:id="equipmentid_column" prefWidth="103.0" text="No. Contenendor" />
-                              <TableColumn fx:id="process_column" prefWidth="85.0" text="Proceso" />
-                              <TableColumn fx:id="quantity_column" prefWidth="77.0" text="Cantidad" />
-                              <TableColumn fx:id="quality_column" prefWidth="100.0" text="Bueno ✓ Malo □" />
+                              <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                              <TableColumn fx:id="date_column1" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Hora">
+                                 <columns>
+                                    <TableColumn fx:id="start_column" minWidth="-Infinity" prefWidth="75.0" text="Entrada" />
+                                    <TableColumn fx:id="end_column" minWidth="-Infinity" prefWidth="75.0" text="Salida" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
+                              <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="# de Parte" />
+                              <TableColumn fx:id="rev_column" prefWidth="50.0" text="Rev" />
+                              <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="100.0" text="Cantidad" />
+                              <TableColumn fx:id="quality_column" minWidth="-Infinity" prefWidth="120.0" text="Calidad" />
                            </columns>
-                           <VBox.margin>
+                           <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
+                           </GridPane.margin>
                         </TableView>
                      </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <VBox>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Detalles">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
-                        <Label text="Amperaje:">
-                           <VBox.margin>
+                        <TableView fx:id="processreport_tableview2">
+                           <columns>
+                              <TableColumn fx:id="id_column2" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                              <TableColumn fx:id="date_column2" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                              <TableColumn fx:id="tank_column" minWidth="-Infinity" prefWidth="120.0" text="Tanque" />
+                              <TableColumn fx:id="equipment_column" minWidth="-Infinity" prefWidth="120.0" text="Equipo" />
+                              <TableColumn fx:id="process_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                              <TableColumn fx:id="voltage_column" minWidth="-Infinity" prefWidth="75.0" text="Voltage" />
+                              <TableColumn fx:id="amperage_column" minWidth="-Infinity" prefWidth="75.0" text="Amperage" />
+                              <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="200.0" text="Comentarios" />
+                           </columns>
+                           <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="amperage_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
-                        <Label text="Voltaje:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="voltage_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
+                           </GridPane.margin>
+                        </TableView>
                      </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Hora de Ingreso:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="starttime_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
-                        <Label text="Hora de Salida:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextField fx:id="endtime_field">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextField>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Comentarios:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></Label>
-                        <TextArea fx:id="comments_field" prefHeight="200.0" prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin></TextArea>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Proceso">
-                     <HBox.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
+                  </GridPane>
+               </content>
+            </Tab>
+         </tabs>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </TabPane>
+      <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Separator>
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Proceso">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="disable_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
          </children>
-      </VBox>
+      </GridPane>
    </children>
-</HBox>
+</GridPane>
