@@ -142,10 +142,10 @@
       <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte de Proceso">
@@ -153,11 +153,21 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="disable_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
-               <GridPane.margin>
-                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-               </GridPane.margin>
-            </Button>
+            <GridPane fx:id="delete_pane" disable="true" GridPane.columnIndex="1">
+              <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="disable_button" disable="true" mnemonicParsing="false" text="Eliminar Selección">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Button>
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints />
+               </columnConstraints>
+            </GridPane>
          </children>
       </GridPane>
    </children>

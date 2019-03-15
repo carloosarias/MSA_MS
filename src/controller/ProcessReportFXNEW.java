@@ -90,6 +90,8 @@ public class ProcessReportFXNEW implements Initializable {
     @FXML
     private Button add_button;
     @FXML
+    private GridPane delete_pane;
+    @FXML
     private Button disable_button;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -108,6 +110,20 @@ public class ProcessReportFXNEW implements Initializable {
         setProcessReportTable();
         updateProcessReportTable();
         
+        delete_pane.setDisable(MainApp.current_employee.isAdmin());
+        disable_button.disableProperty().bind(processreport_tableview1.getSelectionModel().selectedItemProperty().isNull());
+        
+        startdate_picker.setOnAction((ActionEvent) -> {
+            updateProcessReportTable();
+        });
+        
+        enddate_picker.setOnAction((ActionEvent) -> {
+            updateProcessReportTable();
+        });
+        
+        datefilter_check.setOnAction((ActionEvent) -> {
+           updateProcessReportTable(); 
+        });
     }
     
     public void setProcessReportTable(){
@@ -179,8 +195,12 @@ public class ProcessReportFXNEW implements Initializable {
     }
     
     public void updateProcessReportTable(){
-        processreport_tableview1.getItems().setAll(msabase.getProcessReportDAO().list(MainApp.current_employee, DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), datefilter_check.isSelected()));
-        processreport_tableview2.getItems().setAll(processreport_tableview1.getItems());
+        try{
+            processreport_tableview1.getItems().setAll(msabase.getProcessReportDAO().list(MainApp.current_employee, DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), datefilter_check.isSelected()));
+        }catch(Exception e){
+            processreport_tableview1.getItems().clear();
+        }
+            processreport_tableview2.getItems().setAll(processreport_tableview1.getItems());
     }
     
     public String getStart_timeValue(ProcessReport report, String start_time){
