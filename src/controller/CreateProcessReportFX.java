@@ -34,6 +34,7 @@ import model.ProductPart;
 import model.Tank;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.setDatePicker;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  * FXML Controller class
@@ -195,8 +196,8 @@ public class CreateProcessReportFX implements Initializable {
         process_report.setVoltage(Double.parseDouble(voltage_field.getText()));
         Time start_time = new Time(starthour_spinner.getValue(), startminute_spinner.getValue(), 0);
         Time end_time = new Time(endhour_spinner.getValue(), endminute_spinner.getValue(), 0);
-        process_report.setStart_time(start_time);
-        process_report.setEnd_time(end_time);
+        process_report.setStart_time(start_time.toLocalTime().format(timeFormat));
+        process_report.setEnd_time(end_time.toLocalTime().format(timeFormat));
         process_report.setComments(comments_area.getText());
         process_report.setQuality_passed(true);
         

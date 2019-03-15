@@ -161,7 +161,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(quote_tab, invoicequote_tab);
                         break;
                     case "Producción":
-                        process_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/ProcessReportFX.fxml")));
+                        process_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProcessReportFX.fxml")));
                         root_tabpane.getTabs().setAll(process_tab);
                         break;
                     case "Historial de Transacciones":

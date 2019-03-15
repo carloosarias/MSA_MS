@@ -22,6 +22,7 @@ import model.PartRevision;
 import model.ProcessReport;
 import model.ProductPart;
 import model.Tank;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  *
@@ -30,7 +31,15 @@ import model.Tank;
 public class ProcessReportDAOJDBC implements ProcessReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE id = ?";
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN TANK ON PROCESS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN EQUIPMENT ON PROCESS_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "WHERE PROCESS_REPORT.id = ?";
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
@@ -40,17 +49,68 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     private static final String SQL_FIND_EQUIPMENT_BY_ID = 
             "SELECT EQUIPMENT_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT ORDER BY id";
-    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? ORDER BY id";
-    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE report_date BETWEEN ? AND ?  ORDER BY id";
-    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT id, process, report_date, lot_number, quantity, amperage, voltage, start_time, end_time, comments, quality_passed FROM PROCESS_REPORT WHERE EMPLOYEE_ID = ? AND report_date BETWEEN ? AND ? ORDER BY id";
-    private static final String SQL_LIST_PRODUCT_PART_DATE_RANGE = 
-            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed "
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
             + "FROM PROCESS_REPORT "
+            + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN TANK ON PROCESS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN EQUIPMENT ON PROCESS_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "ORDER BY PROCESS_REPORT.id";
+    private static final String SQL_LIST_EMPLOYEE_DATERANGE_ORDER_BY_ID = 
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN TANK ON PROCESS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN EQUIPMENT ON PROCESS_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "WHERE (PROCESS_REPORT.EMPLOYEE_ID = ? OR ? = 1) AND ((PROCESS_REPORT.report_date BETWEEN ? AND ?) OR ? = 0) "
+            + "ORDER BY PROCESS_REPORT.id";
+    private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN TANK ON PROCESS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN EQUIPMENT ON PROCESS_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "WHERE PROCESS_REPORT.EMPLOYEE_ID = ? "
+            + "ORDER BY PROCESS_REPORT.id";
+    private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN TANK ON PROCESS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN EQUIPMENT ON PROCESS_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "WHERE PROCESS_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY PROCESS_REPORT.id";
+    private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN TANK ON PROCESS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN EQUIPMENT ON PROCESS_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
+            + "WHERE PROCESS_REPORT.EMPLOYEE_ID = ? AND PROCESS_REPORT.report_date BETWEEN ? AND ? "
+            + "ORDER BY PROCESS_REPORT.id";
+    private static final String SQL_LIST_PRODUCT_PART_DATE_RANGE = 
+            "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "FROM PROCESS_REPORT "
+            + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN TANK ON PROCESS_REPORT.TANK_ID = TANK.id "
+            + "INNER JOIN EQUIPMENT ON PROCESS_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
             + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PROCESS_REPORT.report_date BETWEEN ? AND ? "
             + "ORDER BY PROCESS_REPORT.report_date, PROCESS_REPORT.id";    
     private static final String SQL_INSERT = 
@@ -234,6 +294,37 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         return process_report;
     }
 
+    @Override
+    public List<ProcessReport> list(Employee employee, Date start, Date end, boolean date_filter) throws DAOException, IllegalArgumentException {
+        if(employee.getId() == null) {
+            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
+        }
+        
+        List<ProcessReport> process_report = new ArrayList<>();
+        
+        Object[] values = {
+            employee.getId(),
+            employee.isAdmin(),
+            start,
+            end,
+            date_filter
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_EMPLOYEE_DATERANGE_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                process_report.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return process_report;
+    }
+    
     @Override
     public List<ProcessReport> listEmployee(Employee employee) throws DAOException {
         if(employee.getId() == null) {
@@ -473,10 +564,17 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         process_report.setQuantity(resultSet.getInt("quantity"));
         process_report.setAmperage(resultSet.getDouble("amperage"));
         process_report.setVoltage(resultSet.getDouble("voltage"));
-        process_report.setStart_time(resultSet.getTime("start_time"));
-        process_report.setEnd_time(resultSet.getTime("end_time"));
+        process_report.setStart_time(resultSet.getTime("start_time").toLocalTime().format(timeFormat));
+        process_report.setEnd_time(resultSet.getTime("end_time").toLocalTime().format(timeFormat));
         process_report.setComments(resultSet.getString("comments"));
         process_report.setQuality_passed(resultSet.getBoolean("quality_passed"));
+        
+        //INNER JOINS
+        process_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
+        process_report.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
+        process_report.setRev(resultSet.getString("PART_REVISION.rev"));
+        process_report.setTank_name(resultSet.getString("TANK.tank_name"));
+        process_report.setEquipment_name(resultSet.getString("EQUIPMENT.name"));
         return process_report;
     }    
 }

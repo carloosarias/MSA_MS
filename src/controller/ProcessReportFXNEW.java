@@ -11,6 +11,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,12 +19,20 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
+import model.ActivityReport;
 import model.ProcessReport;
+import model.ScrapReport;
+import model.Specification;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.process_list;
 import static msa_ms.MainApp.setDatePicker;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  * FXML Controller class
@@ -59,7 +68,7 @@ public class ProcessReportFXNEW implements Initializable {
     @FXML
     private TableColumn<ProcessReport, String> quantity_column;
     @FXML
-    private TableColumn<?, ?> quality_column;
+    private TableColumn<ProcessReport, String> quality_column;
     @FXML
     private TableView<ProcessReport> processreport_tableview2;
     @FXML
@@ -67,11 +76,11 @@ public class ProcessReportFXNEW implements Initializable {
     @FXML
     private TableColumn<ProcessReport, String> date_column2;
     @FXML
-    private TableColumn<?, ?> tank_column;
+    private TableColumn<ProcessReport, String> tank_column;
     @FXML
-    private TableColumn<?, ?> equipment_column;
+    private TableColumn<ProcessReport, String> equipment_column;
     @FXML
-    private TableColumn<?, ?> process_column;
+    private TableColumn<ProcessReport, String> process_column;
     @FXML
     private TableColumn<ProcessReport, String> voltage_column;
     @FXML
@@ -90,6 +99,7 @@ public class ProcessReportFXNEW implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        df.setMaximumFractionDigits(6);
         startdate_picker.setValue(LocalDate.now());
         enddate_picker.setValue(LocalDate.now().plusDays(1));
         setDatePicker(startdate_picker);
@@ -106,23 +116,112 @@ public class ProcessReportFXNEW implements Initializable {
         date_column1.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         date_column2.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         start_column.setCellValueFactory(new PropertyValueFactory<>("start_time"));
+        start_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        start_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setStart_time(getStart_timeValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateProcessReportTable();
+        });
         end_column.setCellValueFactory(new PropertyValueFactory<>("end_time"));
+        end_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        end_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEnd_time(getEnd_timeValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateProcessReportTable();
+        });
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
         partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         rev_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantity_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantity_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity(getQuantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateProcessReportTable();
+        });
         tank_column.setCellValueFactory(new PropertyValueFactory<>("tank_name"));
         equipment_column.setCellValueFactory(new PropertyValueFactory<>("equipment_name"));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
-        voltage_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getVoltage()));
-        amperage_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getAmperage()));
+        process_column.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(process_list)));
+        process_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setProcess(t.getNewValue());
+            msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateProcessReportTable();
+        });
+        voltage_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVoltage())));
+        voltage_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        voltage_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setVoltage(getVoltageValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateProcessReportTable();
+        });
+        amperage_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getAmperage())));
+        amperage_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        amperage_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setAmperage(getAmperageValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateProcessReportTable();
+        });
         comments_column.setCellValueFactory(c -> new SimpleStringProperty("comments"));
+        comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        comments_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setComments(t.getNewValue());
+            msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateProcessReportTable();
+        });
+        quality_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().quality_passedToString()));
+        quality_column.setCellFactory(ComboBoxTableCell.forTableColumn("Bueno", "Malo"));
+        quality_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuality_passed(t.getNewValue());
+            msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateProcessReportTable();
+        });
     }
     
     public void updateProcessReportTable(){
-        //processreport_tableview1.getItems().setAll(msabase.getProcessReportDAO().listEmployeeDateRange(MainApp.current_employee, DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), datefilter_check.isSelected()));
-        processreport_tableview1.getItems().setAll(msabase.getProcessReportDAO().list());
+        processreport_tableview1.getItems().setAll(msabase.getProcessReportDAO().list(MainApp.current_employee, DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), datefilter_check.isSelected()));
         processreport_tableview2.getItems().setAll(processreport_tableview1.getItems());
     }
     
+    public String getStart_timeValue(ProcessReport report, String start_time){
+        try{
+            timeFormat.parse(start_time.toUpperCase());
+        }catch(Exception e){
+            return report.getStart_time();
+        }
+        return start_time;
+    }
+    
+    public String getEnd_timeValue(ProcessReport report, String end_time){
+        try{
+            timeFormat.parse(end_time.toUpperCase());
+        }catch(Exception e){
+            return report.getEnd_time();
+        }
+        return end_time;
+    }
+    
+    public Integer getQuantityValue(ProcessReport report, String quantity){
+        try{
+            return Integer.parseInt(quantity);
+        }catch(Exception e){
+            return report.getQuantity();
+        }
+    }
+    
+    public Double getVoltageValue(ProcessReport report, String voltage){
+        try{
+            return Double.parseDouble(voltage);
+        }catch(Exception e){
+            return report.getVoltage();
+        }
+    }
+    
+    public Double getAmperageValue(ProcessReport report, String amperage){
+        try{
+            return Double.parseDouble(amperage);
+        }catch(Exception e){
+            return report.getAmperage();
+        }
+    }
 }

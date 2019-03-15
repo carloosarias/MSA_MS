@@ -197,9 +197,7 @@ public class SpecificationFX implements Initializable {
     
     public void setSpecificationItemTable(){
         metal_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMetal_name()));
-        metal_column.setOnEditStart((TableColumn.CellEditEvent<SpecificationItem, String> t) -> {
-            System.out.println("TESTING");
-        });
+        
         minimumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getMinimum_thickness())+" IN"));
         minimumthickness_column.setCellFactory(TextFieldTableCell.forTableColumn());
         minimumthickness_column.setOnEditCommit((TableColumn.CellEditEvent<SpecificationItem, String> t) -> {

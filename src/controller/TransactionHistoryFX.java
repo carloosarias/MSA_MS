@@ -219,7 +219,7 @@ public class TransactionHistoryFX implements Initializable {
         processlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         processrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findPartRevision(c.getValue()).getRev()));
         processquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        processstatus_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
+        processstatus_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().quality_passedToString()));
         processprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
@@ -307,7 +307,7 @@ public class TransactionHistoryFX implements Initializable {
         int quantity_total = 0;
         
         for(ProcessReport item: processreport_list){
-            if(item.getStatus().equals(status)){
+            if(item.quality_passedToString().equals(status)){
                 quantity_total += item.getQuantity();
             }
         }

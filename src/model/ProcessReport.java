@@ -22,10 +22,17 @@ public class ProcessReport implements Serializable {
     private Integer quantity;
     private Double amperage;
     private Double voltage;
-    private Time start_time;
-    private Time end_time;
+    private String start_time;
+    private String end_time;
     private String comments;
     private boolean quality_passed;
+    
+    //INNER JOINS
+    private String employee_name;
+    private String part_number;
+    private String rev;
+    private String tank_name;
+    private String equipment_name;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -83,19 +90,19 @@ public class ProcessReport implements Serializable {
         this.voltage = voltage;
     }
 
-    public Time getStart_time() {
+    public String getStart_time() {
         return start_time;
     }
 
-    public void setStart_time(Time start_time) {
+    public void setStart_time(String start_time) {
         this.start_time = start_time;
     }
 
-    public Time getEnd_time() {
+    public String getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(Time end_time) {
+    public void setEnd_time(String end_time) {
         this.end_time = end_time;
     }
 
@@ -115,12 +122,61 @@ public class ProcessReport implements Serializable {
         this.quality_passed = quality_passed;
     }
     
-    public String getStatus(){
-        if(quality_passed){
-            return "Bueno";
-        }else{
+    public String quality_passedToString(){
+        if(!quality_passed){
             return "Malo";
+        }else{
+            return "Bueno";
         }
+    }
+    
+    public void setQuality_passed(String string){
+        if(string.equals("Bueno")){
+            quality_passed = true;
+        }else{
+            quality_passed = false;
+        }
+    }
+    
+    //INNER JOINS
+    public String getEmployee_name() {
+        return employee_name;
+    }
+
+    public void setEmployee_name(String employee_name) {
+        this.employee_name = employee_name;
+    }
+
+    public String getPart_number() {
+        return part_number;
+    }
+
+    public void setPart_number(String part_number) {
+        this.part_number = part_number;
+    }
+
+    public String getRev() {
+        return rev;
+    }
+
+    public void setRev(String rev) {
+        this.rev = rev;
+    }
+
+    public String getTank_name() {
+        return tank_name;
+    }
+
+    public void setTank_name(String tank_name) {
+        this.tank_name = tank_name;
+    }
+
+    public String getEquipment_name() {
+        return equipment_name;
+    }
+
+    public void setEquipment_name(String equipment_name) {
+        this.equipment_name = equipment_name;
     }
     
     // Object overrides ---------------------------------------------------------------------------
