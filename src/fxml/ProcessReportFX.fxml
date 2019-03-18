@@ -80,17 +80,13 @@
                            <columns>
                               <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
                               <TableColumn fx:id="date_column1" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Hora">
-                                 <columns>
-                                    <TableColumn fx:id="start_column" minWidth="-Infinity" prefWidth="75.0" text="Entrada" />
-                                    <TableColumn fx:id="end_column" minWidth="-Infinity" prefWidth="75.0" text="Salida" />
-                                 </columns>
-                              </TableColumn>
+                              <TableColumn fx:id="start_column" minWidth="-Infinity" prefWidth="100.0" text="Hora de Entrada" />
+                              <TableColumn fx:id="end_column" minWidth="-Infinity" prefWidth="100.0" text="Hora de Salida" />
                               <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
-                              <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="# de Parte" />
+                              <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="150.0" text="# de Parte" />
                               <TableColumn fx:id="rev_column" prefWidth="50.0" text="Rev" />
                               <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="100.0" text="Cantidad" />
-                              <TableColumn fx:id="quality_column" minWidth="-Infinity" prefWidth="120.0" text="Calidad" />
+                              <TableColumn fx:id="quality_column" minWidth="-Infinity" prefWidth="150.0" text="Calidad" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -114,8 +110,8 @@
                            <columns>
                               <TableColumn fx:id="id_column2" minWidth="-Infinity" prefWidth="40.0" text="#" />
                               <TableColumn fx:id="date_column2" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                              <TableColumn fx:id="tank_column" minWidth="-Infinity" prefWidth="120.0" text="Tanque" />
-                              <TableColumn fx:id="equipment_column" minWidth="-Infinity" prefWidth="120.0" text="Equipo" />
+                              <TableColumn fx:id="tank_column" minWidth="-Infinity" prefWidth="175.0" text="Tanque" />
+                              <TableColumn fx:id="equipment_column" minWidth="-Infinity" prefWidth="175.0" text="Equipo" />
                               <TableColumn fx:id="process_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
                               <TableColumn fx:id="voltage_column" minWidth="-Infinity" prefWidth="75.0" text="Voltage" />
                               <TableColumn fx:id="amperage_column" minWidth="-Infinity" prefWidth="75.0" text="Amperage" />
