@@ -46,11 +46,7 @@ public class CreateProcessReportFX implements Initializable {
     @FXML
     private HBox root_hbox;
     @FXML
-    private ComboBox<Employee> employee_combo;
-    @FXML
     private DatePicker reportdate_picker;
-    @FXML
-    private ComboBox<String> process_combo;
     @FXML
     private ComboBox<Tank> tank_combo;
     @FXML
@@ -62,24 +58,6 @@ public class CreateProcessReportFX implements Initializable {
     @FXML
     private ComboBox<PartRevision> revision_combo;
     @FXML
-    private TextField lotnumber_field;
-    @FXML
-    private TextField quantity_field;
-    @FXML
-    private TextField amperage_field;
-    @FXML
-    private TextField voltage_field;
-    @FXML
-    private Spinner<Integer> starthour_spinner;
-    @FXML
-    private Spinner<Integer> startminute_spinner;
-    @FXML
-    private Spinner<Integer> endhour_spinner;
-    @FXML
-    private Spinner<Integer> endminute_spinner;
-    @FXML
-    private TextArea comments_area;
-    @FXML
     private Button save_button;
     
     private ProductPart partnumbercombo_selection;
@@ -88,25 +66,17 @@ public class CreateProcessReportFX implements Initializable {
     private PartRevision revisioncombo_selection;
     private String revisioncombo_text;
     
-    private SpinnerValueFactory starthour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, LocalTime.now().getHour());
-    private SpinnerValueFactory startminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, LocalTime.now().getMinute());
-    private SpinnerValueFactory endhour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(LocalTime.now().getHour(), 23, LocalTime.now().getHour());
-    private SpinnerValueFactory endminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(LocalTime.now().getMinute(), 59, LocalTime.now().getMinute());
-    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-
+    
+    public static ProcessReport process_report;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setSpinnerValues();
-        employee_combo.setItems(FXCollections.observableArrayList(MainApp.current_employee));
-        process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list(true)));
         equipmenttype_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list(true)));
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
-        employee_combo.getSelectionModel().selectFirst();
         reportdate_picker.setValue(LocalDate.now());
         setDatePicker(reportdate_picker);
         
@@ -117,8 +87,15 @@ public class CreateProcessReportFX implements Initializable {
         });
         
         partnumber_combo.setOnAction((ActionEvent) -> {
-            partnumbercombo_text = partnumber_combo.getEditor().textProperty().getValue();
-            partnumbercombo_selection = msabase.getProductPartDAO().find(partnumbercombo_text);
+            partnumbercombo_text = partnumber_combo.getEditor().textProperty().getValue().replace(" ", "").toUpperCase();
+            partnumbercombo_selection = null;
+            for(ProductPart product_part : partnumber_combo.getItems()){
+                if(partnumbercombo_text.equals(product_part.getPart_number())){
+                    partnumbercombo_selection = product_part;
+                    break;
+                }
+            }
+           
             if(partnumbercombo_selection == null){
                 partnumber_combo.getEditor().selectAll();
             }else{
@@ -129,17 +106,22 @@ public class CreateProcessReportFX implements Initializable {
         });
         
         revision_combo.setOnAction((ActionEvent) -> {
-            if(partnumbercombo_selection == null){
+            if(revisioncombo_selection == null){
                 ActionEvent.consume();
                 return;
             }
-            revisioncombo_text = revision_combo.getEditor().textProperty().getValue();
-            revisioncombo_selection = msabase.getPartRevisionDAO().find(partnumbercombo_selection, revisioncombo_text);
+            revisioncombo_text = revision_combo.getEditor().textProperty().getValue().replace(" ", "").toUpperCase();
+            revisioncombo_selection = null;
+            for(PartRevision part_revision : revision_combo.getItems()){
+                if(revisioncombo_text.equals(part_revision.getRev())){
+                    revisioncombo_selection = part_revision;
+                    break;
+                }
+            }
             if(revisioncombo_selection == null){
                 revision_combo.getEditor().selectAll();
             }
             else{
-                lotnumber_field.requestFocus();
                 ActionEvent.consume();
             }            
         });
@@ -153,56 +135,23 @@ public class CreateProcessReportFX implements Initializable {
             stage.close();
         });
         
-        starthour_spinner.valueProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
-            endhour_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(newValue, 23, endhour_spinner.getValueFactory().getValue());
-            endhour_spinner.setValueFactory(endhour_factory);
-            if(endhour_spinner.getValueFactory().getValue() < newValue){
-                endhour_spinner.getValueFactory().setValue(newValue);
-            }
-            setEndminute_spinner(startminute_spinner.getValueFactory().getValue());
-        });
-        
-        startminute_spinner.valueProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
-            setEndminute_spinner(newValue);
-        });
-        
-        endhour_spinner.valueProperty().addListener((ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) -> {
-            setEndminute_spinner(startminute_spinner.getValueFactory().getValue()); 
-        });
-        
-    }
-    
-    public void setEndminute_spinner(Integer newValue){
-        if(endhour_spinner.getValueFactory().getValue().equals(starthour_spinner.getValueFactory().getValue())){
-            endminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(newValue, 59, endminute_spinner.getValueFactory().getValue());
-            endminute_spinner.setValueFactory(endminute_factory);
-            if(endminute_spinner.getValueFactory().getValue() < newValue){
-                endminute_spinner.getValueFactory().setValue(newValue);
-            }
-        }
-        else{
-            endminute_factory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, endminute_spinner.getValueFactory().getValue());
-            endminute_spinner.setValueFactory(endminute_factory);
-        }
     }
     
     public void saveProcessReport(){
-        ProcessReport process_report = new ProcessReport();
-        process_report.setProcess(process_combo.getSelectionModel().getSelectedItem());
+        process_report = new ProcessReport();
+        process_report.setProcess("N/A");
         process_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
-        process_report.setLot_number(lotnumber_field.getText());
-        process_report.setQuantity(Integer.parseInt(quantity_field.getText()));
-        process_report.setAmperage(Double.parseDouble(amperage_field.getText()));
-        process_report.setVoltage(Double.parseDouble(voltage_field.getText()));
-        Time start_time = new Time(starthour_spinner.getValue(), startminute_spinner.getValue(), 0);
-        Time end_time = new Time(endhour_spinner.getValue(), endminute_spinner.getValue(), 0);
-        process_report.setStart_time(start_time.toLocalTime().format(timeFormat));
-        process_report.setEnd_time(end_time.toLocalTime().format(timeFormat));
-        process_report.setComments(comments_area.getText());
+        process_report.setLot_number("N/A");
+        process_report.setQuantity(0);
+        process_report.setAmperage(0.0);
+        process_report.setVoltage(0.0);
+        process_report.setStart_time(LocalTime.now().format(timeFormat));
+        process_report.setEnd_time(process_report.getStart_time());
+        process_report.setComments("N/A");
         process_report.setQuality_passed(true);
         
         msabase.getProcessReportDAO().create(
-            employee_combo.getSelectionModel().getSelectedItem(),
+            MainApp.current_employee,
             revisioncombo_selection,
             tank_combo.getSelectionModel().getSelectedItem(),
             equipment_combo.getSelectionModel().getSelectedItem(),
@@ -211,17 +160,11 @@ public class CreateProcessReportFX implements Initializable {
     
     public void clearStyle(){
         reportdate_picker.setStyle(null);
-        process_combo.setStyle(null);
         tank_combo.setStyle(null);   
         equipmenttype_combo.setStyle(null);
-        equipment_combo.setStyle(null);
-        lotnumber_field.setStyle(null);        
-        quantity_field.setStyle(null);        
+        equipment_combo.setStyle(null);   
         partnumber_combo.setStyle(null);        
         revision_combo.setStyle(null);
-        amperage_field.setStyle(null);        
-        voltage_field.setStyle(null);
-        comments_area.setStyle(null);
     }
     
     public boolean testFields(){
@@ -229,11 +172,6 @@ public class CreateProcessReportFX implements Initializable {
         clearStyle();
         if(reportdate_picker.getValue() == null){
             reportdate_picker.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        
-        if(process_combo.getSelectionModel().isEmpty()){
-            process_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         
@@ -248,18 +186,6 @@ public class CreateProcessReportFX implements Initializable {
         
         if(equipment_combo.getSelectionModel().isEmpty()){
             equipment_combo.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        
-        if(lotnumber_field.getText().replace(" ", "").equals("")){
-            lotnumber_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        
-        try{
-            Double.parseDouble(quantity_field.getText());
-        }catch(Exception e){
-            quantity_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         
@@ -283,34 +209,9 @@ public class CreateProcessReportFX implements Initializable {
             b = false;
         }
         
-        try {
-            Double.parseDouble(amperage_field.getText());
-        }catch(Exception e){
-            amperage_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        
-        try {
-            Double.parseDouble(voltage_field.getText());
-        }catch(Exception e){
-            voltage_field.setStyle("-fx-background-color: lightpink;");
-            b = false;
-        }
-        
-        if(comments_area.getText().replace(" ", "").equals("")){
-            comments_area.setText("n/a");
-        }
-        
         return b;
     }
-    
-    public void setSpinnerValues(){
-        starthour_spinner.setValueFactory(starthour_factory);
-        startminute_spinner.setValueFactory(startminute_factory);
-        endhour_spinner.setValueFactory(endhour_factory);
-        endminute_spinner.setValueFactory(endminute_factory);
-    }
-    
+
     public void updatePartrev_combo(){
         try{
             revision_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partnumbercombo_selection, true)));

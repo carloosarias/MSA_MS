@@ -7,13 +7,18 @@ package controller;
 
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
@@ -23,6 +28,10 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.ActivityReport;
 import model.ProcessReport;
 import model.ScrapReport;
@@ -94,6 +103,8 @@ public class ProcessReportFXNEW implements Initializable {
     @FXML
     private Button disable_button;
     
+    private Stage add_stage = new Stage();
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
@@ -124,8 +135,42 @@ public class ProcessReportFXNEW implements Initializable {
         datefilter_check.setOnAction((ActionEvent) -> {
            updateProcessReportTable(); 
         });
+        
+        disable_button.setOnAction((ActionEvent) -> {
+            msabase.getProcessReportDAO().delete(processreport_tableview1.getSelectionModel().getSelectedItem());
+            updateProcessReportTable();
+        });
+        
+        add_button.setOnAction((ActionEvent) -> {
+            int current_size = processreport_tableview1.getItems().size();
+            showAdd_stage();
+            updateProcessReportTable();
+            if(current_size < processreport_tableview1.getItems().size()){
+                processreport_tableview1.scrollTo(CreateProcessReportFX.process_report);
+                processreport_tableview1.getSelectionModel().select(CreateProcessReportFX.process_report);
+            }
+        });
+        
     }
     
+    public void showAdd_stage(){
+        try {
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateProcessReportFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            add_stage.setTitle("Nuevo Reporte de Proceso");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(ProcessReportFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+        
     public void setProcessReportTable(){
         id_column1.setCellValueFactory(new PropertyValueFactory<>("id"));
         id_column2.setCellValueFactory(new PropertyValueFactory<>("id"));
