@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -28,6 +29,9 @@ public class IncomingLot implements Serializable {
     //INNER JOINS
     private String part_number;
     private String part_revision;
+    private Date report_date;
+    private Integer incomingreport_id;
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -118,6 +122,21 @@ public class IncomingLot implements Serializable {
         this.part_revision = part_revision;
     }
     
+    public Date getReport_date() {
+        return report_date;
+    }
+
+    public void setReport_date(Date report_date) {
+        this.report_date = report_date;
+    }
+    
+    public Integer getIncomingreport_id() {
+        return incomingreport_id;
+    }
+
+    public void setIncomingreport_id(Integer incomingreport_id) {
+        this.incomingreport_id = incomingreport_id;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**

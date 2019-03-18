@@ -29,10 +29,11 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number "
+            + "PART_REVISION.rev, PRODUCT_PART.part_number, INCOMING_REPORT.report_date, INCOMING_LOT.INCOMING_REPORT_ID "
             + "FROM INCOMING_LOT "
             + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN INCOMING_REPORT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id "
             + "WHERE INCOMING_LOT.id = ?";
     private static final String SQL_FIND_INCOMING_REPORT_BY_ID =
             "SELECT INCOMING_REPORT_ID FROM INCOMING_LOT WHERE id = ?";
@@ -42,18 +43,20 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             "SELECT DEPART_LOT_ID FROM INCOMING_LOT WHERE id = ?";
     private static final String SQL_LIST_OF_INCOMING_REPORT_ORDER_BY_ID = 
             "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number "
+            + "PART_REVISION.rev, PRODUCT_PART.part_number, INCOMING_REPORT.report_date, INCOMING_LOT.INCOMING_REPORT_ID "
             + "FROM INCOMING_LOT "
             + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN INCOMING_REPORT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id "
             + "WHERE INCOMING_REPORT_ID = ? "
             + "ORDER BY id";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID = 
             "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number "
+            + "PART_REVISION.rev, PRODUCT_PART.part_number, INCOMING_REPORT.report_date, INCOMING_LOT.INCOMING_REPORT_ID "
             + "FROM INCOMING_LOT "
             + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN INCOMING_REPORT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id "
             + "WHERE lot_number = ? "
             + "ORDER BY id";
     private static final String SQL_INSERT = 
@@ -65,7 +68,7 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
             "DELETE FROM INCOMING_LOT WHERE id = ?";
     private static final String LIST_INCOMING_LOT_BY_PRODUCT_PART_DATE_RANGE = 
             "SELECT INCOMING_LOT.id, INCOMING_LOT.lot_number, INCOMING_LOT.quantity, INCOMING_LOT.box_quantity, INCOMING_LOT.status, INCOMING_LOT.comments, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number "
+            + "PART_REVISION.rev, PRODUCT_PART.part_number, INCOMING_REPORT.report_date, INCOMING_LOT.INCOMING_REPORT_ID "
             + "FROM INCOMING_LOT "
             + "INNER JOIN PART_REVISION ON INCOMING_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
@@ -451,6 +454,8 @@ public class IncomingLotDAOJDBC implements IncomingLotDAO{
         //INNER JOINS
         incoming_lot.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
         incoming_lot.setPart_revision(resultSet.getString("PART_REVISION.rev"));
+        incoming_lot.setReport_date(resultSet.getDate("INCOMING_REPORT.report_date"));
+        incoming_lot.setIncomingreport_id(resultSet.getInt("INCOMING_LOT.INCOMING_REPORT_ID"));
         return incoming_lot;
     }
 }

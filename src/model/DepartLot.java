@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  *
@@ -28,6 +29,7 @@ public class DepartLot implements Serializable {
     //INNER JOINS
     private String part_number;
     private String part_revision;
+    private Date report_date;
     private Integer departreport_id;
     private Integer partrevision_id;
 
@@ -137,6 +139,14 @@ public class DepartLot implements Serializable {
 
     public void setPart_revision(String part_revision) {
         this.part_revision = part_revision;
+    }
+    
+    public Date getReport_date() {
+        return report_date;
+    }
+
+    public void setReport_date(Date report_date) {
+        this.report_date = report_date;
     }
     
     public Integer getDepartreport_id() {

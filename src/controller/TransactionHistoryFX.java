@@ -204,10 +204,10 @@ public class TransactionHistoryFX implements Initializable {
     }
     
     public void setIncomingTableViewItems(){
-        incomingid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingLotDAO().findIncomingReport(c.getValue()).getId() + ""));
-        incomingdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(msabase.getIncomingLotDAO().findIncomingReport(c.getValue()).getReport_date()))));
+        incomingid_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIncomingreport_id()+""));
+        incomingdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         incominglotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        incomingrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getIncomingLotDAO().findPartRevision(c.getValue()).getRev()));
+        incomingrevision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision()));
         incomingquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         incomingboxquantity_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         incomingstatus_column.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -217,17 +217,17 @@ public class TransactionHistoryFX implements Initializable {
         processid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         processdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         processlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        processrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getProcessReportDAO().findPartRevision(c.getValue()).getRev()));
+        processrevision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getRev()));
         processquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         processstatus_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().quality_passedToString()));
         processprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
     public void setDepartTableViewItems(){
-        departid_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartLotDAO().findDepartReport(c.getValue()).getId() + ""));
-        departdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(msabase.getDepartLotDAO().findDepartReport(c.getValue()).getReport_date()))));
+        departid_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartreport_id()+""));
+        departdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         departlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        departrevision_column.setCellValueFactory(c -> new SimpleStringProperty(msabase.getDepartLotDAO().findPartRevision(c.getValue()).getRev()));
+        departrevision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision()));
         departquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         departquantitybox_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
         departstatus_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
