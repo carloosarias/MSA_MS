@@ -164,19 +164,19 @@ public class TransactionHistoryFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setDepartTableViewItems();
-        setProcessReportTableViewItems();
-        setIncomingTableViewItems();
-        setWeeklyTableViewItems();
-        partnumber_combo.setItems(FXCollections.observableList(msabase.getProductPartDAO().listActive(true)));
+        setDepartLotTable();
+        setProcessReportTable();
+        setIncomingReportTable();
+        //setWeeklyTableViewItems();
+        partnumber_combo.getItems().setAll(msabase.getProductPartDAO().listActive(true));
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         setDatePicker(startdate_picker);
         setDatePicker(enddate_picker);
         
         partnumber_combo.setOnAction((ActionEvent) -> {
-            updateList(partnumber_combo.getSelectionModel().getSelectedItem(), startdate_picker.getValue(), enddate_picker.getValue());
-            weekly_tableview.setItems(FXCollections.observableArrayList(getWeeklySummaryList(partnumber_combo.getSelectionModel().getSelectedItem(), startdate_picker.getValue(), enddate_picker.getValue())));
+            updateDepartLotTable();
+            //weekly_tableview.setItems(FXCollections.observableArrayList(getWeeklySummaryList(partnumber_combo.getSelectionModel().getSelectedItem(), startdate_picker.getValue(), enddate_picker.getValue())));
             setFieldValues();
         });
         
@@ -193,9 +193,12 @@ public class TransactionHistoryFX implements Initializable {
         });
     }
     
+    public void updateDepartLotTable(){
+        depart_tableview.getItems().setAll(mergeByDepartReport_Partnumber(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()))));
+    }
+    
     public void updateList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
         try{
-            depart_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDateRange(product_part, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
             process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listProductPartDateRange(product_part, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
             incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, false, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
         }catch(Exception e){
@@ -203,7 +206,7 @@ public class TransactionHistoryFX implements Initializable {
         }
     }
     
-    public void setIncomingTableViewItems(){
+    public void setIncomingReportTable(){
         incomingid_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIncomingreport_id()+""));
         incomingdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         incominglotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
@@ -213,7 +216,7 @@ public class TransactionHistoryFX implements Initializable {
         incomingstatus_column.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
     
-    public void setProcessReportTableViewItems(){
+    public void setProcessReportTable(){
         processid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         processdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         processlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
@@ -223,7 +226,7 @@ public class TransactionHistoryFX implements Initializable {
         processprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
-    public void setDepartTableViewItems(){
+    public void setDepartLotTable(){
         departid_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartreport_id()+""));
         departdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         departlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
@@ -233,7 +236,7 @@ public class TransactionHistoryFX implements Initializable {
         departstatus_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
         departprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
-    
+   /* 
     public void setWeeklyTableViewItems(){
         weeklystartdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getStart_date()))));
         weeklyenddate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getEnd_date()))));
@@ -247,7 +250,7 @@ public class TransactionHistoryFX implements Initializable {
         weeklydepartaccepted_column.setCellValueFactory(new PropertyValueFactory<>("depart_accepted"));
         weeklydepartrejected_column.setCellValueFactory(new PropertyValueFactory<>("depart_rejected"));
     }
-    
+    */
     public void setFieldValues(){
         incomingqty_field.setText(""+getIncomingQuantity(incoming_tableview.getItems()));
         incomingnew_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Virgen"));
@@ -462,5 +465,40 @@ public class TransactionHistoryFX implements Initializable {
         public void setDepart_rejected(Integer depart_rejected) {
             this.depart_rejected = depart_rejected;
         }
+    }
+    public List<DepartLot> mergeByDepartReport_Partnumber(List<DepartLot> unfilteredList){
+        //find all part_number
+        ArrayList<Integer> departreport_id = new ArrayList();
+        ArrayList<String> partnumber = new ArrayList();
+        ArrayList<String> part_revision = new ArrayList();
+        ArrayList<DepartLot> mergedList = new ArrayList();
+        for(DepartLot depart_lot : unfilteredList){
+            if(departreport_id.contains(depart_lot.getDepartreport_id()) && partnumber.contains(depart_lot.getPart_number()) && part_revision.contains(depart_lot.getPart_revision())){
+                for(DepartLot listitem : mergedList){
+                    if(depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id()) && depart_lot.getPart_number().equals(listitem.getPart_number()) && depart_lot.getPart_revision().equals(listitem.getPart_revision())){
+                        mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + depart_lot.getQuantity());
+                        mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + depart_lot.getBox_quantity());
+                        break;
+                    }
+                }
+            }
+            else{
+                departreport_id.add(depart_lot.getDepartreport_id());
+                partnumber.add(depart_lot.getPart_number());
+                part_revision.add(depart_lot.getPart_revision());
+                
+                DepartLot item = new DepartLot();
+                item.setReport_date(depart_lot.getReport_date());
+                item.setPart_revision(depart_lot.getPart_revision());
+                item.setDepartreport_id(depart_lot.getDepartreport_id());
+                item.setPart_number(depart_lot.getPart_number());
+                item.setPart_revision(depart_lot.getPart_revision());
+                item.setQuantity(depart_lot.getQuantity());
+                item.setBox_quantity(depart_lot.getBox_quantity());
+                mergedList.add(item);
+            }
+        }
+        
+        return mergedList;
     }
 }
