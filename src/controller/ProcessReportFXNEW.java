@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,14 +29,11 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.ActivityReport;
 import model.ProcessReport;
-import model.ScrapReport;
-import model.Specification;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.getFormattedDate;
@@ -121,8 +119,22 @@ public class ProcessReportFXNEW implements Initializable {
         setProcessReportTable();
         updateProcessReportTable();
         
-        delete_pane.setDisable(MainApp.current_employee.isAdmin());
+        delete_pane.setDisable(!MainApp.current_employee.isAdmin());
         disable_button.disableProperty().bind(processreport_tableview1.getSelectionModel().selectedItemProperty().isNull());
+        
+        processreport_tableview1.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProcessReport> observable, ProcessReport oldValue, ProcessReport newValue) -> {
+            try{
+                processreport_tableview2.getSelectionModel().select(newValue);
+            }catch(Exception e){
+            }
+        });
+        
+        processreport_tableview2.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProcessReport> observable, ProcessReport oldValue, ProcessReport newValue) -> {
+            try{
+                processreport_tableview1.getSelectionModel().select(newValue);
+            }catch(Exception e){
+            }
+        });
         
         startdate_picker.setOnAction((ActionEvent) -> {
             updateProcessReportTable();
@@ -158,7 +170,7 @@ public class ProcessReportFXNEW implements Initializable {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateProcessReportFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/CreateProcessReportFX.fxml"));
             Scene scene = new Scene(root);
             
             add_stage.setTitle("Nuevo Reporte de Proceso");
@@ -193,7 +205,7 @@ public class ProcessReportFXNEW implements Initializable {
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
         partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         rev_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
         quantity_column.setCellFactory(TextFieldTableCell.forTableColumn());
         quantity_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity(getQuantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
@@ -223,13 +235,15 @@ public class ProcessReportFXNEW implements Initializable {
             msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             updateProcessReportTable();
         });
-        comments_column.setCellValueFactory(c -> new SimpleStringProperty("comments"));
+        
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
         comments_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setComments(t.getNewValue());
             msabase.getProcessReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             updateProcessReportTable();
         });
+        
         quality_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().quality_passedToString()));
         quality_column.setCellFactory(ComboBoxTableCell.forTableColumn("Bueno", "Malo"));
         quality_column.setOnEditCommit((TableColumn.CellEditEvent<ProcessReport, String> t) -> {
@@ -241,11 +255,11 @@ public class ProcessReportFXNEW implements Initializable {
     
     public void updateProcessReportTable(){
         try{
-            processreport_tableview1.getItems().setAll(msabase.getProcessReportDAO().list(MainApp.current_employee, DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), datefilter_check.isSelected()));
+            processreport_tableview1.getItems().setAll(msabase.getProcessReportDAO().list(MainApp.current_employee, DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()), datefilter_check.isSelected()));
         }catch(Exception e){
             processreport_tableview1.getItems().clear();
         }
-            processreport_tableview2.getItems().setAll(processreport_tableview1.getItems());
+        processreport_tableview2.getItems().setAll(processreport_tableview1.getItems());
     }
     
     public String getStart_timeValue(ProcessReport report, String start_time){

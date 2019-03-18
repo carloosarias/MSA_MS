@@ -23,6 +23,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Employee;
@@ -44,7 +45,7 @@ import static msa_ms.MainApp.timeFormat;
 public class CreateProcessReportFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private DatePicker reportdate_picker;
     @FXML
@@ -106,10 +107,7 @@ public class CreateProcessReportFX implements Initializable {
         });
         
         revision_combo.setOnAction((ActionEvent) -> {
-            if(revisioncombo_selection == null){
-                ActionEvent.consume();
-                return;
-            }
+            System.out.println(revisioncombo_selection);
             revisioncombo_text = revision_combo.getEditor().textProperty().getValue().replace(" ", "").toUpperCase();
             revisioncombo_selection = null;
             for(PartRevision part_revision : revision_combo.getItems()){
@@ -131,7 +129,7 @@ public class CreateProcessReportFX implements Initializable {
                 return;
             }
             saveProcessReport();
-            Stage stage = (Stage) root_hbox.getScene().getWindow();
+            Stage stage = (Stage) root_gridpane.getScene().getWindow();
             stage.close();
         });
         
@@ -214,7 +212,7 @@ public class CreateProcessReportFX implements Initializable {
 
     public void updatePartrev_combo(){
         try{
-            revision_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partnumbercombo_selection, true)));
+            revision_combo.getItems().setAll(msabase.getPartRevisionDAO().list(partnumbercombo_selection, true));
         } catch(Exception e) {
             revision_combo.getItems().clear();
         }

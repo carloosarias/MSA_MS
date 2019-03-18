@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +68,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN TANK ON PROCESS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN EQUIPMENT ON PROCESS_REPORT.EQUIPMENT_ID = EQUIPMENT.id "
-            + "WHERE (PROCESS_REPORT.EMPLOYEE_ID = ? OR ? = 1) AND ((PROCESS_REPORT.report_date BETWEEN ? AND ?) OR ? = 0) "
+            + "WHERE ((PROCESS_REPORT.EMPLOYEE_ID = ? OR ? = 1) AND ((PROCESS_REPORT.report_date BETWEEN ? AND ?) OR ? = 0)) "
             + "ORDER BY PROCESS_REPORT.id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
             "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
@@ -465,8 +466,8 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             process_report.getQuantity(),
             process_report.getAmperage(),
             process_report.getVoltage(),
-            process_report.getStart_time(),
-            process_report.getEnd_time(),
+            DAOUtil.toSqlTime(LocalTime.parse(process_report.getStart_time(), timeFormat)),
+            DAOUtil.toSqlTime(LocalTime.parse(process_report.getEnd_time(), timeFormat)),
             process_report.getComments(),
             process_report.isQuality_passed()
         };
@@ -506,8 +507,8 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             process_report.getQuantity(),
             process_report.getAmperage(),
             process_report.getVoltage(),
-            process_report.getStart_time(),
-            process_report.getEnd_time(),
+            DAOUtil.toSqlTime(LocalTime.parse(process_report.getStart_time(), timeFormat)),
+            DAOUtil.toSqlTime(LocalTime.parse(process_report.getEnd_time(), timeFormat)),
             process_report.getComments(),
             process_report.isQuality_passed(),
             process_report.getId()
