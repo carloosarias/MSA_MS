@@ -161,19 +161,19 @@
                            <children>
                               <TableView fx:id="departlot_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                  <columns>
-                                    <TableColumn fx:id="id_column3" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                                    <TableColumn fx:id="date_column3" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                                    <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-                                    <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                                    <TableColumn fx:id="lot_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                                    <TableColumn fx:id="id_column2" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                    <TableColumn fx:id="date_column2" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                                    <TableColumn fx:id="part_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                                    <TableColumn fx:id="rev_column2" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                                    <TableColumn fx:id="t" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
                                     <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                                        <columns>
-                                          <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
-                                          <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
+                                          <TableColumn fx:id="quantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
+                                          <TableColumn fx:id="boxquantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
                                        </columns>
                                     </TableColumn>
-                                    <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
-                                    <TableColumn fx:id="status_column3" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
+                                    <TableColumn fx:id="process_column2" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                                    <TableColumn fx:id="status_column2" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
                                  </columns>
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -239,14 +239,14 @@
                            <children>
                               <TableView fx:id="process_tableview">
                                  <columns>
-                                    <TableColumn fx:id="processid_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                                    <TableColumn fx:id="processdate_column" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                                    <TableColumn fx:id="part_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-                                    <TableColumn fx:id="processrevision_column" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                                    <TableColumn fx:id="processlotnumber_column" minWidth="-Infinity" prefWidth="120.0" text="No. de Lote" />
-                                    <TableColumn fx:id="processquantity_column" minWidth="-Infinity" prefWidth="75.0" text="Cantidad" />
-                                    <TableColumn fx:id="processprocess_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
-                                    <TableColumn fx:id="processstatus_column" minWidth="-Infinity" prefWidth="100.0" text="Calidad" />
+                                    <TableColumn fx:id="id_column3" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                    <TableColumn fx:id="date_column3" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                                    <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                                    <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                                    <TableColumn fx:id="lot_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                                    <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Cantidad" />
+                                    <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                                    <TableColumn fx:id="status_column3" minWidth="-Infinity" prefWidth="100.0" text="Calidad" />
                                  </columns>
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -313,29 +313,29 @@
                                  <columns>
                                     <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Fecha">
                                        <columns>
-                                          <TableColumn fx:id="weeklystartdate_column" minWidth="-Infinity" prefWidth="100.0" text="Desde" />
-                                          <TableColumn fx:id="weeklyenddate_column" minWidth="-Infinity" prefWidth="100.0" text="Hasta" />
+                                          <TableColumn fx:id="startdate_column" minWidth="-Infinity" prefWidth="100.0" text="Desde" />
+                                          <TableColumn fx:id="enddate_column" minWidth="-Infinity" prefWidth="100.0" text="Hasta" />
                                        </columns>
                                     </TableColumn>
                                     <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Reciba">
                                        <columns>
-                                          <TableColumn fx:id="weeklyincomingnew_column" minWidth="-Infinity" prefWidth="75.0" text="Virgen" />
-                                          <TableColumn fx:id="weeklyincomingrejected_column" minWidth="-Infinity" prefWidth="75.0" text="Retrabajo" />
-                                          <TableColumn fx:id="weeklyincomingtotal_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                          <TableColumn fx:id="virgin_column" minWidth="-Infinity" prefWidth="75.0" text="Virgen" />
+                                          <TableColumn fx:id="rework_column" minWidth="-Infinity" prefWidth="75.0" text="Retrabajo" />
+                                          <TableColumn fx:id="incominglotquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
                                        </columns>
                                     </TableColumn>
                                     <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Remisiones">
                                        <columns>
-                                          <TableColumn fx:id="weeklydepartaccepted_column" minWidth="-Infinity" prefWidth="75.0" text="Envíos" />
-                                          <TableColumn fx:id="weeklydepartrejected_column" minWidth="-Infinity" prefWidth="75.0" text="Rechazos" />
-                                          <TableColumn fx:id="weeklydeparttotal_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                          <TableColumn fx:id="departlotquantity_column" minWidth="-Infinity" prefWidth="75.0" text="Envíos" />
+                                          <TableColumn fx:id="departlotrejected_column" minWidth="-Infinity" prefWidth="75.0" text="Rechazos" />
+                                          <TableColumn fx:id="departlotbalance_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
                                        </columns>
                                     </TableColumn>
                                     <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Producción">
                                        <columns>
-                                          <TableColumn fx:id="weeklyprocessgood_column" minWidth="-Infinity" prefWidth="75.0" text="Bueno" />
-                                          <TableColumn fx:id="weeklyprocessbad_column" minWidth="-Infinity" prefWidth="75.0" text="Malo" />
-                                          <TableColumn fx:id="weeklyprocesstotal_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                          <TableColumn fx:id="quality_column1" minWidth="-Infinity" prefWidth="75.0" text="Bueno" />
+                                          <TableColumn fx:id="quality_column2" minWidth="-Infinity" prefWidth="75.0" text="Malo" />
+                                          <TableColumn fx:id="processquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
                                        </columns>
                                     </TableColumn>
                                  </columns>

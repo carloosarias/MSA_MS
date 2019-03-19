@@ -90,23 +90,23 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private TableView<DepartLot> departlot_tableview;
     @FXML
-    private TableColumn<DepartLot, String> id_column3;
+    private TableColumn<DepartLot, String> id_column2;
     @FXML
-    private TableColumn<DepartLot, String> date_column3;
+    private TableColumn<DepartLot, String> date_column2;
     @FXML
-    private TableColumn<DepartLot, String> part_column3;
+    private TableColumn<DepartLot, String> part_column2;
     @FXML
-    private TableColumn<DepartLot, String> rev_column3;
+    private TableColumn<DepartLot, String> rev_column2;
     @FXML
-    private TableColumn<DepartLot, String> lot_column3;
+    private TableColumn<DepartLot, String> lot_column2;
     @FXML
-    private TableColumn<DepartLot, Integer> quantity_column3;
+    private TableColumn<DepartLot, Integer> quantity_column2;
     @FXML
-    private TableColumn<DepartLot, Integer> boxquantity_column3;
+    private TableColumn<DepartLot, Integer> boxquantity_column2;
     @FXML
-    private TableColumn<DepartLot, String> process_column3;
+    private TableColumn<DepartLot, String> process_column2;
     @FXML
-    private TableColumn<DepartLot, String> status_column3;
+    private TableColumn<DepartLot, String> status_column2;
     
     @FXML
     private TextField incomingqty_field;
@@ -126,12 +126,6 @@ public class TransactionHistoryFX implements Initializable {
     private TextField departaccepted_field;
     @FXML
     private TextField departrejected_field;
-    @FXML
-    private TextField scrapqty_field;
-    @FXML
-    private TextField onhand_field;
-    @FXML
-    private TextField balance_field;
     @FXML
     private TableView<weekly_summary> weekly_tableview;
     @FXML
@@ -232,15 +226,15 @@ public class TransactionHistoryFX implements Initializable {
     }
     
     public void setDepartLotTable(){
-        id_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartreport_id()+""));
-        date_column3.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
-        part_column3.setCellValueFactory(new PropertyValueFactory<>("part_number"));
-        rev_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision()));
-        lot_column3.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        quantity_column3.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        boxquantity_column3.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
-        process_column3.setCellValueFactory(new PropertyValueFactory<>("process"));
-        status_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
+        id_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartreport_id()+""));
+        date_column2.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        part_column2.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        rev_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision()));
+        lot_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        quantity_column2.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        boxquantity_column2.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        process_column2.setCellValueFactory(new PropertyValueFactory<>("process"));
+        status_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
     }
     /*
     public void setWeeklyTableViewItems(){
