@@ -84,21 +84,24 @@
                                        <children>
                                           <VBox>
                                              <children>
-                                                <TableView fx:id="incoming_tableview" prefHeight="600.0" prefWidth="827.0">
+                                                <TableView fx:id="incominglot_tableview" prefHeight="600.0" prefWidth="827.0">
                                                   <columns>
-                                                    <TableColumn fx:id="incomingid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
-                                                    <TableColumn fx:id="incomingdate_column" prefWidth="100.0" resizable="false" text="Fecha" />
-                                                      <TableColumn fx:id="incominglotnumber_column" prefWidth="100.0" resizable="false" text="No. de Lote" />
-                                                      <TableColumn fx:id="incomingrevision_column" prefWidth="100.0" resizable="false" text="Revisión" />
-                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad">
+                                                    <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                                    <TableColumn fx:id="date_column1" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Fecha" />
+                                                      <TableColumn fx:id="part_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                                                      <TableColumn fx:id="rev_column1" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                                                      <TableColumn fx:id="lot_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                                                      <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                                                          <columns>
-                                                            <TableColumn fx:id="incomingquantity_column" prefWidth="100.0" resizable="false" text="Piezas" />
-                                                            <TableColumn fx:id="incomingboxquantity_column" prefWidth="100.0" resizable="false" text="Cajas" />
+                                                            <TableColumn fx:id="quantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
+                                                            <TableColumn fx:id="boxquantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
                                                          </columns>
                                                       </TableColumn>
-                                                      <TableColumn fx:id="incomingstatus_column" prefWidth="100.0" resizable="false" text="Estado" />
-                                                      <TableColumn prefWidth="127.0" resizable="false" text="N/A" />
+                                                      <TableColumn fx:id="status_column1" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
                                                   </columns>
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
                                                 </TableView>
                                              </children>
                                           </VBox>
@@ -126,6 +129,9 @@
                                                       <TableColumn fx:id="processstatus_column" prefWidth="100.0" resizable="false" text="Estado" />
                                                       <TableColumn fx:id="processprocess_column" prefWidth="127.0" resizable="false" text="Proceso" />
                                                    </columns>
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
                                                 </TableView>
                                              </children>
                                           </VBox>
@@ -138,21 +144,25 @@
                                        <children>
                                           <VBox>
                                              <children>
-                                                <TableView fx:id="depart_tableview" prefHeight="600.0" prefWidth="827.0">
+                                                <TableView fx:id="departlot_tableview" prefHeight="600.0" prefWidth="827.0">
                                                    <columns>
-                                                      <TableColumn fx:id="departid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
-                                                      <TableColumn fx:id="departdate_column" prefWidth="100.0" resizable="false" text="Fecha" />
-                                                      <TableColumn fx:id="departlotnumber_column" prefWidth="100.0" resizable="false" text="No. de Lote" />
-                                                      <TableColumn fx:id="departrevision_column" prefWidth="100.0" resizable="false" text="Revisión" />
-                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad">
+                                                      <TableColumn fx:id="id_column3" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                                      <TableColumn fx:id="date_column3" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                                                      <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                                                      <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                                                      <TableColumn fx:id="lot_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                                                      <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                                                          <columns>
-                                                            <TableColumn fx:id="departquantity_column" prefWidth="100.0" resizable="false" text="Piezas" />
-                                                            <TableColumn fx:id="departquantitybox_column" prefWidth="100.0" resizable="false" text="Cajas" />
+                                                            <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
+                                                            <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
                                                          </columns>
                                                       </TableColumn>
-                                                      <TableColumn fx:id="departstatus_column" prefWidth="100.0" resizable="false" text="Estado" />
-                                                      <TableColumn fx:id="departprocess_column" prefWidth="127.0" resizable="false" text="Proceso" />
+                                                      <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                                                      <TableColumn fx:id="status_column3" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
                                                    </columns>
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
                                                 </TableView>
                                              </children>
                                           </VBox>
@@ -195,6 +205,9 @@
                                                          </columns>
                                                       </TableColumn>
                                                    </columns>
+                                                   <VBox.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </VBox.margin>
                                                 </TableView>
                                              </children>
                                           </VBox>

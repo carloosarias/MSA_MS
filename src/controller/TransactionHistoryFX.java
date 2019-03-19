@@ -52,21 +52,21 @@ public class TransactionHistoryFX implements Initializable {
     
     //IncomingLot TableView ----------------------------------------------------
     @FXML
-    private TableView<IncomingLot> incoming_tableview;
+    private TableView<IncomingLot> incominglot_tableview;
     @FXML
-    private TableColumn<IncomingLot, String> incomingid_column;
+    private TableColumn<IncomingLot, String> id_column1;
     @FXML
-    private TableColumn<IncomingLot, String> incomingdate_column;
+    private TableColumn<IncomingLot, String> date_column1;
     @FXML
-    private TableColumn<IncomingLot, String> incominglotnumber_column;
+    private TableColumn<IncomingLot, String> lot_column1;
     @FXML
-    private TableColumn<IncomingLot, String> incomingrevision_column;
+    private TableColumn<IncomingLot, String> rev_column1;
     @FXML
-    private TableColumn<IncomingLot, Integer> incomingquantity_column;
+    private TableColumn<IncomingLot, Integer> quantity_column1;
     @FXML
-    private TableColumn<IncomingLot, Integer> incomingboxquantity_column;
+    private TableColumn<IncomingLot, Integer> boxquantity_column1;
     @FXML
-    private TableColumn<IncomingLot, String> incomingstatus_column;
+    private TableColumn<IncomingLot, String> status_column1;
     
     //ProcessReport TableView --------------------------------------------------
     @FXML
@@ -88,23 +88,25 @@ public class TransactionHistoryFX implements Initializable {
     
     //DepartLot TableView ------------------------------------------------------
     @FXML
-    private TableView<DepartLot> depart_tableview;
+    private TableView<DepartLot> departlot_tableview;
     @FXML
-    private TableColumn<DepartLot, String> departid_column;
+    private TableColumn<DepartLot, String> id_column3;
     @FXML
-    private TableColumn<DepartLot, String> departdate_column;
+    private TableColumn<DepartLot, String> date_column3;
     @FXML
-    private TableColumn<DepartLot, String> departlotnumber_column;
+    private TableColumn<DepartLot, String> part_column3;
     @FXML
-    private TableColumn<DepartLot, String> departrevision_column;
+    private TableColumn<DepartLot, String> rev_column3;
     @FXML
-    private TableColumn<DepartLot, Integer> departquantity_column;
+    private TableColumn<DepartLot, String> lot_column3;
     @FXML
-    private TableColumn<DepartLot, Integer> departquantitybox_column;
+    private TableColumn<DepartLot, Integer> quantity_column3;
     @FXML
-    private TableColumn<DepartLot, String> departstatus_column;
+    private TableColumn<DepartLot, Integer> boxquantity_column3;
     @FXML
-    private TableColumn<DepartLot, String> departprocess_column;
+    private TableColumn<DepartLot, String> process_column3;
+    @FXML
+    private TableColumn<DepartLot, String> status_column3;
     
     @FXML
     private TextField incomingqty_field;
@@ -194,26 +196,26 @@ public class TransactionHistoryFX implements Initializable {
     }
     
     public void updateDepartLotTable(){
-        depart_tableview.getItems().setAll(mergeByDepartReport_Partnumber(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()))));
+        departlot_tableview.getItems().setAll(mergeByDepartReport_Partnumber(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()))));
     }
     
     public void updateList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
         try{
             process_tableview.setItems(FXCollections.observableArrayList(msabase.getProcessReportDAO().listProductPartDateRange(product_part, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
-            incoming_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, false, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
+            incominglot_tableview.setItems(FXCollections.observableArrayList(msabase.getIncomingLotDAO().listDateRange(product_part, false, DAOUtil.toUtilDate(start_date), DAOUtil.toUtilDate(end_date))));
         }catch(Exception e){
             System.out.println("Failed to update transaction history list");
         }
     }
     
     public void setIncomingReportTable(){
-        incomingid_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getIncomingreport_id()+""));
-        incomingdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
-        incominglotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        incomingrevision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision()));
-        incomingquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        incomingboxquantity_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
-        incomingstatus_column.setCellValueFactory(new PropertyValueFactory<>("status"));
+        id_column1.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getIncomingreport_id()));
+        date_column1.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        lot_column1.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        rev_column1.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision()));
+        quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        boxquantity_column1.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        status_column1.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
     
     public void setProcessReportTable(){
@@ -227,16 +229,17 @@ public class TransactionHistoryFX implements Initializable {
     }
     
     public void setDepartLotTable(){
-        departid_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartreport_id()+""));
-        departdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
-        departlotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        departrevision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision()));
-        departquantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        departquantitybox_column.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
-        departstatus_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
-        departprocess_column.setCellValueFactory(new PropertyValueFactory<>("process"));
+        id_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDepartreport_id()+""));
+        date_column3.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        part_column3.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        rev_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision()));
+        lot_column3.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        quantity_column3.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        boxquantity_column3.setCellValueFactory(new PropertyValueFactory<>("box_quantity"));
+        process_column3.setCellValueFactory(new PropertyValueFactory<>("process"));
+        status_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getStatus()));
     }
-   /* 
+    /*
     public void setWeeklyTableViewItems(){
         weeklystartdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getStart_date()))));
         weeklyenddate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getEnd_date()))));
@@ -252,18 +255,18 @@ public class TransactionHistoryFX implements Initializable {
     }
     */
     public void setFieldValues(){
-        incomingqty_field.setText(""+getIncomingQuantity(incoming_tableview.getItems()));
-        incomingnew_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Virgen"));
-        incomingrework_field.setText(""+getIncomingStatus(incoming_tableview.getItems(), "Rechazo"));
+        incomingqty_field.setText(""+getIncomingQuantity(incominglot_tableview.getItems()));
+        incomingnew_field.setText(""+getIncomingStatus(incominglot_tableview.getItems(), "Virgen"));
+        incomingrework_field.setText(""+getIncomingStatus(incominglot_tableview.getItems(), "Rechazo"));
         scrapqty_field.setText(""+getScrapReportQuantity(msabase.getScrapReportDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))));
         processqty_field.setText(""+getProcessQuantity(process_tableview.getItems()));
         processgood_field.setText(""+getProcessStatus(process_tableview.getItems(), "Bueno"));
         processbad_field.setText(""+getProcessStatus(process_tableview.getItems(), "Malo"));
-        departqty_field.setText(""+getDepartQuantity(depart_tableview.getItems()));
-        departrejected_field.setText(""+getDepartStatus(depart_tableview.getItems(), "Rechazado"));
-        departaccepted_field.setText(""+(getDepartQuantity(depart_tableview.getItems()) - getDepartStatus(depart_tableview.getItems(), "Rechazado")));
+        departqty_field.setText(""+getDepartQuantity(departlot_tableview.getItems()));
+        departrejected_field.setText(""+getDepartStatus(departlot_tableview.getItems(), "Rechazado"));
+        departaccepted_field.setText(""+(getDepartQuantity(departlot_tableview.getItems()) - getDepartStatus(departlot_tableview.getItems(), "Rechazado")));
         onhand_field.setText(""+(getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), false, DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))) - getDepartQuantity(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))) - getScrapReportQuantity(msabase.getScrapReportDAO().listProductPart(partnumber_combo.getSelectionModel().getSelectedItem()))));
-        balance_field.setText(""+((getIncomingQuantity(incoming_tableview.getItems()))-(getDepartQuantity(depart_tableview.getItems())) - Integer.parseInt(scrapqty_field.getText())));
+        balance_field.setText(""+((getIncomingQuantity(incominglot_tableview.getItems()))-(getDepartQuantity(departlot_tableview.getItems())) - Integer.parseInt(scrapqty_field.getText())));
     }
     
     public Integer getIncomingQuantity(List<IncomingLot> incominglot_list){
@@ -471,11 +474,15 @@ public class TransactionHistoryFX implements Initializable {
         ArrayList<Integer> departreport_id = new ArrayList();
         ArrayList<String> partnumber = new ArrayList();
         ArrayList<String> part_revision = new ArrayList();
+        ArrayList<String> lot_number = new ArrayList();
+        ArrayList<String> status = new ArrayList();
+        ArrayList<String> process = new ArrayList();
         ArrayList<DepartLot> mergedList = new ArrayList();
+        
         for(DepartLot depart_lot : unfilteredList){
-            if(departreport_id.contains(depart_lot.getDepartreport_id()) && partnumber.contains(depart_lot.getPart_number()) && part_revision.contains(depart_lot.getPart_revision())){
+            if(process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()) && departreport_id.contains(depart_lot.getDepartreport_id()) && partnumber.contains(depart_lot.getPart_number()) && part_revision.contains(depart_lot.getPart_revision())){
                 for(DepartLot listitem : mergedList){
-                    if(depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id()) && depart_lot.getPart_number().equals(listitem.getPart_number()) && depart_lot.getPart_revision().equals(listitem.getPart_revision())){
+                    if(depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getLot_number().equals(listitem.getLot_number()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id()) && depart_lot.getPart_number().equals(listitem.getPart_number()) && depart_lot.getPart_revision().equals(listitem.getPart_revision())){
                         mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + depart_lot.getQuantity());
                         mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + depart_lot.getBox_quantity());
                         break;
@@ -486,6 +493,9 @@ public class TransactionHistoryFX implements Initializable {
                 departreport_id.add(depart_lot.getDepartreport_id());
                 partnumber.add(depart_lot.getPart_number());
                 part_revision.add(depart_lot.getPart_revision());
+                lot_number.add(depart_lot.getLot_number());
+                status.add(depart_lot.getStatus());
+                process.add(depart_lot.getProcess());
                 
                 DepartLot item = new DepartLot();
                 item.setReport_date(depart_lot.getReport_date());
@@ -495,6 +505,10 @@ public class TransactionHistoryFX implements Initializable {
                 item.setPart_revision(depart_lot.getPart_revision());
                 item.setQuantity(depart_lot.getQuantity());
                 item.setBox_quantity(depart_lot.getBox_quantity());
+                item.setLot_number(depart_lot.getLot_number());
+                item.setProcess(depart_lot.getProcess());
+                item.setPending(depart_lot.isPending());
+                item.setRejected(depart_lot.isPending());
                 mergedList.add(item);
             }
         }

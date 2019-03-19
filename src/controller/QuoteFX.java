@@ -228,6 +228,7 @@ public class QuoteFX implements Initializable {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUnit_price(getUnit_priceValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getQuoteItemDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             quoteitem_tableview.refresh();
+            quote_tableview.refresh();
         });
         
         maximumthickness_column.setCellValueFactory(c -> new SimpleStringProperty(""+df.format(c.getValue().getSpecitem_maximumthicknessMM())+" MM"));

@@ -115,10 +115,11 @@ public class DepartLot implements Serializable {
     }
     
     public String getStatus(){
+        if(pending){
+            return "Pendiente";
+        }
         if(rejected){
             return "Rechazado";
-        }else if(pending){
-            return "Pendiente";
         }else{
             return "Facturado";
         }
