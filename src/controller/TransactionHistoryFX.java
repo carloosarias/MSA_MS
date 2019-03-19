@@ -159,6 +159,8 @@ public class TransactionHistoryFX implements Initializable {
     @FXML
     private Button update_button;
     
+    private List<DepartLot> departlot_list;
+    
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     /**
@@ -196,7 +198,8 @@ public class TransactionHistoryFX implements Initializable {
     }
     
     public void updateDepartLotTable(){
-        departlot_tableview.getItems().setAll(mergeByDepartReport_Partnumber(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()))));
+        departlot_list = msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()));
+        departlot_tableview.getItems().setAll(mergeByDepartReport_Partnumber(departlot_list));
     }
     
     public void updateList(ProductPart product_part, LocalDate start_date, LocalDate end_date){
@@ -258,15 +261,15 @@ public class TransactionHistoryFX implements Initializable {
         incomingqty_field.setText(""+getIncomingQuantity(incominglot_tableview.getItems()));
         incomingnew_field.setText(""+getIncomingStatus(incominglot_tableview.getItems(), "Virgen"));
         incomingrework_field.setText(""+getIncomingStatus(incominglot_tableview.getItems(), "Rechazo"));
-        scrapqty_field.setText(""+getScrapReportQuantity(msabase.getScrapReportDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))));
+        //scrapqty_field.setText(""+getScrapReportQuantity(msabase.getScrapReportDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))));
         processqty_field.setText(""+getProcessQuantity(process_tableview.getItems()));
         processgood_field.setText(""+getProcessStatus(process_tableview.getItems(), "Bueno"));
         processbad_field.setText(""+getProcessStatus(process_tableview.getItems(), "Malo"));
         departqty_field.setText(""+getDepartQuantity(departlot_tableview.getItems()));
         departrejected_field.setText(""+getDepartStatus(departlot_tableview.getItems(), "Rechazado"));
         departaccepted_field.setText(""+(getDepartQuantity(departlot_tableview.getItems()) - getDepartStatus(departlot_tableview.getItems(), "Rechazado")));
-        onhand_field.setText(""+(getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), false, DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))) - getDepartQuantity(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))) - getScrapReportQuantity(msabase.getScrapReportDAO().listProductPart(partnumber_combo.getSelectionModel().getSelectedItem()))));
-        balance_field.setText(""+((getIncomingQuantity(incominglot_tableview.getItems()))-(getDepartQuantity(departlot_tableview.getItems())) - Integer.parseInt(scrapqty_field.getText())));
+        //onhand_field.setText(""+(getIncomingQuantity(msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), false, DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))) - getDepartQuantity(msabase.getDepartLotDAO().listDateRange(partnumber_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(LocalDate.MIN), DAOUtil.toUtilDate(LocalDate.now()))) - getScrapReportQuantity(msabase.getScrapReportDAO().listProductPart(partnumber_combo.getSelectionModel().getSelectedItem()))));
+        //balance_field.setText(""+((getIncomingQuantity(incominglot_tableview.getItems()))-(getDepartQuantity(departlot_tableview.getItems())) - Integer.parseInt(scrapqty_field.getText())));
     }
     
     public Integer getIncomingQuantity(List<IncomingLot> incominglot_list){

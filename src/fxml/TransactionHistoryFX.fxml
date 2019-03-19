@@ -1,403 +1,355 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionHistoryFX">
+<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionHistoryFX">
    <children>
-      <VBox alignment="CENTER">
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+          <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <HBox>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
                <children>
-                  <VBox>
-                     <children>
-                        <Label text="Número de Parte:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <ComboBox fx:id="partnumber_combo" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </ComboBox>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Desde:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker fx:id="startdate_picker" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-                  <VBox>
-                     <children>
-                        <Label text="Hasta:">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </Label>
-                        <DatePicker fx:id="enddate_picker" prefWidth="150.0">
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </DatePicker>
-                     </children>
-                  </VBox>
-                  <VBox alignment="BOTTOM_LEFT">
-                     <children>
-                        <Button fx:id="update_button" mnemonicParsing="false" text="Actualizar" />
-                     </children>
-                     <HBox.margin>
+                  <Label text="Número de Parte:">
+                     <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </HBox.margin>
-                  </VBox>
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox fx:id="partnumber_combo" prefWidth="150.0" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Desde:" GridPane.columnIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker fx:id="startdate_picker" prefWidth="150.0" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <Label text="Hasta:" GridPane.columnIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker fx:id="enddate_picker" prefWidth="150.0" GridPane.columnIndex="5">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </DatePicker>
                </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <VBox prefWidth="835.0">
-                     <children>
-                        <TabPane prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
-                          <tabs>
-                            <Tab text="Reciba">
-                                 <content>
-                                    <HBox>
-                                       <children>
-                                          <VBox>
-                                             <children>
-                                                <TableView fx:id="incominglot_tableview" prefHeight="600.0" prefWidth="827.0">
-                                                  <columns>
-                                                    <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                                                    <TableColumn fx:id="date_column1" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Fecha" />
-                                                      <TableColumn fx:id="part_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-                                                      <TableColumn fx:id="rev_column1" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                                                      <TableColumn fx:id="lot_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                                                      <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                                         <columns>
-                                                            <TableColumn fx:id="quantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
-                                                            <TableColumn fx:id="boxquantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
-                                                         </columns>
-                                                      </TableColumn>
-                                                      <TableColumn fx:id="status_column1" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
-                                                  </columns>
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </TableView>
-                                             </children>
-                                          </VBox>
-                                       </children></HBox>
-                                 </content>
-                              </Tab>
-                            <Tab text="Producción">
-                                 <content>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <VBox>
-                                             <children>
-                                                <TableView fx:id="process_tableview" prefHeight="600.0" prefWidth="827.0">
-                                                   <columns>
-                                                      <TableColumn fx:id="processid_column" prefWidth="100.0" resizable="false" text="No. de Reporte" />
-                                                      <TableColumn fx:id="processdate_column" prefWidth="100.0" resizable="false" text="Fecha" />
-                                                      <TableColumn fx:id="processlotnumber_column" prefWidth="100.0" resizable="false" text="No. de Lote" />
-                                                      <TableColumn fx:id="processrevision_column" prefWidth="100.0" resizable="false" text="Revisión" />
-                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad">
-                                                         <columns>
-                                                            <TableColumn fx:id="processquantity_column" prefWidth="100.0" resizable="false" text="Piezas" />
-                                                            <TableColumn prefWidth="100.0" resizable="false" text="N/A" />
-                                                         </columns>
-                                                      </TableColumn>
-                                                      <TableColumn fx:id="processstatus_column" prefWidth="100.0" resizable="false" text="Estado" />
-                                                      <TableColumn fx:id="processprocess_column" prefWidth="127.0" resizable="false" text="Proceso" />
-                                                   </columns>
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </TableView>
-                                             </children>
-                                          </VBox>
-                                       </children></HBox>
-                                 </content>
-                              </Tab>
-                              <Tab text="Remisiones">
-                                 <content>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <VBox>
-                                             <children>
-                                                <TableView fx:id="departlot_tableview" prefHeight="600.0" prefWidth="827.0">
-                                                   <columns>
-                                                      <TableColumn fx:id="id_column3" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                                                      <TableColumn fx:id="date_column3" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                                                      <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-                                                      <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                                                      <TableColumn fx:id="lot_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                                                      <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                                         <columns>
-                                                            <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
-                                                            <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
-                                                         </columns>
-                                                      </TableColumn>
-                                                      <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
-                                                      <TableColumn fx:id="status_column3" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
-                                                   </columns>
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </TableView>
-                                             </children>
-                                          </VBox>
-                                       </children></HBox>
-                                 </content>
-                              </Tab>
-                              <Tab text="Resumen Semanal">
-                                 <content>
-                                    <HBox>
-                                       <children>
-                                          <VBox>
-                                             <children>
-                                                <TableView fx:id="weekly_tableview" prefHeight="571.0">
-                                                   <columns>
-                                                      <TableColumn prefWidth="100.0" resizable="false" text="Fecha">
-                                                         <columns>
-                                                            <TableColumn fx:id="weeklystartdate_column" prefWidth="75.0" resizable="false" text="Desde" />
-                                                            <TableColumn fx:id="weeklyenddate_column" prefWidth="75.0" resizable="false" text="Hasta" />
-                                                         </columns>
-                                                      </TableColumn>
-                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad Reciba">
-                                                         <columns>
-                                                            <TableColumn fx:id="weeklyincomingtotal_column" prefWidth="75.0" resizable="false" text="Total" />
-                                                            <TableColumn fx:id="weeklyincomingnew_column" prefWidth="75.0" resizable="false" text="Virgen" />
-                                                            <TableColumn fx:id="weeklyincomingrejected_column" prefWidth="75.0" resizable="false" text="Rechazo" />
-                                                         </columns>
-                                                      </TableColumn>
-                                                      <TableColumn prefWidth="100.0" resizable="false" text="Cantidad Producción">
-                                                         <columns>
-                                                            <TableColumn fx:id="weeklyprocesstotal_column" prefWidth="75.0" resizable="false" text="Total" />
-                                                            <TableColumn fx:id="weeklyprocessgood_column" prefWidth="75.0" resizable="false" text="Bueno" />
-                                                            <TableColumn fx:id="weeklyprocessbad_column" prefWidth="75.0" resizable="false" text="Malo" />
-                                                         </columns>
-                                                      </TableColumn>
-                                                      <TableColumn prefWidth="75.0" resizable="false" text="Cantidad Remisiones">
-                                                         <columns>
-                                                            <TableColumn fx:id="weeklydeparttotal_column" prefWidth="75.0" resizable="false" text="Total" />
-                                                            <TableColumn fx:id="weeklydepartaccepted_column" prefWidth="75.0" resizable="false" text="Aceptada" />
-                                                            <TableColumn fx:id="weeklydepartrejected_column" prefWidth="75.0" resizable="false" text="Rechazo" />
-                                                         </columns>
-                                                      </TableColumn>
-                                                   </columns>
-                                                   <VBox.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </VBox.margin>
-                                                </TableView>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </HBox>
-                                 </content>
-                              </Tab>
-                          </tabs>
-                           <VBox.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </VBox.margin>
-                        </TabPane>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <VBox>
-                     <children>
-                        <HBox>
+            </GridPane>
+            <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
+              <tabs>
+                  <Tab text="Reciba">
+                     <content>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Total Recibido (Rango):">
-                                 <HBox.margin>
+                              <TableView fx:id="incominglot_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                                <columns>
+                                  <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                  <TableColumn fx:id="date_column1" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Fecha" />
+                                    <TableColumn fx:id="part_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                                    <TableColumn fx:id="rev_column1" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                                    <TableColumn fx:id="lot_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
+                                       <columns>
+                                          <TableColumn fx:id="quantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
+                                          <TableColumn fx:id="boxquantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn fx:id="status_column1" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
+                                </columns>
+                                 <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="incomingqty_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <Separator prefWidth="200.0" />
-                        <HBox>
-                           <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Total Enviado (Rango):">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="departqty_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <Separator />
-                        <HBox>
-                           <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Carga a Proceso (Rango):">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="processqty_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <Separator />
-                        <HBox>
-                           <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Scrap (Rango):">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="scrapqty_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  <VBox prefWidth="549.0">
-                     <children>
-                        <HBox>
-                           <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Virgen:">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="incomingnew_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Retrabajo:">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="incomingrework_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <Separator />
-                        <HBox>
-                           <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Aceptado:">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="departaccepted_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Rechazado:">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="departrejected_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <Separator />
-                        <HBox>
-                           <children>
-                              <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Bueno:">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="processgood_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Malo:">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="processbad_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <Separator />
-                        <HBox>
-                           <children>
-                              <HBox>
+                                 </GridPane.margin>
+                              </TableView>
+                              <GridPane GridPane.rowIndex="1">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                </rowConstraints>
                                  <children>
-                                    <Label alignment="CENTER_RIGHT" prefWidth="120.0" text="Balance (Rango):">
-                                       <HBox.margin>
+                                    <Label alignment="CENTER_RIGHT" text="Total Recibido:" GridPane.rowIndex="2">
+                                       <GridPane.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
+                                       </GridPane.margin>
                                     </Label>
-                                    <TextField fx:id="balance_field" editable="false" prefWidth="120.0">
-                                       <HBox.margin>
+                                    <Label alignment="CENTER_RIGHT" text="Material Virgen:">
+                                       <GridPane.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </HBox.margin>
-                                    </TextField>
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label alignment="CENTER_RIGHT" text="Material Retrabajo:" GridPane.rowIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="virgin_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="rework_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="incominglotquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
                                  </children>
-                              </HBox>
-                              <Label alignment="CENTER_RIGHT" prefWidth="150.0" text="Total On-Hand (General):">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </Label>
-                              <TextField fx:id="onhand_field" editable="false" prefWidth="120.0">
-                                 <HBox.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </HBox.margin>
-                              </TextField>
+                              </GridPane>
                            </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-         </children></VBox>
+                        </GridPane>
+                     </content>
+                  </Tab>
+                <Tab text="Remisiones">
+                     <content>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                              <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <TableView fx:id="departlot_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                                 <columns>
+                                    <TableColumn fx:id="id_column3" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                    <TableColumn fx:id="date_column3" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                                    <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                                    <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                                    <TableColumn fx:id="lot_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
+                                       <columns>
+                                          <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
+                                          <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                                    <TableColumn fx:id="status_column3" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
+                                 </columns>
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </TableView>
+                              <GridPane GridPane.rowIndex="1">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                    <RowConstraints vgrow="SOMETIMES" />
+                                    <RowConstraints vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER_RIGHT" text="Total Enviado:" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="departlotbalance_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label alignment="CENTER_RIGHT" text="Material Enviado:">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label alignment="CENTER_RIGHT" text="Material Rechazado:" GridPane.rowIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="departlotrejected_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="departlotquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </GridPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Producción">
+                     <content>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <TableView fx:id="process_tableview">
+                                 <columns>
+                                    <TableColumn fx:id="processid_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                                    <TableColumn fx:id="processdate_column" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                                    <TableColumn fx:id="part_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                                    <TableColumn fx:id="processrevision_column" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                                    <TableColumn fx:id="processlotnumber_column" minWidth="-Infinity" prefWidth="120.0" text="No. de Lote" />
+                                    <TableColumn fx:id="processquantity_column" minWidth="-Infinity" prefWidth="75.0" text="Cantidad" />
+                                    <TableColumn fx:id="processprocess_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                                    <TableColumn fx:id="processstatus_column" minWidth="-Infinity" prefWidth="100.0" text="Calidad" />
+                                 </columns>
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </TableView>
+                              <GridPane GridPane.rowIndex="1">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                  <RowConstraints vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER_RIGHT" text="Total Procesado:" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label alignment="CENTER_RIGHT" text="Material Bueno:">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label alignment="CENTER_RIGHT" text="Material Malo:" GridPane.rowIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="quality_label1" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="quality_label2" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label fx:id="processquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </GridPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Resumen Semanal">
+                     <content>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <TableView fx:id="weekly_tableview">
+                                 <columns>
+                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Fecha">
+                                       <columns>
+                                          <TableColumn fx:id="weeklystartdate_column" minWidth="-Infinity" prefWidth="100.0" text="Desde" />
+                                          <TableColumn fx:id="weeklyenddate_column" minWidth="-Infinity" prefWidth="100.0" text="Hasta" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Reciba">
+                                       <columns>
+                                          <TableColumn fx:id="weeklyincomingnew_column" minWidth="-Infinity" prefWidth="75.0" text="Virgen" />
+                                          <TableColumn fx:id="weeklyincomingrejected_column" minWidth="-Infinity" prefWidth="75.0" text="Retrabajo" />
+                                          <TableColumn fx:id="weeklyincomingtotal_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Remisiones">
+                                       <columns>
+                                          <TableColumn fx:id="weeklydepartaccepted_column" minWidth="-Infinity" prefWidth="75.0" text="Envíos" />
+                                          <TableColumn fx:id="weeklydepartrejected_column" minWidth="-Infinity" prefWidth="75.0" text="Rechazos" />
+                                          <TableColumn fx:id="weeklydeparttotal_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Producción">
+                                       <columns>
+                                          <TableColumn fx:id="weeklyprocessgood_column" minWidth="-Infinity" prefWidth="75.0" text="Bueno" />
+                                          <TableColumn fx:id="weeklyprocessbad_column" minWidth="-Infinity" prefWidth="75.0" text="Malo" />
+                                          <TableColumn fx:id="weeklyprocesstotal_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                       </columns>
+                                    </TableColumn>
+                                 </columns>
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </TableView>
+                           </children>
+                        </GridPane>
+                     </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </GridPane>
    </children>
 </HBox>
