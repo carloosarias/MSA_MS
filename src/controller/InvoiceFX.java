@@ -19,6 +19,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -240,6 +242,7 @@ public class InvoiceFX implements Initializable {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setTerms(t.getNewValue());
             msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             invoice_tableview.refresh();
+            invoice_tableview1.refresh();
         });
         pending_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().pendingToString()));
         pending_column.setCellFactory(ComboBoxTableCell.forTableColumn("Pendiente", "Pagada"));
@@ -247,23 +250,33 @@ public class InvoiceFX implements Initializable {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPending(t.getNewValue());
             msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             invoice_tableview.refresh();
+            invoice_tableview1.refresh();
         });
         
         id_column1.setCellValueFactory(new PropertyValueFactory<>("id"));
-        paymentdate_column.setCellValueFactory(c -> new SimpleStringProperty(getPayment_dateValue(c.getValue().getPayment_date())));
+        paymentdate_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().payment_dateToString()));
+        paymentdate_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        paymentdate_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPayment_date(getPayment_dateValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            invoice_tableview.refresh();
+            invoice_tableview1.refresh();
+        });
         checknumber_column.setCellValueFactory(new PropertyValueFactory<>("check_number"));
         checknumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
         checknumber_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setCheck_number(t.getNewValue());
             msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             invoice_tableview.refresh();
+            invoice_tableview1.refresh();
         });
         quantitypaid_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuantity_paid())+" USD"));
         quantitypaid_column.setCellFactory(TextFieldTableCell.forTableColumn());
         quantitypaid_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity_paid(getQuantity_paidValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            invoice_tableview.refresh();
+             invoice_tableview.refresh();
+            invoice_tableview1.refresh();
         });
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -271,6 +284,7 @@ public class InvoiceFX implements Initializable {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setCheck_number(t.getNewValue());
             msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             invoice_tableview.refresh();
+            invoice_tableview1.refresh();
         });
     }
     
@@ -380,11 +394,11 @@ public class InvoiceFX implements Initializable {
         return mergedList;
     }
     
-    public String getPayment_dateValue(Date date){
+    public Date getPayment_dateValue(Invoice invoice, String date){
         try{
-            return getFormattedDate(DAOUtil.toLocalDate(date));
+            return DAOUtil.toUtilDate(LocalDate.parse(date, MainApp.dateFormat));
         }catch(Exception e){
-            return "N/A";
+            return invoice.getPayment_date();
         }
     }
     

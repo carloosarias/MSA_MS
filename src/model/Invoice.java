@@ -5,8 +5,10 @@
  */
 package model;
 
+import dao.DAOUtil;
 import java.io.Serializable;
 import java.util.Date;
+import static msa_ms.MainApp.getFormattedDate;
 
 /**
  *
@@ -104,6 +106,14 @@ public class Invoice implements Serializable{
             return "Pagada";
         }else{
             return "Pendiente";
+        }
+    }
+    
+    public String payment_dateToString(){
+        try{
+            return getFormattedDate(DAOUtil.toLocalDate(payment_date));
+        }catch(Exception e){
+            return "N/A";
         }
     }
     
