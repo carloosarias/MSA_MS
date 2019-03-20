@@ -190,6 +190,7 @@ public class CompanyContactDAOJDBC implements CompanyContactDAO {
             contact.getPosition(),
             contact.getEmail(),
             contact.getPhone_number(),
+            contact.isActive(),
             contact.getId()
         };
         

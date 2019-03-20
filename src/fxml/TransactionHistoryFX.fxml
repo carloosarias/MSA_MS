@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionHistoryFXNEW">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionHistoryFXNEW">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -146,16 +147,15 @@
                         <RowConstraints vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TableView fx:id="process_tableview">
+                        <TableView fx:id="processreport_tableview">
                            <columns>
-                              <TableColumn fx:id="id_column3" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                              <TableColumn fx:id="date_column3" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                              <TableColumn fx:id="tank_column" minWidth="-Infinity" prefWidth="200.0" text="Tanque" />
+                              <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="120.0" text="Proceso" />
                               <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
                               <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                              <TableColumn fx:id="lot_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                              <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Cantidad" />
-                              <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
-                              <TableColumn fx:id="status_column3" minWidth="-Infinity" prefWidth="100.0" text="Calidad" />
+                              <TableColumn fx:id="quality_column1" minWidth="-Infinity" prefWidth="120.0" text="Material Bueno" />
+                              <TableColumn fx:id="quality_column2" minWidth="-Infinity" prefWidth="120.0" text="Material Malo" />
+                              <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="120.0" text="Total Procesado" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -165,7 +165,7 @@
                   </GridPane>
                </content>
             </Tab>
-            <Tab text="Resumen Semanal">
+            <Tab disable="true" text="Resumen Semanal">
                <content>
                   <GridPane>
                      <columnConstraints>
@@ -185,9 +185,9 @@
                               </TableColumn>
                               <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Reciba">
                                  <columns>
-                                    <TableColumn fx:id="virgin_column" minWidth="-Infinity" prefWidth="75.0" text="Virgen" />
-                                    <TableColumn fx:id="rework_column" minWidth="-Infinity" prefWidth="75.0" text="Retrabajo" />
-                                    <TableColumn fx:id="incominglotquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                    <TableColumn fx:id="virgin_column" minWidth="-Infinity" prefWidth="100.0" text="Virgen" />
+                                    <TableColumn fx:id="rework_column" minWidth="-Infinity" prefWidth="100.0" text="Retrabajo" />
+                                    <TableColumn fx:id="incominglotquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total Recibido" />
                                  </columns>
                               </TableColumn>
                               <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Remisiones">
@@ -219,6 +219,8 @@
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
             <ColumnConstraints hgrow="SOMETIMES" />
          </columnConstraints>
          <rowConstraints>
@@ -228,7 +230,7 @@
             <GridPane>
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="75.0" prefWidth="75.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints vgrow="SOMETIMES" />
@@ -268,10 +270,10 @@
                   </Label>
                </children>
             </GridPane>
-            <GridPane GridPane.columnIndex="1">
+            <GridPane GridPane.columnIndex="2">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="75.0" prefWidth="75.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints vgrow="SOMETIMES" />
@@ -311,7 +313,7 @@
                   </Label>
                </children>
             </GridPane>
-            <GridPane GridPane.columnIndex="2">
+            <GridPane GridPane.columnIndex="4">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                   <ColumnConstraints hgrow="SOMETIMES" />
@@ -354,6 +356,16 @@
                   </Label>
                </children>
             </GridPane>
+            <Separator orientation="VERTICAL" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Separator>
+            <Separator orientation="VERTICAL" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Separator>
          </children>
       </GridPane>
    </children>

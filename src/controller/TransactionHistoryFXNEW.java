@@ -83,23 +83,21 @@ public class TransactionHistoryFXNEW implements Initializable {
     @FXML
     private TableColumn<DepartLot, String> status_column2;
     @FXML
-    private TableView<ProcessReport> process_tableview;
+    private TableView<ProcessReport> processreport_tableview;
     @FXML
-    private TableColumn<ProcessReport, Integer> id_column3;
+    private TableColumn<ProcessReport, Integer> tank_column;
     @FXML
-    private TableColumn<ProcessReport, String> date_column3;
+    private TableColumn<ProcessReport, String> process_column3;
     @FXML
     private TableColumn<ProcessReport, String> part_column3;
     @FXML
     private TableColumn<ProcessReport, String> rev_column3;
     @FXML
-    private TableColumn<ProcessReport, String> lot_column3;
+    private TableColumn<ProcessReport, String> quality_column1;
+    @FXML
+    private TableColumn<ProcessReport, String> quality_column2;
     @FXML
     private TableColumn<ProcessReport, Integer> quantity_column3;
-    @FXML
-    private TableColumn<ProcessReport, String> process_column3;
-    @FXML
-    private TableColumn<ProcessReport, String> status_column3;
     @FXML
     private TableView<?> weekly_tableview;
     @FXML
@@ -119,9 +117,9 @@ public class TransactionHistoryFXNEW implements Initializable {
     @FXML
     private TableColumn<?, ?> departlotbalance_column;
     @FXML
-    private TableColumn<?, ?> quality_column1;
+    private TableColumn<?, ?> quality_column3;
     @FXML
-    private TableColumn<?, ?> quality_column2;
+    private TableColumn<?, ?> quality_column4;
     @FXML
     private TableColumn<?, ?> processquantity_column;
     @FXML
@@ -184,12 +182,12 @@ public class TransactionHistoryFXNEW implements Initializable {
     public void updateProcessReportTable(){
         try{
             processreport_list = msabase.getProcessReportDAO().listProductPartDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()));
-            process_tableview.getItems().setAll(mergeByProcess_Partnumber(processreport_list));
+            processreport_tableview.getItems().setAll(mergeByProcess_Partnumber(processreport_list));
             quality_label1.setText(""+getProcessReportQualityValue(true, false));
             quality_label2.setText(""+getProcessReportQualityValue(false, false));
             processquantity_label.setText(""+getProcessReportQualityValue(true, true));
         }catch(Exception e){
-            process_tableview.getItems().clear();
+            processreport_tableview.getItems().clear();
             quality_label1.setText("0");
             quality_label2.setText("0");
             processquantity_label.setText("0");
@@ -228,7 +226,7 @@ public class TransactionHistoryFXNEW implements Initializable {
     
     public int getProcessReportQualityValue(boolean quality, boolean skip){
         int quantity_total = 0;
-        for(ProcessReport item: process_tableview.getItems()){
+        for(ProcessReport item: processreport_tableview.getItems()){
             if(item.isQuality_passed() == quality || skip){
                 quantity_total += item.getQuantity();
             }
@@ -257,14 +255,13 @@ public class TransactionHistoryFXNEW implements Initializable {
     }
 
     public void setProcessReportTable(){
-        id_column3.setCellValueFactory(new PropertyValueFactory<>("id"));
-        date_column3.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        tank_column.setCellValueFactory(new PropertyValueFactory<>("tank_name"));
+        process_column3.setCellValueFactory(new PropertyValueFactory<>("process"));
         part_column3.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         rev_column3.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        lot_column3.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        quality_column1.setCellValueFactory(new PropertyValueFactory<>("good_quantity"));
+        quality_column2.setCellValueFactory(new PropertyValueFactory<>("bad_quantity"));
         quantity_column3.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        status_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().quality_passedToString()));
-        process_column3.setCellValueFactory(new PropertyValueFactory<>("process"));
     }
     
     public void setDepartLotTable(){

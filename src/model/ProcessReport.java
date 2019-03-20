@@ -34,6 +34,11 @@ public class ProcessReport implements Serializable {
     private String tank_name;
     private String equipment_name;
     
+    //TRANSACTION HISTORY
+    private Integer good_quantity;
+    private Integer bad_quantity;
+    
+    
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
         return id;
@@ -177,6 +182,23 @@ public class ProcessReport implements Serializable {
 
     public void setEquipment_name(String equipment_name) {
         this.equipment_name = equipment_name;
+    }
+    
+    //TRANSACTION HISTORY
+    public Integer getGood_quantity() {
+        return good_quantity;
+    }
+
+    public void setGood_quantity(Integer good_quantity) {
+        this.good_quantity = good_quantity;
+    }
+
+    public Integer getBad_quantity() {
+        return bad_quantity;
+    }
+
+    public void setBad_quantity(Integer bad_quantity) {
+        this.bad_quantity = bad_quantity;
     }
     
     // Object overrides ---------------------------------------------------------------------------
