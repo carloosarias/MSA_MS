@@ -35,7 +35,7 @@
                      <children>
                         <TableView fx:id="departreport_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                            <columns>
-                              <TableColumn fx:id="reportid_column" editable="false" prefWidth="99.0" resizable="false" text="# De Reporte" />
+                              <TableColumn fx:id="reportid_column" editable="false" minWidth="-Infinity" prefWidth="40.0" resizable="false" text="#" />
                               <TableColumn fx:id="employee_column" editable="false" prefWidth="166.0" resizable="false" text="Empleado" />
                               <TableColumn fx:id="reportdate_column" editable="false" prefWidth="123.0" resizable="false" text="Fecha de Reporte" />
                               <TableColumn editable="false" prefWidth="133.0" resizable="false" text="Información de Cliente">
@@ -97,7 +97,7 @@
                      <children>
                         <TabPane tabClosingPolicy="UNAVAILABLE">
                            <tabs>
-                              <Tab text="Detalles Por # de Parte">
+                              <Tab text="Detalles Por Número de Parte">
                                  <content>
                                     <GridPane>
                                        <columnConstraints>
@@ -109,11 +109,11 @@
                                        <children>
                                           <TableView fx:id="departlot_tableview1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                              <columns>
-                                                <TableColumn fx:id="partnumber_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="# De Parte" />
+                                                <TableColumn fx:id="partnumber_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
                                                 <TableColumn editable="false" minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                                                    <columns>
-                                                      <TableColumn fx:id="quantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="# De Piezas" />
-                                                      <TableColumn fx:id="boxquantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="# De Cajas" />
+                                                      <TableColumn fx:id="quantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Piezas o Libras" />
+                                                      <TableColumn fx:id="boxquantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
                                                    </columns>
                                                 </TableColumn>
                                              </columns>
@@ -137,13 +137,13 @@
                                        <children>
                                           <TableView fx:id="departlot_tableview2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                              <columns>
-                                                <TableColumn fx:id="partnumber_column2" editable="false" minWidth="-Infinity" prefWidth="150.0" text="# De Parte" />
-                                                <TableColumn fx:id="lotnumber_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="# De Lote" />
+                                                <TableColumn fx:id="partnumber_column2" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
+                                                <TableColumn fx:id="lotnumber_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
                                                 <TableColumn fx:id="process_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Proceso" />
                                                 <TableColumn editable="false" minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                                                    <columns>
-                                                      <TableColumn fx:id="quantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="# De Piezas" />
-                                                      <TableColumn fx:id="boxquantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="# De Cajas" />
+                                                      <TableColumn fx:id="quantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Piezas o Libras" />
+                                                      <TableColumn fx:id="boxquantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
                                                    </columns>
                                                 </TableColumn>
                                              </columns>
@@ -167,13 +167,13 @@
                                        <children>
                                           <TableView fx:id="departlot_tableview3" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                              <columns>
-                                                <TableColumn fx:id="partnumber_column3" editable="false" minWidth="-Infinity" prefWidth="150.0" text="# De Parte" />
-                                                <TableColumn fx:id="partrevision_column" editable="false" minWidth="-Infinity" prefWidth="150.0" text="# De Revisión" />
-                                                <TableColumn fx:id="lotnumber_column2" minWidth="-Infinity" prefWidth="150.0" text="# De Lote" />
+                                                <TableColumn fx:id="partnumber_column3" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
+                                                <TableColumn fx:id="partrevision_column" editable="false" minWidth="-Infinity" prefWidth="75.0" text="Rev" />
+                                                <TableColumn fx:id="lotnumber_column2" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
                                                 <TableColumn editable="false" minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                                                    <columns>
-                                                      <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="100.0" text="# De Piezas" />
-                                                      <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="100.0" text="# De Cajas" />
+                                                      <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="100.0" text="Piezas o Libras" />
+                                                      <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
                                                    </columns>
                                                 </TableColumn>
                                                 <TableColumn fx:id="process_column2" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Proceso" />

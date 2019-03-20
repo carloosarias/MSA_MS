@@ -27,7 +27,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <ComboBox fx:id="employee_combo" disable="true" focusTraversable="false" prefWidth="150.0" promptText="Empleado">
+                              <ComboBox fx:id="employee_combo" disable="true" focusTraversable="false" prefWidth="150.0">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -41,7 +41,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <DatePicker fx:id="reportdate_picker" focusTraversable="false" prefWidth="150.0" promptText="MM/dd/AAAA">
+                              <DatePicker fx:id="reportdate_picker" focusTraversable="false" prefWidth="150.0" promptText="DD/MMM/AAAA">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -55,7 +55,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <ComboBox fx:id="company_combo" prefWidth="150.0" promptText="Cliente">
+                              <ComboBox fx:id="company_combo" prefWidth="200.0" promptText="Cliente">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -64,12 +64,12 @@
                         </VBox>
                         <VBox>
                            <children>
-                              <Label text="Dirección (Cliente):">
+                              <Label text="Dirección de Envío:">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
                               </Label>
-                              <ComboBox fx:id="address_combo" disable="true" prefWidth="150.0" promptText="Dirección">
+                              <ComboBox fx:id="address_combo" disable="true" prefWidth="200.0" promptText="Dirección">
                                  <VBox.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </VBox.margin>
@@ -103,7 +103,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="lotnumber_field" promptText="No. de Lote">
+                                    <TextField fx:id="lotnumber_field">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -113,7 +113,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <ComboBox fx:id="part_combo" editable="true" prefWidth="150.0" promptText="No. de Parte">
+                                    <ComboBox fx:id="part_combo" editable="true" prefWidth="150.0">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -123,7 +123,7 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <ComboBox fx:id="partrev_combo" disable="true" editable="true" prefWidth="150.0" promptText="Revisión">
+                                    <ComboBox fx:id="partrev_combo" disable="true" editable="true" prefWidth="150.0">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -133,17 +133,17 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <ComboBox fx:id="process_combo" focusTraversable="false" prefWidth="150.0" promptText="Proceso">
+                                    <ComboBox fx:id="process_combo" focusTraversable="false" prefWidth="150.0">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </ComboBox>
-                                    <Label text="Cantidad:">
+                                    <Label text="Piezas o Libras:">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TextField fx:id="quantity_field" promptText="Cantidad">
+                                    <TextField fx:id="quantity_field">
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
@@ -157,14 +157,14 @@
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <TableView fx:id="departlot_tableview" editable="true" focusTraversable="false" prefHeight="282.0" prefWidth="624.0">
+                                    <TableView fx:id="departlot_tableview" editable="true" focusTraversable="false">
                                        <columns>
-                                          <TableColumn fx:id="lotnumber_column" prefWidth="100.0" text="No. de Lote" />
-                                          <TableColumn fx:id="partnumber_column" prefWidth="100.0" text="No. Parte" />
-                                          <TableColumn fx:id="revision_column" prefWidth="100.0" text="Revisión" />
-                                          <TableColumn fx:id="quantity_column" prefWidth="96.0" text="Cantidad" />
-                                          <TableColumn fx:id="process_column" prefWidth="82.0" text="Proceso" />
-                                          <TableColumn fx:id="comments_column" prefWidth="144.0" text="Comentarios" />
+                                          <TableColumn fx:id="partnumber_column" prefWidth="120.0" text="No. Parte" />
+                                          <TableColumn fx:id="revision_column" prefWidth="50.0" text="Rev" />
+                                          <TableColumn fx:id="lotnumber_column" prefWidth="120.0" text="No. de Lote" />
+                                          <TableColumn fx:id="quantity_column" prefWidth="100.0" text="Piezas o Libras" />
+                                          <TableColumn fx:id="process_column" prefWidth="120.0" text="Proceso" />
+                                          <TableColumn fx:id="comments_column" prefWidth="200.0" text="Comentarios" />
                                        </columns>
                                        <VBox.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
