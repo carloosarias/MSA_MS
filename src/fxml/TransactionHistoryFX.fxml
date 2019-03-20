@@ -10,346 +10,351 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<HBox fx:id="root_hbox" alignment="CENTER" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionHistoryFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionHistoryFXNEW">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <GridPane>
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-          <RowConstraints vgrow="SOMETIMES" />
-        </rowConstraints>
+      <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label text="Número de Parte:">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <ComboBox fx:id="partnumber_combo" prefWidth="200.0" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label text="Desde:" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="startdate_picker" prefWidth="150.0" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <Label text="Hasta:" GridPane.columnIndex="4">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker fx:id="enddate_picker" prefWidth="150.0" GridPane.columnIndex="5">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </DatePicker>
+         </children>
+      </GridPane>
+      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+         <tabs>
+            <Tab text="Reciba">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <TableView fx:id="incominglot_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                              <TableColumn fx:id="date_column1" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Fecha" />
+                              <TableColumn fx:id="part_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                              <TableColumn fx:id="rev_column1" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                              <TableColumn fx:id="lot_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
+                                 <columns>
+                                    <TableColumn fx:id="quantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
+                                    <TableColumn fx:id="boxquantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="status_column1" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Remisiones">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <TableView fx:id="departlot_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="id_column2" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                              <TableColumn fx:id="date_column2" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                              <TableColumn fx:id="part_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                              <TableColumn fx:id="rev_column2" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                              <TableColumn fx:id="lot_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
+                                 <columns>
+                                    <TableColumn fx:id="quantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
+                                    <TableColumn fx:id="boxquantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="process_column2" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                              <TableColumn fx:id="status_column2" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Producción">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <TableView fx:id="process_tableview">
+                           <columns>
+                              <TableColumn fx:id="id_column3" minWidth="-Infinity" prefWidth="40.0" text="#" />
+                              <TableColumn fx:id="date_column3" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
+                              <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+                              <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                              <TableColumn fx:id="lot_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                              <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Cantidad" />
+                              <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                              <TableColumn fx:id="status_column3" minWidth="-Infinity" prefWidth="100.0" text="Calidad" />
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Resumen Semanal">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <TableView fx:id="weekly_tableview">
+                           <columns>
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Fecha">
+                                 <columns>
+                                    <TableColumn fx:id="startdate_column" minWidth="-Infinity" prefWidth="100.0" text="Desde" />
+                                    <TableColumn fx:id="enddate_column" minWidth="-Infinity" prefWidth="100.0" text="Hasta" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Reciba">
+                                 <columns>
+                                    <TableColumn fx:id="virgin_column" minWidth="-Infinity" prefWidth="75.0" text="Virgen" />
+                                    <TableColumn fx:id="rework_column" minWidth="-Infinity" prefWidth="75.0" text="Retrabajo" />
+                                    <TableColumn fx:id="incominglotquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Remisiones">
+                                 <columns>
+                                    <TableColumn fx:id="departlotquantity_column" minWidth="-Infinity" prefWidth="75.0" text="Envíos" />
+                                    <TableColumn fx:id="departlotrejected_column" minWidth="-Infinity" prefWidth="75.0" text="Rechazos" />
+                                    <TableColumn fx:id="departlotbalance_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Producción">
+                                 <columns>
+                                    <TableColumn fx:id="quality_column1" minWidth="-Infinity" prefWidth="75.0" text="Bueno" />
+                                    <TableColumn fx:id="quality_column2" minWidth="-Infinity" prefWidth="75.0" text="Malo" />
+                                    <TableColumn fx:id="processquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
+                                 </columns>
+                              </TableColumn>
+                           </columns>
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TableView>
+                     </children>
+                  </GridPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+      <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
             <GridPane>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" />
-                <ColumnConstraints hgrow="SOMETIMES" />
-                  <ColumnConstraints hgrow="SOMETIMES" />
-                  <ColumnConstraints hgrow="SOMETIMES" />
-                  <ColumnConstraints hgrow="SOMETIMES" />
-                  <ColumnConstraints hgrow="SOMETIMES" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints vgrow="SOMETIMES" />
-              </rowConstraints>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <Label text="Número de Parte:">
+                  <Label alignment="CENTER_RIGHT" text="Total Recibido:" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox fx:id="partnumber_combo" prefWidth="150.0" GridPane.columnIndex="1">
-                     <GridPane.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </GridPane.margin>
-                  </ComboBox>
-                  <Label text="Desde:" GridPane.columnIndex="2">
+                  <Label alignment="CENTER_RIGHT" text="Material Virgen:">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <DatePicker fx:id="startdate_picker" prefWidth="150.0" GridPane.columnIndex="3">
-                     <GridPane.margin>
-                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                     </GridPane.margin>
-                  </DatePicker>
-                  <Label text="Hasta:" GridPane.columnIndex="4">
+                  <Label alignment="CENTER_RIGHT" text="Material Retrabajo:" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <DatePicker fx:id="enddate_picker" prefWidth="150.0" GridPane.columnIndex="5">
+                  <Label fx:id="virgin_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
-                  </DatePicker>
+                  </Label>
+                  <Label fx:id="rework_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="incominglotquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
                </children>
             </GridPane>
-            <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
-              <tabs>
-                  <Tab text="Reciba">
-                     <content>
-                        <GridPane>
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <TableView fx:id="incominglot_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                <columns>
-                                  <TableColumn fx:id="id_column1" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                                  <TableColumn fx:id="date_column1" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Fecha" />
-                                    <TableColumn fx:id="part_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-                                    <TableColumn fx:id="rev_column1" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                                    <TableColumn fx:id="lot_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                       <columns>
-                                          <TableColumn fx:id="quantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
-                                          <TableColumn fx:id="boxquantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn fx:id="status_column1" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
-                                </columns>
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TableView>
-                              <GridPane GridPane.rowIndex="1">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints vgrow="SOMETIMES" />
-                                  <RowConstraints vgrow="SOMETIMES" />
-                                  <RowConstraints vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Label alignment="CENTER_RIGHT" text="Total Recibido:" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label alignment="CENTER_RIGHT" text="Material Virgen:">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label alignment="CENTER_RIGHT" text="Material Retrabajo:" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="virgin_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="rework_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="incominglotquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                 </children>
-                              </GridPane>
-                           </children>
-                        </GridPane>
-                     </content>
-                  </Tab>
-                <Tab text="Remisiones">
-                     <content>
-                        <GridPane>
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                              <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <TableView fx:id="departlot_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                 <columns>
-                                    <TableColumn fx:id="id_column2" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                                    <TableColumn fx:id="date_column2" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                                    <TableColumn fx:id="part_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-                                    <TableColumn fx:id="rev_column2" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                                    <TableColumn fx:id="t" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                       <columns>
-                                          <TableColumn fx:id="quantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
-                                          <TableColumn fx:id="boxquantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn fx:id="process_column2" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
-                                    <TableColumn fx:id="status_column2" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
-                                 </columns>
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TableView>
-                              <GridPane GridPane.rowIndex="1">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints vgrow="SOMETIMES" />
-                                    <RowConstraints vgrow="SOMETIMES" />
-                                    <RowConstraints vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Label alignment="CENTER_RIGHT" text="Total Enviado:" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="departlotbalance_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label alignment="CENTER_RIGHT" text="Material Enviado:">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label alignment="CENTER_RIGHT" text="Material Rechazado:" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="departlotrejected_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="departlotquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                 </children>
-                              </GridPane>
-                           </children>
-                        </GridPane>
-                     </content>
-                  </Tab>
-                  <Tab text="Producción">
-                     <content>
-                        <GridPane>
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                            <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <TableView fx:id="process_tableview">
-                                 <columns>
-                                    <TableColumn fx:id="id_column3" minWidth="-Infinity" prefWidth="40.0" text="#" />
-                                    <TableColumn fx:id="date_column3" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                                    <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-                                    <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                                    <TableColumn fx:id="lot_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                                    <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="75.0" text="Cantidad" />
-                                    <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
-                                    <TableColumn fx:id="status_column3" minWidth="-Infinity" prefWidth="100.0" text="Calidad" />
-                                 </columns>
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TableView>
-                              <GridPane GridPane.rowIndex="1">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints vgrow="SOMETIMES" />
-                                  <RowConstraints vgrow="SOMETIMES" />
-                                  <RowConstraints vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Label alignment="CENTER_RIGHT" text="Total Procesado:" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label alignment="CENTER_RIGHT" text="Material Bueno:">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label alignment="CENTER_RIGHT" text="Material Malo:" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="quality_label1" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="quality_label2" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                    <Label fx:id="processquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                       <GridPane.margin>
-                                          <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                       </GridPane.margin>
-                                    </Label>
-                                 </children>
-                              </GridPane>
-                           </children>
-                        </GridPane>
-                     </content>
-                  </Tab>
-                  <Tab text="Resumen Semanal">
-                     <content>
-                        <GridPane>
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <TableView fx:id="weekly_tableview">
-                                 <columns>
-                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Fecha">
-                                       <columns>
-                                          <TableColumn fx:id="startdate_column" minWidth="-Infinity" prefWidth="100.0" text="Desde" />
-                                          <TableColumn fx:id="enddate_column" minWidth="-Infinity" prefWidth="100.0" text="Hasta" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Reciba">
-                                       <columns>
-                                          <TableColumn fx:id="virgin_column" minWidth="-Infinity" prefWidth="75.0" text="Virgen" />
-                                          <TableColumn fx:id="rework_column" minWidth="-Infinity" prefWidth="75.0" text="Retrabajo" />
-                                          <TableColumn fx:id="incominglotquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Remisiones">
-                                       <columns>
-                                          <TableColumn fx:id="departlotquantity_column" minWidth="-Infinity" prefWidth="75.0" text="Envíos" />
-                                          <TableColumn fx:id="departlotrejected_column" minWidth="-Infinity" prefWidth="75.0" text="Rechazos" />
-                                          <TableColumn fx:id="departlotbalance_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
-                                       </columns>
-                                    </TableColumn>
-                                    <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Producción">
-                                       <columns>
-                                          <TableColumn fx:id="quality_column1" minWidth="-Infinity" prefWidth="75.0" text="Bueno" />
-                                          <TableColumn fx:id="quality_column2" minWidth="-Infinity" prefWidth="75.0" text="Malo" />
-                                          <TableColumn fx:id="processquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
-                                       </columns>
-                                    </TableColumn>
-                                 </columns>
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TableView>
-                           </children>
-                        </GridPane>
-                     </content>
-                  </Tab>
-              </tabs>
-            </TabPane>
+            <GridPane GridPane.columnIndex="1">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label alignment="CENTER_RIGHT" text="Total Enviado:" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="departlotbalance_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" text="Material Enviado:">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" text="Material Rechazado:" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="departlotrejected_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="departlotquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+            <GridPane GridPane.columnIndex="2">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label alignment="CENTER_RIGHT" text="Total Procesado:" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" text="Material Bueno:">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" text="Material Malo:" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="quality_label1" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="quality_label2" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="processquantity_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
          </children>
       </GridPane>
    </children>
-</HBox>
+</GridPane>
