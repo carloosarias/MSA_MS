@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,12 +23,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Module;
-import model.PartRevision;
-import model.ProductPart;
 import msa_ms.MainApp;
 
 /**
@@ -165,7 +161,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(process_tab);
                         break;
                     case "Historial de Transacciones":
-                        transactionhistory_tab.setContent((HBox) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
+                        transactionhistory_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/TransactionHistoryFX.fxml")));
                         root_tabpane.getTabs().setAll(transactionhistory_tab);
                         break;
                     case "Scrap":

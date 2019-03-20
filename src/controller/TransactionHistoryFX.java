@@ -466,6 +466,7 @@ public class TransactionHistoryFX implements Initializable {
             this.depart_rejected = depart_rejected;
         }
     }
+    
     public List<DepartLot> mergeByDepartReport_Partnumber(List<DepartLot> unfilteredList){
         //find all part_number
         ArrayList<Integer> departreport_id = new ArrayList();
