@@ -109,9 +109,9 @@ public class Invoice implements Serializable{
     
     public void setPending(String string){
         if(string.equals("Pagada")){
-            pending = true;
-        }else{
             pending = false;
+        }else{
+            pending = true;
         }
     }
     

@@ -40,10 +40,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.AnalysisType;
 import model.CompanyContact;
 import model.Invoice;
 import model.InvoiceItem;
@@ -132,6 +134,13 @@ public class InvoiceFX implements Initializable {
         details_tab.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         invoice_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> observable, Invoice oldValue, Invoice newValue) -> {
+            invoice_tableview1.getSelectionModel().select(newValue);
+            updateInvoiceItemTable();
+            total_label.setText("$ "+df.format(getTotal())+" USD");
+        });
+        
+        invoice_tableview1.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Invoice> obsevable, Invoice oldValue, Invoice newValue) -> {
+            invoice_tableview.getSelectionModel().select(newValue);
             updateInvoiceItemTable();
             total_label.setText("$ "+df.format(getTotal())+" USD");
         });
@@ -151,7 +160,7 @@ public class InvoiceFX implements Initializable {
             showPay_stage();
             updateInvoiceTable();
             invoice_tableview1.scrollTo(payment_invoice);
-            invoice_tableview.getSelectionModel().select(payment_invoice);
+            invoice_tableview1.getSelectionModel().select(payment_invoice);
         });
         
         pdf_button.setOnAction((ActionEvent) -> {
@@ -226,6 +235,12 @@ public class InvoiceFX implements Initializable {
         invoicedate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getInvoice_date()))));
         client_column.setCellValueFactory(new PropertyValueFactory<>("company_name"));
         terms_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTerms()));
+        terms_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        terms_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setTerms(t.getNewValue());
+            msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            invoice_tableview.refresh();
+        });
         pending_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().pendingToString()));
         pending_column.setCellFactory(ComboBoxTableCell.forTableColumn("Pendiente", "Pagada"));
         pending_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
@@ -237,8 +252,26 @@ public class InvoiceFX implements Initializable {
         id_column1.setCellValueFactory(new PropertyValueFactory<>("id"));
         paymentdate_column.setCellValueFactory(c -> new SimpleStringProperty(getPayment_dateValue(c.getValue().getPayment_date())));
         checknumber_column.setCellValueFactory(new PropertyValueFactory<>("check_number"));
+        checknumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        checknumber_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setCheck_number(t.getNewValue());
+            msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            invoice_tableview.refresh();
+        });
         quantitypaid_column.setCellValueFactory(c -> new SimpleStringProperty("$ "+df.format(c.getValue().getQuantity_paid())+" USD"));
+        quantitypaid_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantitypaid_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity_paid(getQuantity_paidValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            invoice_tableview.refresh();
+        });
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
+        comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        comments_column.setOnEditCommit((TableColumn.CellEditEvent<Invoice, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setCheck_number(t.getNewValue());
+            msabase.getInvoiceDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            invoice_tableview.refresh();
+        });
     }
     
     public void setInvoiceItemTable(){
@@ -352,6 +385,14 @@ public class InvoiceFX implements Initializable {
             return getFormattedDate(DAOUtil.toLocalDate(date));
         }catch(Exception e){
             return "N/A";
+        }
+    }
+    
+    public Double getQuantity_paidValue(Invoice invoice, String quantity_paid){
+        try{
+            return Double.parseDouble(quantity_paid);
+        }catch(Exception e){
+            return invoice.getQuantity_paid();
         }
     }
 }

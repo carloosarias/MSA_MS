@@ -199,8 +199,8 @@
                               </TableColumn>
                               <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Producción">
                                  <columns>
-                                    <TableColumn fx:id="quality_column1" minWidth="-Infinity" prefWidth="75.0" text="Bueno" />
-                                    <TableColumn fx:id="quality_column2" minWidth="-Infinity" prefWidth="75.0" text="Malo" />
+                                    <TableColumn fx:id="quality_column3" minWidth="-Infinity" prefWidth="75.0" text="Bueno" />
+                                    <TableColumn fx:id="quality_column4" minWidth="-Infinity" prefWidth="75.0" text="Malo" />
                                     <TableColumn fx:id="processquantity_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
                                  </columns>
                               </TableColumn>
