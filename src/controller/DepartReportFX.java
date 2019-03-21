@@ -372,7 +372,6 @@ public class DepartReportFX implements Initializable {
             int current_row = 1;
             for(DepartLot item : departlot_list){
                 if(current_row > 26) break;
-                int extra_rows = 0;
                 int offset = 0;
                 System.out.println(current_row);
                 System.out.println(item.getPart_number());
@@ -384,18 +383,7 @@ public class DepartReportFX implements Initializable {
                     fields.get("lotnumber"+(current_row+offset)).setValue(lot_number);
                     offset++;
                 }
-                extra_rows = offset;
-                
-                offset = 0;                for(String comment : item.getComments().split(",")){
-                    System.out.println("comment: "+comment);
-                    fields.get("description"+(current_row+offset)).setValue(comment);
-                    offset++;
-                }
-
-                
-                if(offset > extra_rows) extra_rows = offset;
-
-                current_row = (current_row + extra_rows) + 1;
+                current_row += offset+1;
             }
             
             form.flattenFields();
