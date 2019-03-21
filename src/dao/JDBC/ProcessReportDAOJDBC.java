@@ -33,7 +33,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
             "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.id, TANK.tank_name, EQUIPMENT.name "
             + "FROM PROCESS_REPORT "
             + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
@@ -51,7 +51,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             "SELECT EQUIPMENT_ID FROM PROCESS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
             "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.id, TANK.tank_name, EQUIPMENT.name "
             + "FROM PROCESS_REPORT "
             + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
@@ -61,7 +61,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             + "ORDER BY PROCESS_REPORT.id";
     private static final String SQL_LIST_EMPLOYEE_DATERANGE_ORDER_BY_ID = 
             "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.id, TANK.tank_name, EQUIPMENT.name "
             + "FROM PROCESS_REPORT "
             + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
@@ -72,7 +72,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             + "ORDER BY PROCESS_REPORT.id";
     private static final String SQL_LIST_EMPLOYEE_ORDER_BY_ID = 
             "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.id, TANK.tank_name, EQUIPMENT.name "
             + "FROM PROCESS_REPORT "
             + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
@@ -83,7 +83,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             + "ORDER BY PROCESS_REPORT.id";
     private static final String SQL_LIST_DATE_RANGE_ORDER_BY_ID = 
             "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.id, TANK.tank_name, EQUIPMENT.name "
             + "FROM PROCESS_REPORT "
             + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
@@ -94,7 +94,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             + "ORDER BY PROCESS_REPORT.id";
     private static final String SQL_LIST_EMPLOYEE_DATE_RANGE_ORDER_BY_ID = 
             "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.id, TANK.tank_name, EQUIPMENT.name "
             + "FROM PROCESS_REPORT "
             + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
@@ -105,7 +105,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
             + "ORDER BY PROCESS_REPORT.id";
     private static final String SQL_LIST_PRODUCT_PART_DATE_RANGE = 
             "SELECT PROCESS_REPORT.id, PROCESS_REPORT.process, PROCESS_REPORT.report_date, PROCESS_REPORT.lot_number, PROCESS_REPORT.quantity, PROCESS_REPORT.amperage, PROCESS_REPORT.voltage, PROCESS_REPORT.start_time, PROCESS_REPORT.end_time, PROCESS_REPORT.comments, PROCESS_REPORT.quality_passed, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.tank_name, EQUIPMENT.name "
+            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev, TANK.id, TANK.tank_name, EQUIPMENT.name "
             + "FROM PROCESS_REPORT "
             + "INNER JOIN EMPLOYEE ON PROCESS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON PROCESS_REPORT.PART_REVISION_ID = PART_REVISION.id "
@@ -574,6 +574,7 @@ public class ProcessReportDAOJDBC implements ProcessReportDAO {
         process_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
         process_report.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
         process_report.setRev(resultSet.getString("PART_REVISION.rev"));
+        process_report.setTank_id(resultSet.getInt("TANK.id"));
         process_report.setTank_name(resultSet.getString("TANK.tank_name"));
         process_report.setEquipment_name(resultSet.getString("EQUIPMENT.name"));
         return process_report;

@@ -182,7 +182,7 @@ public class TransactionHistoryFXNEW implements Initializable {
     public void updateProcessReportTable(){
         try{
             processreport_list = msabase.getProcessReportDAO().listProductPartDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()));
-            processreport_tableview.getItems().setAll(mergeByProcess_Partnumber(processreport_list));
+            processreport_tableview.getItems().setAll(mergeByTank_Process(processreport_list));
             quality_label1.setText(""+getProcessReportQualityValue(true, false));
             quality_label2.setText(""+getProcessReportQualityValue(false, false));
             processquantity_label.setText(""+getProcessReportQualityValue(true, true));
@@ -197,7 +197,7 @@ public class TransactionHistoryFXNEW implements Initializable {
     public void updateDepartLotTable(){
         try{
             departlot_list = msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()));
-            departlot_tableview.getItems().setAll(mergeByDepartReport_Partnumber(departlot_list));
+            departlot_tableview.getItems().setAll(mergeByDepartReport_Lotnumber(departlot_list));
             departlotbalance_label.setText(""+(getDepartLotStatusValue("Pendiente", false)+getDepartLotStatusValue("Facturado", false)));
             departlotrejected_label.setText(""+getDepartLotStatusValue("Rechazado", false));
             departlotquantity_label.setText(""+getDepartLotStatusValue("", true));
@@ -212,7 +212,7 @@ public class TransactionHistoryFXNEW implements Initializable {
     public void updateIncomingLotTable(){
         try{
             incominglot_list = msabase.getIncomingLotDAO().listDateRange(partnumber_combo.getValue(), false, DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()));
-            incominglot_tableview.getItems().setAll(mergeByIncomingReport_Partnumber(incominglot_list));
+            incominglot_tableview.getItems().setAll(mergeByIncomingReport_Lotnumber(incominglot_list));
             virgin_label.setText(""+getIncomingLotStatusValue("Virgen", false));
             rework_label.setText(""+getIncomingLotStatusValue("Rechazo", false));
             incominglotquantity_label.setText(""+getIncomingLotStatusValue("", true));
@@ -226,7 +226,7 @@ public class TransactionHistoryFXNEW implements Initializable {
     
     public int getProcessReportQualityValue(boolean quality, boolean skip){
         int quantity_total = 0;
-        for(ProcessReport item: processreport_tableview.getItems()){
+        for(ProcessReport item: processreport_list){
             if(item.isQuality_passed() == quality || skip){
                 quantity_total += item.getQuantity();
             }
@@ -259,8 +259,8 @@ public class TransactionHistoryFXNEW implements Initializable {
         process_column3.setCellValueFactory(new PropertyValueFactory<>("process"));
         part_column3.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         rev_column3.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        quality_column1.setCellValueFactory(new PropertyValueFactory<>("good_quantity"));
-        quality_column2.setCellValueFactory(new PropertyValueFactory<>("bad_quantity"));
+        quality_column1.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getGood_quantity()));
+        quality_column2.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBad_quantity()));
         quantity_column3.setCellValueFactory(new PropertyValueFactory<>("quantity"));
     }
     
@@ -287,24 +287,61 @@ public class TransactionHistoryFXNEW implements Initializable {
         status_column1.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
     
-    public List<ProcessReport> mergeByProcess_Partnumber(List<ProcessReport> unfilteredList){
-        return unfilteredList;
+    public List<ProcessReport> mergeByTank_Process(List<ProcessReport> unfilteredList){
+        ArrayList<Integer> tank_id = new ArrayList();
+        ArrayList<String> process = new ArrayList();
+        ArrayList<ProcessReport> mergedList = new ArrayList();
+        
+        for(ProcessReport process_report : unfilteredList){
+            if(tank_id.contains(process_report.getTank_id()) && process.contains(process_report.getProcess())){
+                for(ProcessReport listitem : mergedList){
+                    if(process_report.getTank_id().equals(listitem.getTank_id()) && process_report.getProcess().equals(listitem.getProcess())){
+                        mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + process_report.getQuantity());
+                        if(process_report.isQuality_passed()){
+                            mergedList.get(mergedList.indexOf(listitem)).setGood_quantity(mergedList.get(mergedList.indexOf(listitem)).getGood_quantity() + process_report.getQuantity());
+                        }else{
+                            mergedList.get(mergedList.indexOf(listitem)).setBad_quantity(mergedList.get(mergedList.indexOf(listitem)).getBad_quantity() + process_report.getQuantity());
+                        }
+                    }
+                }
+            }
+            else{
+                tank_id.add(process_report.getTank_id());
+                process.add(process_report.getProcess());
+                
+                ProcessReport item = new ProcessReport();
+                item.setTank_id(process_report.getTank_id());
+                item.setTank_name(process_report.getTank_name());
+                item.setProcess(process_report.getProcess());
+                item.setQuantity(process_report.getQuantity());
+                if(process_report.isQuality_passed()){
+                    item.setGood_quantity(process_report.getQuantity());
+                    item.setBad_quantity(0);
+                }else{
+                    item.setGood_quantity(0);
+                    item.setBad_quantity(process_report.getQuantity());
+                }
+                item.setPart_number(process_report.getPart_number());
+                item.setRev(process_report.getRev());
+                mergedList.add(item);
+            }
+        }
+        
+        return mergedList;
     }
     
-    public List<DepartLot> mergeByDepartReport_Partnumber(List<DepartLot> unfilteredList){
+    public List<DepartLot> mergeByDepartReport_Lotnumber(List<DepartLot> unfilteredList){
         //find all part_number
         ArrayList<Integer> departreport_id = new ArrayList();
-        ArrayList<String> partnumber = new ArrayList();
-        ArrayList<String> part_revision = new ArrayList();
         ArrayList<String> lot_number = new ArrayList();
         ArrayList<String> status = new ArrayList();
         ArrayList<String> process = new ArrayList();
         ArrayList<DepartLot> mergedList = new ArrayList();
         
         for(DepartLot depart_lot : unfilteredList){
-            if(process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()) && departreport_id.contains(depart_lot.getDepartreport_id()) && partnumber.contains(depart_lot.getPart_number()) && part_revision.contains(depart_lot.getPart_revision())){
+            if(process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()) && departreport_id.contains(depart_lot.getDepartreport_id())){
                 for(DepartLot listitem : mergedList){
-                    if(depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getLot_number().equals(listitem.getLot_number()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id()) && depart_lot.getPart_number().equals(listitem.getPart_number()) && depart_lot.getPart_revision().equals(listitem.getPart_revision())){
+                    if(depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getLot_number().equals(listitem.getLot_number()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id())){
                         mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + depart_lot.getQuantity());
                         mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + depart_lot.getBox_quantity());
                         break;
@@ -313,8 +350,6 @@ public class TransactionHistoryFXNEW implements Initializable {
             }
             else{
                 departreport_id.add(depart_lot.getDepartreport_id());
-                partnumber.add(depart_lot.getPart_number());
-                part_revision.add(depart_lot.getPart_revision());
                 lot_number.add(depart_lot.getLot_number());
                 status.add(depart_lot.getStatus());
                 process.add(depart_lot.getProcess());
@@ -338,18 +373,16 @@ public class TransactionHistoryFXNEW implements Initializable {
         return mergedList;
     }
     
-    public List<IncomingLot> mergeByIncomingReport_Partnumber(List<IncomingLot> unfilteredList){
+    public List<IncomingLot> mergeByIncomingReport_Lotnumber(List<IncomingLot> unfilteredList){
         ArrayList<Integer> incomingreport_id = new ArrayList();
-        ArrayList<String> partnumber = new ArrayList();
-        ArrayList<String> part_revision = new ArrayList();
         ArrayList<String> lot_number = new ArrayList();
         ArrayList<String> status = new ArrayList();
         ArrayList<IncomingLot> mergedList = new ArrayList();
         
         for(IncomingLot incoming_lot : unfilteredList){
-            if(status.contains(incoming_lot.getStatus()) && lot_number.contains(incoming_lot.getLot_number()) && incomingreport_id.contains(incoming_lot.getIncomingreport_id()) && partnumber.contains(incoming_lot.getPart_number()) && part_revision.contains(incoming_lot.getPart_revision())){
+            if(status.contains(incoming_lot.getStatus()) && lot_number.contains(incoming_lot.getLot_number()) && incomingreport_id.contains(incoming_lot.getIncomingreport_id())){
                 for(IncomingLot listitem : mergedList){
-                    if(incoming_lot.getStatus().equals(listitem.getStatus()) && incoming_lot.getLot_number().equals(listitem.getLot_number()) && incoming_lot.getIncomingreport_id().equals(listitem.getIncomingreport_id()) && incoming_lot.getPart_number().equals(listitem.getPart_number()) && incoming_lot.getPart_revision().equals(listitem.getPart_revision())){
+                    if(incoming_lot.getStatus().equals(listitem.getStatus()) && incoming_lot.getLot_number().equals(listitem.getLot_number()) && incoming_lot.getIncomingreport_id().equals(listitem.getIncomingreport_id())){
                         mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + incoming_lot.getQuantity());
                         mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + incoming_lot.getBox_quantity());
                         break;
@@ -358,8 +391,6 @@ public class TransactionHistoryFXNEW implements Initializable {
             }
             else{
                 incomingreport_id.add(incoming_lot.getIncomingreport_id());
-                partnumber.add(incoming_lot.getPart_number());
-                part_revision.add(incoming_lot.getPart_revision());
                 lot_number.add(incoming_lot.getLot_number());
                 status.add(incoming_lot.getStatus());
                 

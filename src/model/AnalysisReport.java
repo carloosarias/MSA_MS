@@ -72,7 +72,7 @@ public class AnalysisReport implements Serializable{
     //Estimated adjust = ((result - optimal) * volume) / 1000
     //KG
     public double getEstimated_adjust() {
-        return ((getResult() - optimal) * volume)/1000;
+        return ((optimal - getResult()) * volume)/1000;
     }
     
     public double getApplied_adjust(){

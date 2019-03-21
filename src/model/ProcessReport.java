@@ -6,7 +6,6 @@
 package model;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -31,6 +30,7 @@ public class ProcessReport implements Serializable {
     private String employee_name;
     private String part_number;
     private String rev;
+    private Integer tank_id;
     private String tank_name;
     private String equipment_name;
     
@@ -167,7 +167,15 @@ public class ProcessReport implements Serializable {
     public void setRev(String rev) {
         this.rev = rev;
     }
+    
+    public Integer getTank_id() {
+        return tank_id;
+    }
 
+    public void setTank_id(Integer tank_id) {
+        this.tank_id = tank_id;
+    }
+    
     public String getTank_name() {
         return tank_name;
     }
