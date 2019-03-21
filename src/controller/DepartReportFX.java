@@ -211,37 +211,50 @@ public class DepartReportFX implements Initializable {
     
     public void updateDepartLotTable(){
         departlot_tableview3.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreport_tableview.getSelectionModel().getSelectedItem())));
-        departlot_tableview2.setItems(FXCollections.observableArrayList(mergeByProcess(departlot_tableview3.getItems())));
+        departlot_tableview2.setItems(FXCollections.observableArrayList(mergeByDepartReport_Lotnumber(departlot_tableview3.getItems())));
         departlot_tableview1.setItems(FXCollections.observableArrayList(mergeByPart_number(departlot_tableview3.getItems())));
     }
     
-    public List<DepartLot> mergeByProcess(List<DepartLot> unfilteredList){
-        //find all part_number + process
-        ArrayList<String> partnumber_process = new ArrayList();
+    public List<DepartLot> mergeByDepartReport_Lotnumber(List<DepartLot> unfilteredList){
+        //find all part_number
+        ArrayList<Integer> departreport_id = new ArrayList();
+        ArrayList<Integer> partrevision_id = new ArrayList();
+        ArrayList<String> lot_number = new ArrayList();
+        ArrayList<String> status = new ArrayList();
+        ArrayList<String> process = new ArrayList();
         ArrayList<DepartLot> mergedList = new ArrayList();
+        
         for(DepartLot depart_lot : unfilteredList){
-            if(partnumber_process.contains(depart_lot.getPart_number()+" "+depart_lot.getProcess())){
-                mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).setQuantity(mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getQuantity() + depart_lot.getQuantity());
-                mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).setBox_quantity(mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getBox_quantity() + depart_lot.getBox_quantity());
-                if(!depart_lot.getComments().equalsIgnoreCase("N/A") && !depart_lot.getComments().replace(" ", "").equals("")){
-                    mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).setComments(mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getComments()+","+depart_lot.getComments());
+            if(partrevision_id.contains(depart_lot.getPartrevision_id()) && process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()) && departreport_id.contains(depart_lot.getDepartreport_id())){
+                for(DepartLot listitem : mergedList){
+                    if(depart_lot.getPartrevision_id().equals(listitem.getPartrevision_id()) && depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getLot_number().equals(listitem.getLot_number()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id())){
+                        mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + depart_lot.getQuantity());
+                        mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + depart_lot.getBox_quantity());
+                        break;
+                    }
                 }
-                if(!mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getLot_number().contains(depart_lot.getLot_number())){
-                    mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).setLot_number(mergedList.get(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess())).getLot_number()+","+depart_lot.getLot_number());
-                }
-            }else{
-                partnumber_process.add(depart_lot.getPart_number()+" "+depart_lot.getProcess());
+            }
+            else{
+                departreport_id.add(depart_lot.getDepartreport_id());
+                partrevision_id.add(depart_lot.getPartrevision_id());
+                lot_number.add(depart_lot.getLot_number());
+                status.add(depart_lot.getStatus());
+                process.add(depart_lot.getProcess());
+                
                 DepartLot item = new DepartLot();
-                item.setLot_number(depart_lot.getLot_number());
+                item.setReport_date(depart_lot.getReport_date());
+                item.setPart_revision(depart_lot.getPart_revision());
+                item.setDepartreport_id(depart_lot.getDepartreport_id());
+                item.setPartrevision_id(depart_lot.getPartrevision_id());
                 item.setPart_number(depart_lot.getPart_number());
-                item.setProcess(depart_lot.getProcess());
+                item.setPart_revision(depart_lot.getPart_revision());
                 item.setQuantity(depart_lot.getQuantity());
                 item.setBox_quantity(depart_lot.getBox_quantity());
-                item.setComments("");
-                if(!depart_lot.getComments().equalsIgnoreCase("N/A") && !depart_lot.getComments().replace(" ", "").equals("")){
-                    item.setComments(depart_lot.getComments());
-                }
-                mergedList.add(partnumber_process.indexOf(depart_lot.getPart_number()+" "+depart_lot.getProcess()),item);
+                item.setLot_number(depart_lot.getLot_number());
+                item.setProcess(depart_lot.getProcess());
+                item.setPending(depart_lot.isPending());
+                item.setRejected(depart_lot.isPending());
+                mergedList.add(item);
             }
         }
         
@@ -361,6 +374,8 @@ public class DepartReportFX implements Initializable {
                 if(current_row > 26) break;
                 int extra_rows = 0;
                 int offset = 0;
+                System.out.println(current_row);
+                System.out.println(item.getPart_number());
                 fields.get("part_number"+current_row).setValue(item.getPart_number());
                 fields.get("process"+current_row).setValue(item.getProcess());
                 fields.get("quantity"+current_row).setValue(""+item.getQuantity());
@@ -371,11 +386,12 @@ public class DepartReportFX implements Initializable {
                 }
                 extra_rows = offset;
                 
-                offset = 0;
-                for(String comment : item.getComments().split(",")){
+                offset = 0;                for(String comment : item.getComments().split(",")){
+                    System.out.println("comment: "+comment);
                     fields.get("description"+(current_row+offset)).setValue(comment);
                     offset++;
                 }
+
                 
                 if(offset > extra_rows) extra_rows = offset;
 
