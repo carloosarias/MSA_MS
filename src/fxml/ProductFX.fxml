@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -38,7 +38,7 @@
       </GridPane>
       <TableView fx:id="product_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="75.0" text="# de ID" />
+            <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="50.0" text="#" />
             <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="250.0" text="Descripción" />
             <TableColumn fx:id="unitmeasure_column" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Unidad de Medida" />
          </columns>

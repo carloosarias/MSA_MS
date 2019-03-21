@@ -31,7 +31,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -55,8 +54,6 @@ public class CreateInvoiceFX implements Initializable {
     private DatePicker invoicedate_picker;
     @FXML
     private ComboBox<Company> client_combo;
-    @FXML
-    private TextField terms_field;
     @FXML
     private TableView<InvoiceItem> invoiceitem_tableview;
     @FXML
@@ -167,10 +164,6 @@ public class CreateInvoiceFX implements Initializable {
             client_combo.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
-        if(terms_field.getText().replace(" ", "").equals("")){
-            terms_field.setStyle("-fx-background-color: lightpink;");
-            terms_field.setText("N/A");
-        }
         if(invoiceitem_tableview.getItems().isEmpty()){
             invoiceitem_tableview.setStyle("-fx-background-color: lightpink;");
             b = false;
@@ -182,14 +175,13 @@ public class CreateInvoiceFX implements Initializable {
     public void clearStyle(){
         invoicedate_picker.setStyle(null);
         client_combo.setStyle(null);
-        terms_field.setStyle(null);
         invoiceitem_tableview.setStyle(null);
     }
     
     public void createInvoice(){
         invoice = new Invoice();
         invoice.setInvoice_date(DAOUtil.toUtilDate(invoicedate_picker.getValue()));
-        invoice.setTerms(terms_field.getText());
+        invoice.setTerms("N/A");
         invoice.setPayment_date(null);
         invoice.setCheck_number("N/A");
         invoice.setQuantity_paid(0.0);
@@ -234,7 +226,7 @@ public class CreateInvoiceFX implements Initializable {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddInvoiceItemFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/AddInvoiceItemFX.fxml"));
             Scene scene = new Scene(root);
             
             add_stage.setTitle("Seleccionar Remisión");

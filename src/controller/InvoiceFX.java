@@ -91,8 +91,6 @@ public class InvoiceFX implements Initializable {
     @FXML
     private Button add_button;
     @FXML
-    private Button pay_button;
-    @FXML
     private Button pdf_button;
     @FXML
     private Tab details_tab;
@@ -115,8 +113,6 @@ public class InvoiceFX implements Initializable {
     @FXML
     private Label total_label;
     
-    public static Invoice payment_invoice;
-    
     private Stage stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -131,7 +127,6 @@ public class InvoiceFX implements Initializable {
         setInvoiceItemTable();
         updateInvoiceTable();
         
-        pay_button.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
         pdf_button.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
         details_tab.disableProperty().bind(invoice_tableview.getSelectionModel().selectedItemProperty().isNull());
         
@@ -155,14 +150,6 @@ public class InvoiceFX implements Initializable {
                 invoice_tableview.scrollTo(CreateInvoiceFX.invoice);
                 invoice_tableview.getSelectionModel().select(CreateInvoiceFX.invoice);
             }
-        });
-        
-        pay_button.setOnAction((ActionEvent) -> {
-            payment_invoice = invoice_tableview.getSelectionModel().getSelectedItem();
-            showPay_stage();
-            updateInvoiceTable();
-            invoice_tableview1.scrollTo(payment_invoice);
-            invoice_tableview1.getSelectionModel().select(payment_invoice);
         });
         
         pdf_button.setOnAction((ActionEvent) -> {

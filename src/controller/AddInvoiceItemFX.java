@@ -19,7 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.DepartLot;
 import model.InvoiceItem;
@@ -34,7 +34,7 @@ import static msa_ms.MainApp.df;
 public class AddInvoiceItemFX implements Initializable {
 
     @FXML
-    private HBox root_hbox;
+    private GridPane root_gridpane;
     @FXML
     private TableView<DepartLot> departlot_tableview;
     @FXML
@@ -82,7 +82,7 @@ public class AddInvoiceItemFX implements Initializable {
             }
             mapInvoiceItems();
             
-            Stage current_stage = (Stage) root_hbox.getScene().getWindow();
+            Stage current_stage = (Stage) root_gridpane.getScene().getWindow();
             current_stage.close();
         });
     }

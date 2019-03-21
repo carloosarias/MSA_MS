@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoiceQuoteFX">
+<GridPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoiceQuoteFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -24,24 +24,20 @@
    <children>
       <TableView fx:id="quote_tableview" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
          <columns>
-            <TableColumn minWidth="-Infinity" prefWidth="75.0" text="Número de Parte">
-               <columns>
-                  <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="123.0" text="No. de Parte" />
-                  <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="69.0" text="Revisión" />
-                  <TableColumn fx:id="process_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
-               </columns>
-            </TableColumn>
+            <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="123.0" text="Número de Parte" />
+            <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+            <TableColumn fx:id="process_column" minWidth="-Infinity" prefWidth="120.0" text="Proceso" />
             <TableColumn minWidth="-Infinity" text="Cotización">
                <columns>
-                  <TableColumn fx:id="quoteid_column" minWidth="-Infinity" prefWidth="75.0" text="# Folio" />
+                  <TableColumn fx:id="quoteid_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
                   <TableColumn fx:id="quotedate_column" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
-                  <TableColumn fx:id="unitprice_column" minWidth="-Infinity" prefWidth="120.0" text="Precio por Pieza" />
+                  <TableColumn fx:id="unitprice_column" minWidth="-Infinity" prefWidth="120.0" text="Valor Unitario" />
                </columns>
             </TableColumn>
             <TableColumn minWidth="-Infinity" prefWidth="139.0" text="Facturación">
                <columns>
-                  <TableColumn fx:id="totalinvoiced_column" minWidth="-Infinity" prefWidth="120.0" text="Piezas Facturadas" />
-                  <TableColumn fx:id="totalvalue_column" minWidth="-Infinity" prefWidth="150.0" text="Valor Total De Ventas" />
+                  <TableColumn fx:id="totalinvoiced_column" minWidth="-Infinity" prefWidth="150.0" text="Cantidad / Peso Total" />
+                  <TableColumn fx:id="totalvalue_column" minWidth="-Infinity" prefWidth="150.0" text="Precio Total" />
                </columns>
             </TableColumn>
          </columns>

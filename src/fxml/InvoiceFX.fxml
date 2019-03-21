@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoiceFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InvoiceFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -102,8 +102,6 @@
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
                         <TableView fx:id="invoiceitem_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
@@ -124,32 +122,6 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TableView>
-                        <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Separator>
-                        <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
-                           <columnConstraints>
-                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                              <Label text="Total:">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <Label fx:id="total_label" text="total" textFill="BLUE" underline="true" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Label>
-                           </children>
-                        </GridPane>
                      </children>
                   </GridPane>
                </content>
@@ -160,6 +132,7 @@
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" />
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" percentWidth="0.0" prefWidth="50.0" />
             <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
          </columnConstraints>
          <rowConstraints>
@@ -171,16 +144,21 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF" GridPane.columnIndex="2">
+            <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF" GridPane.columnIndex="3">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="pay_button" disable="true" mnemonicParsing="false" text="Pago de Factura" GridPane.columnIndex="1">
+            <Label text="Total:" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
-            </Button>
+            </Label>
+            <Label fx:id="total_label" text="0" textFill="BLUE" underline="true" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Label>
          </children>
       </GridPane>
       <Separator prefWidth="200.0" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">

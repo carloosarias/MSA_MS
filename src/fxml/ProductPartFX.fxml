@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductPartFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductPartFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -122,8 +122,8 @@
                         <TableView fx:id="partrevision_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="partnumber_column1" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
-                              <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="50.0" text="Rev." />
-                              <TableColumn fx:id="revdate_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha de Rev." />
+                              <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+                              <TableColumn fx:id="revdate_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha de Rev\" />
                               <TableColumn fx:id="basemetal_column" minWidth="-Infinity" prefWidth="100.0" text="Metal Base" />
                               <TableColumn fx:id="finalprocess_column" minWidth="-Infinity" prefWidth="100.0" text="Proceso Final" />
                               <TableColumn fx:id="specnumber_column" minWidth="-Infinity" prefWidth="100.0" text="Especificación" />

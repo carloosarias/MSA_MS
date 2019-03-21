@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionHistoryFXNEW">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionHistoryFXNEW">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -87,12 +87,8 @@
                               <TableColumn fx:id="part_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
                               <TableColumn fx:id="rev_column1" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
                               <TableColumn fx:id="lot_column1" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                 <columns>
-                                    <TableColumn fx:id="quantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
-                                    <TableColumn fx:id="boxquantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
-                                 </columns>
-                              </TableColumn>
+                              <TableColumn fx:id="quantity_column1" minWidth="-Infinity" prefWidth="100.0" text="Cantidad / Peso" />
+                              <TableColumn fx:id="boxquantity_column1" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
                               <TableColumn fx:id="status_column1" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
                            </columns>
                            <GridPane.margin>
@@ -120,12 +116,8 @@
                               <TableColumn fx:id="part_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
                               <TableColumn fx:id="rev_column2" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
                               <TableColumn fx:id="lot_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                 <columns>
-                                    <TableColumn fx:id="quantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
-                                    <TableColumn fx:id="boxquantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
-                                 </columns>
-                              </TableColumn>
+                              <TableColumn fx:id="quantity_column2" minWidth="-Infinity" prefWidth="100.0" text="Cantidad / Peso" />
+                              <TableColumn fx:id="boxquantity_column2" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
                               <TableColumn fx:id="process_column2" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
                               <TableColumn fx:id="status_column2" minWidth="-Infinity" prefWidth="120.0" text="Estado" />
                            </columns>
@@ -153,8 +145,8 @@
                               <TableColumn fx:id="process_column3" minWidth="-Infinity" prefWidth="120.0" text="Proceso" />
                               <TableColumn fx:id="part_column3" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
                               <TableColumn fx:id="rev_column3" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                              <TableColumn fx:id="quality_column1" minWidth="-Infinity" prefWidth="120.0" text="Material Bueno" />
-                              <TableColumn fx:id="quality_column2" minWidth="-Infinity" prefWidth="120.0" text="Material Malo" />
+                              <TableColumn fx:id="quality_column1" minWidth="-Infinity" prefWidth="120.0" text="Cantidad Bueno" />
+                              <TableColumn fx:id="quality_column2" minWidth="-Infinity" prefWidth="120.0" text="Cantidad Malo" />
                               <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="120.0" text="Total Procesado" />
                            </columns>
                            <GridPane.margin>
@@ -243,12 +235,12 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label alignment="CENTER_RIGHT" text="Material Virgen:">
+                  <Label alignment="CENTER_RIGHT" text="Cantidad Virgen:">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label alignment="CENTER_RIGHT" text="Material Retrabajo:" GridPane.rowIndex="1">
+                  <Label alignment="CENTER_RIGHT" text="Cantidad Retrabajo:" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
@@ -291,12 +283,12 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label alignment="CENTER_RIGHT" text="Material Enviado:">
+                  <Label alignment="CENTER_RIGHT" text="Cantidad Enviado:">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label alignment="CENTER_RIGHT" text="Material Rechazado:" GridPane.rowIndex="1">
+                  <Label alignment="CENTER_RIGHT" text="Cantidad Rechazado:" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
@@ -329,12 +321,12 @@
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label alignment="CENTER_RIGHT" text="Material Bueno:">
+                  <Label alignment="CENTER_RIGHT" text="Cantidad Bueno:">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label alignment="CENTER_RIGHT" text="Material Malo:" GridPane.rowIndex="1">
+                  <Label alignment="CENTER_RIGHT" text="Cantidad Malo:" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>

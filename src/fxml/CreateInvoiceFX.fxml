@@ -5,15 +5,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateInvoiceFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateInvoiceFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -24,23 +22,20 @@
       <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" />
-            <ColumnConstraints hgrow="SOMETIMES" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TableView fx:id="invoiceitem_tableview" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+            <TableView fx:id="invoiceitem_tableview" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                <columns>
-                  <TableColumn fx:id="departreportid_column" minWidth="-Infinity" prefWidth="100.0" text="# de Remisión" />
+                  <TableColumn fx:id="departreportid_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
                   <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
                   <TableColumn fx:id="revision_column" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                  <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                     <columns>
-                        <TableColumn fx:id="lot_qty" minWidth="-Infinity" prefWidth="75.0" text="Piezas" />
-                        <TableColumn fx:id="lot_boxqty_column" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
-                     </columns>
-                  </TableColumn>
+                  <TableColumn fx:id="lot_qty" minWidth="-Infinity" prefWidth="100.0" text="Cantidad / Peso" />
+                  <TableColumn fx:id="lot_boxqty_column" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
                   <TableColumn fx:id="unitprice_column" minWidth="-Infinity" prefWidth="100.0" text="Precio Cotizado" />
                   <TableColumn fx:id="lotprice_column" minWidth="-Infinity" prefWidth="100.0" text="Total" />
                </columns>
@@ -48,102 +43,76 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </TableView>
-            <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+            <GridPane GridPane.rowIndex="2">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <GridPane>
-                     <columnConstraints>
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                        <ColumnConstraints hgrow="SOMETIMES" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Cliente:" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <ComboBox fx:id="client_combo" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </ComboBox>
-                        <Label text="Fecha:">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <DatePicker fx:id="invoicedate_picker" prefWidth="150.0" GridPane.columnIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </DatePicker>
-                        <Label text="Terminos de pago:" GridPane.rowIndex="2">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <TextField fx:id="terms_field" text="N/A" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </TextField>
-                        <Label text="Total:" GridPane.rowIndex="3">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <Label fx:id="total_label" text="\$ 0 USD" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Label>
-                     </children>
-                  </GridPane>
-                  <GridPane GridPane.rowIndex="1">
-                    <columnConstraints>
-                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints percentHeight="0.0" valignment="TOP" vgrow="SOMETIMES" />
-                      <RowConstraints valignment="BOTTOM" vgrow="SOMETIMES" />
-                      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Button fx:id="add_button" mnemonicParsing="false" text="Agregar Lotes a Factura" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.rowIndex="2">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <Button fx:id="create_button" disable="true" mnemonicParsing="false" text="Generar Factura" GridPane.rowIndex="3">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <Separator>
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Separator>
-                     </children>
-                  </GridPane>
+                  <Button fx:id="create_button" disable="true" mnemonicParsing="false" text="Generar Factura" GridPane.columnIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="add_button" mnemonicParsing="false" text="Agregar Remisión">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Label text="Total:" GridPane.columnIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="total_label" text="\$ 0 USD" textFill="BLUE" underline="true" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Fecha:">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker fx:id="invoicedate_picker" prefWidth="150.0" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <Label text="Cliente:" GridPane.columnIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox fx:id="client_combo" prefWidth="200.0" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                     </GridPane.margin>
+                  </ComboBox>
                </children>
             </GridPane>
          </children>

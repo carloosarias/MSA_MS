@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DepartReportFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DepartReportFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -110,12 +110,8 @@
                                           <TableView fx:id="departlot_tableview1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                              <columns>
                                                 <TableColumn fx:id="partnumber_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
-                                                <TableColumn editable="false" minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                                   <columns>
-                                                      <TableColumn fx:id="quantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Piezas o Libras" />
-                                                      <TableColumn fx:id="boxquantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
-                                                   </columns>
-                                                </TableColumn>
+                                                <TableColumn fx:id="quantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cantidad / Peso" />
+                                                <TableColumn fx:id="boxquantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
                                              </columns>
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -140,12 +136,8 @@
                                                 <TableColumn fx:id="partnumber_column2" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
                                                 <TableColumn fx:id="lotnumber_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
                                                 <TableColumn fx:id="process_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Proceso" />
-                                                <TableColumn editable="false" minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                                   <columns>
-                                                      <TableColumn fx:id="quantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Piezas o Libras" />
-                                                      <TableColumn fx:id="boxquantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
-                                                   </columns>
-                                                </TableColumn>
+                                                <TableColumn fx:id="quantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cantidad / Peso" />
+                                                <TableColumn fx:id="boxquantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
                                              </columns>
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -170,12 +162,8 @@
                                                 <TableColumn fx:id="partnumber_column3" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
                                                 <TableColumn fx:id="partrevision_column" editable="false" minWidth="-Infinity" prefWidth="75.0" text="Rev" />
                                                 <TableColumn fx:id="lotnumber_column2" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
-                                                <TableColumn editable="false" minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
-                                                   <columns>
-                                                      <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="100.0" text="Piezas o Libras" />
-                                                      <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
-                                                   </columns>
-                                                </TableColumn>
+                                                <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="100.0" text="Cantidad / Peso" />
+                                                <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
                                                 <TableColumn fx:id="process_column2" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Proceso" />
                                                 <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="200.0" text="Comentarios" />
                                              </columns>
