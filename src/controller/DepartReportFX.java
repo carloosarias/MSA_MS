@@ -383,7 +383,7 @@ public class DepartReportFX implements Initializable {
                     fields.get("lotnumber"+(current_row+offset)).setValue(lot_number);
                     offset++;
                 }
-                current_row += offset+1;
+                current_row += offset;
             }
             
             form.flattenFields();
