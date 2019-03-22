@@ -8,11 +8,13 @@ package controller;
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -160,13 +162,27 @@ public class DepartReportFX implements Initializable {
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
-                MainApp.openPDF(buildPDF(departreport_tableview.getSelectionModel().getSelectedItem(), departlot_tableview2.getItems()));
+                for(List<DepartLot> departlot_list : divideList(departlot_tableview2.getItems())){
+                    MainApp.openPDF(buildPDF(departreport_tableview.getSelectionModel().getSelectedItem(), departlot_list));
+                }
             }
             catch(Exception e){
                 e.printStackTrace();
             }
         });
     }
+    
+    public List<List<DepartLot>> divideList(List<DepartLot> arrayList){
+        List<List<DepartLot>> dividedList = new ArrayList();
+        int size = 26;
+        for (int start = 0; start < arrayList.size(); start += size) {
+            int end = Math.min(start + size, arrayList.size());
+            List<DepartLot> sublist = arrayList.subList(start, end);
+            dividedList.add(sublist);
+        }
+        return dividedList;
+    }
+    
     
     public void showAdd_stage(){
         try {
@@ -336,7 +352,7 @@ public class DepartReportFX implements Initializable {
     }
     
     private File buildPDF(DepartReport depart_report, List<DepartLot> departlot_list) throws Exception{
-        
+
             Path template = Files.createTempFile("DepartReportTemplate", ".pdf");
             template.toFile().deleteOnExit();
             
@@ -344,7 +360,7 @@ public class DepartReportFX implements Initializable {
                 Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
             }
             
-            Path output = Files.createTempFile("RemisionPDF", ".pdf");
+            Path output = Files.createTempFile("RemisionTEMP", ".pdf");
             template.toFile().deleteOnExit();
             
             PdfDocument pdf = new PdfDocument(
