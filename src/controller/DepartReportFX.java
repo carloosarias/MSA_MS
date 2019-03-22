@@ -8,13 +8,11 @@ package controller;
 import com.itextpdf.forms.PdfAcroForm;
 import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -23,7 +21,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -50,9 +47,10 @@ import javafx.stage.StageStyle;
 import model.CompanyContact;
 import model.DepartLot;
 import model.DepartReport;
-import model.ProductPart;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
  * FXML Controller class
@@ -162,9 +160,21 @@ public class DepartReportFX implements Initializable {
         
         pdf_button.setOnAction((ActionEvent) -> {
             try{
+                Path output = Files.createTempFile("RemisionPDF", ".pdf");
+                output.toFile().deleteOnExit();
+                //Instantiating PDFMergerUtility class
+                PDFMergerUtility PDFmerger = new PDFMergerUtility();
+
+                //Setting the destination file
+                PDFmerger.setDestinationFileName(output.toString());
+                int page_offset = 0;
                 for(List<DepartLot> departlot_list : divideList(departlot_tableview2.getItems())){
-                    MainApp.openPDF(buildPDF(departreport_tableview.getSelectionModel().getSelectedItem(), departlot_list));
+                    PDFmerger.addSource(buildPDF(page_offset, departreport_tableview.getSelectionModel().getSelectedItem(), departlot_list));
+                    page_offset++;
                 }
+                //Merging the two documents
+                PDFmerger.mergeDocuments();
+                MainApp.openPDF(new File(PDFmerger.getDestinationFileName()));
             }
             catch(Exception e){
                 e.printStackTrace();
@@ -351,7 +361,7 @@ public class DepartReportFX implements Initializable {
         });
     }
     
-    private File buildPDF(DepartReport depart_report, List<DepartLot> departlot_list) throws Exception{
+    private File buildPDF(int page_offset, DepartReport depart_report, List<DepartLot> departlot_list) throws Exception{
 
             Path template = Files.createTempFile("DepartReportTemplate", ".pdf");
             template.toFile().deleteOnExit();
@@ -360,7 +370,7 @@ public class DepartReportFX implements Initializable {
                 Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
             }
             
-            Path output = Files.createTempFile("RemisionTEMP", ".pdf");
+            Path output = Files.createTempFile("RemisionPage"+page_offset, ".pdf");
             template.toFile().deleteOnExit();
             
             PdfDocument pdf = new PdfDocument(
@@ -423,4 +433,5 @@ public class DepartReportFX implements Initializable {
             return depart_lot.getBox_quantity();
         }
     }
+    
 }
