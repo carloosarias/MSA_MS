@@ -5,24 +5,22 @@
  */
 package model;
 
-import java.io.Serializable;
-
 /**
  *
  * @author Pavilion Mini
  */
-public class AnalysisType implements Serializable {
+public class AnalysisType {
     // Properties ---------------------------------------------------------------------------------
-
     private Integer id;
     private String name;
     private String description;
-    private double factor;
+    private double min_range;
     private double optimal; //G/L
+    private double max_range;
+    private String formula;
     private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
-
     public Integer getId() {
         return id;
     }
@@ -46,21 +44,36 @@ public class AnalysisType implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public double getFactor() {
-        return factor;
+    public double getMin_range() {
+        return min_range;
     }
 
-    public void setFactor(double factor) {
-        this.factor = factor;
+    public void setMin_range(double min_range) {
+        this.min_range = min_range;
     }
-    
-    public double getOptimal(){
+
+    public double getOptimal() {
         return optimal;
     }
-    
-    public void setOptimal(double optimal){
+
+    public void setOptimal(double optimal) {
         this.optimal = optimal;
+    }
+    
+    public double getMax_range() {
+        return max_range;
+    }
+
+    public void setMax_range(double max_range) {
+        this.max_range = max_range;
+    }
+    
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
     }
     
     public boolean isActive() {
@@ -104,4 +117,5 @@ public class AnalysisType implements Serializable {
         return String.format("%s",
                 name);
     }
+
 }

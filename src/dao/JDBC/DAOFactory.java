@@ -5,6 +5,7 @@ import dao.DAOProperties;
 import dao.interfaces.ActivityReportDAO;
 import dao.interfaces.AnalysisReportDAO;
 import dao.interfaces.AnalysisTypeDAO;
+import dao.interfaces.AnalysisTypeVarDAO;
 import dao.interfaces.EmployeeDAO;
 import dao.interfaces.CompanyDAO;
 import dao.interfaces.ModuleDAO;
@@ -338,6 +339,14 @@ public abstract class DAOFactory {
      */   
     public AnalysisTypeDAO getAnalysisTypeDAO(){
         return new AnalysisTypeDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the AnalysisTypeVar DAO associated with the current DAOFactory.
+     * @return The AnalysisTypeVar DAO associated with the current DAOFactory.
+     */   
+    public AnalysisTypeVarDAO getAnalysisTypeVarDAO(){
+        return new AnalysisTypeVarDAOJDBC(this);
     }
     
     /**

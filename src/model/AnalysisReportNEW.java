@@ -17,6 +17,7 @@ public class AnalysisReportNEW {
     private Date report_date;
     private String report_time;
     private double applied_adjust; //KG
+    private String formula_timestamp;
     private boolean active;
     
     //INNER JOINS
@@ -25,7 +26,6 @@ public class AnalysisReportNEW {
     private double tank_volume;
     private String analysistype_name;
     private double analysistype_optimal;
-    private String analysistype_formula;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -110,12 +110,12 @@ public class AnalysisReportNEW {
         this.analysistype_optimal = analysistype_optimal;
     }
     
-    public String getAnalysistype_formula() {
-        return analysistype_formula;
+    public String getFormula_timestamp() {
+        return formula_timestamp;
     }
 
-    public void setAnalysistype_formula(String analysistype_formula) {
-        this.analysistype_formula = analysistype_formula;
+    public void setFormula_timestamp(String formula_timestamp) {
+        this.formula_timestamp = formula_timestamp;
     }
     // Object overrides ---------------------------------------------------------------------------
     

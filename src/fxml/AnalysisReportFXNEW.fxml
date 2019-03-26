@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9.0.1">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" />
   </columnConstraints>
@@ -37,7 +37,7 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ComboBox prefWidth="200.0" GridPane.columnIndex="1">
+            <ComboBox fx:id="tank_combo" prefWidth="200.0" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
@@ -47,7 +47,7 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Label>
-            <CheckBox mnemonicParsing="false" text="Filtrar Por Tanque" GridPane.columnIndex="2">
+            <CheckBox fx:id="tank_filter" mnemonicParsing="false" text="Filtrar Por Tanque" GridPane.columnIndex="2">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
@@ -57,12 +57,12 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </Label>
-            <ComboBox prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <ComboBox fx:id="analysistype_combo" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
             </ComboBox>
-            <CheckBox mnemonicParsing="false" text="Filtrar Por Tipo de Análisis" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <CheckBox fx:id="analysistype_filter" mnemonicParsing="false" text="Filtrar Por Tipo de Análisis" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
@@ -76,19 +76,19 @@
                   <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <DatePicker prefWidth="150.0" promptText="Desde">
+                  <DatePicker fx:id="start_datepicker" prefWidth="150.0" promptText="Desde">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </DatePicker>
-                  <DatePicker prefWidth="150.0" promptText="Hasta" GridPane.columnIndex="1">
+                  <DatePicker fx:id="end_datepicker" prefWidth="150.0" promptText="Hasta" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                      </GridPane.margin>
                   </DatePicker>
                </children>
             </GridPane>
-            <CheckBox mnemonicParsing="false" text="Filtrar Por Fecha" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <CheckBox fx:id="date_filter" mnemonicParsing="false" text="Filtrar Por Fecha" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
@@ -208,18 +208,22 @@
                           </columnConstraints>
                           <rowConstraints>
                               <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                             <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                             <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                               <RowConstraints valignment="TOP" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Fórmula (Resultado):" GridPane.rowIndex="1">
+                              <Label text="Fórmula (Resultado):" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label text="Fórmula" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Label fx:id="resultformula_label" text="Fórmula" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
@@ -227,22 +231,22 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label text="Resultado:" GridPane.rowIndex="2">
+                              <Label text="Resultado:" GridPane.rowIndex="6">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label text="Fórmula (Ajuste Estimado):" GridPane.rowIndex="3">
+                              <Label text="Fórmula (Ajuste Estimado):" GridPane.rowIndex="7">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label text="Resultado" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                              <Label fx:id="result_label" text="Resultado" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label text="Fórmula" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                              <Label fx:id="estimatedadjustformula_label" text="Fórmula" GridPane.columnIndex="1" GridPane.rowIndex="7">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
@@ -250,15 +254,80 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Label text="Ajuste Estimado:" GridPane.rowIndex="4">
+                              <Label text="Ajuste Estimado:" GridPane.rowIndex="8">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label text="Ajuste Estimado" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                              <Label fx:id="estimatedadjust_label" text="Ajuste Estimado" textFill="BLUE" underline="true" GridPane.columnIndex="1" GridPane.rowIndex="8">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
+                              </Label>
+                              <Label text="Tanque:">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label fx:id="tank_label" text="Tanque" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Volumen:" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label fx:id="volume_label" text="Volumen" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Tipo de Análisis:" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label fx:id="analysistype_label" text="Tipo de Análisis" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Rango:" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Óptimo:" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label fx:id="range_label" text="Rango" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="optimal_label" text="Optimo" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
                               </Label>
                            </children>
                         </GridPane>

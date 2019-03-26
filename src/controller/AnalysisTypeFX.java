@@ -80,7 +80,6 @@ public class AnalysisTypeFX implements Initializable {
         analysis_type = new AnalysisType();
         analysis_type.setName("N/A");
         analysis_type.setDescription("N/A");
-        analysis_type.setFactor(0.0);
         analysis_type.setOptimal(0.0);
         analysis_type.setActive(true);
         
@@ -109,14 +108,6 @@ public class AnalysisTypeFX implements Initializable {
             analysistype_tableview.refresh();
         });
         
-        factor_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getFactor())));
-        factor_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        factor_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisType, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setFactor(getFactorValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
-            msabase.getAnalysisTypeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            analysistype_tableview.refresh();
-        });
-        
         optimal_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getOptimal())+" G/L"));
         optimal_column.setCellFactory(TextFieldTableCell.forTableColumn());
         optimal_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisType, String> t) -> {
@@ -138,11 +129,4 @@ public class AnalysisTypeFX implements Initializable {
         }
     }
     
-    public Double getFactorValue(AnalysisType analysis_type, String factor){
-        try{
-            return Double.parseDouble(factor);
-        }catch(Exception e){
-            return analysis_type.getFactor();
-        }
-    }
 }

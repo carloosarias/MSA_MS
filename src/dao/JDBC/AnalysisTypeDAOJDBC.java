@@ -23,14 +23,14 @@ import model.AnalysisType;
 public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, name, description, factor, optimal, active FROM ANALYSIS_TYPE WHERE id = ?";
+            "SELECT id, name, description, min_range, optimal, max_range, formula, active FROM ANALYSIS_TYPE WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_NAME = 
-            "SELECT id, name, description, factor, optimal, active FROM ANALYSIS_TYPE WHERE active = ? ORDER BY name";
+            "SELECT id, name, description, min_range, optimal, max_range, formula, active FROM ANALYSIS_TYPE WHERE active = ? ORDER BY name";
     private static final String SQL_INSERT =
-            "INSERT INTO ANALYSIS_TYPE (name, description, factor, optimal, active) "
-            + "VALUES (?, ?, ?, ?, ?)";
+            "INSERT INTO ANALYSIS_TYPE (name, description, min_range, optimal, max_range, formula, active) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ANALYSIS_TYPE SET name = ?, description = ?, factor = ?, optimal = ?, active = ? WHERE id = ?";
+            "UPDATE ANALYSIS_TYPE SET name = ?, description = ?, min_range = ?, optimal = ?, max_range = ?, formula = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM ANALYSIS_TYPE WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -111,8 +111,10 @@ public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
         Object[] values = {
             analysis_type.getName(),
             analysis_type.getDescription(),
-            analysis_type.getFactor(),
+            analysis_type.getMin_range(),
             analysis_type.getOptimal(),
+            analysis_type.getMax_range(),
+            analysis_type.getFormula(),
             analysis_type.isActive()
         };
         
@@ -147,8 +149,10 @@ public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
         Object[] values = {
             analysis_type.getName(),
             analysis_type.getDescription(),
-            analysis_type.getFactor(),
+            analysis_type.getMin_range(),
             analysis_type.getOptimal(),
+            analysis_type.getMax_range(),
+            analysis_type.getFormula(),
             analysis_type.isActive(),
             analysis_type.getId()
         };
@@ -199,8 +203,10 @@ public class AnalysisTypeDAOJDBC implements AnalysisTypeDAO{
         analysis_type.setId(resultSet.getInt("id"));
         analysis_type.setName(resultSet.getString("name"));
         analysis_type.setDescription(resultSet.getString("description"));
-        analysis_type.setFactor(resultSet.getDouble("factor"));
+        analysis_type.setMin_range(resultSet.getDouble("min_range"));
         analysis_type.setOptimal(resultSet.getDouble("optimal"));
+        analysis_type.setMax_range(resultSet.getDouble("max_range"));
+        analysis_type.setFormula(resultSet.getString("formula"));
         analysis_type.setActive(resultSet.getBoolean("active"));
         return analysis_type;
     }
