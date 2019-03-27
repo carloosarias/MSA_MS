@@ -8,7 +8,10 @@ package controller;
 
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -22,9 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import model.AnalysisType;
-import model.AnalysisType;
 import model.AnalysisTypeVar;
-import model.PartRevision;
 import static msa_ms.MainApp.df;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -125,9 +126,49 @@ public class AnalysisTypeFXNEW implements Initializable {
         });
         
         disablevar_button.setOnAction((ActionEvent) -> {
-            disableAnalysisTypeVar();
-            updateAnalysisTypeVarTable();
+            AnalysisTypeVar temp = analysistypevar_tableview.getSelectionModel().getSelectedItem();
+            int index = analysistypevar_tableview.getSelectionModel().getSelectedIndex();
+            analysistypevar_tableview.getItems().remove(temp);
+            
+            if(evalExpression()){
+                analysistypevar_tableview.getItems().add(index, temp);
+                analysistypevar_tableview.getSelectionModel().select(temp);
+                disableAnalysisTypeVar();
+                updateAnalysisTypeVarTable();
+            }else{
+                analysistypevar_tableview.getItems().add(index, temp);
+                analysistypevar_tableview.getSelectionModel().select(temp);
+                formula_textfield.requestFocus();
+            }
         });
+        
+        formula_textfield.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if(evalExpression()){
+                analysistype_tableview.getSelectionModel().getSelectedItem().setFormula(newValue);
+                msabase.getAnalysisTypeDAO().update(analysistype_tableview.getSelectionModel().getSelectedItem());
+            }
+        });
+    }
+    
+    public boolean evalExpression(){
+        formula_textfield.setStyle(null);
+        try{
+            ExpressionBuilder builder = new ExpressionBuilder(formula_textfield.getText());
+            for(AnalysisTypeVar item : analysistypevar_tableview.getItems()){
+                builder.variable(item.getName());
+            }
+            Expression e = builder.build();
+            for(AnalysisTypeVar item : analysistypevar_tableview.getItems()){
+                e.setVariable(item.getName(), item.getDefault_value());
+            }
+            
+            double result = e.evaluate();
+            System.out.println(result);
+            return true;
+        }catch(Exception e){
+            formula_textfield.setStyle("-fx-background-color: lightpink;");
+            return false;
+        }
     }
     
     public void createAnalysisTypeVar(){
@@ -179,12 +220,13 @@ public class AnalysisTypeFXNEW implements Initializable {
         varname_column.setCellValueFactory(new PropertyValueFactory<>("name"));
         varname_column.setCellFactory(TextFieldTableCell.forTableColumn());
         varname_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisTypeVar, String> t) -> {
-            int counter = 1;
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setName(t.getNewValue());
-            while(analysistypevar_tableview.getItems().stream().filter(o -> o.getName().equals((t.getTableView().getItems().get(t.getTablePosition().getRow())).getName())).findFirst().isPresent()){
-                analysistype_var.setName((t.getTableView().getItems().get(t.getTablePosition().getRow())).getName()+counter);
-                counter++;
+            for(AnalysisTypeVar analysistype_var : analysistypevar_tableview.getItems()){
+                if(analysistype_var.getName().equals(t.getNewValue())){
+                    analysistypevar_tableview.refresh();
+                    return;
+                }
             }
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setName(t.getNewValue());
             msabase.getAnalysisTypeVarDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             analysistypevar_tableview.refresh();
         });

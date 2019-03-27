@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisTypeFXNEW">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisTypeFXNEW">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
   </columnConstraints>
@@ -21,7 +21,7 @@
     <RowConstraints vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE">
+      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <tabs>
           <Tab text="Tipos de Análisis">
                <content>
@@ -35,7 +35,7 @@
                       <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="analysistype_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="analysistype_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="name_column" minWidth="-Infinity" prefWidth="150.0" text="Análisis" />
                             <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="300.0" text="Descripción" />
@@ -141,7 +141,7 @@
                               </Button>
                            </children>
                         </GridPane>
-                        <TableView fx:id="analysistypevar_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="analysistypevar_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="varname_column" minWidth="-Infinity" prefWidth="150.0" text="Variables" />
                               <TableColumn fx:id="vardescription_column" minWidth="-Infinity" prefWidth="300.0" text="Descripción" />
