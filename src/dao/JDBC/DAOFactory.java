@@ -4,6 +4,7 @@ import dao.DAOConfigurationException;
 import dao.DAOProperties;
 import dao.interfaces.ActivityReportDAO;
 import dao.interfaces.AnalysisReportDAO;
+import dao.interfaces.AnalysisReportVarDAO;
 import dao.interfaces.AnalysisTypeDAO;
 import dao.interfaces.AnalysisTypeVarDAO;
 import dao.interfaces.EmployeeDAO;
@@ -355,6 +356,14 @@ public abstract class DAOFactory {
      */   
     public AnalysisReportDAO getAnalysisReportDAO(){
         return new AnalysisReportDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the AnalysisReport DAO associated with the current DAOFactory.
+     * @return The AnalysisReport DAO associated with the current DAOFactory.
+     */   
+    public AnalysisReportVarDAO getAnalysisReportVarDAO(){
+        return new AnalysisReportVarDAOJDBC(this);
     }
     
     /**

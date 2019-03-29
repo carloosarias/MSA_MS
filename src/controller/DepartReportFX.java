@@ -252,9 +252,12 @@ public class DepartReportFX implements Initializable {
         ArrayList<DepartLot> mergedList = new ArrayList();
         
         for(DepartLot depart_lot : unfilteredList){
-            if(comments.contains((depart_lot.getComments()+depart_lot.getPart_number()).toUpperCase()) && partrevision_id.contains(depart_lot.getPartrevision_id()) && process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()) && departreport_id.contains(depart_lot.getDepartreport_id())){
+            if(comments.contains((depart_lot.getComments()+depart_lot.getPart_number()).toUpperCase()) && partrevision_id.contains(depart_lot.getPartrevision_id()) && process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()+depart_lot.getPart_number()) && departreport_id.contains(depart_lot.getDepartreport_id())){
                 for(DepartLot listitem : mergedList){
-                    if((depart_lot.getComments()+depart_lot.getPart_number()).equalsIgnoreCase(listitem.getComments()+listitem.getPart_number()) && depart_lot.getPartrevision_id().equals(listitem.getPartrevision_id()) && depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getLot_number().equals(listitem.getLot_number()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id())){
+                    if((depart_lot.getComments()+depart_lot.getPart_number()).equalsIgnoreCase(listitem.getComments()+listitem.getPart_number()) && depart_lot.getPartrevision_id().equals(listitem.getPartrevision_id()) && depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id())){
+                        if(!listitem.getLot_number().contains(depart_lot.getLot_number())){
+                            mergedList.get(mergedList.indexOf(listitem)).setLot_number(mergedList.get(mergedList.indexOf(listitem)).getLot_number()+","+depart_lot.getLot_number());
+                        }
                         mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + depart_lot.getQuantity());
                         mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + depart_lot.getBox_quantity());
                         break;
@@ -264,7 +267,7 @@ public class DepartReportFX implements Initializable {
             else{
                 departreport_id.add(depart_lot.getDepartreport_id());
                 partrevision_id.add(depart_lot.getPartrevision_id());
-                lot_number.add(depart_lot.getLot_number());
+                lot_number.add(depart_lot.getLot_number()+depart_lot.getPart_number().toUpperCase());
                 status.add(depart_lot.getStatus());
                 process.add(depart_lot.getProcess());
                 comments.add((depart_lot.getComments()+depart_lot.getPart_number()).toUpperCase());
@@ -391,9 +394,9 @@ public class DepartReportFX implements Initializable {
             fields.get("quantity_total").setValue(getQuantity_total()+"");
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report), true);
             if(company_contact.isEmpty()){
-                fields.get("contact").setValue("n/a");
-                fields.get("contact_email").setValue("n/a");
-                fields.get("contact_number").setValue("n/a");
+                fields.get("contact").setValue("N/A");
+                fields.get("contact_email").setValue("N/A");
+                fields.get("contact_number").setValue("N/A");
             }else{
                 fields.get("contact").setValue(company_contact.get(0).getName());
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());

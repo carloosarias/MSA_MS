@@ -48,42 +48,42 @@ public interface AnalysisReportVarDAO {
     public AnalysisReport findAnalysisReport(AnalysisReportVar analysisreport_var) throws IllegalArgumentException, DAOException;
     
     /**
-     * Returns a list of all AnalysisReportVar from the database matching AnalysisReport and active ordered by AnalysisReportVar ID. The list is never null and
-     * is empty when the database does not contain any AnalysisReportVar matching AnalysisReport and active.
+     * Returns a list of all AnalysisReportVar from the database matching AnalysisReport ordered by AnalysisReportVar ID. The list is never null and
+     * is empty when the database does not contain any AnalysisReportVar matching AnalysisReport.
      * AnalysisReport ID must not be null, otherwise will throw IllegalArgumentException.
      * @param analysis_report AnalysisReport to get the AnalysisReportVar from
-     * @param active active status
      * @return A list of all AnalysisReportVar from the database ordered by AnalysisReport ID.
      * @throws IllegalArgumentException If AnalysisReport ID is null.
      * @throws DAOException If something fails at database level.
      */        
-    public List<AnalysisReportVar> list(AnalysisReport analysis_report, boolean active) throws DAOException;
+    public List<AnalysisReportVar> list(AnalysisReport analysis_report) throws DAOException;
     
     /**
-     * Create the given AnalysisTypeVar in the database.
-     * The AnalysisTypeVar ID must be null, otherwise it will throw IllegalArgumentException.
+     * Create the given AnalysisReportVar in the database.
+     * The AnalysisReportVar ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given AnalysisTypeVar.
-     * @param analysis_type The AnalysisType for this AnalysisTypeVar
-     * @param analysistype_var The AnalysisTypeVar to be created.
-     * @throws IllegalArgumentException If the AnalysisTypeVar ID is not null.
+     * @param analysistype_var The AnalysisTypeVar for this AnalysisTypeVar
+     * @param analysis_report The AnalysisReport for this AnalysisReportVar
+     * @param analysisreport_var The AnalysisReportVar to be created.
+     * @throws IllegalArgumentException If the AnalysisReportVar ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(AnalysisType analysis_type, AnalysisTypeVar analysistype_var) throws IllegalArgumentException, DAOException;
+    public void create(AnalysisTypeVar analysistype_var, AnalysisReport analysis_report, AnalysisReportVar analysisreport_var) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given AnalysisTypeVar in the database. The AnalysisTypeVar ID must not be null, 
+     * Update the given AnalysisReportVar in the database. The AnalysisReportVar ID must not be null, 
      * otherwise it will throw IllegalArgumentException.
-     * @param analysistype_var The AnalysisTypeVar to be updated.
-     * @throws IllegalArgumentException If the AnalysisTypeVar ID is null.
+     * @param analysisreport_var The AnalysisReportVar to be updated.
+     * @throws IllegalArgumentException If the AnalysisReportVar ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public void update(AnalysisTypeVar analysistype_var) throws IllegalArgumentException, DAOException;
+    public void update(AnalysisReportVar analysisreport_var) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given AnalysisTypeVar from the database. After deleting, the DAO will set the ID of the given
-     * AnalysisTypeVar to null.
-     * @param analysistype_var The AnalysisTypeVar to be deleted from the database.
+     * Delete the given AnalysisReportVar from the database. After deleting, the DAO will set the ID of the given
+     * AnalysisReportVar to null.
+     * @param analysisreport_var The AnalysisReportVar to be deleted from the database.
      * @throws DAOException If something fails at database level.
      */
-    public void delete(AnalysisTypeVar analysistype_var) throws DAOException;
+    public void delete(AnalysisReportVar analysisreport_var) throws DAOException;
 }
