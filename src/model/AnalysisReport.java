@@ -5,30 +5,28 @@
  */
 package model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author Pavilion Mini
  */
-public class AnalysisReport implements Serializable{
+public class AnalysisReport {
     // Properties ---------------------------------------------------------------------------------
-
     private Integer id;
     private Date report_date;
     private String report_time;
-    private double quantity_used; //ML
+    private double result;
     private double applied_adjust; //KG
+    private String formula_timestamp;
     private boolean active;
     
     //INNER JOINS
     private String employee_name;
-    private String tank;
-    private double volume;
-    private String analysis_type;
-    private double factor;
-    private double optimal;
+    private String tank_name;
+    private double tank_volume;
+    private String analysistype_name;
+    private double analysistype_optimal;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -39,7 +37,7 @@ public class AnalysisReport implements Serializable{
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public Date getReport_date() {
         return report_date;
     }
@@ -47,42 +45,31 @@ public class AnalysisReport implements Serializable{
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
     }
-    
-    public String getReport_time(){
+
+    public String getReport_time() {
         return report_time;
     }
-    
-    public void setReport_time(String report_time){
+
+    public void setReport_time(String report_time) {
         this.report_time = report_time;
     }
-
-    public double getQuantity_used() {
-        return quantity_used;
-    }
-
-    public void setQuantity_used(double quantity_used) {
-        this.quantity_used = quantity_used;
-    }
     
-    //Result = Quantity used * factor
     public double getResult() {
-        return quantity_used*factor;
+        return result;
+    }
+
+    public void setEstimated_adjust(Double estimated_adjust) {
+        this.result = estimated_adjust;
     }
     
-    //Estimated adjust = ((result - optimal) * volume) / 1000
-    //KG
-    public double getEstimated_adjust() {
-        return ((optimal - getResult()) * volume)/1000;
-    }
-    
-    public double getApplied_adjust(){
+    public double getApplied_adjust() {
         return applied_adjust;
     }
-    
-    public void setApplied_adjust(double applied_adjust){
+
+    public void setApplied_adjust(double applied_adjust) {
         this.applied_adjust = applied_adjust;
     }
-    
+
     public boolean isActive() {
         return active;
     }
@@ -90,6 +77,7 @@ public class AnalysisReport implements Serializable{
     public void setActive(boolean active) {
         this.active = active;
     }
+    
     
     //INNER JOINS
     public String getEmployee_name() {
@@ -100,44 +88,50 @@ public class AnalysisReport implements Serializable{
         this.employee_name = employee_name;
     }
 
-    public String getTank() {
-        return tank;
+    public String getTank_name() {
+        return tank_name;
     }
 
-    public void setTank(String tank) {
-        this.tank = tank;
+    public void setTank_name(String tank_name) {
+        this.tank_name = tank_name;
     }
 
-    public double getVolume() {
-        return volume;
+    public double getTank_volume() {
+        return tank_volume;
     }
 
-    public void setVolume(double volume) {
-        this.volume = volume;
+    public void setTank_volume(double tank_volume) {
+        this.tank_volume = tank_volume;
+    }
+
+    public String getAnalysistype_name() {
+        return analysistype_name;
+    }
+
+    public void setAnalysistype_name(String analysistype_name) {
+        this.analysistype_name = analysistype_name;
+    }
+
+    public double getAnalysistype_optimal() {
+        return analysistype_optimal;
+    }
+
+    public void setAnalysistype_optimal(double analysistype_optimal) {
+        this.analysistype_optimal = analysistype_optimal;
     }
     
-    public String getAnalysis_type() {
-        return analysis_type;
+    public String getFormula_timestamp() {
+        return formula_timestamp;
     }
 
-    public void setAnalysis_type(String analysis_type) {
-        this.analysis_type = analysis_type;
+    public void setFormula_timestamp(String formula_timestamp) {
+        this.formula_timestamp = formula_timestamp;
     }
     
-    public double getFactor() {
-        return factor;
-    }
-
-    public void setFactor(double factor) {
-        this.factor = factor;
-    }
-
-    public double getOptimal() {
-        return optimal;
-    }
-
-    public void setOptimal(double optimal) {
-        this.optimal = optimal;
+    //Estimated adjust = ((optimal - result) * volume) / 1000
+    //KG
+    public double getEstimated_adjust() {
+        return ((analysistype_optimal - result) * tank_volume)/1000;
     }
     // Object overrides ---------------------------------------------------------------------------
     
@@ -172,5 +166,4 @@ public class AnalysisReport implements Serializable{
         return String.format("%d",
                 id);
     }
-
 }

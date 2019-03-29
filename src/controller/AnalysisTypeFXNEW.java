@@ -163,7 +163,6 @@ public class AnalysisTypeFXNEW implements Initializable {
             }
             
             double result = e.evaluate();
-            System.out.println(result);
             return true;
         }catch(Exception e){
             formula_textfield.setStyle("-fx-background-color: lightpink;");

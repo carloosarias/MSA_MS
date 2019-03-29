@@ -248,12 +248,13 @@ public class DepartReportFX implements Initializable {
         ArrayList<String> lot_number = new ArrayList();
         ArrayList<String> status = new ArrayList();
         ArrayList<String> process = new ArrayList();
+        ArrayList<String> comments = new ArrayList();
         ArrayList<DepartLot> mergedList = new ArrayList();
         
         for(DepartLot depart_lot : unfilteredList){
-            if(partrevision_id.contains(depart_lot.getPartrevision_id()) && process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()) && departreport_id.contains(depart_lot.getDepartreport_id())){
+            if(comments.contains((depart_lot.getComments()+depart_lot.getPart_number()).toUpperCase()) && partrevision_id.contains(depart_lot.getPartrevision_id()) && process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()) && departreport_id.contains(depart_lot.getDepartreport_id())){
                 for(DepartLot listitem : mergedList){
-                    if(depart_lot.getPartrevision_id().equals(listitem.getPartrevision_id()) && depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getLot_number().equals(listitem.getLot_number()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id())){
+                    if((depart_lot.getComments()+depart_lot.getPart_number()).equalsIgnoreCase(listitem.getComments()+listitem.getPart_number()) && depart_lot.getPartrevision_id().equals(listitem.getPartrevision_id()) && depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getLot_number().equals(listitem.getLot_number()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id())){
                         mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + depart_lot.getQuantity());
                         mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + depart_lot.getBox_quantity());
                         break;
@@ -266,6 +267,7 @@ public class DepartReportFX implements Initializable {
                 lot_number.add(depart_lot.getLot_number());
                 status.add(depart_lot.getStatus());
                 process.add(depart_lot.getProcess());
+                comments.add((depart_lot.getComments()+depart_lot.getPart_number()).toUpperCase());
                 
                 DepartLot item = new DepartLot();
                 item.setReport_date(depart_lot.getReport_date());
@@ -280,10 +282,11 @@ public class DepartReportFX implements Initializable {
                 item.setProcess(depart_lot.getProcess());
                 item.setPending(depart_lot.isPending());
                 item.setRejected(depart_lot.isPending());
+                item.setComments(depart_lot.getComments());
                 mergedList.add(item);
             }
         }
-        
+        mergedList.sort((o1, o2) -> o1.getPart_number().compareTo(o2.getPart_number()));
         return mergedList;
     }
     
@@ -385,6 +388,7 @@ public class DepartReportFX implements Initializable {
             fields.get("employee_email").setValue("alberto.nunez@maquilasales.com");
             fields.get("client").setValue(depart_report.getCompany_name());
             fields.get("client_address").setValue(depart_report.getCompany_address());
+            fields.get("quantity_total").setValue(getQuantity_total()+"");
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report), true);
             if(company_contact.isEmpty()){
                 fields.get("contact").setValue("n/a");
@@ -399,10 +403,9 @@ public class DepartReportFX implements Initializable {
             for(DepartLot item : departlot_list){
                 if(current_row > 26) break;
                 int offset = 0;
-                System.out.println(current_row);
-                System.out.println(item.getPart_number());
                 fields.get("part_number"+current_row).setValue(item.getPart_number());
                 fields.get("process"+current_row).setValue(item.getProcess());
+                fields.get("description"+current_row).setValue(item.getComments());
                 fields.get("quantity"+current_row).setValue(""+item.getQuantity());
                 fields.get("quantity_box"+current_row).setValue(""+item.getBox_quantity());
                 for(String lot_number : item.getLot_number().split(",")){
@@ -432,6 +435,14 @@ public class DepartReportFX implements Initializable {
         }catch(Exception e){
             return depart_lot.getBox_quantity();
         }
+    }
+    
+    public Integer getQuantity_total(){
+        int add = 0;
+        for(DepartLot depart_lot : departlot_tableview1.getItems()){
+            add += depart_lot.getQuantity();
+        }
+        return add;
     }
     
 }

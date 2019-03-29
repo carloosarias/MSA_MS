@@ -98,7 +98,7 @@ public class CreateAnalysisReportFX implements Initializable {
         analysis_report = new AnalysisReport();
         analysis_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
         analysis_report.setReport_time(LocalTime.now().format(timeFormat));
-        analysis_report.setQuantity_used(0.0);
+        //analysis_report.setQuantity_used(0.0);
         analysis_report.setApplied_adjust(0.0);
         analysis_report.setActive(true);
         msabase.getAnalysisReportDAO().create(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), MainApp.current_employee, analysis_report);

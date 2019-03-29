@@ -71,16 +71,18 @@ public interface AnalysisReportDAO {
      * The Tank ID must not be null, otherwise it will throw IllegalArgumentException.
      * The list is never null and is empty when the database does not contain any AnalysisReport matching Tank ID.
      * @param tank The Tank ID to be searched for.
+     * @param type The AnalysisType ID to be searched for.
      * @param start The start date of the range.
      * @param end the end date of the range.
-     * @param active
      * @param tank_filter
+     * @param analysistype_filter
      * @param date_filter
+     * @param active
      * @return A list of all AnalysisReport matching Tank ID from the database ordered by AnalysisReport ID.
      * @throws IllegalArgumentException If Tank ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<AnalysisReport> list(Tank tank, Date start, Date end, boolean active, boolean tank_filter, boolean date_filter) throws IllegalArgumentException, DAOException;
+    public List<AnalysisReport> list(Tank tank, AnalysisType type, Date start, Date end, boolean tank_filter, boolean analysistype_filter, boolean date_filter, boolean active) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given AnalysisReport in the database.

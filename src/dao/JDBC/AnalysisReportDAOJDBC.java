@@ -30,8 +30,8 @@ import static msa_ms.MainApp.timeFormat;
 public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
-            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
+            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
@@ -44,8 +44,8 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM ANALYSIS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
-            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
+            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
@@ -53,19 +53,19 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             + "WHERE ANALYSIS_REPORT.active = ? "
             + "ORDER BY report_date, report_time";
     private static final String SQL_LIST_ACTIVE_TANK_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.quantity_used, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.active, "
-            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.factor, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
+            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.report_date BETWEEN ? AND ? OR ? = 0) AND ANALYSIS_REPORT.active = ? "
+            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ? OR ? = 0) (ANALYSIS_REPORT.report_date BETWEEN ? AND ? OR ? = 0) AND ANALYSIS_REPORT.active = ? "
             + "ORDER BY report_date, report_time";
     private static final String SQL_INSERT =
-            "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, report_time, quantity_used, applied_adjust, active) "
+            "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, report_time, applied_adjust, formula_timestamp, active) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ANALYSIS_REPORT SET report_date = ?, report_time = ?, quantity_used = ?, applied_adjust = ?, active = ? WHERE id = ?";
+            "UPDATE ANALYSIS_REPORT SET report_date = ?, report_time = ?, applied_adjust = ?, formula_timestamp, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM ANALYSIS_REPORT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -220,9 +220,13 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     }
 
     @Override
-    public List<AnalysisReport> list(Tank tank, Date start, Date end, boolean active, boolean tank_filter, boolean date_filter) throws IllegalArgumentException, DAOException {
+    public List<AnalysisReport> list(Tank tank, AnalysisType type, Date start, Date end, boolean tank_filter, boolean analysistype_filter, boolean date_filter, boolean active) throws IllegalArgumentException, DAOException {
         if(tank.getId() == null) {
             throw new IllegalArgumentException("Tank is not created yet, the Tank ID is null.");
+        }
+        
+        if(type.getId() == null) {
+            throw new IllegalArgumentException("AnalysisType is not created yet, the AnalysisType ID is null.");
         }
         
         List<AnalysisReport> analysis_report = new ArrayList<>();
@@ -230,6 +234,8 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         Object[] values = {
             tank.getId(),
             tank_filter,
+            type.getId(),
+            analysistype_filter,
             start,
             end,
             date_filter,
@@ -275,8 +281,8 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             employee.getId(),
             analysis_report.getReport_date(),
             DAOUtil.toSqlTime(LocalTime.parse(analysis_report.getReport_time(), timeFormat)),
-            analysis_report.getQuantity_used(),
             analysis_report.getApplied_adjust(),
+            analysis_report.getFormula_timestamp(),
             analysis_report.isActive()
         };
         
@@ -311,8 +317,8 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         Object[] values = {
             analysis_report.getReport_date(),
             DAOUtil.toSqlTime(LocalTime.parse(analysis_report.getReport_time(), timeFormat)),
-            analysis_report.getQuantity_used(),
             analysis_report.getApplied_adjust(),
+            analysis_report.getFormula_timestamp(),
             analysis_report.isActive(),
             analysis_report.getId()
         };
@@ -364,17 +370,16 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         analysis_report.setId(resultSet.getInt("ANALYSIS_REPORT.id"));
         analysis_report.setReport_date(resultSet.getDate("ANALYSIS_REPORT.report_date"));
         analysis_report.setReport_time(resultSet.getTime("ANALYSIS_REPORT.report_time").toLocalTime().format(timeFormat));
-        analysis_report.setQuantity_used(resultSet.getDouble("ANALYSIS_REPORT.quantity_used"));
         analysis_report.setApplied_adjust(resultSet.getDouble("ANALYSIS_REPORT.applied_adjust"));
+        analysis_report.setFormula_timestamp(resultSet.getString("ANALYSIS_REPORT.formula_timestamp"));
         analysis_report.setActive(resultSet.getBoolean("ANALYSIS_REPORT.active"));
         
         //INNER JOINS
-        analysis_report.setTank(resultSet.getString("TANK.tank_name"));
-        analysis_report.setVolume(resultSet.getDouble("TANK.volume"));
-        analysis_report.setAnalysis_type(resultSet.getString("ANALYSIS_TYPE.name"));
-        analysis_report.setFactor(resultSet.getDouble("ANALYSIS_TYPE.factor"));
-        analysis_report.setOptimal(resultSet.getDouble("ANALYSIS_TYPE.optimal"));
         analysis_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
+        analysis_report.setTank_name(resultSet.getString("TANK.tank_name"));
+        analysis_report.setTank_volume(resultSet.getDouble("TANK.volume"));
+        analysis_report.setAnalysistype_name(resultSet.getString("ANALYSIS_TYPE.name"));
+        analysis_report.setAnalysistype_optimal(resultSet.getDouble("ANALYSIS_TYPE.optimal"));
         
         return analysis_report;
     }

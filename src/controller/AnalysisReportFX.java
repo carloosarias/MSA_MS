@@ -159,21 +159,10 @@ public class AnalysisReportFX implements Initializable {
         reporttime_column.setCellValueFactory(new PropertyValueFactory<>("report_time"));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
         tank_column.setCellValueFactory(new PropertyValueFactory<>("tank"));
-        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getVolume())+" L"));
         analysistype_column.setCellValueFactory(new PropertyValueFactory<>("analysis_type"));
-        factor_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getFactor())));
-        optimal_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getOptimal())+" G/L"));
-        
-        quantityused_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getQuantity_used())+" ML"));
-        quantityused_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        quantityused_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReport, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity_used(getQuantity_usedValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
-            msabase.getAnalysisReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            analysisreport_tableview.refresh();
-        });
         
         result_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getResult())+" ML"));
-        estimatedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getEstimated_adjust())+" KG"));
+        estimatedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getResult())+" KG"));
         
         appliedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getApplied_adjust())+" KG"));
         appliedadjust_column.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -186,7 +175,7 @@ public class AnalysisReportFX implements Initializable {
     
     public void updateAnalysisReportTable(){
         try{
-            analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), true, tank_filter.isSelected(), date_filter.isSelected()));
+            //analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(startdate_picker.getValue()), DAOUtil.toUtilDate(enddate_picker.getValue()), true, tank_filter.isSelected(), date_filter.isSelected()));
         } catch(Exception e){
             analysisreport_tableview.getItems().clear();
         }
@@ -207,14 +196,6 @@ public class AnalysisReportFX implements Initializable {
             add_stage.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public Double getQuantity_usedValue(AnalysisReport analysis_report, String quantity_used){
-        try{
-            return Double.parseDouble(quantity_used);
-        }catch(Exception e){
-            return analysis_report.getQuantity_used();
         }
     }
     
