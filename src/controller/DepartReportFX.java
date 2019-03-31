@@ -167,7 +167,7 @@ public class DepartReportFX implements Initializable {
 
                 //Setting the destination file
                 PDFmerger.setDestinationFileName(output.toString());
-                int page_offset = 0;
+                int page_offset = 1;
                 for(List<DepartLot> departlot_list : divideList(departlot_tableview2.getItems())){
                     PDFmerger.addSource(buildPDF(page_offset, departreport_tableview.getSelectionModel().getSelectedItem(), departlot_list));
                     page_offset++;
@@ -184,7 +184,7 @@ public class DepartReportFX implements Initializable {
     
     public List<List<DepartLot>> divideList(List<DepartLot> arrayList){
         List<List<DepartLot>> dividedList = new ArrayList();
-        int size = 26;
+        int size = 35;
         for (int start = 0; start < arrayList.size(); start += size) {
             int end = Math.min(start + size, arrayList.size());
             List<DepartLot> sublist = arrayList.subList(start, end);
@@ -369,14 +369,14 @@ public class DepartReportFX implements Initializable {
     
     private File buildPDF(int page_offset, DepartReport depart_report, List<DepartLot> departlot_list) throws Exception{
 
-            Path template = Files.createTempFile("DepartReportTemplate", ".pdf");
+            Path template = Files.createTempFile("Depart Report Template", ".pdf");
             template.toFile().deleteOnExit();
             
-            try (InputStream is = MainApp.class.getClassLoader().getResourceAsStream("template/DepartReportTemplate.pdf")) {
+            try (InputStream is = MainApp.class.getClassLoader().getResourceAsStream("template/Depart Report Template.pdf")) {
                 Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
             }
             
-            Path output = Files.createTempFile("RemisionPage"+page_offset, ".pdf");
+            Path output = Files.createTempFile("RemisionPDF"+page_offset, ".pdf");
             template.toFile().deleteOnExit();
             
             PdfDocument pdf = new PdfDocument(
@@ -386,37 +386,40 @@ public class DepartReportFX implements Initializable {
             
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
             Map<String, PdfFormField> fields = form.getFormFields();
-            fields.get("depart_report_id").setValue(""+depart_report.getId());
-            fields.get("date").setValue(depart_report.getReport_date().toString());
-            fields.get("employee_email").setValue("alberto.nunez@maquilasales.com");
-            fields.get("client").setValue(depart_report.getCompany_name());
+            fields.get("page_number").setValue(page_offset+" / "+divideList(departlot_tableview2.getItems()).size());
+            fields.get("report_id").setValue(""+depart_report.getId());
+            fields.get("report_date").setValue(depart_report.getReport_date().toString());
+            fields.get("employee_name").setValue(depart_report.getEmployee_name());
+            fields.get("client_name").setValue(depart_report.getCompany_name());
             fields.get("client_address").setValue(depart_report.getCompany_address());
-            fields.get("quantity_total").setValue(getQuantity_total()+"");
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report), true);
             if(company_contact.isEmpty()){
-                fields.get("contact").setValue("N/A");
+                fields.get("contact_name").setValue("N/A");
                 fields.get("contact_email").setValue("N/A");
                 fields.get("contact_number").setValue("N/A");
             }else{
-                fields.get("contact").setValue(company_contact.get(0).getName());
+                fields.get("contact_name").setValue(company_contact.get(0).getName());
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());
-                fields.get("contact_number").setValue(company_contact.get(0).getPhone_number());
+                fields.get("contact_phone").setValue(company_contact.get(0).getPhone_number());
             }
             int current_row = 1;
             for(DepartLot item : departlot_list){
-                if(current_row > 26) break;
+                if(current_row > 41) break;
                 int offset = 0;
                 fields.get("part_number"+current_row).setValue(item.getPart_number());
                 fields.get("process"+current_row).setValue(item.getProcess());
-                fields.get("description"+current_row).setValue(item.getComments());
+                fields.get("comments"+current_row).setValue(item.getComments());
                 fields.get("quantity"+current_row).setValue(""+item.getQuantity());
-                fields.get("quantity_box"+current_row).setValue(""+item.getBox_quantity());
+                fields.get("box_quantity"+current_row).setValue(""+item.getBox_quantity());
                 for(String lot_number : item.getLot_number().split(",")){
-                    fields.get("lotnumber"+(current_row+offset)).setValue(lot_number);
+                    fields.get("lot_number"+(current_row+offset)).setValue(lot_number);
                     offset++;
                 }
                 current_row += offset;
             }
+            
+            fields.get("total_quantity").setValue(""+getQuantity_total());
+            fields.get("total_boxquantity").setValue(""+getBoxquantity_total());
             
             form.flattenFields();
             pdf.close();
@@ -448,4 +451,11 @@ public class DepartReportFX implements Initializable {
         return add;
     }
     
+    public Integer getBoxquantity_total(){
+        int add = 0;
+        for(DepartLot depart_lot : departlot_tableview1.getItems()){
+            add += depart_lot.getBox_quantity();
+        }
+        return add;
+    }
 }
