@@ -170,6 +170,17 @@ public class DepartReportFX implements Initializable {
         });
         
         pdf_button1.setOnAction((ActionEvent) -> {
+            buildPDF(departlot_tableview1.getItems());
+        });
+        pdf_button2.setOnAction((ActionEvent) -> {
+            buildPDF(departlot_tableview2.getItems());
+        });
+        pdf_button3.setOnAction((ActionEvent) -> {
+            buildPDF(departlot_tableview3.getItems());
+        });
+    }
+    
+    public void buildPDF(List<DepartLot> departlot_list){
             try{
                 Path output = Files.createTempFile("RemisionPDF", ".pdf");
                 output.toFile().deleteOnExit();
@@ -178,9 +189,11 @@ public class DepartReportFX implements Initializable {
 
                 //Setting the destination file
                 PDFmerger.setDestinationFileName(output.toString());
+                int size = 35;
                 int page_offset = 1;
-                for(List<DepartLot> departlot_list : divideList(departlot_tableview2.getItems())){
-                    PDFmerger.addSource(buildPDF(page_offset, departreport_tableview.getSelectionModel().getSelectedItem(), departlot_list));
+                int total_pages = divideList(departlot_list, size).size();
+                for(List<DepartLot> divided_list : divideList(departlot_list, size)){
+                    PDFmerger.addSource(buildPDF(page_offset, departreport_tableview.getSelectionModel().getSelectedItem(), divided_list, total_pages));
                     page_offset++;
                 }
                 //Merging the two documents
@@ -190,12 +203,10 @@ public class DepartReportFX implements Initializable {
             catch(Exception e){
                 e.printStackTrace();
             }
-        });
     }
     
-    public List<List<DepartLot>> divideList(List<DepartLot> arrayList){
+    public List<List<DepartLot>> divideList(List<DepartLot> arrayList, int size){
         List<List<DepartLot>> dividedList = new ArrayList();
-        int size = 35;
         for (int start = 0; start < arrayList.size(); start += size) {
             int end = Math.min(start + size, arrayList.size());
             List<DepartLot> sublist = arrayList.subList(start, end);
@@ -269,7 +280,6 @@ public class DepartReportFX implements Initializable {
                 string_list.add(string_item);
                 DepartLot filtered_item = new DepartLot();
                 filtered_item.setReport_date(unfiltered_item.getReport_date());
-                filtered_item.setPart_revision(unfiltered_item.getPart_revision());
                 filtered_item.setDepartreport_id(unfiltered_item.getDepartreport_id());
                 filtered_item.setPartrevision_id(unfiltered_item.getPartrevision_id());
                 filtered_item.setPart_number(unfiltered_item.getPart_number());
@@ -302,9 +312,17 @@ public class DepartReportFX implements Initializable {
             }else{
                 partnumber.add(depart_lot.getPart_number());
                 DepartLot item = new DepartLot();
+                item.setReport_date(depart_lot.getReport_date());
+                item.setPart_revision("N/A");
+                item.setDepartreport_id(depart_lot.getDepartreport_id());
                 item.setPart_number(depart_lot.getPart_number());
+                item.setLot_number("N/A");
+                item.setProcess("N/A");
+                item.setPo_number("N/A");
+                item.setLine_number("N/A");
                 item.setQuantity(depart_lot.getQuantity());
                 item.setBox_quantity(depart_lot.getBox_quantity());
+                item.setComments("N/A");
                 mergedList.add(partnumber.indexOf(depart_lot.getPart_number()),item);
             }
         }
@@ -382,7 +400,7 @@ public class DepartReportFX implements Initializable {
         });
     }
     
-    private File buildPDF(int page_offset, DepartReport depart_report, List<DepartLot> departlot_list) throws Exception{
+    private File buildPDF(int page_offset, DepartReport depart_report, List<DepartLot> departlot_list, int total_pages) throws Exception{
 
             Path template = Files.createTempFile("Depart Report Template", ".pdf");
             template.toFile().deleteOnExit();
@@ -401,7 +419,7 @@ public class DepartReportFX implements Initializable {
             
             PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
             Map<String, PdfFormField> fields = form.getFormFields();
-            fields.get("page_number").setValue(page_offset+" / "+divideList(departlot_tableview2.getItems()).size());
+            fields.get("page_number").setValue(page_offset+" / "+total_pages);
             fields.get("report_id").setValue(""+depart_report.getId());
             fields.get("report_date").setValue(depart_report.getReport_date().toString());
             fields.get("employee_name").setValue(depart_report.getEmployee_name());
@@ -423,6 +441,8 @@ public class DepartReportFX implements Initializable {
                 int offset = 0;
                 fields.get("part_number"+current_row).setValue(item.getPart_number());
                 fields.get("process"+current_row).setValue(item.getProcess());
+                fields.get("po_number"+current_row).setValue(item.getPo_number());
+                fields.get("line_number"+current_row).setValue(item.getLine_number());
                 fields.get("comments"+current_row).setValue(item.getComments());
                 fields.get("quantity"+current_row).setValue(""+item.getQuantity());
                 fields.get("box_quantity"+current_row).setValue(""+item.getBox_quantity());
