@@ -187,7 +187,7 @@ public class AnalysisTypeVarDAOJDBC implements AnalysisTypeVarDAO{
     }
 
     @Override
-    public void update(AnalysisTypeVar analysistype_var) throws IllegalArgumentException, DAOException {
+   public void update(AnalysisTypeVar analysistype_var) throws IllegalArgumentException, DAOException {
         if (analysistype_var.getId() == null) {
             throw new IllegalArgumentException("AnalysisTypeVar is not created yet, the AnalysisTypeVar ID is null.");
         }
@@ -210,7 +210,7 @@ public class AnalysisTypeVarDAOJDBC implements AnalysisTypeVarDAO{
             }
         } catch(SQLException e){
             throw new DAOException(e);
-        }
+        } 
     }
 
     @Override

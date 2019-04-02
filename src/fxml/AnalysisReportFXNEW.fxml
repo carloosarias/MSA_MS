@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="root_gridpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisReportFXNEW">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AnalysisReportFXNEW">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" />
   </columnConstraints>
@@ -114,7 +114,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="analysisreport_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="analysisreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="50.0" text="#" />
                             <TableColumn fx:id="date_column" minWidth="-Infinity" prefWidth="120.0" text="Fecha" />
@@ -138,7 +138,7 @@
                                     <TableColumn fx:id="appliedadjust_column" minWidth="-Infinity" prefWidth="100.0" text="Agregado" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn prefWidth="75.0" text="Ph" />
+                              <TableColumn fx:id="ph_column" prefWidth="75.0" text="Ph" />
                           </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />

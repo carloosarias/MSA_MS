@@ -18,6 +18,7 @@ public class AnalysisReport {
     private String report_time;
     private double result;
     private double applied_adjust; //KG
+    private double ph;
     private String formula_timestamp;
     private boolean active;
     
@@ -69,7 +70,15 @@ public class AnalysisReport {
     public void setApplied_adjust(double applied_adjust) {
         this.applied_adjust = applied_adjust;
     }
+    
+    public double getPh() {
+        return ph;
+    }
 
+    public void setPh(double ph) {
+        this.ph = ph;
+    }
+    
     public boolean isActive() {
         return active;
     }

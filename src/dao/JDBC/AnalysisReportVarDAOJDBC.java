@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import model.AnalysisReport;
 import model.AnalysisReportVar;
@@ -34,7 +35,7 @@ public class AnalysisReportVarDAOJDBC implements AnalysisReportVarDAO {
             "SELECT ANALYSIS_TYPE_VAR_ID FROM ANALYSIS_REPORT_VAR WHERE id = ?";
     private static final String SQL_FIND_ANALYSIS_REPORT_BY_ID = 
             "SELECT ANALYSIS_REPORT_ID FROM ANALYSIS_REPORT_VAR WHERE id = ?";
-    private static final String SQL_LIST_ANALYSISTYPE_ACTIVE_ORDER_BY_ID = 
+    private static final String SQL_LIST_ANALYSISREPORT_ORDER_BY_ID = 
             "SELECT ANALYSIS_REPORT_VAR.id, ANALYSIS_REPORT_VAR.value, "
             + "ANALYSIS_REPORT.id, ANALYSIS_TYPE_VAR.id, ANALYSIS_TYPE_VAR.name, ANALYSIS_TYPE_VAR.description "
             + "FROM ANALYSIS_REPORT_VAR "
@@ -136,7 +137,7 @@ public class AnalysisReportVarDAOJDBC implements AnalysisReportVarDAO {
         
         try (
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_ANALYSIS_TYPE_VAR_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_FIND_ANALYSIS_REPORT_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
@@ -151,22 +152,113 @@ public class AnalysisReportVarDAOJDBC implements AnalysisReportVarDAO {
 
     @Override
     public List<AnalysisReportVar> list(AnalysisReport analysis_report) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(analysis_report.getId() == null) {
+            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null.");
+        }
+        
+        List<AnalysisReportVar> analysisreportvar_list = new ArrayList<>();
+        
+        Object[] values = {
+            analysis_report.getId(),
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ANALYSISREPORT_ORDER_BY_ID, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                analysisreportvar_list.add(map(resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return analysisreportvar_list;
     }
 
     @Override
     public void create(AnalysisTypeVar analysistype_var, AnalysisReport analysis_report, AnalysisReportVar analysisreport_var) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(analysistype_var.getId() == null){
+            throw new IllegalArgumentException("AnalysisTypeVar is not created yet, the AnalysisTypeVar ID is null");
+        }
+        if(analysis_report.getId() == null){
+            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null");
+        }
+        if(analysisreport_var.getId() != null){
+            throw new IllegalArgumentException("AnalysisReportVar is already created, the AnalysisReportVar ID is not null.");
+        }
+        Object[] values = {
+            analysistype_var.getId(),
+            analysis_report.getId(),
+            analysisreport_var.getValue()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating AnalysisReportVar failed, no rows affected.");
+            }
+            
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    analysistype_var.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new DAOException("Creating AnalysisReportVar failed, no generated key obtained.");
+                }
+            }
+            
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(AnalysisReportVar analysisreport_var) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (analysisreport_var.getId() == null) {
+            throw new IllegalArgumentException("AnalysisReportVar is not created yet, the AnalysisReportVar ID is null.");
+        }
+        
+        Object[] values = {
+            analysisreport_var.getValue(),
+            analysisreport_var.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating AnalysisReportVar failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        } 
     }
 
     @Override
     public void delete(AnalysisReportVar analysisreport_var) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            analysisreport_var.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting AnalysisReportVar failed, no rows affected.");
+            } else{
+                analysisreport_var.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     // Helpers ------------------------------------------------------------------------------------
     

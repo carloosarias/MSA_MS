@@ -30,7 +30,7 @@ import static msa_ms.MainApp.timeFormat;
 public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.ph, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
             + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
@@ -44,7 +44,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     private static final String SQL_FIND_EMPLOYEE_BY_ID = 
             "SELECT EMPLOYEE_ID FROM ANALYSIS_REPORT WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.ph, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
             + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
@@ -53,19 +53,19 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             + "WHERE ANALYSIS_REPORT.active = ? "
             + "ORDER BY report_date, report_time";
     private static final String SQL_LIST_ACTIVE_TANK_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
+            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.ph, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
             + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ? OR ? = 0) (ANALYSIS_REPORT.report_date BETWEEN ? AND ? OR ? = 0) AND ANALYSIS_REPORT.active = ? "
+            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ? OR ? = 0) AND ((ANALYSIS_REPORT.report_date BETWEEN ? AND ?) OR ? = 0) AND ANALYSIS_REPORT.active = ? "
             + "ORDER BY report_date, report_time";
     private static final String SQL_INSERT =
-            "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, report_time, applied_adjust, formula_timestamp, active) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, report_time, applied_adjust, ph, formula_timestamp, active) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE ANALYSIS_REPORT SET report_date = ?, report_time = ?, applied_adjust = ?, formula_timestamp, active = ? WHERE id = ?";
+            "UPDATE ANALYSIS_REPORT SET report_date = ?, report_time = ?, applied_adjust = ?, ph = ?, formula_timestamp, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM ANALYSIS_REPORT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -282,6 +282,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             analysis_report.getReport_date(),
             DAOUtil.toSqlTime(LocalTime.parse(analysis_report.getReport_time(), timeFormat)),
             analysis_report.getApplied_adjust(),
+            analysis_report.getPh(),
             analysis_report.getFormula_timestamp(),
             analysis_report.isActive()
         };
@@ -318,6 +319,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
             analysis_report.getReport_date(),
             DAOUtil.toSqlTime(LocalTime.parse(analysis_report.getReport_time(), timeFormat)),
             analysis_report.getApplied_adjust(),
+            analysis_report.getPh(),
             analysis_report.getFormula_timestamp(),
             analysis_report.isActive(),
             analysis_report.getId()
@@ -371,6 +373,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         analysis_report.setReport_date(resultSet.getDate("ANALYSIS_REPORT.report_date"));
         analysis_report.setReport_time(resultSet.getTime("ANALYSIS_REPORT.report_time").toLocalTime().format(timeFormat));
         analysis_report.setApplied_adjust(resultSet.getDouble("ANALYSIS_REPORT.applied_adjust"));
+        analysis_report.setPh(resultSet.getDouble("ANALYSIS_REPORT.ph"));
         analysis_report.setFormula_timestamp(resultSet.getString("ANALYSIS_REPORT.formula_timestamp"));
         analysis_report.setActive(resultSet.getBoolean("ANALYSIS_REPORT.active"));
         

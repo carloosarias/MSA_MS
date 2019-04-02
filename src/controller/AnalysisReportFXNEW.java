@@ -7,13 +7,18 @@ package controller;
 
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -25,7 +30,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.AnalysisReport;
 import model.AnalysisReportVar;
 import model.AnalysisType;
@@ -80,6 +88,8 @@ public class AnalysisReportFXNEW implements Initializable {
     @FXML
     private TableColumn<AnalysisReport, String> estimatedadjust_column;
     @FXML
+    private TableColumn<AnalysisReport, String> ph_column;
+    @FXML
     private TableColumn<AnalysisReport, String> appliedadjust_column;
     @FXML
     private Button add_button;
@@ -127,6 +137,11 @@ public class AnalysisReportFXNEW implements Initializable {
         tank_combo.getSelectionModel().selectFirst();
         analysistype_combo.getItems().setAll(msabase.getAnalysisTypeDAO().list(true));
         analysistype_combo.getSelectionModel().selectFirst();
+        start_datepicker.setValue(LocalDate.now());
+        end_datepicker.setValue(LocalDate.now().plusMonths(1));
+        
+        details_tab.disableProperty().bind(analysisreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        disable_button.disableProperty().bind(analysisreport_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         setAnalysisReportTable();
         setAnalysisReportVarTable();
@@ -142,19 +157,70 @@ public class AnalysisReportFXNEW implements Initializable {
             }
         });
         
+        add_button.setOnAction((ActionEvent) -> {
+            showAdd_stage();
+        });
+        
+        tank_combo.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        analysistype_combo.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        start_datepicker.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        end_datepicker.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        analysistype_filter.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        date_filter.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        tank_filter.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();
+        });
+        
+    }
+    
+    public void showAdd_stage(){
+        try {
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
+            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateAnalysisReportFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            add_stage.setTitle("Generar Reporte de Análisis");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void updateAnalysisReportVarTable(){
-        //
+        try{
+            analysisreportvar_tableview.getItems().setAll(msabase.getAnalysisReportVarDAO().list(analysisreport_tableview.getSelectionModel().getSelectedItem()));
+        }catch(Exception e){
+            analysisreportvar_tableview.getItems().clear();
+        }
     }
     
     public void setAnalysisReportVarTable(){
-        //
+        var_column.setCellValueFactory(new PropertyValueFactory<>("analysistypevar_name"));
+        description_column.setCellValueFactory(new PropertyValueFactory<>("analysistypevar_description"));
+        value_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getValue())));
     }
     
     public void updateAnalysisReportTable(){
+        System.out.println("test");
         try{
-            msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(start_datepicker.getValue().minusDays(1)), DAOUtil.toUtilDate(end_datepicker.getValue().minusDays(1)), tank_filter.isSelected(), analysistype_filter.isSelected(), date_filter.isSelected(), true);
+            analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(start_datepicker.getValue().minusDays(1)), DAOUtil.toUtilDate(end_datepicker.getValue().minusDays(1)), tank_filter.isSelected(), analysistype_filter.isSelected(), date_filter.isSelected(), true));
         }catch(Exception e){
             analysisreport_tableview.getItems().clear();
         }
@@ -174,6 +240,13 @@ public class AnalysisReportFXNEW implements Initializable {
         appliedadjust_column.setCellFactory(TextFieldTableCell.forTableColumn());
         appliedadjust_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReport, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setApplied_adjust(getApplied_adjustValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getAnalysisReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            analysisreport_tableview.refresh();
+        });
+        ph_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getPh())));
+        ph_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        ph_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReport, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPh(getPh_value(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getAnalysisReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             analysisreport_tableview.refresh();
         });
@@ -200,6 +273,14 @@ public class AnalysisReportFXNEW implements Initializable {
             return Double.parseDouble(applied_adjust);
         }catch(Exception e){
             return analysis_report.getApplied_adjust();
+        }
+    }
+    
+    public Double getPh_value(AnalysisReport analysis_report, String ph){
+        try{
+            return Double.parseDouble(ph);
+        }catch(Exception e){
+            return analysis_report.getPh();
         }
     }
     

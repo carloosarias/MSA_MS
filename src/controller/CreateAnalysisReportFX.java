@@ -20,7 +20,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.AnalysisReport;
+import model.AnalysisReportVar;
 import model.AnalysisType;
+import model.AnalysisTypeVar;
 import model.Tank;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.setDatePicker;
@@ -98,9 +100,18 @@ public class CreateAnalysisReportFX implements Initializable {
         analysis_report = new AnalysisReport();
         analysis_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
         analysis_report.setReport_time(LocalTime.now().format(timeFormat));
-        //analysis_report.setQuantity_used(0.0);
         analysis_report.setApplied_adjust(0.0);
+        analysis_report.setFormula_timestamp(analysistype_combo.getSelectionModel().getSelectedItem().getFormula());
         analysis_report.setActive(true);
         msabase.getAnalysisReportDAO().create(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), MainApp.current_employee, analysis_report);
+        createAnalysisReportVar();
+    }
+    
+    public void createAnalysisReportVar(){
+        for(AnalysisTypeVar analysistype_var : msabase.getAnalysisTypeVarDAO().list(analysistype_combo.getSelectionModel().getSelectedItem(), true)){
+            AnalysisReportVar analysisreport_var = new AnalysisReportVar();
+            analysisreport_var.setValue(analysistype_var.getDefault_value());
+            msabase.getAnalysisReportVarDAO().create(analysistype_var, analysis_report, analysisreport_var);
+        }
     }
 }
