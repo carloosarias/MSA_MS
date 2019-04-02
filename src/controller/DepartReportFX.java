@@ -89,11 +89,15 @@ public class DepartReportFX implements Initializable {
     @FXML
     private TableColumn<DepartLot, String> lotnumber_column1;
     @FXML
+    private TableColumn<DepartLot, String> process_column1;
+    @FXML
+    private TableColumn<DepartLot, String> ponumber_column1;
+    @FXML
+    private TableColumn<DepartLot, String> linenumber_column1;
+    @FXML
     private TableColumn<DepartLot, Integer> quantity_column2;
     @FXML
     private TableColumn<DepartLot, Integer> boxquantity_column2;
-    @FXML
-    private TableColumn<DepartLot, String> process_column1;
     @FXML
     private TableView<DepartLot> departlot_tableview3;
     @FXML
@@ -103,11 +107,15 @@ public class DepartReportFX implements Initializable {
     @FXML
     private TableColumn<DepartLot, String> lotnumber_column2;
     @FXML
+    private TableColumn<DepartLot, String> process_column2;
+    @FXML
+    private TableColumn<DepartLot, String> ponumber_column2;
+    @FXML
+    private TableColumn<DepartLot, String> linenumber_column2;
+    @FXML
     private TableColumn<DepartLot, String> quantity_column3;
     @FXML
     private TableColumn<DepartLot, String> boxquantity_column3;
-    @FXML
-    private TableColumn<DepartLot, String> process_column2;
     @FXML
     private TableColumn<DepartLot, String> comments_column;
     @FXML
@@ -115,7 +123,11 @@ public class DepartReportFX implements Initializable {
     @FXML
     private Button edit_button;
     @FXML
-    private Button pdf_button;
+    private Button pdf_button1;
+    @FXML
+    private Button pdf_button2;
+    @FXML
+    private Button pdf_button3;
     
     private Stage add_stage = new Stage();
     
@@ -133,7 +145,7 @@ public class DepartReportFX implements Initializable {
         updateDepartReportTable();
         
         details_tab.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
-        pdf_button.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        pdf_button1.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
             edit_button.setDisable(true);
@@ -157,7 +169,7 @@ public class DepartReportFX implements Initializable {
            updateDepartReportTable();
         });
         
-        pdf_button.setOnAction((ActionEvent) -> {
+        pdf_button1.setOnAction((ActionEvent) -> {
             try{
                 Path output = Files.createTempFile("RemisionPDF", ".pdf");
                 output.toFile().deleteOnExit();
@@ -246,7 +258,7 @@ public class DepartReportFX implements Initializable {
         String string_item = "";
         
         for(DepartLot unfiltered_item : unfiltered_list){
-            string_item = (unfiltered_item.getPartrevision_id()+unfiltered_item.getProcess()+unfiltered_item.getStatus()+unfiltered_item.getComments()).toUpperCase();
+            string_item = (unfiltered_item.getPartrevision_id()+unfiltered_item.getProcess()+unfiltered_item.getPo_number()+unfiltered_item.getLine_number()+unfiltered_item.getStatus()+unfiltered_item.getComments()).toUpperCase();
             if(string_list.contains(string_item)){
                 filtered_list.get(string_list.indexOf(string_item)).setQuantity(filtered_list.get(string_list.indexOf(string_item)).getQuantity() + unfiltered_item.getQuantity());
                 filtered_list.get(string_list.indexOf(string_item)).setBox_quantity(filtered_list.get(string_list.indexOf(string_item)).getBox_quantity() + unfiltered_item.getBox_quantity());
@@ -262,10 +274,12 @@ public class DepartReportFX implements Initializable {
                 filtered_item.setPartrevision_id(unfiltered_item.getPartrevision_id());
                 filtered_item.setPart_number(unfiltered_item.getPart_number());
                 filtered_item.setPart_revision(unfiltered_item.getPart_revision());
-                filtered_item.setQuantity(unfiltered_item.getQuantity());
-                filtered_item.setBox_quantity(unfiltered_item.getBox_quantity());
                 filtered_item.setLot_number(unfiltered_item.getLot_number());
                 filtered_item.setProcess(unfiltered_item.getProcess());
+                filtered_item.setPo_number(unfiltered_item.getPo_number());
+                filtered_item.setLine_number(unfiltered_item.getLine_number());
+                filtered_item.setQuantity(unfiltered_item.getQuantity());
+                filtered_item.setBox_quantity(unfiltered_item.getBox_quantity());
                 filtered_item.setPending(unfiltered_item.isPending());
                 filtered_item.setRejected(unfiltered_item.isPending());
                 filtered_item.setComments(unfiltered_item.getComments());
@@ -276,59 +290,6 @@ public class DepartReportFX implements Initializable {
         filtered_list.sort((o1, o2) -> o1.getPart_number().compareTo(o2.getPart_number()));
         return filtered_list;
     }
-    /*
-    public List<DepartLot> mergeByDepartReport_Lotnumber(List<DepartLot> unfilteredList){
-        //find all part_number
-        ArrayList<Integer> departreport_id = new ArrayList();
-        ArrayList<Integer> partrevision_id = new ArrayList();
-        ArrayList<String> lot_number = new ArrayList();
-        ArrayList<String> status = new ArrayList();
-        ArrayList<String> process = new ArrayList();
-        ArrayList<String> comments = new ArrayList();
-        ArrayList<DepartLot> mergedList = new ArrayList();
-        
-        for(DepartLot depart_lot : unfilteredList){
-            if(comments.contains((depart_lot.getComments()+depart_lot.getPart_number()).toUpperCase()) && partrevision_id.contains(depart_lot.getPartrevision_id()) && process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()+depart_lot.getPart_number()) && departreport_id.contains(depart_lot.getDepartreport_id())){
-                for(DepartLot listitem : mergedList){
-                    if((depart_lot.getComments()+depart_lot.getPart_number()).equalsIgnoreCase(listitem.getComments()+listitem.getPart_number()) && depart_lot.getPartrevision_id().equals(listitem.getPartrevision_id()) && depart_lot.getProcess().equals(listitem.getProcess()) && depart_lot.getStatus().equals(listitem.getStatus()) && depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id())){
-                        if(!listitem.getLot_number().contains(depart_lot.getLot_number())){
-                            mergedList.get(mergedList.indexOf(listitem)).setLot_number(mergedList.get(mergedList.indexOf(listitem)).getLot_number()+","+depart_lot.getLot_number());
-                        }
-                        mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + depart_lot.getQuantity());
-                        mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + depart_lot.getBox_quantity());
-                        break;
-                    }
-                }
-            }
-            else{
-                departreport_id.add(depart_lot.getDepartreport_id());
-                partrevision_id.add(depart_lot.getPartrevision_id());
-                lot_number.add((depart_lot.getLot_number()+depart_lot.getPart_number()).toUpperCase());
-                status.add(depart_lot.getStatus());
-                process.add(depart_lot.getProcess());
-                comments.add((depart_lot.getComments()+depart_lot.getPart_number()).toUpperCase());
-                
-                DepartLot item = new DepartLot();
-                item.setReport_date(depart_lot.getReport_date());
-                item.setPart_revision(depart_lot.getPart_revision());
-                item.setDepartreport_id(depart_lot.getDepartreport_id());
-                item.setPartrevision_id(depart_lot.getPartrevision_id());
-                item.setPart_number(depart_lot.getPart_number());
-                item.setPart_revision(depart_lot.getPart_revision());
-                item.setQuantity(depart_lot.getQuantity());
-                item.setBox_quantity(depart_lot.getBox_quantity());
-                item.setLot_number(depart_lot.getLot_number());
-                item.setProcess(depart_lot.getProcess());
-                item.setPending(depart_lot.isPending());
-                item.setRejected(depart_lot.isPending());
-                item.setComments(depart_lot.getComments());
-                mergedList.add(item);
-            }
-        }
-        mergedList.sort((o1, o2) -> o1.getPart_number().compareTo(o2.getPart_number()));
-        return mergedList;
-    }
-    */
     
     public List<DepartLot> mergeByPart_number(List<DepartLot> unfilteredList){
         //find all part_number
@@ -373,6 +334,25 @@ public class DepartReportFX implements Initializable {
             updateDepartLotTable();
         });
         
+        process_column1.setCellValueFactory(new PropertyValueFactory<>("process"));
+        process_column2.setCellValueFactory(new PropertyValueFactory<>("process"));
+        ponumber_column1.setCellValueFactory(new PropertyValueFactory<>("po_number"));
+        ponumber_column2.setCellValueFactory(new PropertyValueFactory<>("po_number"));
+        ponumber_column2.setCellFactory(TextFieldTableCell.forTableColumn());
+        ponumber_column2.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPo_number(t.getNewValue().replace(" ", "").toUpperCase());
+            msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateDepartLotTable();
+        });
+        linenumber_column1.setCellValueFactory(new PropertyValueFactory<>("line_number"));
+        linenumber_column2.setCellValueFactory(new PropertyValueFactory<>("line_number"));
+        linenumber_column2.setCellFactory(TextFieldTableCell.forTableColumn());
+        linenumber_column2.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setLine_number(t.getNewValue().replace(" ", "").toUpperCase());
+            msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            updateDepartLotTable();
+        });
+        
         quantity_column1.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column2.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
@@ -393,8 +373,6 @@ public class DepartReportFX implements Initializable {
             updateDepartLotTable();
         });
         
-        process_column1.setCellValueFactory(new PropertyValueFactory<>("process"));
-        process_column2.setCellValueFactory(new PropertyValueFactory<>("process"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
         comments_column.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {

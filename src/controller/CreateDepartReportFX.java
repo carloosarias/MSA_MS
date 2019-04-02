@@ -7,11 +7,14 @@ package controller;
 
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -19,7 +22,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -32,7 +37,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.Company;
 import model.CompanyAddress;
 import model.DepartLot;
@@ -87,17 +94,21 @@ public class CreateDepartReportFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
-    public static List<DepartLot> departlot_queue = new ArrayList<DepartLot>();
+    public static ObservableList<DepartLot> departlot_queue = FXCollections.observableArrayList(new ArrayList<DepartLot>());
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        departlot_queue.clear();
         setDepartLotTable();
+        updateDepartLotTable();
         
-        disable_button.disableProperty().bind(departlot_tableview.itemsProperty().isNull());
-        address_combo.disableProperty().bind(address_combo.itemsProperty().isNull());
+        departlot_tableview.disableProperty().bind(Bindings.size(departlot_queue).isEqualTo(0));
+        disable_button.disableProperty().bind(departlot_tableview.getSelectionModel().selectedItemProperty().isNull());
+        address_combo.disableProperty().bind(company_combo.getSelectionModel().selectedItemProperty().isNull());
+        save_button.disableProperty().bind(Bindings.size(departlot_queue).isEqualTo(0));
         
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
         comments_column.setOnEditCommit(
@@ -136,16 +147,31 @@ public class CreateDepartReportFX implements Initializable {
     }
     
     public void showAdd_stage(){
-        
+        try {
+            add_stage = new Stage();
+            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
+            add_stage.initModality(Modality.APPLICATION_MODAL);
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/AddDepartLotFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            add_stage.setTitle("Agregar caja a Remisión");
+            add_stage.setResizable(false);
+            add_stage.initStyle(StageStyle.UTILITY);
+            add_stage.setScene(scene);
+            add_stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void setDepartLotTable(){
-        departlot_tableview.setDisable(departlot_tableview.getItems().isEmpty());
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productpart().toString()));
         rev_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_partrevision().getRev()));
-        quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
+        ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
+        linenumber_column.setCellValueFactory(new PropertyValueFactory<>("line_number"));  
+        quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
     
@@ -185,8 +211,7 @@ public class CreateDepartReportFX implements Initializable {
     }
     
     public void updateDepartLotTable(){
-        departlot_tableview.setItems(FXCollections.observableArrayList(departlot_queue));
-        departlot_tableview.disableProperty().bind(Bindings.isEmpty(departlot_tableview.getItems()));
+        departlot_tableview.setItems(departlot_queue);
     }
     
     public void clearStyle(){

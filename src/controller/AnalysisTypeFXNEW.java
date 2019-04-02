@@ -131,9 +131,8 @@ public class AnalysisTypeFXNEW implements Initializable {
             analysistypevar_tableview.getItems().remove(temp);
             
             if(evalExpression()){
-                analysistypevar_tableview.getItems().add(index, temp);
-                analysistypevar_tableview.getSelectionModel().select(temp);
-                disableAnalysisTypeVar();
+                temp.setActive(false);
+                msabase.getAnalysisTypeVarDAO().update(temp);
                 updateAnalysisTypeVarTable();
             }else{
                 analysistypevar_tableview.getItems().add(index, temp);
@@ -184,11 +183,6 @@ public class AnalysisTypeFXNEW implements Initializable {
         msabase.getAnalysisTypeVarDAO().create(analysistype_tableview.getSelectionModel().getSelectedItem(), analysistype_var);
     }
     
-    public void disableAnalysisTypeVar(){
-        analysistypevar_tableview.getSelectionModel().getSelectedItem().setActive(false);
-        msabase.getAnalysisTypeVarDAO().update(analysistypevar_tableview.getSelectionModel().getSelectedItem());
-    }
-    
     public void disableAnalysisType(){
         analysistype_tableview.getSelectionModel().getSelectedItem().setActive(false);
         msabase.getAnalysisTypeDAO().update(analysistype_tableview.getSelectionModel().getSelectedItem());
@@ -226,6 +220,12 @@ public class AnalysisTypeFXNEW implements Initializable {
                 }
             }
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setName(t.getNewValue());
+            if(!evalExpression()){
+                (t.getTableView().getItems().get(t.getTablePosition().getRow())).setName(t.getOldValue());
+                analysistypevar_tableview.refresh();
+                formula_textfield.requestFocus();
+                return;
+            }
             msabase.getAnalysisTypeVarDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             analysistypevar_tableview.refresh();
         });

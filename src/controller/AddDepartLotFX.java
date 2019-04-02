@@ -40,13 +40,13 @@ public class AddDepartLotFX implements Initializable {
     @FXML
     private ComboBox<PartRevision> rev_combo;
     @FXML
-    private TextField quantity_field;
-    @FXML
     private ComboBox<String> process_combo;
     @FXML
     private TextField ponumber_field;
     @FXML
     private TextField linenumber_field;
+    @FXML
+    private TextField quantity_field;
     @FXML
     private Button save_button;
     
@@ -69,7 +69,6 @@ public class AddDepartLotFX implements Initializable {
         
         lotnumber_field.setOnAction((ActionEvent) -> {
             part_combo.requestFocus();
-            ActionEvent.consume();
         });
         
         part_combo.setOnAction((ActionEvent) -> {
@@ -85,7 +84,7 @@ public class AddDepartLotFX implements Initializable {
             if(partcombo_selection == null){
                 part_combo.getEditor().selectAll();
             }else{
-                updatePartrev_combo();
+                updateRev_combo();
                 rev_combo.requestFocus();
             }
             ActionEvent.consume();
@@ -108,15 +107,24 @@ public class AddDepartLotFX implements Initializable {
                 rev_combo.getEditor().selectAll();
             }
             else{
-                process_combo.getSelectionModel().select(msabase.getPartRevisionDAO().findSpecification(partrevcombo_selection).getProcess());
+                process_combo.getSelectionModel().select(partrevcombo_selection.getSpecification_process());
                 quantity_field.requestFocus();
-                ActionEvent.consume();
             }            
         });
         
         quantity_field.setOnAction((ActionEvent) -> {
+            ponumber_field.requestFocus();
+        });
+        
+        ponumber_field.setOnAction((ActionEvent) -> {
+            linenumber_field.requestFocus();
+        });
+        
+        linenumber_field.setOnAction((ActionEvent) -> {
             save_button.fireEvent(new ActionEvent());
         });
+        
+
         
         save_button.setOnKeyPressed((KeyEvent ke) -> {
            if(ke.getCode().equals(KeyCode.ENTER)){
@@ -130,9 +138,11 @@ public class AddDepartLotFX implements Initializable {
             }
             DepartLot depart_lot = new DepartLot();
             depart_lot.setLot_number(lotnumber_field.getText().replace(" ", "").toUpperCase());
+            depart_lot.setProcess(process_combo.getSelectionModel().getSelectedItem());
+            depart_lot.setPo_number(ponumber_field.getText().replace(" ", "").toUpperCase());
+            depart_lot.setLine_number(linenumber_field.getText().replace(" ", "").toUpperCase());
             depart_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
             depart_lot.setBox_quantity(1);
-            depart_lot.setProcess(process_combo.getSelectionModel().getSelectedItem());
             depart_lot.setComments("N/A");
             depart_lot.setTemp_partrevision(partrevcombo_selection);
             depart_lot.setTemp_productpart(partcombo_selection);
@@ -143,7 +153,7 @@ public class AddDepartLotFX implements Initializable {
         });
     }
     
-    public void updatePartrev_combo(){
+    public void updateRev_combo(){
         try{
             rev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection, true)));
         } catch(Exception e) {
@@ -153,8 +163,11 @@ public class AddDepartLotFX implements Initializable {
     
         public void clearFields(){
         lotnumber_field.setText(null);
-        part_combo.getSelectionModel().select(null);
+        part_combo.getSelectionModel().clearSelection();
         part_combo.getEditor().setText(null);
+        process_combo.getSelectionModel().clearSelection();
+        ponumber_field.setText(null);
+        linenumber_field.setText(null);
         rev_combo.getSelectionModel().clearSelection();
         rev_combo.getEditor().setText(null);
         quantity_field.setText(null);
@@ -169,6 +182,14 @@ public class AddDepartLotFX implements Initializable {
         }
         if(process_combo.getSelectionModel().isEmpty()){
             process_combo.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(ponumber_field.getText().replace(" ", "").equals("")){
+            ponumber_field.setStyle("-fx-background-color: lightpink;");
+            b = false;
+        }
+        if(linenumber_field.getText().replace(" ", "").equals("")){
+            linenumber_field.setStyle("-fx-background-color: lightpink;");
             b = false;
         }
         try{
@@ -202,6 +223,8 @@ public class AddDepartLotFX implements Initializable {
     public void clearStyle(){
         lotnumber_field.setStyle(null);
         process_combo.setStyle(null);
+        ponumber_field.setStyle(null);
+        linenumber_field.setStyle(null);
         quantity_field.setStyle(null);
         part_combo.setStyle(null);
         rev_combo.setStyle(null);

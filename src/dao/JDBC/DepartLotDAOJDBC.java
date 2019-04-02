@@ -28,7 +28,7 @@ import model.ProductPart;
 public class DepartLotDAOJDBC implements DepartLotDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
+            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
             + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
             + "FROM DEPART_LOT "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -40,7 +40,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM DEPART_LOT WHERE id = ?";
     private static final String SQL_LIST_OF_DEPART_REPORT_ORDER_BY_ID = 
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
+            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
             + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
             + "FROM DEPART_LOT "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -49,7 +49,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             + "WHERE DEPART_LOT.DEPART_REPORT_ID = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID =
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
+            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
             + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
             + "FROM DEPART_LOT "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -58,7 +58,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             + "WHERE DEPART_LOT.lot_number = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_OF_DEPART_REPORT_REJECTED_ORDER_BY_ID =
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
+            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
             + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
             + "FROM DEPART_LOT "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -67,7 +67,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             + "WHERE DEPART_LOT.DEPART_REPORT_ID = ? AND DEPART_LOT.rejected = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_OF_PENDING_REJECTED_ORDER_BY_ID = 
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
+            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
             + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
             + "FROM DEPART_LOT "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -76,7 +76,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             + "WHERE DEPART_REPORT.COMPANY_ID = ? AND rejected = ? AND pending = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_OF_PART_REVISION_PROCESS_DEPART_REPORT_ORDER_BY_ID = 
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
+            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
             + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
             + "FROM DEPART_LOT "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -89,14 +89,14 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     private static final String SQL_LIST_DEPART_REPORTS = 
             "SELECT DISTINCT DEPART_REPORT_ID FROM DEPART_LOT WHERE rejected = ?";
     private static final String SQL_INSERT =
-            "INSERT INTO DEPART_LOT (DEPART_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, process, comments, rejected, pending) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO DEPART_LOT (DEPART_REPORT_ID, PART_REVISION_ID, lot_number, quantity, box_quantity, process, po_number, line_number, comments, rejected, pending) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE DEPART_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, process = ?, comments = ?, rejected = ?, pending = ? WHERE id = ?";
+            "UPDATE DEPART_LOT SET lot_number = ?, quantity = ?, box_quantity = ?, process = ?, po_number = ?, line_number = ?, comments = ?, rejected = ?, pending = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM DEPART_LOT WHERE id = ?";
     private static final String LIST_DEPART_LOT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
+            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
             + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
             + "FROM DEPART_LOT "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
@@ -423,6 +423,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             depart_lot.getQuantity(),
             depart_lot.getBox_quantity(),
             depart_lot.getProcess(),
+            depart_lot.getPo_number(),
+            depart_lot.getLine_number(),
             depart_lot.getComments(),
             depart_lot.isRejected(),
             depart_lot.isPending()
@@ -462,6 +464,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             depart_lot.getQuantity(),
             depart_lot.getBox_quantity(),
             depart_lot.getProcess(),
+            depart_lot.getPo_number(),
+            depart_lot.getLine_number(),
             depart_lot.getComments(),
             depart_lot.isRejected(),
             depart_lot.isPending(),
@@ -541,6 +545,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         depart_lot.setQuantity(resultSet.getInt("DEPART_LOT.quantity"));
         depart_lot.setBox_quantity(resultSet.getInt("DEPART_LOT.box_quantity"));
         depart_lot.setProcess(resultSet.getString("DEPART_LOT.process"));
+        depart_lot.setPo_number(resultSet.getString("DEPART_LOT.po_number"));
+        depart_lot.setLine_number(resultSet.getString("DEPART_LOT.line_number"));
         depart_lot.setComments(resultSet.getString("DEPART_LOT.comments"));
         depart_lot.setRejected(resultSet.getBoolean("DEPART_LOT.rejected"));
         depart_lot.setPending(resultSet.getBoolean("DEPART_LOT.pending"));

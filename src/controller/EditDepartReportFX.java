@@ -123,6 +123,8 @@ public class EditDepartReportFX implements Initializable {
             depart_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
             depart_lot.setBox_quantity(1);
             depart_lot.setProcess(process_combo.getSelectionModel().getSelectedItem());
+            depart_lot.setPo_number("N/A");
+            depart_lot.setLine_number(("N/A"));
             depart_lot.setComments("N/A");
             depart_lot.setTemp_partrevision(partrevcombo_selection);
             depart_lot.setTemp_productpart(partcombo_selection);
