@@ -50,7 +50,6 @@ import model.DepartReport;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
-import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
  * FXML Controller class
@@ -199,7 +198,7 @@ public class DepartReportFX implements Initializable {
             add_stage = new Stage();
             add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
             add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/CreateDepartReportFX.fxml"));
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/CreateDepartReportFX.fxml"));
             Scene scene = new Scene(root);
             
             add_stage.setTitle("Nueva Remisión");
@@ -237,10 +236,47 @@ public class DepartReportFX implements Initializable {
     
     public void updateDepartLotTable(){
         departlot_tableview3.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreport_tableview.getSelectionModel().getSelectedItem())));
-        departlot_tableview2.setItems(FXCollections.observableArrayList(mergeByDepartReport_Lotnumber(departlot_tableview3.getItems())));
+        departlot_tableview2.setItems(FXCollections.observableArrayList(mergeByLot_number(departlot_tableview3.getItems())));
         departlot_tableview1.setItems(FXCollections.observableArrayList(mergeByPart_number(departlot_tableview3.getItems())));
     }
     
+    public List<DepartLot> mergeByLot_number(List<DepartLot> unfiltered_list){
+        ArrayList<DepartLot> filtered_list = new ArrayList();
+        ArrayList<String> string_list = new ArrayList();
+        String string_item = "";
+        
+        for(DepartLot unfiltered_item : unfiltered_list){
+            string_item = (unfiltered_item.getPartrevision_id()+unfiltered_item.getProcess()+unfiltered_item.getStatus()+unfiltered_item.getComments()).toUpperCase();
+            if(string_list.contains(string_item)){
+                filtered_list.get(string_list.indexOf(string_item)).setQuantity(filtered_list.get(string_list.indexOf(string_item)).getQuantity() + unfiltered_item.getQuantity());
+                filtered_list.get(string_list.indexOf(string_item)).setBox_quantity(filtered_list.get(string_list.indexOf(string_item)).getBox_quantity() + unfiltered_item.getBox_quantity());
+                if(!(filtered_list.get(string_list.indexOf(string_item)).getLot_number().contains(unfiltered_item.getLot_number()))){
+                    filtered_list.get(string_list.indexOf(string_item)).setLot_number(filtered_list.get(string_list.indexOf(string_item)).getLot_number()+","+ unfiltered_item.getLot_number());
+                }
+            }else{
+                string_list.add(string_item);
+                DepartLot filtered_item = new DepartLot();
+                filtered_item.setReport_date(unfiltered_item.getReport_date());
+                filtered_item.setPart_revision(unfiltered_item.getPart_revision());
+                filtered_item.setDepartreport_id(unfiltered_item.getDepartreport_id());
+                filtered_item.setPartrevision_id(unfiltered_item.getPartrevision_id());
+                filtered_item.setPart_number(unfiltered_item.getPart_number());
+                filtered_item.setPart_revision(unfiltered_item.getPart_revision());
+                filtered_item.setQuantity(unfiltered_item.getQuantity());
+                filtered_item.setBox_quantity(unfiltered_item.getBox_quantity());
+                filtered_item.setLot_number(unfiltered_item.getLot_number());
+                filtered_item.setProcess(unfiltered_item.getProcess());
+                filtered_item.setPending(unfiltered_item.isPending());
+                filtered_item.setRejected(unfiltered_item.isPending());
+                filtered_item.setComments(unfiltered_item.getComments());
+                filtered_list.add(filtered_item);
+            }
+        }
+        
+        filtered_list.sort((o1, o2) -> o1.getPart_number().compareTo(o2.getPart_number()));
+        return filtered_list;
+    }
+    /*
     public List<DepartLot> mergeByDepartReport_Lotnumber(List<DepartLot> unfilteredList){
         //find all part_number
         ArrayList<Integer> departreport_id = new ArrayList();
@@ -267,7 +303,7 @@ public class DepartReportFX implements Initializable {
             else{
                 departreport_id.add(depart_lot.getDepartreport_id());
                 partrevision_id.add(depart_lot.getPartrevision_id());
-                lot_number.add(depart_lot.getLot_number()+depart_lot.getPart_number().toUpperCase());
+                lot_number.add((depart_lot.getLot_number()+depart_lot.getPart_number()).toUpperCase());
                 status.add(depart_lot.getStatus());
                 process.add(depart_lot.getProcess());
                 comments.add((depart_lot.getComments()+depart_lot.getPart_number()).toUpperCase());
@@ -292,6 +328,7 @@ public class DepartReportFX implements Initializable {
         mergedList.sort((o1, o2) -> o1.getPart_number().compareTo(o2.getPart_number()));
         return mergedList;
     }
+    */
     
     public List<DepartLot> mergeByPart_number(List<DepartLot> unfilteredList){
         //find all part_number

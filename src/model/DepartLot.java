@@ -20,6 +20,8 @@ public class DepartLot implements Serializable {
     private Integer box_quantity;
     private String process;
     private String comments;
+    private String po_number;
+    private String line_number;
     private boolean rejected;
     private boolean pending;
     
@@ -112,6 +114,21 @@ public class DepartLot implements Serializable {
     
     public ProductPart getTemp_productpart(){
         return temp_productpart;
+    }
+    public String getPo_number() {
+        return po_number;
+    }
+
+    public void setPo_number(String po_number) {
+        this.po_number = po_number;
+    }
+
+    public String getLine_number() {
+        return line_number;
+    }
+
+    public void setLine_number(String line_number) {
+        this.line_number = line_number;
     }
     
     public String getStatus(){
