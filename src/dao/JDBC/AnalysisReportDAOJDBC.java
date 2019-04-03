@@ -31,7 +31,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.ph, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
-            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, EMPLOYEE.first_name, EMPLOYEE.last_name "
+            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, ANALYSIS_TYPE.min_range, ANALYSIS_TYPE.max_range, EMPLOYEE.first_name, EMPLOYEE.last_name "
             + "FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
@@ -383,6 +383,8 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         analysis_report.setTank_volume(resultSet.getDouble("TANK.volume"));
         analysis_report.setAnalysistype_name(resultSet.getString("ANALYSIS_TYPE.name"));
         analysis_report.setAnalysistype_optimal(resultSet.getDouble("ANALYSIS_TYPE.optimal"));
+        analysis_report.setAnalysistype_minrange(resultSet.getDouble("ANALYSIS_TYPE.min_range"));
+        analysis_report.setAnalysistype_minrange(resultSet.getDouble("ANALYSIS_TYPE.max_range"));
         
         return analysis_report;
     }

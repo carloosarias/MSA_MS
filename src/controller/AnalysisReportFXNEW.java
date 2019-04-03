@@ -41,6 +41,7 @@ import model.AnalysisTypeVar;
 import model.Tank;
 import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.setDatePicker;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
@@ -139,6 +140,8 @@ public class AnalysisReportFXNEW implements Initializable {
         analysistype_combo.getSelectionModel().selectFirst();
         start_datepicker.setValue(LocalDate.now());
         end_datepicker.setValue(LocalDate.now().plusMonths(1));
+        setDatePicker(start_datepicker);
+        setDatePicker(end_datepicker);
         
         details_tab.disableProperty().bind(analysisreport_tableview.getSelectionModel().selectedItemProperty().isNull());
         disable_button.disableProperty().bind(analysisreport_tableview.getSelectionModel().selectedItemProperty().isNull());
@@ -158,30 +161,29 @@ public class AnalysisReportFXNEW implements Initializable {
         });
         
         add_button.setOnAction((ActionEvent) -> {
+            int current_size = analysisreport_tableview.getItems().size();
             showAdd_stage();
+            updateAnalysisReportTable();
+            if(current_size < analysisreport_tableview.getItems().size()){
+                analysisreport_tableview.scrollTo(CreateAnalysisReportFX.analysis_report);
+                analysisreport_tableview.getSelectionModel().select(CreateAnalysisReportFX.analysis_report);
+            }
         });
         
-        tank_combo.setOnAction((ActionEvent) -> {
+        disable_button.setOnAction((ActionEvent) -> {
+            analysisreport_tableview.getSelectionModel().getSelectedItem().setActive(false);
+            msabase.getAnalysisReportDAO().update(analysisreport_tableview.getSelectionModel().getSelectedItem());
             updateAnalysisReportTable();
         });
-        analysistype_combo.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();
-        });
-        start_datepicker.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();
-        });
-        end_datepicker.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();
-        });
-        analysistype_filter.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();
-        });
-        date_filter.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();
-        });
-        tank_filter.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();
-        });
+        
+        //Update AnalysisReport table
+        tank_combo.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
+        analysistype_combo.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
+        start_datepicker.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
+        end_datepicker.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
+        analysistype_filter.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
+        date_filter.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
+        tank_filter.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
         
     }
     
@@ -206,6 +208,15 @@ public class AnalysisReportFXNEW implements Initializable {
     public void updateAnalysisReportVarTable(){
         try{
             analysisreportvar_tableview.getItems().setAll(msabase.getAnalysisReportVarDAO().list(analysisreport_tableview.getSelectionModel().getSelectedItem()));
+            resultformula_label.setText(analysisreport_tableview.getSelectionModel().getSelectedItem().getFormula_timestamp());
+            result_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getResult()));
+            estimatedadjustformula_label.setText("((Óptimo - Resultado) * Volumen) / 1000");
+            estimatedadjust_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getEstimated_adjust()));
+            tank_label.setText(analysisreport_tableview.getSelectionModel().getSelectedItem().getTank_name());
+            volume_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getTank_volume())+" L");
+            analysistype_label.setText(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysistype_name());
+            optimal_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysistype_optimal())+" G/L");
+            range_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysistype_minrange())+" G/L - "+df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysistype_maxrange())+" G/L");
         }catch(Exception e){
             analysisreportvar_tableview.getItems().clear();
         }

@@ -28,6 +28,8 @@ public class AnalysisReport {
     private double tank_volume;
     private String analysistype_name;
     private double analysistype_optimal;
+    private double analysistype_minrange;
+    private double analysistype_maxrange;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -174,5 +176,21 @@ public class AnalysisReport {
     public String toString() {
         return String.format("%d",
                 id);
+    }
+
+    public double getAnalysistype_minrange() {
+        return analysistype_minrange;
+    }
+
+    public void setAnalysistype_minrange(double analysistype_minrange) {
+        this.analysistype_minrange = analysistype_minrange;
+    }
+
+    public double getAnalysistype_maxrange() {
+        return analysistype_maxrange;
+    }
+
+    public void setAnalysistype_maxrange(double analysistype_maxrange) {
+        this.analysistype_maxrange = analysistype_maxrange;
     }
 }
