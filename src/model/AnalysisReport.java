@@ -61,8 +61,8 @@ public class AnalysisReport {
         return result;
     }
 
-    public void setEstimated_adjust(Double estimated_adjust) {
-        this.result = estimated_adjust;
+    public void setResult(double result) {
+        this.result = result;
     }
     
     public double getApplied_adjust() {

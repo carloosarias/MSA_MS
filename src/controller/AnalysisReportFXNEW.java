@@ -151,13 +151,8 @@ public class AnalysisReportFXNEW implements Initializable {
         
         updateAnalysisReportTable();
         analysisreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends AnalysisReport> observable, AnalysisReport oldValue, AnalysisReport newValue) -> {
-            try{
                 updateAnalysisReportVarTable();
-                calculateResult();
                 analysisreport_tableview.refresh();
-            }catch(Exception e){
-                analysisreportvar_tableview.getItems().clear();
-            }
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -177,13 +172,20 @@ public class AnalysisReportFXNEW implements Initializable {
         });
         
         //Update AnalysisReport table
-        tank_combo.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
-        analysistype_combo.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
-        start_datepicker.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
-        end_datepicker.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
-        analysistype_filter.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
-        date_filter.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
-        tank_filter.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
+        tank_combo.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();});
+        analysistype_combo.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();});
+        start_datepicker.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();});
+        end_datepicker.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();});
+        analysistype_filter.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();});
+        date_filter.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();});
+        tank_filter.setOnAction((ActionEvent) -> {
+            updateAnalysisReportTable();});
         
     }
     
@@ -205,10 +207,33 @@ public class AnalysisReportFXNEW implements Initializable {
         }
     }
     
+    public void evalResult(){
+        try{
+            ExpressionBuilder builder = new ExpressionBuilder(analysisreport_tableview.getSelectionModel().getSelectedItem().getFormula_timestamp());
+            for(AnalysisReportVar item : analysisreportvar_tableview.getItems()){
+                builder.variable(item.getAnalysistypevar_name());
+            }
+            Expression e = builder.build();
+            for(AnalysisReportVar item : analysisreportvar_tableview.getItems()){
+                e.setVariable(item.getAnalysistypevar_name(), item.getValue());
+            }
+            
+            analysisreport_tableview.getSelectionModel().getSelectedItem().setResult(e.evaluate());
+            msabase.getAnalysisReportDAO().update(analysisreport_tableview.getSelectionModel().getSelectedItem());
+            analysisreport_tableview.refresh();
+        }catch(Exception e){
+            analysisreport_tableview.getSelectionModel().getSelectedItem().setResult(0.0);
+            msabase.getAnalysisReportDAO().update(analysisreport_tableview.getSelectionModel().getSelectedItem());
+            analysisreport_tableview.refresh();
+        }
+    }
+    
+    
     public void updateAnalysisReportVarTable(){
         try{
             analysisreportvar_tableview.getItems().setAll(msabase.getAnalysisReportVarDAO().list(analysisreport_tableview.getSelectionModel().getSelectedItem()));
             resultformula_label.setText(analysisreport_tableview.getSelectionModel().getSelectedItem().getFormula_timestamp());
+            evalResult();
             result_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getResult()));
             estimatedadjustformula_label.setText("((Óptimo - Resultado) * Volumen) / 1000");
             estimatedadjust_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getEstimated_adjust()));
@@ -229,7 +254,6 @@ public class AnalysisReportFXNEW implements Initializable {
     }
     
     public void updateAnalysisReportTable(){
-        System.out.println("test");
         try{
             analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(start_datepicker.getValue().minusDays(1)), DAOUtil.toUtilDate(end_datepicker.getValue().minusDays(1)), tank_filter.isSelected(), analysistype_filter.isSelected(), date_filter.isSelected(), true));
         }catch(Exception e){
@@ -261,22 +285,6 @@ public class AnalysisReportFXNEW implements Initializable {
             msabase.getAnalysisReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             analysisreport_tableview.refresh();
         });
-    }
-    
-    public void calculateResult(){
-        ExpressionBuilder builder = new ExpressionBuilder(analysisreport_tableview.getSelectionModel().getSelectedItem().getFormula_timestamp());
-        for(AnalysisReportVar item : analysisreportvar_tableview.getItems()){
-            builder.variable(item.getAnalysistypevar_name());
-        }
-        Expression e = builder.build();
-        for(AnalysisReportVar item : analysisreportvar_tableview.getItems()){
-            e.setVariable(item.getAnalysistypevar_name(), item.getValue());
-        }
-        
-        if(e.evaluate() != analysisreport_tableview.getSelectionModel().getSelectedItem().getResult()){
-            analysisreport_tableview.getSelectionModel().getSelectedItem().setEstimated_adjust(e.evaluate());
-            msabase.getAnalysisReportDAO().update(analysisreport_tableview.getSelectionModel().getSelectedItem());
-        }
     }
     
     public Double getApplied_adjustValue(AnalysisReport analysis_report, String applied_adjust){
