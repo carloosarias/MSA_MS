@@ -251,6 +251,12 @@ public class AnalysisReportFXNEW implements Initializable {
         var_column.setCellValueFactory(new PropertyValueFactory<>("analysistypevar_name"));
         description_column.setCellValueFactory(new PropertyValueFactory<>("analysistypevar_description"));
         value_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getValue())));
+        value_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        value_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReportVar, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setValue(getValueValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getAnalysisReportVarDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            analysisreport_tableview.refresh();
+        });
     }
     
     public void updateAnalysisReportTable(){
@@ -281,7 +287,7 @@ public class AnalysisReportFXNEW implements Initializable {
         ph_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getPh())));
         ph_column.setCellFactory(TextFieldTableCell.forTableColumn());
         ph_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReport, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPh(getPh_value(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPh(getPhValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getAnalysisReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             analysisreport_tableview.refresh();
         });
@@ -295,7 +301,7 @@ public class AnalysisReportFXNEW implements Initializable {
         }
     }
     
-    public Double getPh_value(AnalysisReport analysis_report, String ph){
+    public Double getPhValue(AnalysisReport analysis_report, String ph){
         try{
             return Double.parseDouble(ph);
         }catch(Exception e){
@@ -303,4 +309,11 @@ public class AnalysisReportFXNEW implements Initializable {
         }
     }
     
+    public Double getValueValue(AnalysisReportVar analysisreport_var, String value){
+        try{
+            return Double.parseDouble(value);
+        }catch(Exception e){
+            return analysisreport_var.getValue();
+        }
+    }
 }

@@ -187,7 +187,7 @@
                         <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="analysisreportvar_tableview" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="analysisreportvar_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="var_column" minWidth="-Infinity" prefWidth="100.0" text="Variable" />
                             <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="250.0" text="Descripción" />
