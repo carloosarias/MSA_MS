@@ -387,7 +387,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         analysis_report.setAnalysistype_name(resultSet.getString("ANALYSIS_TYPE.name"));
         analysis_report.setAnalysistype_optimal(resultSet.getDouble("ANALYSIS_TYPE.optimal"));
         analysis_report.setAnalysistype_minrange(resultSet.getDouble("ANALYSIS_TYPE.min_range"));
-        analysis_report.setAnalysistype_minrange(resultSet.getDouble("ANALYSIS_TYPE.max_range"));
+        analysis_report.setAnalysistype_maxrange(resultSet.getDouble("ANALYSIS_TYPE.max_range"));
         
         return analysis_report;
     }

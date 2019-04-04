@@ -255,7 +255,7 @@ public class AnalysisReportFXNEW implements Initializable {
         value_column.setOnEditCommit((TableColumn.CellEditEvent<AnalysisReportVar, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setValue(getValueValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getAnalysisReportVarDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            analysisreport_tableview.refresh();
+            updateAnalysisReportVarTable();
         });
     }
     
