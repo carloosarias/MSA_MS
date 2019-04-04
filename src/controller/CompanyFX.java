@@ -123,7 +123,8 @@ public class CompanyFX implements Initializable {
                 company_field1.setText(newValue.getName());
                 company_field2.setText(newValue.getName());
             }catch(Exception e){
-                e.printStackTrace();
+                company_field1.setText(null);
+                company_field2.setText(null);
             }
             
         });

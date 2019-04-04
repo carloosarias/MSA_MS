@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EmployeeFX">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" />
       <ColumnConstraints hgrow="SOMETIMES" />
@@ -20,7 +20,7 @@
     <RowConstraints vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE">
+      <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
         <tabs>
           <Tab text="Empleados">
                <content>
@@ -31,21 +31,22 @@
                     <rowConstraints>
                       <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="employee_tableview1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                               <TableColumn prefWidth="75.0" text="Empleado">
                                  <columns>
-                                  <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Nombre" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Apellido" />
+                                  <TableColumn fx:id="firstname_column" minWidth="-Infinity" prefWidth="100.0" text="Nombre" />
+                                    <TableColumn fx:id="lastname_column" minWidth="-Infinity" prefWidth="100.0" text="Apellido" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn minWidth="-Infinity" prefWidth="120.0" text="F. Nacimiento" />
-                              <TableColumn minWidth="-Infinity" prefWidth="110.0" text="CURP" />
-                              <TableColumn minWidth="-Infinity" prefWidth="120.0" text="Teléfono" />
-                              <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Dirección" />
+                              <TableColumn fx:id="birthdate_column" minWidth="-Infinity" prefWidth="120.0" text="F. Nacimiento" />
+                              <TableColumn fx:id="curp_column" minWidth="-Infinity" prefWidth="110.0" text="CURP" />
+                              <TableColumn fx:id="phone_column" minWidth="-Infinity" prefWidth="120.0" text="Teléfono" />
+                              <TableColumn fx:id="email_column" minWidth="-Infinity" prefWidth="120.0" text="email" />
+                              <TableColumn fx:id="address_column" minWidth="-Infinity" prefWidth="200.0" text="Dirección" />
                           </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
@@ -65,12 +66,12 @@
                             <RowConstraints vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Button mnemonicParsing="false" text="Agregar Empleado">
+                              <Button fx:id="add_button" mnemonicParsing="false" text="Agregar Empleado">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button focusTraversable="false" mnemonicParsing="false" text="Eliminar Empleado" GridPane.columnIndex="1">
+                              <Button fx:id="disable_button" focusTraversable="false" mnemonicParsing="false" text="Eliminar Empleado" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
@@ -91,21 +92,21 @@
                       <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="employee_tableview2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
-                            <TableColumn minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
-                              <TableColumn minWidth="-Infinity" prefWidth="120.0" text="F. Contratación" />
+                            <TableColumn fx:id="employeename_column1" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
+                              <TableColumn fx:id="hiredate_column" minWidth="-Infinity" prefWidth="120.0" text="F. Contratación" />
                             <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Horario de Trabajo">
                                  <columns>
-                                    <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Entrada" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Salida" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="40.0" text="L" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="40.0" text="M" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="40.0" text="M" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="40.0" text="J" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="40.0" text="V" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="40.0" text="S" />
-                                    <TableColumn minWidth="-Infinity" prefWidth="40.0" text="D" />
+                                    <TableColumn fx:id="entrytime_column" minWidth="-Infinity" prefWidth="100.0" text="Entrada" />
+                                    <TableColumn fx:id="endtime_column" minWidth="-Infinity" prefWidth="100.0" text="Salida" />
+                                    <TableColumn fx:id="schedule_column1" minWidth="-Infinity" prefWidth="40.0" text="L" />
+                                    <TableColumn fx:id="schedule_column2" minWidth="-Infinity" prefWidth="40.0" text="M" />
+                                    <TableColumn fx:id="schedule_column3" minWidth="-Infinity" prefWidth="40.0" text="M" />
+                                    <TableColumn fx:id="schedule_column4" minWidth="-Infinity" prefWidth="40.0" text="J" />
+                                    <TableColumn fx:id="schedule_column5" minWidth="-Infinity" prefWidth="40.0" text="V" />
+                                    <TableColumn fx:id="schedule_column6" minWidth="-Infinity" prefWidth="40.0" text="S" />
+                                    <TableColumn fx:id="schedule_column7" minWidth="-Infinity" prefWidth="40.0" text="D" />
                                  </columns>
                               </TableColumn>
                           </columns>
@@ -121,39 +122,61 @@
                <content>
                   <GridPane>
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" />
                         <ColumnConstraints hgrow="SOMETIMES" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                          <columns>
-                            <TableColumn minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
-                            <TableColumn minWidth="-Infinity" prefWidth="150.0" text="Usuario" />
-                              <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Admin" />
-                          </columns>
+                        <Button fx:id="password_button" mnemonicParsing="false" text="Cambiar contraseña" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
-                        </TableView>
-                        <TableView GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                          <columns>
-                            <TableColumn prefWidth="140.0" text="Modulos" />
-                              <TableColumn prefWidth="75.0" text="Acceso" />
-                          </columns>
+                        </Button>
+                        <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <TableView fx:id="employee_tableview3">
+                                <columns>
+                                  <TableColumn fx:id="employeename_column2" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
+                                  <TableColumn fx:id="user_column" minWidth="-Infinity" prefWidth="150.0" text="Usuario" />
+                                    <TableColumn fx:id="admin_column" minWidth="-Infinity" prefWidth="100.0" text="Admin" />
+                                </columns>
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </TableView>
+                              <TableView fx:id="module_tableview" GridPane.columnIndex="1">
+                                <columns>
+                                  <TableColumn fx:id="modulename_column" prefWidth="140.0" text="Módulos" />
+                                    <TableColumn fx:id="access_column" prefWidth="75.0" text="Acceso" />
+                                </columns>
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </TableView>
+                           </children>
+                        </GridPane>
+                        <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
-                        </TableView>
+                        </Separator>
                      </children>
                   </GridPane>
                </content>
             </Tab>
         </tabs>
          <GridPane.margin>
-            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+            <Insets />
          </GridPane.margin>
       </TabPane>
    </children>

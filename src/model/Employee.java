@@ -22,13 +22,16 @@ public class Employee implements Serializable {
     private String first_name;
     private String last_name;
     private Date hire_date;
-    private LocalTime entry_time;
-    private LocalTime end_time;
+    private String entry_time;
+    private String end_time;
     private Date birth_date;
     private String curp;
     private String address;
     private boolean active;
     private boolean admin;
+    private String email;
+    private String phone;
+    private String schedule;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -79,19 +82,19 @@ public class Employee implements Serializable {
         this.hire_date = hire_date;
     }
 
-    public LocalTime getEntry_time() {
+    public String getEntry_time() {
         return entry_time;
     }
 
-    public void setEntry_time(LocalTime entry_time) {
+    public void setEntry_time(String entry_time) {
         this.entry_time = entry_time;
     }
 
-    public LocalTime getEnd_time() {
+    public String getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(LocalTime end_time) {
+    public void setEnd_time(String end_time) {
         this.end_time = end_time;
     }
     public Date getBirth_date() {
@@ -133,6 +136,35 @@ public class Employee implements Serializable {
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
+    
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
+    
+    public boolean getScheduleValue(int index){
+        return Integer.parseInt(schedule.split(",")[index]) == 1;
+    }
+    
     // Object overrides ---------------------------------------------------------------------------
 
     /**

@@ -124,7 +124,7 @@ public class MainFX implements Initializable {
         try {
                 switch(module.getName()){
                     case "Recursos Humanos":
-                        employee_tab.setContent((BorderPane) FXMLLoader.load(getClass().getResource("/fxml/HrFX.fxml")));
+                        employee_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/EmployeeFX.fxml")));
                         company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
                         root_tabpane.getTabs().setAll(employee_tab, company_tab);
                         break;

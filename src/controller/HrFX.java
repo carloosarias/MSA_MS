@@ -186,8 +186,8 @@ public class HrFX implements Initializable {
         employee.setFirst_name(fname_field.getText());
         employee.setLast_name(lname_field.getText());
         employee.setBirth_date(DAOUtil.toUtilDate(dob_picker.getValue()));
-        employee.setEnd_time(LocalTime.of(end_hour.getValueFactory().getValue(), end_min.getValueFactory().getValue()));
-        employee.setEntry_time(LocalTime.of(entry_hour.getValueFactory().getValue(),entry_min.getValueFactory().getValue()));
+        //employee.setEnd_time(LocalTime.of(end_hour.getValueFactory().getValue(), end_min.getValueFactory().getValue()));
+        //employee.setEntry_time(LocalTime.of(entry_hour.getValueFactory().getValue(),entry_min.getValueFactory().getValue()));
         employee.setHire_date(DAOUtil.toUtilDate(hire_picker.getValue()));
         employee.setUser(user_field.getText());
         employee.setPassword(pass_field.getText());
@@ -255,10 +255,10 @@ public class HrFX implements Initializable {
             lname_field.setText(employee.getLast_name());
             dob_picker.setValue(LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(employee.getBirth_date())));
             hire_picker.setValue(LocalDate.parse( new SimpleDateFormat("yyyy-MM-dd").format(employee.getHire_date())));
-            entry_hour.getValueFactory().setValue(employee.getEntry_time().getHour());
-            entry_min.getValueFactory().setValue(employee.getEntry_time().getMinute());
-            end_hour.getValueFactory().setValue(employee.getEnd_time().getHour());
-            end_min.getValueFactory().setValue(employee.getEnd_time().getMinute());
+            //entry_hour.getValueFactory().setValue(employee.getEntry_time().getHour());
+            //entry_min.getValueFactory().setValue(employee.getEntry_time().getMinute());
+            //end_hour.getValueFactory().setValue(employee.getEnd_time().getHour());
+            //end_min.getValueFactory().setValue(employee.getEnd_time().getMinute());
             id_field.setText(""+employee.getId());
             user_field.setText(employee.getUser());
             curp_field.setText(employee.getCurp());

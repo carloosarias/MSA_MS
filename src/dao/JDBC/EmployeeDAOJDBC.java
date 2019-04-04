@@ -7,15 +7,18 @@ package dao.JDBC;
 
 
 import dao.DAOException;
+import dao.DAOUtil;
 import dao.interfaces.EmployeeDAO;
 import static dao.DAOUtil.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import model.Employee;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  *
@@ -24,18 +27,18 @@ import model.Employee;
 public class EmployeeDAOJDBC implements EmployeeDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin FROM EMPLOYEE WHERE id = ?";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_FIND_BY_USER_AND_PASSWORD =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
     private static final String SQL_LIST_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin FROM EMPLOYEE ORDER BY id";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin FROM EMPLOYEE WHERE active = ? ORDER BY id";
+            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
-            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin) "
+            "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule) "
             +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, entry_time = ?, end_time = ?, birth_date = ?, curp = ?, address = ?, active = ?, admin = ? WHERE id = ?";
+            "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, entry_time = ?, end_time = ?, birth_date = ?, curp = ?, address = ?, active = ?, admin = ?, email = ?, phone = ?, schedule = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_EXIST_USER =
@@ -154,13 +157,16 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             employee.getFirst_name(),
             employee.getLast_name(),
             toSqlDate(employee.getHire_date()),
-            toSqlTime(employee.getEntry_time()),
-            toSqlTime(employee.getEnd_time()),
+            DAOUtil.toSqlTime(LocalTime.parse(employee.getEntry_time(), timeFormat)),
+            DAOUtil.toSqlTime(LocalTime.parse(employee.getEnd_time(), timeFormat)),
             toSqlDate(employee.getBirth_date()),
             employee.getCurp(),
             employee.getAddress(),
             employee.isActive(),
-            employee.isAdmin()
+            employee.isAdmin(),
+            employee.getEmail(),
+            employee.getPhone(),
+            employee.getSchedule()
         };
         
         try(
@@ -196,13 +202,16 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             employee.getFirst_name(),
             employee.getLast_name(),
             toSqlDate(employee.getHire_date()),
-            toSqlTime(employee.getEntry_time()),
-            toSqlTime(employee.getEnd_time()),
+            DAOUtil.toSqlTime(LocalTime.parse(employee.getEntry_time(), timeFormat)),
+            DAOUtil.toSqlTime(LocalTime.parse(employee.getEnd_time(), timeFormat)),
             toSqlDate(employee.getBirth_date()),
             employee.getCurp(),
             employee.getAddress(),
             employee.isActive(),
             employee.isAdmin(),
+            employee.getEmail(),
+            employee.getPhone(),
+            employee.getSchedule(),
             employee.getId()
         };
         
@@ -326,13 +335,17 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         employee.setFirst_name(resultSet.getString("first_name"));
         employee.setLast_name(resultSet.getString("last_name"));
         employee.setHire_date(resultSet.getDate("hire_date"));
-        employee.setEntry_time(toLocalTime(resultSet.getTime("entry_time")));
-        employee.setEnd_time(toLocalTime(resultSet.getTime("end_time")));
+        
+        employee.setEntry_time(resultSet.getTime("entry_time").toLocalTime().format(timeFormat));
+        employee.setEnd_time(resultSet.getTime("end_time").toLocalTime().format(timeFormat));
         employee.setBirth_date(resultSet.getDate("birth_date"));
         employee.setCurp(resultSet.getString("curp"));
         employee.setAddress(resultSet.getString("address"));
         employee.setActive(resultSet.getBoolean("active"));
         employee.setAdmin(resultSet.getBoolean("admin"));
+        employee.setEmail(resultSet.getString("email"));
+        employee.setPhone(resultSet.getString("phone"));
+        employee.setSchedule(resultSet.getString("schedule"));
         return employee;
     }
     
