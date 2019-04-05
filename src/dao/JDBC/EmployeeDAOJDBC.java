@@ -166,7 +166,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             employee.isAdmin(),
             employee.getEmail(),
             employee.getPhone(),
-            employee.getSchedule()
+            employee.getScheduleAsString()
         };
         
         try(
@@ -211,7 +211,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             employee.isAdmin(),
             employee.getEmail(),
             employee.getPhone(),
-            employee.getSchedule(),
+            employee.getScheduleAsString(),
             employee.getId()
         };
         
@@ -345,7 +345,8 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         employee.setAdmin(resultSet.getBoolean("admin"));
         employee.setEmail(resultSet.getString("email"));
         employee.setPhone(resultSet.getString("phone"));
-        employee.setSchedule(resultSet.getString("schedule"));
+        
+        System.out.println(employee.getScheduleAsString());
         return employee;
     }
     

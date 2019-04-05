@@ -8,11 +8,16 @@ package controller;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,10 +25,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
+import model.ActivityReport;
 import model.Employee;
+import model.Equipment;
+import model.Invoice;
 import model.Module;
+import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
+import static msa_ms.MainApp.timeFormat;
 
 /**
  * FXML Controller class
@@ -95,7 +106,7 @@ public class EmployeeFX implements Initializable {
     @FXML
     private TableColumn<Module, Boolean> access_column;
     
-    private List<Module> employeemodule_list;
+    private ObservableList<Module> employeemodule_list = FXCollections.<Module>emptyObservableList();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -136,7 +147,7 @@ public class EmployeeFX implements Initializable {
     }
     
     public void updateEmployeeModuleList(){
-        employeemodule_list = msabase.getModuleDAO().list(employee_tableview3.getSelectionModel().getSelectedItem());
+        employeemodule_list = FXCollections.observableArrayList(msabase.getModuleDAO().list(employee_tableview3.getSelectionModel().getSelectedItem()));
     }
     
     public void updateModuleList(){
@@ -163,21 +174,103 @@ public class EmployeeFX implements Initializable {
     
     public void setEmployeeTable(){
         firstname_column.setCellValueFactory(new PropertyValueFactory<>("first_name"));
+        firstname_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        firstname_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setFirst_name(t.getNewValue());
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         lastname_column.setCellValueFactory(new PropertyValueFactory<>("last_name"));
+        lastname_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        lastname_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setLast_name(t.getNewValue());
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         birthdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getBirth_date()))));
+        birthdate_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        birthdate_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setBirth_date(getBirth_dateValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         curp_column.setCellValueFactory(new PropertyValueFactory<>("curp"));
+        curp_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        curp_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setCurp(t.getNewValue());
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         phone_column.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        phone_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        phone_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPhone(t.getNewValue());
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         email_column.setCellValueFactory(new PropertyValueFactory<>("email"));
+        email_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        email_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEmail(t.getNewValue());
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         address_column.setCellValueFactory(new PropertyValueFactory<>("address"));
+        address_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        address_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setAddress(t.getNewValue());
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         
         employeename_column1.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirst_name()+" "+c.getValue().getLast_name()));
         hiredate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getHire_date()))));
+        birthdate_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        birthdate_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setHire_date(getHire_dateValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         entrytime_column.setCellValueFactory(new PropertyValueFactory<>("entry_time"));
+        entrytime_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        entrytime_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEntry_time(getEntry_timeValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         endtime_column.setCellValueFactory(new PropertyValueFactory<>("end_time"));
-        schedule_column1.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(0)));
-        schedule_column1.setCellFactory(tc -> new CheckBoxTableCell<>());
-        schedule_column2.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(1)));
-        schedule_column2.setCellFactory(tc -> new CheckBoxTableCell<>());
+        endtime_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        endtime_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setEnd_time(getEnd_timeValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
+        schedule_column1.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getSchedule().get(2)));
+        schedule_column1.setCellFactory(c -> new CheckBoxTableCell<>());
+        
+        schedule_column2.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getSchedule().get(1)));
+        schedule_column2.setCellFactory(c -> new CheckBoxTableCell<>());
+        /*
         schedule_column3.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(2)));
         schedule_column3.setCellFactory(tc -> new CheckBoxTableCell<>());
         schedule_column4.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(3)));
@@ -187,7 +280,7 @@ public class EmployeeFX implements Initializable {
         schedule_column6.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(5)));
         schedule_column6.setCellFactory(tc -> new CheckBoxTableCell<>());
         schedule_column7.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(6)));
-        schedule_column7.setCellFactory(tc -> new CheckBoxTableCell<>());
+        schedule_column7.setCellFactory(tc -> new CheckBoxTableCell<>());*/
         
         employeename_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirst_name()+" "+c.getValue().getLast_name()));
         user_column.setCellValueFactory(new PropertyValueFactory<>("user"));
@@ -207,4 +300,35 @@ public class EmployeeFX implements Initializable {
         }
     }
     
+    public Date getBirth_dateValue(Employee employee, String date){
+        try{
+            return DAOUtil.toUtilDate(LocalDate.parse(date, MainApp.dateFormat));
+        }catch(Exception e){
+            return employee.getBirth_date();
+        }
+    }
+    
+    public Date getHire_dateValue(Employee employee, String date){
+        try{
+            return DAOUtil.toUtilDate(LocalDate.parse(date, MainApp.dateFormat));
+        }catch(Exception e){
+            return employee.getHire_date();
+        }
+    }
+    public String getEntry_timeValue(Employee employee, String entry_time){
+        try{
+            timeFormat.parse(entry_time.toUpperCase());
+        }catch(Exception e){
+            return employee.getEntry_time();
+        }
+        return entry_time;
+    }
+    public String getEnd_timeValue(Employee employee, String end_time){
+        try{
+            timeFormat.parse(end_time.toUpperCase());
+        }catch(Exception e){
+            return employee.getEnd_time();
+        }
+        return end_time;
+    }
 }

@@ -34,7 +34,7 @@
                         <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="employee_tableview1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="employee_tableview1" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                               <TableColumn prefWidth="75.0" text="Empleado">
                                  <columns>
@@ -71,7 +71,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Button>
-                              <Button fx:id="disable_button" focusTraversable="false" mnemonicParsing="false" text="Eliminar Empleado" GridPane.columnIndex="1">
+                              <Button fx:id="disable_button" disable="true" focusTraversable="false" mnemonicParsing="false" text="Eliminar Empleado" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
@@ -92,7 +92,7 @@
                       <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TableView fx:id="employee_tableview2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <TableView fx:id="employee_tableview2" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="employeename_column1" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
                               <TableColumn fx:id="hiredate_column" minWidth="-Infinity" prefWidth="120.0" text="F. Contratación" />
@@ -130,7 +130,7 @@
                         <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="password_button" mnemonicParsing="false" text="Cambiar contraseña" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+                        <Button fx:id="password_button" disable="true" mnemonicParsing="false" text="Cambiar contraseña" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
@@ -144,7 +144,7 @@
                             <RowConstraints vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <TableView fx:id="employee_tableview3">
+                              <TableView fx:id="employee_tableview3" editable="true">
                                 <columns>
                                   <TableColumn fx:id="employeename_column2" minWidth="-Infinity" prefWidth="150.0" text="Empleado" />
                                   <TableColumn fx:id="user_column" minWidth="-Infinity" prefWidth="150.0" text="Usuario" />
@@ -154,7 +154,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </TableView>
-                              <TableView fx:id="module_tableview" GridPane.columnIndex="1">
+                              <TableView fx:id="module_tableview" disable="true" editable="true" GridPane.columnIndex="1">
                                 <columns>
                                   <TableColumn fx:id="modulename_column" prefWidth="140.0" text="Módulos" />
                                     <TableColumn fx:id="access_column" prefWidth="75.0" text="Acceso" />

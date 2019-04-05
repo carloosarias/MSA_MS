@@ -6,8 +6,9 @@
 package model;
 
 import java.io.Serializable;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -31,7 +32,7 @@ public class Employee implements Serializable {
     private boolean admin;
     private String email;
     private String phone;
-    private String schedule;
+    private List<Boolean> schedule = new ArrayList<>();
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -153,16 +154,29 @@ public class Employee implements Serializable {
         this.phone = phone;
     }
 
-    public String getSchedule() {
+    public List<Boolean> getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(String schedule) {
+    public void setSchedule(List<Boolean> schedule) {
         this.schedule = schedule;
     }
     
-    public boolean getScheduleValue(int index){
-        return Integer.parseInt(schedule.split(",")[index]) == 1;
+    public String getScheduleAsString(){
+        List<String> string_list = new ArrayList<>();
+        for(Boolean item : schedule){
+            if(item){
+                string_list.add("1");
+            }else{
+                string_list.add("0");
+            }
+        }
+        String string = string_list.get(0);
+        for(int i = 1 ; i < string_list.size() ; i++){
+            string += ","+string_list.get(i);
+        }
+        
+        return string;
     }
     
     // Object overrides ---------------------------------------------------------------------------
