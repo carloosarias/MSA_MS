@@ -150,6 +150,11 @@ public class EmployeeFX implements Initializable {
         });
         
         
+        disable_button.setOnAction((ActionEvent) -> {
+            disableEmployee();
+            updateEmployeeTable();
+        });
+        
         add_button.setOnAction((ActionEvent) -> {
             int current_size = employee_tableview1.getItems().size();
             createEmployee();
@@ -161,6 +166,13 @@ public class EmployeeFX implements Initializable {
                 employee_tableview1.getSelectionModel().select(employee);
             }
         });
+    }
+    
+    public void disableEmployee(){
+        employee_tableview1.getSelectionModel().getSelectedItem().setActive(false);
+        employee_tableview1.getSelectionModel().getSelectedItem().setUser("");
+        employee_tableview1.getSelectionModel().getSelectedItem().setPassword("");
+        msabase.getEmployeeDAO().update(employee_tableview1.getSelectionModel().getSelectedItem());
     }
     
     public void createEmployee(){
@@ -206,7 +218,33 @@ public class EmployeeFX implements Initializable {
     public void setModuleTable(){
         modulename_column.setCellValueFactory(new PropertyValueFactory<>("name"));
         access_column.setCellValueFactory(c -> new SimpleBooleanProperty(getAccessValue(c.getValue())));
-        access_column.setCellFactory(tc -> new CheckBoxTableCell<>());
+        access_column.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Module, Boolean> tableCell = new TableCell<Module, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                if(checkBox.isSelected()){
+                    msabase.getModuleEmployeeDAO().delete((Module) tableCell.getTableRow().getItem(), employee_tableview3.getSelectionModel().getSelectedItem());
+                }else{
+                    msabase.getModuleEmployeeDAO().create((Module) tableCell.getTableRow().getItem(), employee_tableview3.getSelectionModel().getSelectedItem());
+                }
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
     }
     
     public boolean getAccessValue(Module module){
