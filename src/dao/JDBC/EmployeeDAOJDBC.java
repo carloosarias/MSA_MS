@@ -346,7 +346,6 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         employee.setEmail(resultSet.getString("email"));
         employee.setPhone(resultSet.getString("phone"));
         employee.setScheduleFromString(resultSet.getString("schedule"));
-        System.out.println(employee.getScheduleAsString());
         
         return employee;
     }

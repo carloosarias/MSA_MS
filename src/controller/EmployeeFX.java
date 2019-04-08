@@ -7,11 +7,14 @@ package controller;
 
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,8 +23,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContentDisplay;
@@ -35,6 +40,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.ActivityReport;
 import model.Employee;
 import model.Equipment;
@@ -115,7 +123,9 @@ public class EmployeeFX implements Initializable {
     @FXML
     private TableColumn<Module, Boolean> access_column;
     
-    private Employee employee;
+    public static Employee employee;
+    
+    private Stage stage = new Stage();
     
     private ObservableList<Module> employeemodule_list = FXCollections.<Module>emptyObservableList();
     
@@ -132,7 +142,7 @@ public class EmployeeFX implements Initializable {
         updateEmployeeTable();
         
         disable_button.disableProperty().bind(employee_tableview1.getSelectionModel().selectedItemProperty().isNull());
-        password_button.disableProperty().bind(employee_tableview3.getSelectionModel().selectedItemProperty().isNull());
+        password_button.disableProperty().bind(employee_tableview3.getSelectionModel().selectedItemProperty().isNull().or(Bindings.createBooleanBinding(() -> !MainApp.current_employee.isAdmin())));
         module_tableview.disableProperty().bind(employee_tableview3.getSelectionModel().selectedItemProperty().isNull());
         
         employee_tableview1.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) -> {
@@ -149,6 +159,10 @@ public class EmployeeFX implements Initializable {
             module_tableview.refresh();
         });
         
+        password_button.setOnAction((ActionEvent) -> {
+            employee = employee_tableview3.getSelectionModel().getSelectedItem();
+            showStage();
+        });
         
         disable_button.setOnAction((ActionEvent) -> {
             disableEmployee();
@@ -166,6 +180,23 @@ public class EmployeeFX implements Initializable {
                 employee_tableview1.getSelectionModel().select(employee);
             }
         });
+    }
+    
+    public void showStage(){
+        try {
+            stage = new Stage();
+            stage.initOwner((Stage) root_gridpane.getScene().getWindow());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            GridPane root = (GridPane) FXMLLoader.load(getClass().getResource("/fxml/ChangePasswordFX.fxml"));
+            Scene scene = new Scene(root);
+            
+            stage.setTitle("Cambiar Contraseña");
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(InvoiceFX.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void disableEmployee(){
