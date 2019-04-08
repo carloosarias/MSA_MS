@@ -18,20 +18,29 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import model.ActivityReport;
 import model.Employee;
 import model.Equipment;
 import model.Invoice;
 import model.Module;
+import model.ProductPart;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
 import static msa_ms.MainApp.timeFormat;
@@ -106,6 +115,8 @@ public class EmployeeFX implements Initializable {
     @FXML
     private TableColumn<Module, Boolean> access_column;
     
+    private Employee employee;
+    
     private ObservableList<Module> employeemodule_list = FXCollections.<Module>emptyObservableList();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -125,25 +136,59 @@ public class EmployeeFX implements Initializable {
         module_tableview.disableProperty().bind(employee_tableview3.getSelectionModel().selectedItemProperty().isNull());
         
         employee_tableview1.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) -> {
-            employee_tableview2.getSelectionModel().select(newValue);
-            employee_tableview3.getSelectionModel().select(newValue);
-            //updateEmployeeModuleList();
-            module_tableview.refresh();
+            updateSelection(newValue);
         });
         
         employee_tableview2.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) -> {
-            employee_tableview1.getSelectionModel().select(newValue);
-            employee_tableview3.getSelectionModel().select(newValue);
-            //updateEmployeeModuleList();
-            module_tableview.refresh();
+            updateSelection(newValue);
         });
         
         employee_tableview3.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Employee> observable, Employee oldValue, Employee newValue) -> {
-            employee_tableview1.getSelectionModel().select(newValue);
-            employee_tableview2.getSelectionModel().select(newValue);
+            updateSelection(newValue);
             updateEmployeeModuleList();
             module_tableview.refresh();
         });
+        
+        
+        add_button.setOnAction((ActionEvent) -> {
+            int current_size = employee_tableview1.getItems().size();
+            createEmployee();
+            updateEmployeeTable();
+            if(current_size < employee_tableview1.getItems().size()){
+                employee_tableview1.scrollTo(employee);
+                employee_tableview2.scrollTo(employee);
+                employee_tableview3.scrollTo(employee);
+                employee_tableview1.getSelectionModel().select(employee);
+            }
+        });
+    }
+    
+    public void createEmployee(){
+        employee = new Employee();
+        employee.setUser("");
+        employee.setPassword("");
+        employee.setFirst_name("N/A");
+        employee.setLast_name("N/A");
+        employee.setHire_date(DAOUtil.toUtilDate(LocalDate.now()));
+        employee.setEntry_time("07:30 AM");
+        employee.setEnd_time("03:30 PM");
+        employee.setBirth_date(DAOUtil.toUtilDate(LocalDate.now()));
+        employee.setCurp("N/A");
+        employee.setAddress("N/A");
+        employee.setEmail("N/A");
+        employee.setPhone("N/A");
+        employee.setScheduleFromString("0,0,0,0,0,0,0");
+        employee.setActive(true);
+        employee.setAdmin(false);
+        
+        msabase.getEmployeeDAO().create(employee);
+    }
+    
+    public void updateSelection(Employee newValue){
+        
+        employee_tableview1.getSelectionModel().select(newValue);
+        employee_tableview2.getSelectionModel().select(newValue);
+        employee_tableview3.getSelectionModel().select(newValue);
     }
     
     public void updateEmployeeModuleList(){
@@ -265,27 +310,234 @@ public class EmployeeFX implements Initializable {
             employee_tableview2.refresh();
             employee_tableview3.refresh();
         });
-        schedule_column1.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getSchedule().get(2)));
-        schedule_column1.setCellFactory(c -> new CheckBoxTableCell<>());
+        //MONDAY
+        schedule_column1.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isMon()));
+        schedule_column1.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Employee, Boolean> tableCell = new TableCell<Employee, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                ((Employee) tableCell.getTableRow().getItem()).setMon(!checkBox.isSelected());
+                msabase.getEmployeeDAO().update((Employee) tableCell.getTableRow().getItem());
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
         
-        schedule_column2.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getSchedule().get(1)));
-        schedule_column2.setCellFactory(c -> new CheckBoxTableCell<>());
-        /*
-        schedule_column3.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(2)));
-        schedule_column3.setCellFactory(tc -> new CheckBoxTableCell<>());
-        schedule_column4.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(3)));
-        schedule_column4.setCellFactory(tc -> new CheckBoxTableCell<>());
-        schedule_column5.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(4)));
-        schedule_column5.setCellFactory(tc -> new CheckBoxTableCell<>());
-        schedule_column6.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(5)));
-        schedule_column6.setCellFactory(tc -> new CheckBoxTableCell<>());
-        schedule_column7.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().getScheduleValue(6)));
-        schedule_column7.setCellFactory(tc -> new CheckBoxTableCell<>());*/
+        //TUESDAY
+        schedule_column2.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isTue()));
+        schedule_column2.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Employee, Boolean> tableCell = new TableCell<Employee, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                ((Employee) tableCell.getTableRow().getItem()).setTue(!checkBox.isSelected());
+                msabase.getEmployeeDAO().update((Employee) tableCell.getTableRow().getItem());
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
+        
+        //WEDNESDAY
+        schedule_column3.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isWed()));
+        schedule_column3.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Employee, Boolean> tableCell = new TableCell<Employee, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                ((Employee) tableCell.getTableRow().getItem()).setWed(!checkBox.isSelected());
+                msabase.getEmployeeDAO().update((Employee) tableCell.getTableRow().getItem());
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
+        
+        //THURSDAY
+        schedule_column4.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isThu()));
+        schedule_column4.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Employee, Boolean> tableCell = new TableCell<Employee, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                ((Employee) tableCell.getTableRow().getItem()).setThu(!checkBox.isSelected());
+                msabase.getEmployeeDAO().update((Employee) tableCell.getTableRow().getItem());
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
+        
+        //FRIDAY
+        schedule_column5.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isFri()));
+        schedule_column5.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Employee, Boolean> tableCell = new TableCell<Employee, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                ((Employee) tableCell.getTableRow().getItem()).setFri(!checkBox.isSelected());
+                msabase.getEmployeeDAO().update((Employee) tableCell.getTableRow().getItem());
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
+        schedule_column6.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isSat()));
+        schedule_column6.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Employee, Boolean> tableCell = new TableCell<Employee, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                ((Employee) tableCell.getTableRow().getItem()).setSat(!checkBox.isSelected());
+                msabase.getEmployeeDAO().update((Employee) tableCell.getTableRow().getItem());
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
+        schedule_column7.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isSun()));
+        schedule_column7.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Employee, Boolean> tableCell = new TableCell<Employee, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                ((Employee) tableCell.getTableRow().getItem()).setSun(!checkBox.isSelected());
+                msabase.getEmployeeDAO().update((Employee) tableCell.getTableRow().getItem());
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
         
         employeename_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getFirst_name()+" "+c.getValue().getLast_name()));
         user_column.setCellValueFactory(new PropertyValueFactory<>("user"));
+        user_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        user_column.setOnEditCommit((TableColumn.CellEditEvent<Employee, String> t) -> {
+            for(Employee item : employee_tableview3.getItems()){
+                if(item.getUser().equals(t.getNewValue())){
+                    employee_tableview1.refresh();
+                    employee_tableview2.refresh();
+                    employee_tableview3.refresh();
+                    return;
+                }
+            }
+            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setUser(t.getNewValue());
+            msabase.getEmployeeDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            employee_tableview1.refresh();
+            employee_tableview2.refresh();
+            employee_tableview3.refresh();
+        });
         admin_column.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isAdmin()));
-        admin_column.setCellFactory(tc -> new CheckBoxTableCell<>());
+        admin_column.setCellFactory(p -> {
+            CheckBox checkBox = new CheckBox();
+            TableCell<Employee, Boolean> tableCell = new TableCell<Employee, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) 
+                        setGraphic(null);
+                    else {
+                        setGraphic(checkBox);
+                        checkBox.setSelected(item);
+                    }
+                }
+            };
+            checkBox.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                event.consume();
+                ((Employee) tableCell.getTableRow().getItem()).setAdmin(!checkBox.isSelected());
+                msabase.getEmployeeDAO().update((Employee) tableCell.getTableRow().getItem());
+                checkBox.setSelected(!checkBox.isSelected());
+            });
+            tableCell.setAlignment(Pos.CENTER);
+            tableCell.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            return tableCell;
+        });
     }
     
     public void updateEmployeeTable(){
@@ -331,4 +583,9 @@ public class EmployeeFX implements Initializable {
         }
         return end_time;
     }
+    
+    private void validate(CheckBox checkBox, Employee item, Event event){
+        checkBox.setSelected(!checkBox.isSelected());
+    }
+    
 }

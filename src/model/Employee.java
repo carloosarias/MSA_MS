@@ -32,7 +32,11 @@ public class Employee implements Serializable {
     private boolean admin;
     private String email;
     private String phone;
-    private List<Boolean> schedule = new ArrayList<>();
+    
+    //schedule
+    private boolean mon,tue,wed,thu,fri,sat,sun;
+    
+    
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -153,18 +157,86 @@ public class Employee implements Serializable {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    public List<Boolean> getSchedule() {
-        return schedule;
+    
+    public boolean isMon() {
+        return mon;
     }
 
-    public void setSchedule(List<Boolean> schedule) {
-        this.schedule = schedule;
+    public void setMon(boolean mon) {
+        this.mon = mon;
+    }
+
+    public boolean isTue() {
+        return tue;
+    }
+
+    public void setTue(boolean tue) {
+        this.tue = tue;
+    }
+
+    public boolean isWed() {
+        return wed;
+    }
+
+    public void setWed(boolean wed) {
+        this.wed = wed;
+    }
+
+    public boolean isThu() {
+        return thu;
+    }
+
+    public void setThu(boolean thu) {
+        this.thu = thu;
+    }
+
+    public boolean isFri() {
+        return fri;
+    }
+
+    public void setFri(boolean fri) {
+        this.fri = fri;
+    }
+
+    public boolean isSat() {
+        return sat;
+    }
+
+    public void setSat(boolean sat) {
+        this.sat = sat;
+    }
+
+    public boolean isSun() {
+        return sun;
+    }
+
+    public void setSun(boolean sun) {
+        this.sun = sun;
+    }
+    
+    public void setScheduleFromString(String schedule){
+        List<Boolean> boolean_list = new ArrayList();
+        for(String item : schedule.split(",")){
+            if(item.equals("1")){
+                boolean_list.add(true);
+            }else{
+                boolean_list.add(false);
+            }
+        }
+        
+        mon = boolean_list.get(0);
+        tue = boolean_list.get(1);
+        wed = boolean_list.get(2);
+        thu = boolean_list.get(3);
+        fri = boolean_list.get(4);
+        sat = boolean_list.get(5);
+        sun = boolean_list.get(6);
     }
     
     public String getScheduleAsString(){
-        List<String> string_list = new ArrayList<>();
-        for(Boolean item : schedule){
+        boolean[] schedule_list = {mon,tue,wed,thu,fri,sat,sun};
+        List<String> string_list = new ArrayList();
+        for(boolean item : schedule_list){
             if(item){
                 string_list.add("1");
             }else{

@@ -36,7 +36,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule) "
-            +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE EMPLOYEE SET user = ?, first_name = ?, last_name = ?, hire_date = ?, entry_time = ?, end_time = ?, birth_date = ?, curp = ?, address = ?, active = ?, admin = ?, email = ?, phone = ?, schedule = ? WHERE id = ?";
     private static final String SQL_DELETE =
@@ -345,8 +345,9 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
         employee.setAdmin(resultSet.getBoolean("admin"));
         employee.setEmail(resultSet.getString("email"));
         employee.setPhone(resultSet.getString("phone"));
-        
+        employee.setScheduleFromString(resultSet.getString("schedule"));
         System.out.println(employee.getScheduleAsString());
+        
         return employee;
     }
     
