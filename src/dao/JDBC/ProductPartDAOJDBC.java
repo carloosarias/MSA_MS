@@ -31,11 +31,11 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
     private static final String SQL_LIST_ACTIVE_LIKE_PARTNUMBER_ORDER_BY_ID = 
             "SELECT * FROM PRODUCT_PART INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "WHERE (PRODUCT_PART.part_number LIKE ? OR ? = 0) AND PRODUCT_PART.active = ? "
-            + "ORDER BY PRODUCT_PART.part_number, COMPANY.name";
+            + "ORDER BY COMPANY.name, PRODUCT_PART.part_number";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
             "SELECT * FROM PRODUCT_PART INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
-            + "WHERE PRODUCT_PART.active = ? AND COMPANY_ID IS NULL "
-            + "ORDER BY PRODUCT_PART.part_number, COMPANY.name";
+            + "WHERE PRODUCT_PART.active = ? AND COMPANY_ID IS NOT NULL "
+            + "ORDER BY COMPANY.name, PRODUCT_PART.part_number";
     private static final String SQL_INSERT =
             "INSERT INTO PRODUCT_PART (COMPANY_ID, part_number, description, active) "
             + "VALUES (?, ?, ?, ?)";
