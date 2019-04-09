@@ -21,10 +21,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
@@ -32,6 +34,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Company;
 import model.PartRevision;
 import model.ProductPart;
 import static msa_ms.MainApp.df;
@@ -51,15 +54,17 @@ public class ProductPartFX implements Initializable {
     @FXML
     private TextField partnumber_field;
     @FXML
-    private CheckBox partnumber_filter;
-    @FXML
     private TableView<ProductPart> productpart_tableview;
+    @FXML
+    private TableColumn<ProductPart, Company> company_column;
     @FXML
     private TableColumn<ProductPart, String> counter_column;
     @FXML
     private TableColumn<ProductPart, String> partnumber_column;
     @FXML
     private TableColumn<ProductPart, String> description_column;
+    @FXML
+    private ComboBox<Company> company_combo;
     @FXML
     private Button addpart_button;
     @FXML
@@ -105,10 +110,12 @@ public class ProductPartFX implements Initializable {
         setPartRevisionTable();
         updateProductPartTable();
         
+        company_combo.getItems().setAll(msabase.getCompanyDAO().listClient(true));
+        
         disablepart_button.disableProperty().bind(productpart_tableview.getSelectionModel().selectedItemProperty().isNull());
         disablerev_button.disableProperty().bind(partrevision_tableview.getSelectionModel().selectedItemProperty().isNull());
-        partnumber_field.disableProperty().bind(partnumber_filter.selectedProperty().not());
         revision_tab.disableProperty().bind(productpart_tableview.getSelectionModel().selectedItemProperty().isNull());
+        addpart_button.disableProperty().bind(company_combo.getSelectionModel().selectedItemProperty().isNull());
         
         productpart_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
             updatePartRevisionTable();
@@ -116,10 +123,6 @@ public class ProductPartFX implements Initializable {
         
         partnumber_field.setOnAction((ActionEvent) -> {
             updateProductPartTable();
-        });
-        
-        partnumber_filter.setOnAction((ActionEvent) -> {
-           updateProductPartTable(); 
         });
         
         addpart_button.setOnAction((ActionEvent) -> {
@@ -155,6 +158,7 @@ public class ProductPartFX implements Initializable {
     
     public void createProductPart(){
         product_part = new ProductPart();
+        product_part.setCompany(company_combo.getSelectionModel().getSelectedItem());
         product_part.setPart_number("N/A");
         product_part.setDescription("N/A");
         product_part.setActive(true);
@@ -164,6 +168,13 @@ public class ProductPartFX implements Initializable {
     
     public void setProductPartTable(){
         counter_column.setCellValueFactory(c -> new SimpleStringProperty(Integer.toString(c.getTableView().getItems().indexOf(c.getValue())+1)));
+        company_column.setCellValueFactory(new PropertyValueFactory<>("company"));
+        company_column.setCellFactory(ComboBoxTableCell.forTableColumn(company_combo.getItems()));
+        company_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, Company> t) -> {
+            t.getTableView().getItems().get(t.getTablePosition().getRow()).setCompany(t.getNewValue());
+            msabase.getProductPartDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
+            productpart_tableview.refresh();
+        });
         partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         partnumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
         partnumber_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, String> t) -> {
@@ -230,7 +241,7 @@ public class ProductPartFX implements Initializable {
     }
     
     public void updateProductPartTable(){
-        productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list(partnumber_field.getText(), partnumber_filter.isSelected(), true)));
+        productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list(partnumber_field.getText(), true, true)));
     }
     
     public void disablePartRevision(){

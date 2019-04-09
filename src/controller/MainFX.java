@@ -26,6 +26,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Module;
+import model.ProductPart;
+import model.Quote;
 import msa_ms.MainApp;
 
 /**
@@ -102,7 +104,6 @@ public class MainFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
         menu_listview.getItems().setAll(msabase.getModuleDAO().list(MainApp.current_employee));
         menu_listview.getSelectionModel().selectFirst();
         

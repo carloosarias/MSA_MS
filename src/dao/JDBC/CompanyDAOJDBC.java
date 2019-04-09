@@ -23,15 +23,15 @@ import model.Company;
 public class CompanyDAOJDBC implements CompanyDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE id = ?";
+            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY ORDER BY id";
+            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY ORDER BY id";
     private static final String SQL_LIST_SUPPLIER_ORDER_BY_ID =
-            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE supplier = TRUE AND active = ? ORDER BY id";
+            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY WHERE supplier = TRUE AND active = ? ORDER BY id";
     private static final String SQL_LIST_CLIENT_ORDER_BY_ID = 
-            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE client = TRUE AND active = ? ORDER BY id";
+            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY WHERE client = TRUE AND active = ? ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, name, rfc, tax_id, payment_terms, supplier, client, active FROM COMPANY WHERE active = ? ORDER BY id";
+            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT = 
             "INSERT INTO COMPANY (name, rfc, tax_id, payment_terms, supplier, client, active) "
             +"VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -272,16 +272,16 @@ public class CompanyDAOJDBC implements CompanyDAO{
      * @return The mapped Employee from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    private static Company map(ResultSet resultSet) throws SQLException {
+    public static Company map(ResultSet resultSet) throws SQLException {
         Company company = new Company();
-        company.setId(resultSet.getInt("id"));
-        company.setName(resultSet.getString("name"));
-        company.setRfc(resultSet.getString("rfc"));
-        company.setTax_id(resultSet.getString("tax_id"));
-        company.setPayment_terms(resultSet.getString("payment_terms"));
-        company.setSupplier(resultSet.getBoolean("supplier"));
-        company.setClient(resultSet.getBoolean("client"));
-        company.setActive(resultSet.getBoolean("active"));
+        company.setId(resultSet.getInt("COMPANY.id"));
+        company.setName(resultSet.getString("COMPANY.name"));
+        company.setRfc(resultSet.getString("COMPANY.rfc"));
+        company.setTax_id(resultSet.getString("COMPANY.tax_id"));
+        company.setPayment_terms(resultSet.getString("COMPANY.payment_terms"));
+        company.setSupplier(resultSet.getBoolean("COMPANY.supplier"));
+        company.setClient(resultSet.getBoolean("COMPANY.client"));
+        company.setActive(resultSet.getBoolean("COMPANY.active"));
         return company;
     }
 }

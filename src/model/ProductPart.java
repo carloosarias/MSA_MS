@@ -17,6 +17,7 @@ public class ProductPart implements Serializable{
     private String part_number;
     private String description;
     private boolean active;
+    private Company company;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -50,7 +51,14 @@ public class ProductPart implements Serializable{
     public void setActive(boolean active) {
         this.active = active;
     }
+    
+    public Company getCompany() {
+        return company;
+    }
 
+    public void setCompany(Company company) {
+        this.company = company;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**

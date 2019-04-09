@@ -7,6 +7,7 @@ package dao.interfaces;
 
 import dao.DAOException;
 import java.util.List;
+import model.Company;
 import model.ProductPart;
 
 /**
