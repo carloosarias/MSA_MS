@@ -62,7 +62,7 @@ public class AddDepartLotFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
+        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         
         rev_combo.disableProperty().bind(rev_combo.itemsProperty().isNull());
@@ -107,7 +107,7 @@ public class AddDepartLotFX implements Initializable {
                 rev_combo.getEditor().selectAll();
             }
             else{
-                process_combo.getSelectionModel().select(partrevcombo_selection.getSpecification_process());
+                process_combo.getSelectionModel().select(partrevcombo_selection.getSpecification().getProcess());
                 quantity_field.requestFocus();
             }            
         });

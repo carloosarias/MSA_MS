@@ -35,23 +35,20 @@ public interface ProductPartDAO {
     public ProductPart find(String part_number) throws DAOException;
     
     /**
-     * Returns a list of all ProductParts from the database ordered by ProductPart ID. The list is never null and
-     * is empty when the database does not contain any ProductPart.
-     * @param pattern
-     * @param partnumber_filter
-     * @param active
-     * @return A list of all ProductParts from the database ordered by ProductPart ID.
+     * Returns a list of all active ProductPart
+     * @return List of all active ProductPart
      * @throws DAOException If something fails at database level.
      */
-    public List<ProductPart> list(String pattern, boolean partnumber_filter, boolean active) throws DAOException;
+    public List<ProductPart> list() throws DAOException;
     
     /**
-     * Returns a list of all active ProductParts from the database ordered by ProductPart ID. The list is never null and
-     * is empty when the database does not contain any ProductPart.
-     * @return A list of all ProductParts from the database ordered by ProductPart ID.
+     * Returns a list of active ProductPart matching Company.id and a part_number pattern
+     * @param company
+     * @param pattern
+     * @return List of active ProductPart matching Company.id and a part_number pattern
      * @throws DAOException If something fails at database level.
      */
-    public List<ProductPart> listActive (boolean active) throws DAOException;
+    public List<ProductPart> list(Company company, String pattern) throws DAOException;
     
     /**
      * Create the given ProductPart in the database. The ProductPart ID must be null, 

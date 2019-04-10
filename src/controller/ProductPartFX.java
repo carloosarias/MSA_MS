@@ -49,9 +49,7 @@ public class ProductPartFX implements Initializable {
 
     @FXML
     private GridPane root_gridpane;
-    @FXML
     private Tab revision_tab;
-    @FXML
     private TextField partnumber_field;
     @FXML
     private TableView<ProductPart> productpart_tableview;
@@ -63,35 +61,20 @@ public class ProductPartFX implements Initializable {
     private TableColumn<ProductPart, String> partnumber_column;
     @FXML
     private TableColumn<ProductPart, String> description_column;
-    @FXML
     private ComboBox<Company> company_combo;
-    @FXML
     private Button addpart_button;
-    @FXML
     private Button disablepart_button;
-    @FXML
     private TableView<PartRevision> partrevision_tableview;
-    @FXML
     private TableColumn<PartRevision, String> partnumber_column1;
-    @FXML
     private TableColumn<PartRevision, String> rev_column;
-    @FXML
     private TableColumn<PartRevision, String> revdate_column;
-    @FXML
     private TableColumn<PartRevision, String> basemetal_column;
-    @FXML
     private TableColumn<PartRevision, String> finalprocess_column;
-    @FXML
     private TableColumn<PartRevision, String> specnumber_column;
-    @FXML
     private TableColumn<PartRevision, String> area_column;
-    @FXML
     private TableColumn<PartRevision, String> baseweight_column;
-    @FXML
     private TableColumn<PartRevision, String> finalweight_column;
-    @FXML
     private Button addrev_button;
-    @FXML
     private Button disablerev_button;
     
     private ProductPart product_part;
@@ -99,6 +82,18 @@ public class ProductPartFX implements Initializable {
     private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    @FXML
+    private ComboBox<Company> company_combo1;
+    @FXML
+    private Button reset_button;
+    @FXML
+    private TextField part_field;
+    @FXML
+    private Button add_button;
+    @FXML
+    private ComboBox<Company> company_combo2;
+    @FXML
+    private Button delete_button;
     
     /**
      * Initializes the controller class.
@@ -234,14 +229,14 @@ public class ProductPartFX implements Initializable {
     
     public void updatePartRevisionTable(){
         try{
-            partrevision_tableview.getItems().setAll(msabase.getPartRevisionDAO().list(productpart_tableview.getSelectionModel().getSelectedItem(), true));
+            //partrevision_tableview.getItems().setAll(msabase.getPartRevisionDAO().list(productpart_tableview.getSelectionModel().getSelectedItem(), true));
         }catch(Exception e){
             partrevision_tableview.getItems().clear();
         }
     }
     
     public void updateProductPartTable(){
-        productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list(partnumber_field.getText(), true, true)));
+        productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list(company_combo1.getSelectionModel().getSelectedItem(), partnumber_field.getText())));
     }
     
     public void disablePartRevision(){
@@ -252,12 +247,11 @@ public class ProductPartFX implements Initializable {
     public void disableProductPart(){
         productpart_tableview.getSelectionModel().getSelectedItem().setActive(false);
         msabase.getProductPartDAO().update(productpart_tableview.getSelectionModel().getSelectedItem());
-        for(PartRevision part_revision : msabase.getPartRevisionDAO().list(product_part, true)){
+        /*for(PartRevision part_revision : msabase.getPartRevisionDAO().list(product_part, true)){
             part_revision.setActive(false);
             msabase.getPartRevisionDAO().update(part_revision);
-        }
+        }*/
     }
-    
     public String getPartNumberValue(ProductPart product_part, String part_number){
         for(ProductPart item : productpart_tableview.getItems()){
             if(item.getPart_number().replace(" ", "").equalsIgnoreCase(part_number.replace(" ", ""))){
@@ -269,7 +263,7 @@ public class ProductPartFX implements Initializable {
     
     public String getRevValue(PartRevision part_revision, String rev){
         for(PartRevision item : partrevision_tableview.getItems()){
-            if(item.getRev().replace(" ", "").equalsIgnoreCase(rev.replace(" ", "")) && item.getPart_number().equalsIgnoreCase(part_revision.getPart_number())){
+            if(item.getRev().replace(" ", "").equalsIgnoreCase(rev.replace(" ", "")) && item.getProduct_part().getPart_number().equalsIgnoreCase(part_revision.getProduct_part().getPart_number())){
                 return part_revision.getRev().replace(" ", "").toUpperCase();
             }
         }

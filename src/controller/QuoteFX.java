@@ -124,7 +124,7 @@ public class QuoteFX implements Initializable {
         setQuoteTable();
         setQuoteItemTable();
         
-        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
+        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         
         partrev_combo.disableProperty().bind(partrev_combo.itemsProperty().isNull());
         pdf_button.disableProperty().bind(quote_tableview.getSelectionModel().selectedItemProperty().isNull());

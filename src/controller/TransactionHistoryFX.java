@@ -166,7 +166,7 @@ public class TransactionHistoryFX implements Initializable {
         setProcessReportTable();
         setIncomingReportTable();
         //setWeeklyTableViewItems();
-        partnumber_combo.getItems().setAll(msabase.getProductPartDAO().listActive(true));
+        partnumber_combo.getItems().setAll(msabase.getProductPartDAO().list());
         startdate_picker.setValue(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1));
         enddate_picker.setValue(startdate_picker.getValue().plusMonths(1).minusDays(1));
         setDatePicker(startdate_picker);

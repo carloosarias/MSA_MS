@@ -15,9 +15,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import model.Company;
 import model.Metal;
 import model.PartRevision;
-import model.ProductPart;
 import model.Specification;
 
 /**
@@ -27,59 +27,37 @@ import model.Specification;
 public class PartRevisionDAOJDBC implements PartRevisionDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
-            + "FROM PART_REVISION "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            "SELECT * FROM PART_REVISION INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE PART_REVISION.id = ?";
-    private static final String SQL_FIND_BY_PART_REV = 
-            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
-            + "FROM PART_REVISION "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+    private static final String SQL_FIND_BY_PATTERN = 
+            "SELECT * FROM PART_REVISION INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND PART_REVISION.rev = ?";
-    private static final String SQL_FIND_PRODUCT_PART_BY_ID = 
-            "SELECT PRODUCT_PART_ID FROM PART_REVISION WHERE id = ?";
-    private static final String SQL_FIND_SPECIFICATION_BY_ID = 
-            "SELECT SPECIFICATION_ID FROM PART_REVISION WHERE id = ?";
-    private static final String SQL_FIND_BASE_METAL_BY_ID = 
-            "SELECT BASE_METAL_ID FROM PART_REVISION WHERE id = ?";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
-            + "FROM PART_REVISION "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "WHERE (COMPANY.id = ? AND COMPANY.active = 1) AND (PRODUCT_PART.part_number = ? AND PRODUCT_PART.active = 1) AND (PART_REVISION.rev = ? AND PART_REVISION.active = 1)";
+    private static final String SQL_LIST_ACTIVE = 
+            "SELECT * FROM PART_REVISION INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.active = ? "
-            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
-    private static final String SQL_LIST_ACTIVE_OF_PRODUCTPART_ORDER_BY_PARTNUMBER = 
-            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
-            + "FROM PART_REVISION "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "WHERE (PART_REVISION.active = 1 AND PRODUCT_PART.active = 1 AND COMPANY.active = 1 AND METAL.active = 1 AND SPECIFICATION.active = 1) "
+            + "ORDER BY COMPANY.name, PRODUCT_PART.part_number, PART_REVISION.rev";
+    private static final String SQL_LIST_ACTIVE_FILTER = 
+            "SELECT * FROM PART_REVISION INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PRODUCT_PART.id = ? AND PART_REVISION.active = ? "
-            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
-    private static final String SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT PART_REVISION.id, PART_REVISION.rev, PART_REVISION.rev_date, PART_REVISION.area, PART_REVISION.base_weight, PART_REVISION.final_weight, PART_REVISION.active, "
-            + "PRODUCT_PART.part_number, METAL.metal_name, SPECIFICATION.process, SPECIFICATION.specification_number "
-            + "FROM PART_REVISION "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE PART_REVISION.SPECIFICATION_ID = ? AND PART_REVISION.active = ? "
-            + "ORDER BY PRODUCT_PART.part_number, PART_REVISION.rev_date";
+            + "WHERE (PRODUCT_PART.part_number LIKE ? AND PRODUCT_PART.active = 1) AND ((COMPANY.id = ? OR ? IS NULL) AND COMPANY.active = 1) "
+            + "AND ((METAL.id = ? OR ? IS NULL) AND METAL.active = 1) AND ((SPECIFICATION.id = ? OR ? IS NULL) AND SPECIFICATION.active = 1) "
+            + "ORDER BY COMPANY.name, PRODUCT_PART.part_number, PART_REVISION.rev";
     private static final String SQL_INSERT = 
-            "INSERT INTO PART_REVISION (PRODUCT_PART_ID, SPECIFICATION_ID, BASE_METAL_ID, rev, rev_date, area, base_weight, final_weight, active) "
+            "INSERT INTO PART_REVISION (PRODUCT_PART_ID, BASE_METAL_ID, SPECIFICATION_ID, rev, rev_date, area, base_weight, final_weight, active) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
+            "UPDATE PART_REVISION SET PRODUCT_PART_ID = ?, BASE_METAL_ID = ?, SPECIFICATION_ID = ?, rev = ?, rev_date = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM PART_REVISION WHERE id = ?";
     
@@ -103,14 +81,13 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     public PartRevision find(Integer id) throws DAOException {
         return find(SQL_FIND_BY_ID, id);
     }
-
+    
     @Override
-    public PartRevision find(ProductPart part, String rev) throws IllegalArgumentException, DAOException {
-        if(part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
-        }
-        
-        return find(SQL_FIND_BY_PART_REV, part.getId(), rev);
+    public PartRevision find(Company company, String part_number, String rev) throws DAOException {
+        if(company.getId() == null) {
+            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
+        }   
+        return find(SQL_FIND_BY_PATTERN, company, part_number, rev);
     }
     
     /**
@@ -137,214 +114,72 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
 
         return part_revision;
     }
-    
+
     @Override
-    public ProductPart findProductPart(PartRevision part_revision) throws IllegalArgumentException, DAOException {
-        if(part_revision.getId() == null) {
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }
-        
-        ProductPart part = null;
-        
-        Object[] values = {
-            part_revision.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PRODUCT_PART_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                part = daoFactory.getProductPartDAO().find(resultSet.getInt("PRODUCT_PART_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return part;
-    }
-    
-    @Override
-    public Specification findSpecification(PartRevision part_revision) throws IllegalArgumentException, DAOException {
-        if(part_revision.getId() == null) {
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }
-        
-        Specification specification = null;
-        
-        Object[] values = {
-            part_revision.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_SPECIFICATION_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                specification = daoFactory.getSpecificationDAO().find(resultSet.getInt("SPECIFICATION_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return specification;
-    }
-    
-    @Override
-    public Metal findMetal(PartRevision part_revision) throws IllegalArgumentException, DAOException {
-        if(part_revision.getId() == null) {
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }
-        
-        Metal metal = null;
-        
-        Object[] values = {
-            part_revision.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_BASE_METAL_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                metal = daoFactory.getMetalDAO().find(resultSet.getInt("BASE_METAL_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return metal;
-    }
-    
-    /*@Override
     public List<PartRevision> list() throws DAOException {
-        List<PartRevision> revisions = new ArrayList<>();
-
+        List<PartRevision> partrevision_list = new ArrayList<>();
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE, false);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                revisions.add(map(resultSet));
+                partrevision_list.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return revisions;
-    }*/
-
-    @Override
-    public List<PartRevision> list(boolean active) throws DAOException {
-        List<PartRevision> revisions = new ArrayList<>();
-        
-        Object[] values = {
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                revisions.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return revisions;
+        return partrevision_list;
     }
     
     @Override
-    public List<PartRevision> list(ProductPart part, boolean active) throws IllegalArgumentException, DAOException {
-        if(part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
-        }    
+    public List<PartRevision> list(Company company, Metal metal, Specification specification, String pattern) throws IllegalArgumentException, DAOException {
         
-        List<PartRevision> revisions = new ArrayList<>();
+        List<PartRevision> partrevision_list = new ArrayList<>();
         
         Object[] values = {
-            part.getId(),
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_PRODUCTPART_ORDER_BY_PARTNUMBER, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                revisions.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return revisions;
-    }
-
-    @Override
-    public List<PartRevision> listOfSpecification(Specification specification, boolean active) throws DAOException { 
-        if(specification.getId() == null) {
-            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
-        }    
-        
-        List<PartRevision> revisions = new ArrayList<>();
-        
-        Object[] values = {
+            pattern+"%",
+            company.getId(),
+            company.getId(),
+            metal.getId(),
+            metal.getId(),
             specification.getId(),
-            active
+            specification.getId()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_FILTER, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                revisions.add(map(resultSet));
+                partrevision_list.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return revisions;
+        return partrevision_list;
     }
 
     @Override
-    public void create(ProductPart part, Specification specification, Metal metal, PartRevision revision) throws IllegalArgumentException, DAOException {
-        if (part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
-        }
-        
-        if (specification.getId() == null) {
-            throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
-        }
-        
-        if (metal.getId() == null) {
-            throw new IllegalArgumentException("Metal is not created yet, the Metal ID is null.");
-        }
-        
-        if(revision.getId() != null){
+    public void create(PartRevision part_revision) throws IllegalArgumentException, DAOException {
+        if(part_revision.getId() != null){
             throw new IllegalArgumentException("PartRevision is already created, the PartRevision ID is not null.");
         }
         
         Object[] values = {
-            part.getId(),
-            specification.getId(),
-            metal.getId(),
-            revision.getRev(),
-            DAOUtil.toSqlDate(revision.getRev_date()),
-            revision.getArea(),
-            revision.getBase_weight(),
-            revision.getFinal_weight(),
-            revision.isActive()
+            part_revision.getProduct_part().getId(),
+            part_revision.getMetal().getId(),
+            part_revision.getSpecification().getId(),
+            part_revision.getRev(),
+            DAOUtil.toSqlDate(part_revision.getRev_date()),
+            part_revision.getArea(),
+            part_revision.getBase_weight(),
+            part_revision.getFinal_weight(),
+            part_revision.isActive()
         };
         
         try(
@@ -358,7 +193,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    revision.setId(generatedKeys.getInt(1));
+                    part_revision.setId(generatedKeys.getInt(1));
                 } else {
                     throw new DAOException("Creating PartRevision failed, no generated key obtained.");
                 }
@@ -370,19 +205,22 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public void update(PartRevision revision) throws IllegalArgumentException, DAOException {
-        if (revision.getId() == null) {
+    public void update(PartRevision part_revision) throws IllegalArgumentException, DAOException {
+        if (part_revision.getId() == null) {
             throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
         }
         
         Object[] values = {
-            revision.getRev(),
-            DAOUtil.toSqlDate(revision.getRev_date()),
-            revision.getArea(),
-            revision.getBase_weight(),
-            revision.getFinal_weight(),
-            revision.isActive(),
-            revision.getId()
+            part_revision.getProduct_part().getId(),
+            part_revision.getMetal().getId(),
+            part_revision.getSpecification().getId(),
+            part_revision.getRev(),
+            DAOUtil.toSqlDate(part_revision.getRev_date()),
+            part_revision.getArea(),
+            part_revision.getBase_weight(),
+            part_revision.getFinal_weight(),
+            part_revision.isActive(),
+            part_revision.getId()
         };
         
         try(
@@ -399,9 +237,9 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
 
     @Override
-    public void delete(PartRevision revision) throws DAOException {
+    public void delete(PartRevision part_revision) throws DAOException {
         Object[] values = {
-            revision.getId()
+            part_revision.getId()
         };
         
         try(
@@ -412,7 +250,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             if(affectedRows == 0){
                 throw new DAOException("Deleting PartRevision failed, no rows affected.");
             } else{
-                revision.setId(null);
+                part_revision.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -428,20 +266,18 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
      * @throws SQLException If something fails at database level.
      */
     public static PartRevision map(ResultSet resultSet) throws SQLException{
-        PartRevision revision = new PartRevision();
-        revision.setId(resultSet.getInt("PART_REVISION.id"));
-        revision.setRev(resultSet.getString("PART_REVISION.rev"));
-        revision.setRev_date(resultSet.getDate("PART_REVISION.rev_date"));
-        revision.setArea(resultSet.getDouble("PART_REVISION.area"));
-        revision.setBase_weight(resultSet.getDouble("PART_REVISION.base_weight"));
-        revision.setFinal_weight(resultSet.getDouble("PART_REVISION.final_weight"));
-        revision.setActive(resultSet.getBoolean("PART_REVISION.active"));
+        PartRevision part_revision = new PartRevision();
+        part_revision.setId(resultSet.getInt("PART_REVISION.id"));
+        part_revision.setRev(resultSet.getString("PART_REVISION.rev"));
+        part_revision.setRev_date(resultSet.getDate("PART_REVISION.rev_date"));
+        part_revision.setArea(resultSet.getDouble("PART_REVISION.area"));
+        part_revision.setBase_weight(resultSet.getDouble("PART_REVISION.base_weight"));
+        part_revision.setFinal_weight(resultSet.getDouble("PART_REVISION.final_weight"));
+        part_revision.setActive(resultSet.getBoolean("PART_REVISION.active"));
+        part_revision.setProduct_part(ProductPartDAOJDBC.map(resultSet));
+        part_revision.setMetal(MetalDAOJDBC.map(resultSet));
+        part_revision.setSpecification(SpecificationDAOJDBC.map(resultSet));
         
-        //INNER JOINS
-        revision.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
-        revision.setMetal_metalname(resultSet.getString("METAL.metal_name"));
-        revision.setSpecification_specificationnumber(resultSet.getString("SPECIFICATION.specification_number"));
-        revision.setSpecification_process(resultSet.getString("SPECIFICATION.process"));
-        return revision;
+        return part_revision;
     }
 }

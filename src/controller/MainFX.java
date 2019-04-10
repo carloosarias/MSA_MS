@@ -49,6 +49,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab company_tab;
     @FXML
+    private Tab partrevision_tab;
+    @FXML
     private Tab productpart_tab;
     @FXML
     private Tab metal_tab;
@@ -138,6 +140,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
                         break;
                     case "Números de Parte":
+                        partrevision_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
                         productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
                         specification_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/SpecificationFX.fxml")));
                         metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));

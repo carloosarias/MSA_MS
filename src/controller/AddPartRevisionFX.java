@@ -56,7 +56,7 @@ public class AddPartRevisionFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        productpart_combo.getItems().setAll(msabase.getProductPartDAO().listActive(true));
+        productpart_combo.getItems().setAll(msabase.getProductPartDAO().list());
         metal_combo.getItems().setAll(msabase.getMetalDAO().list(true));
         specification_combo.setItems(FXCollections.observableArrayList(msabase.getSpecificationDAO().list(true)));
         revdate_picker.setValue(LocalDate.now());
@@ -82,7 +82,7 @@ public class AddPartRevisionFX implements Initializable {
         part_revision.setFinal_weight(0.0);
         part_revision.setActive(true);
         
-        msabase.getPartRevisionDAO().create(productpart_combo.getSelectionModel().getSelectedItem(), specification_combo.getSelectionModel().getSelectedItem(), metal_combo.getSelectionModel().getSelectedItem(), part_revision);
+        msabase.getPartRevisionDAO().create(part_revision);
     }
     
     public boolean testFields(){

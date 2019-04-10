@@ -64,7 +64,7 @@ public class CreateQuoteFX implements Initializable {
         setDatePicker(quotedate_picker);
         
         client_combo.getItems().setAll(msabase.getCompanyDAO().listClient(true));
-        part_combo.getItems().setAll(msabase.getProductPartDAO().listActive(true));
+        part_combo.getItems().setAll(msabase.getProductPartDAO().list());
         
         contact_combo.disableProperty().bind(client_combo.getSelectionModel().selectedItemProperty().isNull());
         partrev_combo.disableProperty().bind(part_combo.getSelectionModel().selectedItemProperty().isNull());
