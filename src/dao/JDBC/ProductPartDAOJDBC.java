@@ -118,6 +118,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
     
     @Override
     public List<ProductPart> list(Company company, String pattern) throws DAOException {
+        if(company == null) company = new Company();
         
         List<ProductPart> productpart_list = new ArrayList<>();
         

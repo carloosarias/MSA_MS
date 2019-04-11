@@ -82,8 +82,7 @@ public class ProductPartFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         df.setMaximumFractionDigits(6);
         setProductPartTable();
-        //setPartRevisionTable();
-        //updateProductPartTable();
+        updateProductPartTable();
         
         company_combo1.getItems().setAll(msabase.getCompanyDAO().listClient(true));
         company_combo2.setItems(company_combo1.getItems());
@@ -91,16 +90,12 @@ public class ProductPartFX implements Initializable {
         delete_button.disableProperty().bind(productpart_tableview.getSelectionModel().selectedItemProperty().isNull());
         add_button.disableProperty().bind(company_combo2.getSelectionModel().selectedItemProperty().isNull());
         
-        productpart_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
-            //updatePartRevisionTable();
-        });
-        
-        //company_combo1.setOnAction((ActionEvent) -> {updateProductPartTable();});
+        company_combo1.setOnAction((ActionEvent) -> {updateProductPartTable();});
         part_field.setOnAction(company_combo1.getOnAction());
         reset_button.setOnAction((ActionEvent) -> {
             company_combo1.getSelectionModel().clearSelection();
             part_field.clear();
-            //updateProductPartTable();
+            updateProductPartTable();
         });
         
         add_button.setOnAction((ActionEvent) -> {
@@ -111,12 +106,12 @@ public class ProductPartFX implements Initializable {
     public void createProductPart(){
         int current_size = productpart_tableview.getItems().size();
         ProductPart product_part = new ProductPart();
-        //product_part.setCompany(company_combo.getSelectionModel().getSelectedItem());
+        product_part.setCompany(company_combo2.getSelectionModel().getSelectedItem());
         product_part.setPart_number("N/A");
         product_part.setDescription("N/A");
         product_part.setActive(true);
         msabase.getProductPartDAO().create(product_part);
-            //updateProductPartTable();
+            updateProductPartTable();
             if(current_size < productpart_tableview.getItems().size()){
                 productpart_tableview.scrollTo(product_part);
                 productpart_tableview.getSelectionModel().select(product_part);
@@ -127,7 +122,7 @@ public class ProductPartFX implements Initializable {
     public void setProductPartTable(){
         counter_column.setCellValueFactory(c -> new SimpleStringProperty(Integer.toString(c.getTableView().getItems().indexOf(c.getValue())+1)));
         company_column.setCellValueFactory(new PropertyValueFactory<>("company"));
-        //company_column.setCellFactory(ComboBoxTableCell.forTableColumn(company_combo.getItems()));
+        company_column.setCellFactory(ComboBoxTableCell.forTableColumn(company_combo1.getItems()));
         company_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, Company> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setCompany(t.getNewValue());
             msabase.getProductPartDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
@@ -149,72 +144,17 @@ public class ProductPartFX implements Initializable {
             productpart_tableview.refresh();
         });
     }
-    /*
-    public void setPartRevisionTable(){
-        partnumber_column1.setCellValueFactory(new PropertyValueFactory<>("part_number"));
-        revdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getRev_date()))));
-        finalprocess_column.setCellValueFactory(new PropertyValueFactory<>("specification_process"));
-        specnumber_column.setCellValueFactory(new PropertyValueFactory<>("specification_specificationnumber"));
-        basemetal_column.setCellValueFactory(new PropertyValueFactory<>("metal_metalname"));
-        
-        rev_column.setCellValueFactory(new PropertyValueFactory<>("rev"));
-        rev_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        rev_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setRev(getRevValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
-            msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            partrevision_tableview.refresh();
-        });
-        
-        area_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getArea())+" IN²"));
-        area_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        area_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setArea(getAreaValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
-            msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            partrevision_tableview.refresh();
-        });
-        
-        baseweight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getBase_weight())+" KG"));
-        baseweight_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        baseweight_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setBase_weight(getBase_weightValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
-            msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            partrevision_tableview.refresh();
-        });
-        
-        finalweight_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getFinal_weight())+" KG"));
-        finalweight_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        finalweight_column.setOnEditCommit((TableColumn.CellEditEvent<PartRevision, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setFinal_weight(getFinal_weightValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
-            msabase.getPartRevisionDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            partrevision_tableview.refresh();
-        });
-    }
     
-    public void updatePartRevisionTable(){
-        try{
-            //partrevision_tableview.getItems().setAll(msabase.getPartRevisionDAO().list(productpart_tableview.getSelectionModel().getSelectedItem(), true));
-        }catch(Exception e){
-            partrevision_tableview.getItems().clear();
-        }
-    }*/
-    /*
     public void updateProductPartTable(){
-        productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list(company_combo1.getSelectionModel().getSelectedItem(), partnumber_field.getText())));
-    }*/
-    /*
-    public void disablePartRevision(){
-        partrevision_tableview.getSelectionModel().getSelectedItem().setActive(false);
-        msabase.getPartRevisionDAO().update(partrevision_tableview.getSelectionModel().getSelectedItem());
-    }*/
-    /*
+        productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list(company_combo1.getSelectionModel().getSelectedItem(), part_field.getText())));
+    }
+
+    
     public void disableProductPart(){
         productpart_tableview.getSelectionModel().getSelectedItem().setActive(false);
         msabase.getProductPartDAO().update(productpart_tableview.getSelectionModel().getSelectedItem());
-        for(PartRevision part_revision : msabase.getPartRevisionDAO().list(product_part, true)){
-            part_revision.setActive(false);
-            msabase.getPartRevisionDAO().update(part_revision);
-        }
-    }*/
+    }
+    
     public String getPartNumberValue(ProductPart product_part, String part_number){
         for(ProductPart item : productpart_tableview.getItems()){
             if(item.getPart_number().replace(" ", "").equalsIgnoreCase(part_number.replace(" ", ""))){
@@ -222,57 +162,5 @@ public class ProductPartFX implements Initializable {
             }
         }
         return part_number.replace(" ", "").toUpperCase();
-    }
-    /*
-    public String getRevValue(PartRevision part_revision, String rev){
-        for(PartRevision item : partrevision_tableview.getItems()){
-            if(item.getRev().replace(" ", "").equalsIgnoreCase(rev.replace(" ", "")) && item.getProduct_part().getPart_number().equalsIgnoreCase(part_revision.getProduct_part().getPart_number())){
-                return part_revision.getRev().replace(" ", "").toUpperCase();
-            }
-        }
-        return rev.replace(" ", "").toUpperCase();
-    }
-        
-    public Double getAreaValue(PartRevision revision, String area){
-        try{
-            return Double.parseDouble(area);
-        }catch(Exception e){
-            return revision.getArea();
-        }
-    }
-    
-    public Double getBase_weightValue(PartRevision revision, String base_weight){
-        try{
-            return Double.parseDouble(base_weight);
-        }catch(Exception e){
-            return revision.getBase_weight();
-        }
-    }
-    
-    public Double getFinal_weightValue(PartRevision revision, String final_weight){
-        try{
-            return Double.parseDouble(final_weight);
-        }catch(Exception e){
-            return revision.getFinal_weight();
-        }
-    }*/
-
-        public void showAdd_stage(){
-        try {
-            add_stage = new Stage();
-            add_stage.initOwner((Stage) root_gridpane.getScene().getWindow());
-            add_stage.initModality(Modality.APPLICATION_MODAL);
-            HBox root = (HBox) FXMLLoader.load(getClass().getResource("/fxml/AddPartRevisionFX.fxml"));
-            Scene scene = new Scene(root);
-            
-            add_stage.setTitle("Registrar Revisión");
-            add_stage.setResizable(false);
-            add_stage.initStyle(StageStyle.UTILITY);
-            add_stage.setScene(scene);
-            add_stage.showAndWait();
-        } catch (IOException ex) {
-            Logger.getLogger(ProductPartFX.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
+    } 
 }
