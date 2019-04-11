@@ -43,21 +43,21 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE (PART_REVISION.active = 1 AND PRODUCT_PART.active = 1 AND COMPANY.active = 1 AND METAL.active = 1 AND SPECIFICATION.active = 1) "
+            + "WHERE PART_REVISION.active = 1 AND PRODUCT_PART.active = 1 AND COMPANY.active = 1 AND METAL.active = 1 AND SPECIFICATION.active = 1 "
             + "ORDER BY COMPANY.name, PRODUCT_PART.part_number, PART_REVISION.rev";
     private static final String SQL_LIST_ACTIVE_FILTER = 
             "SELECT * FROM PART_REVISION INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE (PRODUCT_PART.part_number LIKE ? AND PRODUCT_PART.active = 1) AND ((COMPANY.id = ? OR ? IS NULL) AND COMPANY.active = 1) "
+            + "WHERE PART_REVISION.active = 1 AND (PRODUCT_PART.part_number LIKE ? AND PRODUCT_PART.active = 1) AND ((COMPANY.id = ? OR ? IS NULL) AND COMPANY.active = 1) "
             + "AND ((METAL.id = ? OR ? IS NULL) AND METAL.active = 1) AND ((SPECIFICATION.id = ? OR ? IS NULL) AND SPECIFICATION.active = 1) "
             + "ORDER BY COMPANY.name, PRODUCT_PART.part_number, PART_REVISION.rev";
     private static final String SQL_INSERT = 
             "INSERT INTO PART_REVISION (PRODUCT_PART_ID, BASE_METAL_ID, SPECIFICATION_ID, rev, rev_date, area, base_weight, final_weight, active) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE PART_REVISION SET PRODUCT_PART_ID = ?, BASE_METAL_ID = ?, SPECIFICATION_ID = ?, rev = ?, rev_date = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
+            "UPDATE PART_REVISION SET rev = ?, rev_date = ?, area = ?, base_weight = ?, final_weight = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM PART_REVISION WHERE id = ?";
     
@@ -118,10 +118,10 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     @Override
     public List<PartRevision> list() throws DAOException {
         List<PartRevision> partrevision_list = new ArrayList<>();
-        
+
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE, false);
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ACTIVE);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -136,6 +136,9 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     
     @Override
     public List<PartRevision> list(Company company, Metal metal, Specification specification, String pattern) throws IllegalArgumentException, DAOException {
+        if(company == null) company = new Company();
+        if(metal == null) metal = new Metal();
+        if(specification == null) specification = new Specification();
         
         List<PartRevision> partrevision_list = new ArrayList<>();
         
@@ -211,9 +214,6 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         }
         
         Object[] values = {
-            part_revision.getProduct_part().getId(),
-            part_revision.getMetal().getId(),
-            part_revision.getSpecification().getId(),
             part_revision.getRev(),
             DAOUtil.toSqlDate(part_revision.getRev_date()),
             part_revision.getArea(),

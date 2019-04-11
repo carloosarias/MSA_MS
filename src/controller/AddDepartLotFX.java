@@ -155,7 +155,7 @@ public class AddDepartLotFX implements Initializable {
     
     public void updateRev_combo(){
         try{
-            rev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection, true)));
+            rev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(null, null, null, partcombo_selection.getPart_number())));
         } catch(Exception e) {
             rev_combo.getItems().clear();
         }

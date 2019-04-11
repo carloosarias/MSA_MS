@@ -55,7 +55,7 @@ public class CreateScrapReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
+        partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         reportdate_picker.setValue(LocalDate.now());
         setDatePicker(reportdate_picker);
         
@@ -77,7 +77,7 @@ public class CreateScrapReportFX implements Initializable {
                 return;
             }
             revisioncombo_text = revision_combo.getEditor().textProperty().getValue();
-            revisioncombo_selection = msabase.getPartRevisionDAO().find(partnumbercombo_selection, revisioncombo_text);
+            revisioncombo_selection = msabase.getPartRevisionDAO().find(null, partnumbercombo_selection.getPart_number(), revisioncombo_text);
             if(revisioncombo_selection == null){
                 revision_combo.getEditor().selectAll();
             }
@@ -140,7 +140,7 @@ public class CreateScrapReportFX implements Initializable {
     
     public void updatePartrev_combo(){
         try{
-            revision_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partnumbercombo_selection, true)));
+            revision_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(null, null, null, partnumbercombo_selection.getPart_number())));
         } catch(Exception e) {
             revision_combo.getItems().clear();
         }

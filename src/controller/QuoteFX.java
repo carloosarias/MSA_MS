@@ -43,11 +43,14 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.Company;
 import model.CompanyAddress;
+import model.Metal;
 import model.PartRevision;
 import model.ProductPart;
 import model.Quote;
 import model.QuoteItem;
+import model.Specification;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.getFormattedDate;
@@ -131,7 +134,7 @@ public class QuoteFX implements Initializable {
         disable_button.disableProperty().bind(quote_tableview.getSelectionModel().selectedItemProperty().isNull()); 
         
         part_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
-            partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(newValue, true)));
+            partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(new Company(), new Metal(), new Specification(), newValue.getPart_number())));
             partrev_combo.getSelectionModel().selectFirst();
         });
         

@@ -19,14 +19,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import model.Employee;
 import model.Equipment;
 import model.EquipmentType;
 import model.PartRevision;
@@ -212,7 +206,7 @@ public class CreateProcessReportFX implements Initializable {
 
     public void updatePartrev_combo(){
         try{
-            revision_combo.getItems().setAll(msabase.getPartRevisionDAO().list(partnumbercombo_selection, true));
+            revision_combo.getItems().setAll(msabase.getPartRevisionDAO().list(null, null, null, partnumbercombo_selection.getPart_number()));
         } catch(Exception e) {
             revision_combo.getItems().clear();
         }

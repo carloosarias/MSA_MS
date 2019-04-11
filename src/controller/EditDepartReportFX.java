@@ -59,7 +59,7 @@ public class EditDepartReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().listActive(true)));
+        part_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         process_combo.setItems(FXCollections.observableArrayList(MainApp.process_list));
         
         lotnumber_field.setOnAction((ActionEvent) -> {
@@ -185,7 +185,7 @@ public class EditDepartReportFX implements Initializable {
     
     public void updatePartrev_combo(){
         try{
-            partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(partcombo_selection, true)));
+            partrev_combo.setItems(FXCollections.observableArrayList(msabase.getPartRevisionDAO().list(null, null, null, partcombo_selection.getPart_number())));
         } catch(Exception e) {
             partrev_combo.getItems().clear();
         }

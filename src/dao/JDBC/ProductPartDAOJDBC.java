@@ -103,7 +103,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE, false);
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ACTIVE);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){

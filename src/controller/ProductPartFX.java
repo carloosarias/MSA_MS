@@ -20,7 +20,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
@@ -133,16 +132,6 @@ public class ProductPartFX implements Initializable {
         disablepart_button.setOnAction((ActionEvent) -> {
             disableProductPart();
             updateProductPartTable();
-        });
-        
-        addrev_button.setOnAction((ActionEvent) -> {
-            int current_size = partrevision_tableview.getItems().size();
-            showAdd_stage();
-            updatePartRevisionTable();
-            if(current_size < partrevision_tableview.getItems().size()){
-                partrevision_tableview.scrollTo(AddPartRevisionFX.part_revision);
-                partrevision_tableview.getSelectionModel().select(AddPartRevisionFX.part_revision);
-            }
         });
         
         disablerev_button.setOnAction((ActionEvent) -> {

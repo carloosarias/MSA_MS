@@ -74,7 +74,7 @@ public class CreateQuoteFX implements Initializable {
         });
         
         part_combo.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
-            partrev_combo.getItems().setAll(msabase.getPartRevisionDAO().list(newValue, true));
+            partrev_combo.getItems().setAll(msabase.getPartRevisionDAO().list(null, null, null, newValue.getPart_number()));
         });
         
         save_button.setOnAction((ActionEvent) -> {

@@ -141,10 +141,10 @@ public class MainFX implements Initializable {
                         break;
                     case "Números de Parte":
                         partrevision_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
-                        productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
+                        //productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
                         specification_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/SpecificationFX.fxml")));
                         metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));
-                        root_tabpane.getTabs().setAll(productpart_tab, specification_tab, metal_tab);
+                        root_tabpane.getTabs().setAll(partrevision_tab, productpart_tab, specification_tab, metal_tab);
                         break;
                     case "Reciba":
                         incoming_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
