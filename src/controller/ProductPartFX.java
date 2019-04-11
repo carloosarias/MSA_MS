@@ -48,8 +48,16 @@ public class ProductPartFX implements Initializable {
 
     @FXML
     private GridPane root_gridpane;
-    private Tab revision_tab;
-    private TextField partnumber_field;
+    @FXML
+    private ComboBox<Company> company_combo1;
+    @FXML
+    private TextField part_field;
+    @FXML
+    private Button reset_button;
+    @FXML
+    private ComboBox<Company> company_combo2;
+    @FXML
+    private Button add_button;
     @FXML
     private TableView<ProductPart> productpart_tableview;
     @FXML
@@ -60,39 +68,12 @@ public class ProductPartFX implements Initializable {
     private TableColumn<ProductPart, String> partnumber_column;
     @FXML
     private TableColumn<ProductPart, String> description_column;
-    private ComboBox<Company> company_combo;
-    private Button addpart_button;
-    private Button disablepart_button;
-    private TableView<PartRevision> partrevision_tableview;
-    private TableColumn<PartRevision, String> partnumber_column1;
-    private TableColumn<PartRevision, String> rev_column;
-    private TableColumn<PartRevision, String> revdate_column;
-    private TableColumn<PartRevision, String> basemetal_column;
-    private TableColumn<PartRevision, String> finalprocess_column;
-    private TableColumn<PartRevision, String> specnumber_column;
-    private TableColumn<PartRevision, String> area_column;
-    private TableColumn<PartRevision, String> baseweight_column;
-    private TableColumn<PartRevision, String> finalweight_column;
-    private Button addrev_button;
-    private Button disablerev_button;
-    
-    private ProductPart product_part;
+    @FXML
+    private Button delete_button;
     
     private Stage add_stage = new Stage();
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
-    @FXML
-    private ComboBox<Company> company_combo1;
-    @FXML
-    private Button reset_button;
-    @FXML
-    private TextField part_field;
-    @FXML
-    private Button add_button;
-    @FXML
-    private ComboBox<Company> company_combo2;
-    @FXML
-    private Button delete_button;
     
     /**
      * Initializes the controller class.
@@ -101,59 +82,52 @@ public class ProductPartFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         df.setMaximumFractionDigits(6);
         setProductPartTable();
-        setPartRevisionTable();
-        updateProductPartTable();
+        //setPartRevisionTable();
+        //updateProductPartTable();
         
-        company_combo.getItems().setAll(msabase.getCompanyDAO().listClient(true));
+        company_combo1.getItems().setAll(msabase.getCompanyDAO().listClient(true));
+        company_combo2.setItems(company_combo1.getItems());
         
-        disablepart_button.disableProperty().bind(productpart_tableview.getSelectionModel().selectedItemProperty().isNull());
-        disablerev_button.disableProperty().bind(partrevision_tableview.getSelectionModel().selectedItemProperty().isNull());
-        revision_tab.disableProperty().bind(productpart_tableview.getSelectionModel().selectedItemProperty().isNull());
-        addpart_button.disableProperty().bind(company_combo.getSelectionModel().selectedItemProperty().isNull());
+        delete_button.disableProperty().bind(productpart_tableview.getSelectionModel().selectedItemProperty().isNull());
+        add_button.disableProperty().bind(company_combo2.getSelectionModel().selectedItemProperty().isNull());
         
         productpart_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ProductPart> observable, ProductPart oldValue, ProductPart newValue) -> {
-            updatePartRevisionTable();
+            //updatePartRevisionTable();
         });
         
-        partnumber_field.setOnAction((ActionEvent) -> {
-            updateProductPartTable();
+        //company_combo1.setOnAction((ActionEvent) -> {updateProductPartTable();});
+        part_field.setOnAction(company_combo1.getOnAction());
+        reset_button.setOnAction((ActionEvent) -> {
+            company_combo1.getSelectionModel().clearSelection();
+            part_field.clear();
+            //updateProductPartTable();
         });
         
-        addpart_button.setOnAction((ActionEvent) -> {
-            int current_size = productpart_tableview.getItems().size();
+        add_button.setOnAction((ActionEvent) -> {
             createProductPart();
-            updateProductPartTable();
-            if(current_size < productpart_tableview.getItems().size()){
-                productpart_tableview.scrollTo(product_part);
-                productpart_tableview.getSelectionModel().select(product_part);
-            }
-        });
-        
-        disablepart_button.setOnAction((ActionEvent) -> {
-            disableProductPart();
-            updateProductPartTable();
-        });
-        
-        disablerev_button.setOnAction((ActionEvent) -> {
-            disablePartRevision();
-            updatePartRevisionTable();
         });
     }
     
     public void createProductPart(){
-        product_part = new ProductPart();
-        product_part.setCompany(company_combo.getSelectionModel().getSelectedItem());
+        int current_size = productpart_tableview.getItems().size();
+        ProductPart product_part = new ProductPart();
+        //product_part.setCompany(company_combo.getSelectionModel().getSelectedItem());
         product_part.setPart_number("N/A");
         product_part.setDescription("N/A");
         product_part.setActive(true);
         msabase.getProductPartDAO().create(product_part);
+            //updateProductPartTable();
+            if(current_size < productpart_tableview.getItems().size()){
+                productpart_tableview.scrollTo(product_part);
+                productpart_tableview.getSelectionModel().select(product_part);
+            }
     }
  
     
     public void setProductPartTable(){
         counter_column.setCellValueFactory(c -> new SimpleStringProperty(Integer.toString(c.getTableView().getItems().indexOf(c.getValue())+1)));
         company_column.setCellValueFactory(new PropertyValueFactory<>("company"));
-        company_column.setCellFactory(ComboBoxTableCell.forTableColumn(company_combo.getItems()));
+        //company_column.setCellFactory(ComboBoxTableCell.forTableColumn(company_combo.getItems()));
         company_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, Company> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setCompany(t.getNewValue());
             msabase.getProductPartDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
@@ -175,7 +149,7 @@ public class ProductPartFX implements Initializable {
             productpart_tableview.refresh();
         });
     }
-    
+    /*
     public void setPartRevisionTable(){
         partnumber_column1.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         revdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getRev_date()))));
@@ -222,25 +196,25 @@ public class ProductPartFX implements Initializable {
         }catch(Exception e){
             partrevision_tableview.getItems().clear();
         }
-    }
-    
+    }*/
+    /*
     public void updateProductPartTable(){
         productpart_tableview.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list(company_combo1.getSelectionModel().getSelectedItem(), partnumber_field.getText())));
-    }
-    
+    }*/
+    /*
     public void disablePartRevision(){
         partrevision_tableview.getSelectionModel().getSelectedItem().setActive(false);
         msabase.getPartRevisionDAO().update(partrevision_tableview.getSelectionModel().getSelectedItem());
-    }
-    
+    }*/
+    /*
     public void disableProductPart(){
         productpart_tableview.getSelectionModel().getSelectedItem().setActive(false);
         msabase.getProductPartDAO().update(productpart_tableview.getSelectionModel().getSelectedItem());
-        /*for(PartRevision part_revision : msabase.getPartRevisionDAO().list(product_part, true)){
+        for(PartRevision part_revision : msabase.getPartRevisionDAO().list(product_part, true)){
             part_revision.setActive(false);
             msabase.getPartRevisionDAO().update(part_revision);
-        }*/
-    }
+        }
+    }*/
     public String getPartNumberValue(ProductPart product_part, String part_number){
         for(ProductPart item : productpart_tableview.getItems()){
             if(item.getPart_number().replace(" ", "").equalsIgnoreCase(part_number.replace(" ", ""))){
@@ -249,7 +223,7 @@ public class ProductPartFX implements Initializable {
         }
         return part_number.replace(" ", "").toUpperCase();
     }
-    
+    /*
     public String getRevValue(PartRevision part_revision, String rev){
         for(PartRevision item : partrevision_tableview.getItems()){
             if(item.getRev().replace(" ", "").equalsIgnoreCase(rev.replace(" ", "")) && item.getProduct_part().getPart_number().equalsIgnoreCase(part_revision.getProduct_part().getPart_number())){
@@ -281,7 +255,7 @@ public class ProductPartFX implements Initializable {
         }catch(Exception e){
             return revision.getFinal_weight();
         }
-    }
+    }*/
 
         public void showAdd_stage(){
         try {
