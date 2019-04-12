@@ -201,11 +201,11 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
      * @return The mapped CompanyAddress from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    private static CompanyAddress map(ResultSet resultSet) throws SQLException {
+    public static CompanyAddress map(ResultSet resultSet) throws SQLException {
         CompanyAddress address = new CompanyAddress();
-        address.setId(resultSet.getInt("id"));
-        address.setAddress(resultSet.getString("address"));
-        address.setActive(resultSet.getBoolean("active"));
+        address.setId(resultSet.getInt("COMPANY_ADDRESS.id"));
+        address.setAddress(resultSet.getString("COMPANY_ADDRESS.address"));
+        address.setActive(resultSet.getBoolean("COMPANY_ADDRESS.active"));
         return address;
     }
 }

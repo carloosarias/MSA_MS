@@ -13,13 +13,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import model.AnalysisReport;
 import model.AnalysisType;
-import model.Employee;
+
 import model.Tank;
 import static msa_ms.MainApp.timeFormat;
 
@@ -30,37 +31,25 @@ import static msa_ms.MainApp.timeFormat;
 public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.result, ANALYSIS_REPORT.ph, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
-            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, ANALYSIS_TYPE.min_range, ANALYSIS_TYPE.max_range, EMPLOYEE.first_name, EMPLOYEE.last_name "
-            + "FROM ANALYSIS_REPORT "
+            "SELECT * FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE id = ?";
-    private static final String SQL_FIND_TANK_BY_ID = 
-            "SELECT TANK_ID FROM ANALYSIS_REPORT WHERE id = ?";
-    private static final String SQL_FIND_ANALYSIS_TYPE_BY_ID = 
-            "SELECT ANALYSIS_TYPE_ID FROM ANALYSIS_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM ANALYSIS_REPORT WHERE id = ?";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.result, ANALYSIS_REPORT.ph, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
-            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, ANALYSIS_TYPE.min_range, ANALYSIS_TYPE.max_range, EMPLOYEE.first_name, EMPLOYEE.last_name "
-            + "FROM ANALYSIS_REPORT "
+            + "WHERE ANALYSIS_REPORT.id = ?";
+    private static final String SQL_LIST_ACTIVE = 
+            "SELECT * FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE ANALYSIS_REPORT.active = ? "
-            + "ORDER BY report_date, report_time";
-    private static final String SQL_LIST_ACTIVE_TANK_DATE_RANGE_ORDER_BY_ID = 
-            "SELECT ANALYSIS_REPORT.id, ANALYSIS_REPORT.report_date, ANALYSIS_REPORT.report_time, ANALYSIS_REPORT.applied_adjust, ANALYSIS_REPORT.result, ANALYSIS_REPORT.ph, ANALYSIS_REPORT.formula_timestamp, ANALYSIS_REPORT.active, "
-            + "TANK.tank_name, TANK.volume, ANALYSIS_TYPE.name, ANALYSIS_TYPE.optimal, ANALYSIS_TYPE.min_range, ANALYSIS_TYPE.max_range, EMPLOYEE.first_name, EMPLOYEE.last_name "
-            + "FROM ANALYSIS_REPORT "
+            + "WHERE ANALYSIS_REPORT.active = 1 "
+            + "ORDER BY ANALYSIS_REPORT.id DESC";
+    private static final String SQL_LIST_ACTIVE_FILTER = 
+            "SELECT * FROM ANALYSIS_REPORT "
             + "INNER JOIN TANK ON ANALYSIS_REPORT.TANK_ID = TANK.id "
             + "INNER JOIN ANALYSIS_TYPE ON ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ANALYSIS_TYPE.id "
             + "INNER JOIN EMPLOYEE ON ANALYSIS_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? = 0) AND (ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ? OR ? = 0) AND ((ANALYSIS_REPORT.report_date BETWEEN ? AND ?) OR ? = 0) AND ANALYSIS_REPORT.active = ? "
-            + "ORDER BY report_date, report_time";
+            + "WHERE (ANALYSIS_REPORT.TANK_ID = ? OR ? IS NULL) AND (ANALYSIS_REPORT.ANALYSIS_TYPE_ID = ? OR ? IS NULL) AND (ANALYSIS_REPORT.report_date BETWEEN ? AND ?) AND ANALYSIS_REPORT.active = 1 "
+            + "ORDER BY ANALYSIS_REPORT.id DESC";
     private static final String SQL_INSERT =
             "INSERT INTO ANALYSIS_REPORT (TANK_ID, ANALYSIS_TYPE_ID, EMPLOYEE_ID, report_date, report_time, applied_adjust, result, ph, formula_timestamp, active) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -114,99 +103,14 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
 
         return analysis_report;
     }
-    
-    @Override
-    public Tank findTank(AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        if(analysis_report.getId() == null) {
-            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null.");
-        }
-        
-        Tank tank = null;
-        
-        Object[] values = {
-            analysis_report.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_TANK_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                tank = daoFactory.getTankDAO().find(resultSet.getInt("TANK_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return tank;
-    }
 
     @Override
-    public AnalysisType findAnalysisType(AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        if(analysis_report.getId() == null) {
-            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null.");
-        }
-        
-        AnalysisType analysis_type = null;
-        
-        Object[] values = {
-            analysis_report.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_ANALYSIS_TYPE_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                analysis_type = daoFactory.getAnalysisTypeDAO().find(resultSet.getInt("ANALYSIS_TYPE_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return analysis_type;
-    }
-
-    @Override
-    public Employee findEmployee(AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        if(analysis_report.getId() == null) {
-            throw new IllegalArgumentException("AnalysisReport is not created yet, the AnalysisReport ID is null.");
-        }
-        
-        Employee employee = null;
-        
-        Object[] values = {
-            analysis_report.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                employee = daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return employee;
-    }
-
-    @Override
-    public List<AnalysisReport> list(boolean active) throws DAOException {
+    public List<AnalysisReport> list() throws DAOException {
         List<AnalysisReport> analysis_report = new ArrayList<>();
-        
-        Object[] values = {
-            active
-        };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ACTIVE);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -220,31 +124,25 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     }
 
     @Override
-    public List<AnalysisReport> list(Tank tank, AnalysisType type, Date start, Date end, boolean tank_filter, boolean analysistype_filter, boolean date_filter, boolean active) throws IllegalArgumentException, DAOException {
-        if(tank.getId() == null) {
-            throw new IllegalArgumentException("Tank is not created yet, the Tank ID is null.");
-        }
-        
-        if(type.getId() == null) {
-            throw new IllegalArgumentException("AnalysisType is not created yet, the AnalysisType ID is null.");
-        }
-        
+    public List<AnalysisReport> list(Tank tank, AnalysisType analysis_type, Date start_date, Date end_date) throws IllegalArgumentException, DAOException {
+        if(tank == null) tank = new Tank();
+        if(analysis_type == null) analysis_type = new AnalysisType();
+        if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
+        if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
         List<AnalysisReport> analysis_report = new ArrayList<>();
         
         Object[] values = {
             tank.getId(),
-            tank_filter,
-            type.getId(),
-            analysistype_filter,
-            start,
-            end,
-            date_filter,
-            active
+            tank.getId(),
+            analysis_type.getId(),
+            analysis_type.getId(),
+            start_date,
+            end_date
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_TANK_DATE_RANGE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_FILTER, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -258,27 +156,15 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
     }
 
     @Override
-    public void create(Tank tank, AnalysisType analysis_type, Employee employee, AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
-        if(tank.getId() == null){
-            throw new IllegalArgumentException("Container is not created yet, the Container ID is null.");
-        }
-        
-        if(analysis_type.getId() == null){
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }
-        
-        if (employee.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
-        }
-        
+    public void create(AnalysisReport analysis_report) throws IllegalArgumentException, DAOException {
         if(analysis_report.getId() != null){
             throw new IllegalArgumentException("ProcessReport is already created, the ProcessReport ID is null.");
         }
         
         Object[] values = {
-            tank.getId(),
-            analysis_type.getId(),
-            employee.getId(),
+            analysis_report.getTank().getId(),
+            analysis_report.getAnalysis_type().getId(),
+            analysis_report.getEmployee().getId(),
             analysis_report.getReport_date(),
             DAOUtil.toSqlTime(LocalTime.parse(analysis_report.getReport_time(), timeFormat)),
             analysis_report.getApplied_adjust(),
@@ -379,15 +265,9 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         analysis_report.setPh(resultSet.getDouble("ANALYSIS_REPORT.ph"));
         analysis_report.setFormula_timestamp(resultSet.getString("ANALYSIS_REPORT.formula_timestamp"));
         analysis_report.setActive(resultSet.getBoolean("ANALYSIS_REPORT.active"));
-        
-        //INNER JOINS
-        analysis_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
-        analysis_report.setTank_name(resultSet.getString("TANK.tank_name"));
-        analysis_report.setTank_volume(resultSet.getDouble("TANK.volume"));
-        analysis_report.setAnalysistype_name(resultSet.getString("ANALYSIS_TYPE.name"));
-        analysis_report.setAnalysistype_optimal(resultSet.getDouble("ANALYSIS_TYPE.optimal"));
-        analysis_report.setAnalysistype_minrange(resultSet.getDouble("ANALYSIS_TYPE.min_range"));
-        analysis_report.setAnalysistype_maxrange(resultSet.getDouble("ANALYSIS_TYPE.max_range"));
+        analysis_report.setTank(TankDAOJDBC.map(resultSet));
+        analysis_report.setAnalysis_type(AnalysisTypeDAOJDBC.map(resultSet));
+        analysis_report.setEmployee(EmployeeDAOJDBC.map(resultSet));
         
         return analysis_report;
     }

@@ -21,15 +21,9 @@ public class AnalysisReport {
     private double ph;
     private String formula_timestamp;
     private boolean active;
-    
-    //INNER JOINS
-    private String employee_name;
-    private String tank_name;
-    private double tank_volume;
-    private String analysistype_name;
-    private double analysistype_optimal;
-    private double analysistype_minrange;
-    private double analysistype_maxrange;
+    private Tank tank;
+    private AnalysisType analysis_type;
+    private Employee employee;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -81,56 +75,6 @@ public class AnalysisReport {
         this.ph = ph;
     }
     
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-    
-    
-    //INNER JOINS
-    public String getEmployee_name() {
-        return employee_name;
-    }
-
-    public void setEmployee_name(String employee_name) {
-        this.employee_name = employee_name;
-    }
-
-    public String getTank_name() {
-        return tank_name;
-    }
-
-    public void setTank_name(String tank_name) {
-        this.tank_name = tank_name;
-    }
-
-    public double getTank_volume() {
-        return tank_volume;
-    }
-
-    public void setTank_volume(double tank_volume) {
-        this.tank_volume = tank_volume;
-    }
-
-    public String getAnalysistype_name() {
-        return analysistype_name;
-    }
-
-    public void setAnalysistype_name(String analysistype_name) {
-        this.analysistype_name = analysistype_name;
-    }
-
-    public double getAnalysistype_optimal() {
-        return analysistype_optimal;
-    }
-
-    public void setAnalysistype_optimal(double analysistype_optimal) {
-        this.analysistype_optimal = analysistype_optimal;
-    }
-    
     public String getFormula_timestamp() {
         return formula_timestamp;
     }
@@ -139,10 +83,42 @@ public class AnalysisReport {
         this.formula_timestamp = formula_timestamp;
     }
     
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
+    public Tank getTank() {
+        return tank;
+    }
+
+    public void setTank(Tank tank) {
+        this.tank = tank;
+    }
+
+    public AnalysisType getAnalysis_type() {
+        return analysis_type;
+    }
+
+    public void setAnalysis_type(AnalysisType analysis_type) {
+        this.analysis_type = analysis_type;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+    
     //Estimated adjust = ((optimal - result) * volume) / 1000
     //KG
     public double getEstimated_adjust() {
-        return ((analysistype_optimal - result) * tank_volume)/1000;
+        return ((analysis_type.getOptimal() - result) * tank.getVolume())/1000;
     }
     // Object overrides ---------------------------------------------------------------------------
     
@@ -176,21 +152,5 @@ public class AnalysisReport {
     public String toString() {
         return String.format("%d",
                 id);
-    }
-
-    public double getAnalysistype_minrange() {
-        return analysistype_minrange;
-    }
-
-    public void setAnalysistype_minrange(double analysistype_minrange) {
-        this.analysistype_minrange = analysistype_minrange;
-    }
-
-    public double getAnalysistype_maxrange() {
-        return analysistype_maxrange;
-    }
-
-    public void setAnalysistype_maxrange(double analysistype_maxrange) {
-        this.analysistype_maxrange = analysistype_maxrange;
     }
 }

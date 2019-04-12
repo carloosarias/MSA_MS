@@ -93,6 +93,7 @@ public final class DAOUtil {
     }
     
     public static java.util.Date toUtilDate(LocalDate date){
+        if(date == null) return null;
         java.sql.Date sqlDate = java.sql.Date.valueOf(date); 
         java.util.Date utilDate = new java.util.Date();
         utilDate.setDate(sqlDate.getDate());

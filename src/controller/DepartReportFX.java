@@ -422,10 +422,10 @@ public class DepartReportFX implements Initializable {
             fields.get("page_number").setValue(page_offset+" / "+total_pages);
             fields.get("report_id").setValue(""+depart_report.getId());
             fields.get("report_date").setValue(depart_report.getReport_date().toString());
-            fields.get("employee_name").setValue(depart_report.getEmployee_name());
-            fields.get("client_name").setValue(depart_report.getCompany_name());
-            fields.get("client_address").setValue(depart_report.getCompany_address());
-            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report), true);
+            //fields.get("employee_name").setValue(depart_report.getEmployee_name());
+            //fields.get("client_name").setValue(depart_report.getCompany_name());
+            //fields.get("client_address").setValue(depart_report.getCompany_address());
+            /*List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report), true);
             if(company_contact.isEmpty()){
                 fields.get("contact_name").setValue("N/A");
                 fields.get("contact_email").setValue("N/A");
@@ -434,7 +434,7 @@ public class DepartReportFX implements Initializable {
                 fields.get("contact_name").setValue(company_contact.get(0).getName());
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());
                 fields.get("contact_phone").setValue(company_contact.get(0).getPhone_number());
-            }
+            }*/
             int current_row = 1;
             for(DepartLot item : departlot_list){
                 if(current_row > 41) break;
@@ -453,8 +453,8 @@ public class DepartReportFX implements Initializable {
                 current_row += offset;
             }
             
-            fields.get("total_quantity").setValue(""+getQuantity_total());
-            fields.get("total_boxquantity").setValue(""+getBoxquantity_total());
+            //fields.get("total_quantity").setValue(""+getQuantity_total());
+            //fields.get("total_boxquantity").setValue(""+getBoxquantity_total());
             
             form.flattenFields();
             pdf.close();
@@ -476,21 +476,5 @@ public class DepartReportFX implements Initializable {
         }catch(Exception e){
             return depart_lot.getBox_quantity();
         }
-    }
-    
-    public Integer getQuantity_total(){
-        int add = 0;
-        for(DepartLot depart_lot : departlot_tableview1.getItems()){
-            add += depart_lot.getQuantity();
-        }
-        return add;
-    }
-    
-    public Integer getBoxquantity_total(){
-        int add = 0;
-        for(DepartLot depart_lot : departlot_tableview1.getItems()){
-            add += depart_lot.getBox_quantity();
-        }
-        return add;
     }
 }

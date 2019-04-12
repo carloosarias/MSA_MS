@@ -328,24 +328,24 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
      * @return The mapped Employee from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    private static Employee map(ResultSet resultSet) throws SQLException {
+    public static Employee map(ResultSet resultSet) throws SQLException {
         Employee employee = new Employee();
-        employee.setId(resultSet.getInt("id"));
-        employee.setUser(resultSet.getString("user"));
-        employee.setFirst_name(resultSet.getString("first_name"));
-        employee.setLast_name(resultSet.getString("last_name"));
-        employee.setHire_date(resultSet.getDate("hire_date"));
+        employee.setId(resultSet.getInt("EMPLOYEE.id"));
+        employee.setUser(resultSet.getString("EMPLOYEE.user"));
+        employee.setFirst_name(resultSet.getString("EMPLOYEE.first_name"));
+        employee.setLast_name(resultSet.getString("EMPLOYEE.last_name"));
+        employee.setHire_date(resultSet.getDate("EMPLOYEE.hire_date"));
         
-        employee.setEntry_time(resultSet.getTime("entry_time").toLocalTime().format(timeFormat));
-        employee.setEnd_time(resultSet.getTime("end_time").toLocalTime().format(timeFormat));
-        employee.setBirth_date(resultSet.getDate("birth_date"));
-        employee.setCurp(resultSet.getString("curp"));
-        employee.setAddress(resultSet.getString("address"));
-        employee.setActive(resultSet.getBoolean("active"));
-        employee.setAdmin(resultSet.getBoolean("admin"));
-        employee.setEmail(resultSet.getString("email"));
-        employee.setPhone(resultSet.getString("phone"));
-        employee.setScheduleFromString(resultSet.getString("schedule"));
+        employee.setEntry_time(resultSet.getTime("EMPLOYEE.entry_time").toLocalTime().format(timeFormat));
+        employee.setEnd_time(resultSet.getTime("EMPLOYEE.end_time").toLocalTime().format(timeFormat));
+        employee.setBirth_date(resultSet.getDate("EMPLOYEE.birth_date"));
+        employee.setCurp(resultSet.getString("EMPLOYEE.curp"));
+        employee.setAddress(resultSet.getString("EMPLOYEE.address"));
+        employee.setActive(resultSet.getBoolean("EMPLOYEE.active"));
+        employee.setAdmin(resultSet.getBoolean("EMPLOYEE.admin"));
+        employee.setEmail(resultSet.getString("EMPLOYEE.email"));
+        employee.setPhone(resultSet.getString("EMPLOYEE.phone"));
+        employee.setScheduleFromString(resultSet.getString("EMPLOYEE.schedule"));
         
         return employee;
     }

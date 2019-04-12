@@ -16,11 +16,12 @@ public class DepartReport implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date report_date;
-    
-    //INNER JOINS
-    private String employee_name;
-    private String company_name;
-    private String company_address;
+    private boolean active;
+    private Integer total_qty;
+    private Integer total_box;
+    private Company company;
+    private CompanyAddress company_address;
+    private Employee employee;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -38,31 +39,54 @@ public class DepartReport implements Serializable {
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
     }
-    //INNER JOINS
-    public String getEmployee_name() {
-        return employee_name;
+    
+    public boolean isActive() {
+        return active;
     }
 
-    public void setEmployee_name(String employee_name) {
-        this.employee_name = employee_name;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
-    public String getCompany_name() {
-        return company_name;
+    public Integer getTotal_qty() {
+        return total_qty;
     }
 
-    public void setCompany_name(String company_name) {
-        this.company_name = company_name;
+    public void setTotal_qty(Integer total_qty) {
+        this.total_qty = total_qty;
     }
 
-    public String getCompany_address() {
+    public Integer getTotal_box() {
+        return total_box;
+    }
+
+    public void setTotal_box(Integer total_box) {
+        this.total_box = total_box;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public CompanyAddress getCompany_address() {
         return company_address;
     }
 
-    public void setCompany_address(String company_address) {
+    public void setCompany_address(CompanyAddress company_address) {
         this.company_address = company_address;
     }
-    
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**

@@ -38,6 +38,7 @@ import model.AnalysisReport;
 import model.AnalysisReportVar;
 import model.AnalysisType;
 import model.AnalysisTypeVar;
+import model.Employee;
 import model.Tank;
 import static msa_ms.MainApp.df;
 import static msa_ms.MainApp.getFormattedDate;
@@ -55,19 +56,21 @@ public class AnalysisReportFX implements Initializable {
     @FXML
     private GridPane root_gridpane;
     @FXML
-    private ComboBox<Tank> tank_combo;
+    private ComboBox<Tank> tank_combo1;
     @FXML
-    private CheckBox tank_filter;
-    @FXML
-    private ComboBox<AnalysisType> analysistype_combo;
-    @FXML
-    private CheckBox analysistype_filter;
+    private ComboBox<AnalysisType> analysistype_combo1;
     @FXML
     private DatePicker start_datepicker;
     @FXML
     private DatePicker end_datepicker;
     @FXML
-    private CheckBox date_filter;
+    private ComboBox<Tank> tank_combo2;
+    @FXML
+    private ComboBox<AnalysisType> analysistype_combo2;
+    @FXML
+    private Button reset_button;
+    @FXML
+    private Button save_button;
     @FXML
     private TableView<AnalysisReport> analysisreport_tableview;
     @FXML
@@ -77,13 +80,13 @@ public class AnalysisReportFX implements Initializable {
     @FXML
     private TableColumn<AnalysisReport, String> time_column;
     @FXML
-    private TableColumn<AnalysisReport, String> employee_column;
+    private TableColumn<AnalysisReport, Employee> employee_column;
     @FXML
-    private TableColumn<AnalysisReport, String> tank_column;
+    private TableColumn<AnalysisReport, Tank> tank_column;
     @FXML
     private TableColumn<AnalysisReport, String> volume_column;
     @FXML
-    private TableColumn<AnalysisReport, String> type_column;
+    private TableColumn<AnalysisReport, AnalysisType> type_column;
     @FXML
     private TableColumn<AnalysisReport, String> optimal_column;
     @FXML
@@ -93,9 +96,7 @@ public class AnalysisReportFX implements Initializable {
     @FXML
     private TableColumn<AnalysisReport, String> appliedadjust_column;
     @FXML
-    private Button add_button;
-    @FXML
-    private Button disable_button;
+    private Button delete_button;
     @FXML
     private Tab details_tab;
     @FXML
@@ -134,17 +135,10 @@ public class AnalysisReportFX implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         df.setMaximumFractionDigits(6);
-        tank_combo.getItems().setAll(msabase.getTankDAO().list(true));
-        tank_combo.getSelectionModel().selectFirst();
-        analysistype_combo.getItems().setAll(msabase.getAnalysisTypeDAO().list(true));
-        analysistype_combo.getSelectionModel().selectFirst();
-        start_datepicker.setValue(LocalDate.now());
-        end_datepicker.setValue(LocalDate.now().plusMonths(1));
-        setDatePicker(start_datepicker);
-        setDatePicker(end_datepicker);
+        updateComboItems();
         
         details_tab.disableProperty().bind(analysisreport_tableview.getSelectionModel().selectedItemProperty().isNull());
-        disable_button.disableProperty().bind(analysisreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        delete_button.disableProperty().bind(analysisreport_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         setAnalysisReportTable();
         setAnalysisReportVarTable();
@@ -155,7 +149,7 @@ public class AnalysisReportFX implements Initializable {
                 analysisreport_tableview.refresh();
         });
         
-        add_button.setOnAction((ActionEvent) -> {
+        save_button.setOnAction((ActionEvent) -> {
             int current_size = analysisreport_tableview.getItems().size();
             showAdd_stage();
             updateAnalysisReportTable();
@@ -165,28 +159,26 @@ public class AnalysisReportFX implements Initializable {
             }
         });
         
-        disable_button.setOnAction((ActionEvent) -> {
+        delete_button.setOnAction((ActionEvent) -> {
             analysisreport_tableview.getSelectionModel().getSelectedItem().setActive(false);
             msabase.getAnalysisReportDAO().update(analysisreport_tableview.getSelectionModel().getSelectedItem());
             updateAnalysisReportTable();
         });
+
+        tank_combo1.setOnAction((ActionEvent) -> {updateAnalysisReportTable();});
+        analysistype_combo1.setOnAction(tank_combo1.getOnAction());
+        start_datepicker.setOnAction(tank_combo1.getOnAction());
+        end_datepicker.setOnAction(tank_combo1.getOnAction());
         
-        //Update AnalysisReport table
-        tank_combo.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();});
-        analysistype_combo.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();});
-        start_datepicker.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();});
-        end_datepicker.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();});
-        analysistype_filter.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();});
-        date_filter.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();});
-        tank_filter.setOnAction((ActionEvent) -> {
-            updateAnalysisReportTable();});
-        
+    }
+    
+    public void updateComboItems(){
+        tank_combo1.getItems().setAll(msabase.getTankDAO().list(true));
+        tank_combo2.itemsProperty().bind(tank_combo1.itemsProperty());
+        analysistype_combo1.getItems().setAll(msabase.getAnalysisTypeDAO().list(true));
+        analysistype_combo2.itemsProperty().bind(analysistype_combo1.itemsProperty());
+        setDatePicker(start_datepicker);
+        setDatePicker(end_datepicker);
     }
     
     public void showAdd_stage(){
@@ -237,11 +229,11 @@ public class AnalysisReportFX implements Initializable {
             result_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getResult()));
             estimatedadjustformula_label.setText("((Óptimo - Resultado) * Volumen) / 1000");
             estimatedadjust_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getEstimated_adjust()));
-            tank_label.setText(analysisreport_tableview.getSelectionModel().getSelectedItem().getTank_name());
-            volume_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getTank_volume())+" L");
-            analysistype_label.setText(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysistype_name());
-            optimal_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysistype_optimal())+" G/L");
-            range_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysistype_minrange())+" G/L - "+df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysistype_maxrange())+" G/L");
+            tank_label.setText(analysisreport_tableview.getSelectionModel().getSelectedItem().getTank().getTank_name());
+            volume_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getTank().getVolume())+" L");
+            analysistype_label.setText(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysis_type().getName());
+            optimal_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysis_type().getOptimal())+" G/L");
+            range_label.setText(df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysis_type().getMin_range())+" G/L - "+df.format(analysisreport_tableview.getSelectionModel().getSelectedItem().getAnalysis_type().getMax_range())+" G/L");
         }catch(Exception e){
             analysisreportvar_tableview.getItems().clear();
         }
@@ -261,7 +253,7 @@ public class AnalysisReportFX implements Initializable {
     
     public void updateAnalysisReportTable(){
         try{
-            analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(start_datepicker.getValue().minusDays(1)), DAOUtil.toUtilDate(end_datepicker.getValue().minusDays(1)), tank_filter.isSelected(), analysistype_filter.isSelected(), date_filter.isSelected(), true));
+            analysisreport_tableview.getItems().setAll(msabase.getAnalysisReportDAO().list(tank_combo1.getSelectionModel().getSelectedItem(), analysistype_combo1.getSelectionModel().getSelectedItem(), DAOUtil.toUtilDate(start_datepicker.getValue()), DAOUtil.toUtilDate(end_datepicker.getValue())));
         }catch(Exception e){
             analysisreport_tableview.getItems().clear();
         }
@@ -271,11 +263,11 @@ public class AnalysisReportFX implements Initializable {
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         date_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         time_column.setCellValueFactory(new PropertyValueFactory<>("report_time"));
-        employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
-        tank_column.setCellValueFactory(new PropertyValueFactory<>("tank_name"));
-        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getTank_volume())+" L"));
-        type_column.setCellValueFactory(new PropertyValueFactory<>("analysistype_name"));
-        optimal_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getAnalysistype_optimal())+" G/L"));
+        employee_column.setCellValueFactory(new PropertyValueFactory<>("employee"));
+        tank_column.setCellValueFactory(new PropertyValueFactory<>("tank"));
+        volume_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getTank().getVolume())+" L"));
+        type_column.setCellValueFactory(new PropertyValueFactory<>("analysis_type"));
+        optimal_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getAnalysis_type().getOptimal())+" G/L"));
         estimatedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getEstimated_adjust())+ " KG"));
         appliedadjust_column.setCellValueFactory(c -> new SimpleStringProperty(df.format(c.getValue().getApplied_adjust())+" KG"));
         appliedadjust_column.setCellFactory(TextFieldTableCell.forTableColumn());

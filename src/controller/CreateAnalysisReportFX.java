@@ -104,7 +104,10 @@ public class CreateAnalysisReportFX implements Initializable {
         analysis_report.setResult(0.0);
         analysis_report.setFormula_timestamp(analysistype_combo.getSelectionModel().getSelectedItem().getFormula());
         analysis_report.setActive(true);
-        msabase.getAnalysisReportDAO().create(tank_combo.getSelectionModel().getSelectedItem(), analysistype_combo.getSelectionModel().getSelectedItem(), MainApp.current_employee, analysis_report);
+        analysis_report.setTank(tank_combo.getSelectionModel().getSelectedItem());
+        analysis_report.setAnalysis_type(analysistype_combo.getSelectionModel().getSelectedItem());
+        analysis_report.setEmployee(MainApp.current_employee);
+        msabase.getAnalysisReportDAO().create(analysis_report);
         createAnalysisReportVar();
     }
     

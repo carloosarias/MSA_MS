@@ -44,9 +44,6 @@ import model.Company;
 import model.CompanyAddress;
 import model.DepartLot;
 import model.DepartReport;
-import model.Employee;
-import model.PartRevision;
-import model.ProductPart;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.setDatePicker;
 
@@ -200,7 +197,7 @@ public class CreateDepartReportFX implements Initializable {
     public void saveDepartReport(){
         DepartReport depart_report = new DepartReport();
         depart_report.setReport_date(DAOUtil.toUtilDate(reportdate_picker.getValue()));
-        msabase.getDepartReportDAO().create(MainApp.current_employee, company_combo.getSelectionModel().getSelectedItem(), address_combo.getSelectionModel().getSelectedItem(), depart_report);
+        //msabase.getDepartReportDAO().create(MainApp.current_employee, company_combo.getSelectionModel().getSelectedItem(), address_combo.getSelectionModel().getSelectedItem(), depart_report);
         saveDepartLots(depart_report);
     }
     

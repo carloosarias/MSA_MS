@@ -11,6 +11,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,6 +23,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import model.Company;
+import model.DepartReport;
 import model.Metal;
 import model.PartRevision;
 import model.ProductPart;
@@ -92,7 +94,7 @@ public class PartRevisionFX implements Initializable {
         df.setMaximumFractionDigits(6);
         setPartRevisionTable();
         updatePartRevisionTable();
-        setComboItems();
+        updateComboItems();
         
         delete_button.disableProperty().bind(partrevision_tableview.getSelectionModel().selectedItemProperty().isNull());
         
@@ -160,15 +162,15 @@ public class PartRevisionFX implements Initializable {
         }
     }
     
-    public void setComboItems(){
+    public void updateComboItems(){
         company_combo1.getItems().setAll(msabase.getCompanyDAO().listClient(true));
         metal_combo1.getItems().setAll(msabase.getMetalDAO().list(true));
         spec_combo1.getItems().setAll(msabase.getSpecificationDAO().list(true));
         part_combo2.getItems().setAll(msabase.getProductPartDAO().list());
 
-        company_combo2.setItems(company_combo1.getItems());
-        metal_combo2.setItems(metal_combo1.getItems());
-        spec_combo2.setItems(spec_combo1.getItems());
+        company_combo2.itemsProperty().bind(company_combo1.itemsProperty());
+        metal_combo2.itemsProperty().bind(metal_combo1.itemsProperty());
+        spec_combo2.itemsProperty().bind(spec_combo1.itemsProperty());
     }
     
     public void setPartRevisionTable(){

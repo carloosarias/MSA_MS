@@ -13,12 +13,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import model.Company;
-import model.CompanyAddress;
 import model.DepartReport;
-import model.Employee;
 
 /**
  *
@@ -28,41 +28,38 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT DEPART_REPORT.id, DEPART_REPORT.report_date, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name, COMPANY_ADDRESS.address "
-            + "FROM DEPART_REPORT "
-            + "INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            + "WHERE DEPART_REPORT.id = ?";
-    private static final String SQL_FIND_COMPANY_BY_ID = 
-            "SELECT COMPANY_ID FROM DEPART_REPORT WHERE id = ?";
-    private static final String SQL_FIND_COMPANY_ADDRESS_BY_ID = 
-            "SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT WHERE id = ?";
-    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM DEPART_REPORT WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT DEPART_REPORT.id, DEPART_REPORT.report_date, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name, COMPANY_ADDRESS.address "
-            + "FROM DEPART_REPORT "
-            + "INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            + "ORDER BY DEPART_REPORT.id";
-    private static final String SQL_LIST_OF_COMPANY_ORDER_BY_ID = 
-            "SELECT DEPART_REPORT.id, DEPART_REPORT.report_date, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, COMPANY.name, COMPANY_ADDRESS.address "
-            + "FROM DEPART_REPORT "
-            + "INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            + "WHERE DEPART_REPORT.COMPANY_ID = ? "
-            + "ORDER BY DEPART_REPORT.id";
+            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
+            +"FROM DEPART_REPORT "
+            +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            +"INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
+            +"INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            +"WHERE DEPART_REPORT.id = ? AND DEPART_LOT.rejected = 0 ";
+    private static final String SQL_LIST_ACTIVE = 
+            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
+            +"FROM DEPART_REPORT "
+            +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            +"INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
+            +"INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            +"WHERE DEPART_REPORT.active = 1 AND DEPART_LOT.rejected = 0 "
+            +"GROUP BY DEPART_REPORT.id "
+            +"ORDER BY DEPART_REPORT.id DESC";
+    private static final String SQL_LIST_ACTIVE_FILTER = 
+            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
+            +"FROM DEPART_REPORT "
+            +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
+            +"INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
+            +"INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            +"WHERE (COMPANY.id = ? OR ? IS NULL) AND (DEPART_REPORT.report_date BETWEEN ? AND ?) AND DEPART_REPORT.active = 1 AND DEPART_LOT.rejected = 0 "
+            +"GROUP BY DEPART_REPORT.id "
+            +"ORDER BY DEPART_REPORT.id DESC";
     private static final String SQL_INSERT =
-            "INSERT INTO DEPART_REPORT (COMPANY_ID, COMPANY_ADDRESS_ID, EMPLOYEE_ID, report_date) "
-            + "VALUES (?, ?, ?, ?)";
+            "INSERT INTO DEPART_REPORT (COMPANY_ID, COMPANY_ADDRESS_ID, EMPLOYEE_ID, report_date, active) "
+            + "VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE DEPART_REPORT SET report_date = ? WHERE id = ?";
+            "UPDATE DEPART_REPORT SET report_date = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE =
             "DELETE FROM DEPART_REPORT WHERE id = ?";
     // Vars ---------------------------------------------------------------------------------------
@@ -111,86 +108,6 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
 
         return depart_report;
     }
-    
-    @Override
-    public Company findCompany(DepartReport depart_report) throws IllegalArgumentException, DAOException {
-        if(depart_report.getId() == null) {
-            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
-        }
-        
-        Company company = null;
-        
-        Object[] values = {
-            depart_report.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                company = daoFactory.getCompanyDAO().find(resultSet.getInt("COMPANY_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return company;
-    }
-    @Override
-    public CompanyAddress findCompanyAddress(DepartReport depart_report) throws IllegalArgumentException, DAOException {
-        if(depart_report.getId() == null) {
-            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
-        }
-        
-        CompanyAddress address = null;
-        
-        Object[] values = {
-            depart_report.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_COMPANY_ADDRESS_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                address = daoFactory.getCompanyAddressDAO().find(resultSet.getInt("COMPANY_ADDRESS_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return address;
-    }
-    
-    @Override
-    public Employee findEmployee(DepartReport depart_report) throws IllegalArgumentException, DAOException {
-        if(depart_report.getId() == null) {
-            throw new IllegalArgumentException("DepartReport is not created yet, the DepartReport ID is null.");
-        }
-        
-        Employee employee = null;
-        
-        Object[] values = {
-            depart_report.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                employee = daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return employee;
-    }
 
     @Override
     public List<DepartReport> list() throws DAOException {
@@ -198,7 +115,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
 
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ACTIVE);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -212,20 +129,23 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     }
 
     @Override
-    public List<DepartReport> listCompany(Company company) throws IllegalArgumentException, DAOException {
-        if(company.getId() == null) {
-            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
-        }    
+    public List<DepartReport> list(Company company, Date start_date, Date end_date) throws IllegalArgumentException, DAOException {
+        if(company == null) company = new Company();
+        if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
+        if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
         
         List<DepartReport> depart_reports = new ArrayList<>();
         
         Object[] values = {
             company.getId(),
+            company.getId(),
+            start_date,
+            end_date
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_COMPANY_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_FILTER, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -239,24 +159,18 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     }
 
     @Override
-    public void create(Employee employee, Company company, CompanyAddress address, DepartReport depart_Report) throws IllegalArgumentException, DAOException {
-        if (company.getId() == null) {
-            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
-        }
+    public void create(DepartReport depart_report) throws IllegalArgumentException, DAOException {
         
-        if(employee.getId() == null){
-            throw new IllegalArgumentException("Employee is not created yet, the Company ID is null.");
-        }
-        
-        if(depart_Report.getId() != null){
+        if(depart_report.getId() != null){
             throw new IllegalArgumentException("DepartReport is already created, the DepartReport ID is not null.");
         }
         
         Object[] values = {
-            company.getId(),
-            address.getId(),
-            employee.getId(),
-            DAOUtil.toSqlDate(depart_Report.getReport_date()),
+            depart_report.getCompany().getId(),
+            depart_report.getCompany_address().getId(),
+            depart_report.getEmployee().getId(),
+            DAOUtil.toSqlDate(depart_report.getReport_date()),
+            depart_report.isActive()
         };
         
         try(
@@ -270,7 +184,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    depart_Report.setId(generatedKeys.getInt(1));
+                    depart_report.setId(generatedKeys.getInt(1));
                 } else {
                     throw new DAOException("Creating DepartReport failed, no generated key obtained.");
                 }
@@ -336,13 +250,15 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
      */
     public static DepartReport map(ResultSet resultSet) throws SQLException{
         DepartReport depart_report = new DepartReport();
-        depart_report.setId(resultSet.getInt("id"));
-        depart_report.setReport_date(resultSet.getDate("report_date"));
+        depart_report.setId(resultSet.getInt("DEPART_REPORT.id"));
+        depart_report.setReport_date(resultSet.getDate("DEPART_REPORT.report_date"));
+        depart_report.setActive(resultSet.getBoolean("DEPART_REPORT.active"));
+        depart_report.setTotal_qty(resultSet.getInt("total_qty"));
+        depart_report.setTotal_box(resultSet.getInt("total_box"));
+        depart_report.setCompany(CompanyDAOJDBC.map(resultSet));
+        depart_report.setCompany_address(CompanyAddressDAOJDBC.map(resultSet));
+        depart_report.setEmployee(EmployeeDAOJDBC.map(resultSet));
         
-        //INNER JOINS
-        depart_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name")+" "+resultSet.getString("EMPLOYEE.last_name"));
-        depart_report.setCompany_name(resultSet.getString("COMPANY.name"));
-        depart_report.setCompany_address(resultSet.getString("COMPANY_ADDRESS.address"));
         return depart_report;
     }
 }
