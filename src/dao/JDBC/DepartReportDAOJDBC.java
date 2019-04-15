@@ -100,7 +100,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                depart_report = map(resultSet);
+                depart_report = map("DEPART_REPORT.", "EMPLOYEE.", "COMPANY.", "COMPANY_ADDRESS.", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -119,7 +119,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                depart_reports.add(map(resultSet));
+                depart_reports.add(map("DEPART_REPORT.", "EMPLOYEE.", "COMPANY.", "COMPANY_ADDRESS.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -149,7 +149,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                depart_reports.add(map(resultSet));
+                depart_reports.add(map("DEPART_REPORT.", "EMPLOYEE.", "COMPANY.", "COMPANY_ADDRESS.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -248,16 +248,16 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
      * @return The mapped DepartReport from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static DepartReport map(ResultSet resultSet) throws SQLException{
+    public static DepartReport map(String departreport_label, String employee_label, String company_label, String companyaddress_label, ResultSet resultSet) throws SQLException{
         DepartReport depart_report = new DepartReport();
-        depart_report.setId(resultSet.getInt("DEPART_REPORT.id"));
-        depart_report.setReport_date(resultSet.getDate("DEPART_REPORT.report_date"));
-        depart_report.setActive(resultSet.getBoolean("DEPART_REPORT.active"));
-        depart_report.setTotal_qty(resultSet.getInt("total_qty"));
-        depart_report.setTotal_box(resultSet.getInt("total_box"));
-        depart_report.setCompany(CompanyDAOJDBC.map(resultSet));
-        depart_report.setCompany_address(CompanyAddressDAOJDBC.map(resultSet));
-        depart_report.setEmployee(EmployeeDAOJDBC.map(resultSet));
+        depart_report.setId(resultSet.getInt(departreport_label+"id"));
+        depart_report.setReport_date(resultSet.getDate(departreport_label+"report_date"));
+        depart_report.setActive(resultSet.getBoolean(departreport_label+"active"));
+        depart_report.setTotal_qty(resultSet.getInt(departreport_label+"total_qty"));
+        depart_report.setTotal_box(resultSet.getInt(departreport_label+"total_box"));
+        depart_report.setEmployee(EmployeeDAOJDBC.map(employee_label, resultSet));
+        depart_report.setCompany(CompanyDAOJDBC.map(company_label, resultSet));
+        depart_report.setCompany_address(CompanyAddressDAOJDBC.map(companyaddress_label, resultSet));
         
         return depart_report;
     }

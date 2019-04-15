@@ -24,9 +24,9 @@ import model.CompanyAddress;
 public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, address, active FROM COMPANY_ADDRESS WHERE id = ?";
+            "SELECT * FROM COMPANY_ADDRESS WHERE id = ?";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, address, active FROM COMPANY_ADDRESS WHERE COMPANY_ID = ? AND active = ? ORDER BY id";
+            "SELECT * FROM COMPANY_ADDRESS WHERE COMPANY_ID = ? AND active = ? ORDER BY id";
     private static final String SQL_INSERT = 
             "INSERT INTO COMPANY_ADDRESS (COMPANY_ID, address, active) "
             +"VALUES (?, ?, ?)";
@@ -73,7 +73,7 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                address = map(resultSet);
+                address = map("", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -101,7 +101,7 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                companyAddresses.add(map(resultSet));
+                companyAddresses.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -201,11 +201,11 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
      * @return The mapped CompanyAddress from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static CompanyAddress map(ResultSet resultSet) throws SQLException {
+    public static CompanyAddress map(String companyaddress_label, ResultSet resultSet) throws SQLException {
         CompanyAddress address = new CompanyAddress();
-        address.setId(resultSet.getInt("COMPANY_ADDRESS.id"));
-        address.setAddress(resultSet.getString("COMPANY_ADDRESS.address"));
-        address.setActive(resultSet.getBoolean("COMPANY_ADDRESS.active"));
+        address.setId(resultSet.getInt(companyaddress_label+"id"));
+        address.setAddress(resultSet.getString(companyaddress_label+"address"));
+        address.setActive(resultSet.getBoolean(companyaddress_label+"active"));
         return address;
     }
 }

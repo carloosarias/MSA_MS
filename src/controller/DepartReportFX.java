@@ -259,77 +259,7 @@ public class DepartReportFX implements Initializable {
     
     public void updateDepartLotTable(){
         departlot_tableview3.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreport_tableview.getSelectionModel().getSelectedItem())));
-        departlot_tableview2.setItems(FXCollections.observableArrayList(mergeByLot_number(departlot_tableview3.getItems())));
-        departlot_tableview1.setItems(FXCollections.observableArrayList(mergeByPart_number(departlot_tableview3.getItems())));
     }
-    
-    public List<DepartLot> mergeByLot_number(List<DepartLot> unfiltered_list){
-        ArrayList<DepartLot> filtered_list = new ArrayList();
-        ArrayList<String> string_list = new ArrayList();
-        String string_item = "";
-        
-        for(DepartLot unfiltered_item : unfiltered_list){
-            string_item = (unfiltered_item.getPartrevision_id()+unfiltered_item.getProcess()+unfiltered_item.getPo_number()+unfiltered_item.getLine_number()+unfiltered_item.getStatus()+unfiltered_item.getComments()).toUpperCase();
-            if(string_list.contains(string_item)){
-                filtered_list.get(string_list.indexOf(string_item)).setQuantity(filtered_list.get(string_list.indexOf(string_item)).getQuantity() + unfiltered_item.getQuantity());
-                filtered_list.get(string_list.indexOf(string_item)).setBox_quantity(filtered_list.get(string_list.indexOf(string_item)).getBox_quantity() + unfiltered_item.getBox_quantity());
-                if(!(filtered_list.get(string_list.indexOf(string_item)).getLot_number().contains(unfiltered_item.getLot_number()))){
-                    filtered_list.get(string_list.indexOf(string_item)).setLot_number(filtered_list.get(string_list.indexOf(string_item)).getLot_number()+","+ unfiltered_item.getLot_number());
-                }
-            }else{
-                string_list.add(string_item);
-                DepartLot filtered_item = new DepartLot();
-                filtered_item.setReport_date(unfiltered_item.getReport_date());
-                filtered_item.setDepartreport_id(unfiltered_item.getDepartreport_id());
-                filtered_item.setPartrevision_id(unfiltered_item.getPartrevision_id());
-                filtered_item.setPart_number(unfiltered_item.getPart_number());
-                filtered_item.setPart_revision(unfiltered_item.getPart_revision());
-                filtered_item.setLot_number(unfiltered_item.getLot_number());
-                filtered_item.setProcess(unfiltered_item.getProcess());
-                filtered_item.setPo_number(unfiltered_item.getPo_number());
-                filtered_item.setLine_number(unfiltered_item.getLine_number());
-                filtered_item.setQuantity(unfiltered_item.getQuantity());
-                filtered_item.setBox_quantity(unfiltered_item.getBox_quantity());
-                filtered_item.setPending(unfiltered_item.isPending());
-                filtered_item.setRejected(unfiltered_item.isPending());
-                filtered_item.setComments(unfiltered_item.getComments());
-                filtered_list.add(filtered_item);
-            }
-        }
-        
-        filtered_list.sort((o1, o2) -> o1.getPart_number().compareTo(o2.getPart_number()));
-        return filtered_list;
-    }
-    
-    public List<DepartLot> mergeByPart_number(List<DepartLot> unfilteredList){
-        //find all part_number
-        ArrayList<String> partnumber = new ArrayList();
-        ArrayList<DepartLot> mergedList = new ArrayList();
-        for(DepartLot depart_lot : unfilteredList){
-            if(partnumber.contains(depart_lot.getPart_number())){
-                mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).setQuantity(mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).getQuantity() + depart_lot.getQuantity());
-                mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).setBox_quantity(mergedList.get(partnumber.indexOf(depart_lot.getPart_number())).getBox_quantity() + depart_lot.getBox_quantity());
-            }else{
-                partnumber.add(depart_lot.getPart_number());
-                DepartLot item = new DepartLot();
-                item.setReport_date(depart_lot.getReport_date());
-                item.setPart_revision("N/A");
-                item.setDepartreport_id(depart_lot.getDepartreport_id());
-                item.setPart_number(depart_lot.getPart_number());
-                item.setLot_number("N/A");
-                item.setProcess("N/A");
-                item.setPo_number("N/A");
-                item.setLine_number("N/A");
-                item.setQuantity(depart_lot.getQuantity());
-                item.setBox_quantity(depart_lot.getBox_quantity());
-                item.setComments("N/A");
-                mergedList.add(partnumber.indexOf(depart_lot.getPart_number()),item);
-            }
-        }
-        
-        return mergedList;
-    }
-    
     public void setDepartReportTable(){
         reportid_column.setCellValueFactory(new PropertyValueFactory<>("id"));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
@@ -439,7 +369,7 @@ public class DepartReportFX implements Initializable {
             for(DepartLot item : departlot_list){
                 if(current_row > 41) break;
                 int offset = 0;
-                fields.get("part_number"+current_row).setValue(item.getPart_number());
+                //fields.get("part_number"+current_row).setValue(item.getPart_number());
                 fields.get("process"+current_row).setValue(item.getProcess());
                 fields.get("po_number"+current_row).setValue(item.getPo_number());
                 fields.get("line_number"+current_row).setValue(item.getLine_number());

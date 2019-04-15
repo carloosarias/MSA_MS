@@ -27,13 +27,13 @@ import static msa_ms.MainApp.timeFormat;
 public class EmployeeDAOJDBC implements EmployeeDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE WHERE id = ?";
+            "SELECT * FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_FIND_BY_USER_AND_PASSWORD =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
+            "SELECT * FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
     private static final String SQL_LIST_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE ORDER BY id";
+            "SELECT * FROM EMPLOYEE ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID =
-            "SELECT id, user, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule FROM EMPLOYEE WHERE active = ? ORDER BY id";
+            "SELECT * FROM EMPLOYEE WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT =
             "INSERT INTO EMPLOYEE (user, password, first_name, last_name, hire_date, entry_time, end_time, birth_date, curp, address, active, admin, email, phone, schedule) "
             +"VALUES (?, MD5(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -91,7 +91,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                employee = map(resultSet);
+                employee = map("", resultSet);
             }
             connection.close();
         } catch (SQLException e) {
@@ -111,7 +111,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                employees.add(map(resultSet));
+                employees.add(map("", resultSet));
             }
             connection.close();
         } catch(SQLException e){
@@ -135,7 +135,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                employees.add(map(resultSet));
+                employees.add(map("", resultSet));
             }
             connection.close();
         } catch(SQLException e){
@@ -324,28 +324,29 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
 
     /**
      * Map the current row of the given ResultSet to an Employee.
+     * @param employee_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an Employee.
      * @return The mapped Employee from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static Employee map(ResultSet resultSet) throws SQLException {
+    public static Employee map(String employee_label, ResultSet resultSet) throws SQLException {
         Employee employee = new Employee();
-        employee.setId(resultSet.getInt("EMPLOYEE.id"));
-        employee.setUser(resultSet.getString("EMPLOYEE.user"));
-        employee.setFirst_name(resultSet.getString("EMPLOYEE.first_name"));
-        employee.setLast_name(resultSet.getString("EMPLOYEE.last_name"));
-        employee.setHire_date(resultSet.getDate("EMPLOYEE.hire_date"));
+        employee.setId(resultSet.getInt(employee_label+"id"));
+        employee.setUser(resultSet.getString(employee_label+"user"));
+        employee.setFirst_name(resultSet.getString(employee_label+"first_name"));
+        employee.setLast_name(resultSet.getString(employee_label+"last_name"));
+        employee.setHire_date(resultSet.getDate(employee_label+"hire_date"));
         
-        employee.setEntry_time(resultSet.getTime("EMPLOYEE.entry_time").toLocalTime().format(timeFormat));
-        employee.setEnd_time(resultSet.getTime("EMPLOYEE.end_time").toLocalTime().format(timeFormat));
-        employee.setBirth_date(resultSet.getDate("EMPLOYEE.birth_date"));
-        employee.setCurp(resultSet.getString("EMPLOYEE.curp"));
-        employee.setAddress(resultSet.getString("EMPLOYEE.address"));
-        employee.setActive(resultSet.getBoolean("EMPLOYEE.active"));
-        employee.setAdmin(resultSet.getBoolean("EMPLOYEE.admin"));
-        employee.setEmail(resultSet.getString("EMPLOYEE.email"));
-        employee.setPhone(resultSet.getString("EMPLOYEE.phone"));
-        employee.setScheduleFromString(resultSet.getString("EMPLOYEE.schedule"));
+        employee.setEntry_time(resultSet.getTime(employee_label+"entry_time").toLocalTime().format(timeFormat));
+        employee.setEnd_time(resultSet.getTime(employee_label+"end_time").toLocalTime().format(timeFormat));
+        employee.setBirth_date(resultSet.getDate(employee_label+"birth_date"));
+        employee.setCurp(resultSet.getString(employee_label+"curp"));
+        employee.setAddress(resultSet.getString(employee_label+"address"));
+        employee.setActive(resultSet.getBoolean(employee_label+"active"));
+        employee.setAdmin(resultSet.getBoolean(employee_label+"admin"));
+        employee.setEmail(resultSet.getString(employee_label+"email"));
+        employee.setPhone(resultSet.getString(employee_label+"phone"));
+        employee.setScheduleFromString(resultSet.getString(employee_label+"schedule"));
         
         return employee;
     }

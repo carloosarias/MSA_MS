@@ -106,7 +106,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                part_revision = map(resultSet);
+                part_revision = map("PART_REVISION.", "PRODUCT_PART.", "COMPANY.", "METAL.", "SPECIFICATION.", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -125,7 +125,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                partrevision_list.add(map(resultSet));
+                partrevision_list.add(map("PART_REVISION.", "PRODUCT_PART.", "COMPANY.", "METAL.", "SPECIFICATION.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -158,7 +158,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                partrevision_list.add(map(resultSet));
+                partrevision_list.add(map("PART_REVISION.", "PRODUCT_PART.", "COMPANY.", "METAL.", "SPECIFICATION.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -261,22 +261,27 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
 
     /**
      * Map the current row of the given ResultSet to an PartRevision.
+     * @param partrevision_label
+     * @param productpart_label
+     * @param productpartcompany_label
+     * @param metal_label
+     * @param specification_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an PartRevision.
      * @return The mapped PartRevision from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static PartRevision map(ResultSet resultSet) throws SQLException{
+    public static PartRevision map(String partrevision_label, String productpart_label, String productpartcompany_label, String metal_label, String specification_label, ResultSet resultSet) throws SQLException{
         PartRevision part_revision = new PartRevision();
-        part_revision.setId(resultSet.getInt("PART_REVISION.id"));
-        part_revision.setRev(resultSet.getString("PART_REVISION.rev"));
-        part_revision.setRev_date(resultSet.getDate("PART_REVISION.rev_date"));
-        part_revision.setArea(resultSet.getDouble("PART_REVISION.area"));
-        part_revision.setBase_weight(resultSet.getDouble("PART_REVISION.base_weight"));
-        part_revision.setFinal_weight(resultSet.getDouble("PART_REVISION.final_weight"));
-        part_revision.setActive(resultSet.getBoolean("PART_REVISION.active"));
-        part_revision.setProduct_part(ProductPartDAOJDBC.map(resultSet));
-        part_revision.setMetal(MetalDAOJDBC.map(resultSet));
-        part_revision.setSpecification(SpecificationDAOJDBC.map(resultSet));
+        part_revision.setId(resultSet.getInt(partrevision_label+"id"));
+        part_revision.setRev(resultSet.getString(partrevision_label+"rev"));
+        part_revision.setRev_date(resultSet.getDate(partrevision_label+"rev_date"));
+        part_revision.setArea(resultSet.getDouble(partrevision_label+"area"));
+        part_revision.setBase_weight(resultSet.getDouble(partrevision_label+"base_weight"));
+        part_revision.setFinal_weight(resultSet.getDouble(partrevision_label+"final_weight"));
+        part_revision.setActive(resultSet.getBoolean(partrevision_label+"active"));
+        part_revision.setProduct_part(ProductPartDAOJDBC.map(productpart_label, productpartcompany_label, resultSet));
+        part_revision.setMetal(MetalDAOJDBC.map(metal_label, resultSet));
+        part_revision.setSpecification(SpecificationDAOJDBC.map(specification_label, resultSet));
         
         return part_revision;
     }

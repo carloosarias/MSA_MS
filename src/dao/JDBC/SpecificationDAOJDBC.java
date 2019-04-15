@@ -23,13 +23,13 @@ import model.Specification;
 public class SpecificationDAOJDBC implements SpecificationDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, specification_number, specification_name, process, active FROM SPECIFICATION WHERE id = ?";
+            "SELECT * FROM SPECIFICATION WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_PROCESS = 
-            "SELECT id, specification_number, specification_name, process, active FROM SPECIFICATION ORDER BY process, specification_number";
+            "SELECT * FROM SPECIFICATION ORDER BY process, specification_number";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_PROCESS = 
-            "SELECT id, specification_number, specification_name, process, active FROM SPECIFICATION WHERE active = ? ORDER BY process, specification_number";
+            "SELECT * FROM SPECIFICATION WHERE active = ? ORDER BY process, specification_number";
     private static final String SQL_LIST_PROCESS_ORDER_BY_PROCESS = 
-            "SELECT id, specification_number, specification_name, process FROM SPECIFICATION WHERE process = ? ORDER BY process, specification_number";
+            "SELECT * FROM SPECIFICATION WHERE process = ? ORDER BY process, specification_number";
     private static final String SQL_INSERT = 
             "INSERT INTO SPECIFICATION (specification_number, specification_name, process, active) "
             + "VALUES(?, ?, ?, ?)";
@@ -75,7 +75,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                specification = map(resultSet);
+                specification = map("", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -117,7 +117,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                specifications.add(map(resultSet));
+                specifications.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -140,7 +140,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                specifications.add(map(resultSet));
+                specifications.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -236,17 +236,18 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
 
     /**
      * Map the current row of the given ResultSet to an Specification.
+     * @param specification_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an Specification.
      * @return The mapped Specification from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static Specification map(ResultSet resultSet) throws SQLException{
+    public static Specification map(String specification_label, ResultSet resultSet) throws SQLException{
         Specification specification = new Specification();
-        specification.setId(resultSet.getInt("id"));
-        specification.setSpecification_number(resultSet.getString("specification_number"));
-        specification.setSpecification_name(resultSet.getString("specification_name"));
-        specification.setProcess(resultSet.getString("process"));
-        specification.setActive(resultSet.getBoolean("active"));
+        specification.setId(resultSet.getInt(specification_label+"id"));
+        specification.setSpecification_number(resultSet.getString(specification_label+"specification_number"));
+        specification.setSpecification_name(resultSet.getString(specification_label+"specification_name"));
+        specification.setProcess(resultSet.getString(specification_label+"process"));
+        specification.setActive(resultSet.getBoolean(specification_label+"active"));
         return specification;
     }
 }

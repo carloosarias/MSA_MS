@@ -28,60 +28,77 @@ import model.ProductPart;
 public class DepartLotDAOJDBC implements DepartLotDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
-            + "FROM DEPART_LOT "
+            "SELECT * FROM DEPART_LOT INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS productpart_company ON PRODUCT_PART.COMPANY_ID = productpart_company.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE DEPART_LOT.id = ?";
     private static final String SQL_FIND_DEPART_REPORT_BY_ID =
             "SELECT DEPART_REPORT_ID FROM DEPART_LOT WHERE id = ?";
     private static final String SQL_FIND_PART_REVISION_BY_ID = 
             "SELECT PART_REVISION_ID FROM DEPART_LOT WHERE id = ?";
     private static final String SQL_LIST_OF_DEPART_REPORT_ORDER_BY_ID = 
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
-            + "FROM DEPART_LOT "
+            "SELECT * FROM DEPART_LOT INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS productpart_company ON PRODUCT_PART.COMPANY_ID = productpart_company.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE DEPART_LOT.DEPART_REPORT_ID = ? "
             + "ORDER BY DEPART_LOT.id";
-    private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID =
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
-            + "FROM DEPART_LOT "
+    private static final String SQL_LIST_OF_DEPART_LOT_ORDER_BY_ID_GROUP =
+            "SELECT * FROM DEPART_LOT INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS productpart_company ON PRODUCT_PART.COMPANY_ID = productpart_company.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE DEPART_LOT.DEPART_REPORT_ID = ? "
+            + "GROUP DEPART_LOT.PART_REVISION_ID, DEPART_LOT.lot_number, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments"
+            + "ORDER BY DEPART_LOT.id";
+    private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID =
+            "SELECT * FROM DEPART_LOT INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
+            + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY AS productpart_company ON PRODUCT_PART.COMPANY_ID = productpart_company.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE DEPART_LOT.lot_number = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_OF_DEPART_REPORT_REJECTED_ORDER_BY_ID =
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
-            + "FROM DEPART_LOT "
+            "SELECT * FROM DEPART_LOT INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS productpart_company ON PRODUCT_PART.COMPANY_ID = productpart_company.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE DEPART_LOT.DEPART_REPORT_ID = ? AND DEPART_LOT.rejected = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_OF_PENDING_REJECTED_ORDER_BY_ID = 
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
-            + "FROM DEPART_LOT "
+            "SELECT * FROM DEPART_LOT INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS productpart_company ON PRODUCT_PART.COMPANY_ID = productpart_company.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE DEPART_REPORT.COMPANY_ID = ? AND rejected = ? AND pending = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_OF_PART_REVISION_PROCESS_DEPART_REPORT_ORDER_BY_ID = 
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
-            + "FROM DEPART_LOT "
+            "SELECT * FROM DEPART_LOT INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS productpart_company ON PRODUCT_PART.COMPANY_ID = productpart_company.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE DEPART_LOT.PART_REVISION_ID = ? AND DEPART_LOT.process = ? AND DEPART_LOT.DEPART_REPORT_ID = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_PROCESS = 
@@ -96,12 +113,13 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     private static final String SQL_DELETE =
             "DELETE FROM DEPART_LOT WHERE id = ?";
     private static final String LIST_DEPART_LOT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT DEPART_LOT.id, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, DEPART_LOT.process, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.comments, DEPART_LOT.rejected, DEPART_LOT.pending, "
-            + "PART_REVISION.rev, PRODUCT_PART.part_number, DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.PART_REVISION_ID "
-            + "FROM DEPART_LOT "
+            "SELECT * FROM DEPART_LOT INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
+            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
+            + "INNER JOIN COMPANY AS productpart_company ON PRODUCT_PART.COMPANY_ID = productpart_company.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND DEPART_REPORT.report_date BETWEEN ? AND ? "
             + "ORDER BY DEPART_REPORT.report_date, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.id";
     
@@ -143,7 +161,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                depart_lot = map(resultSet);
+                depart_lot = map("DEPART_LOT.", "PART_REVISION.", "PRODUCT_PART.", "productpart_company.", "METAL.", "SPECIFICATION.", 
+                        "DEPART_REPORT.", "EMPLOYEE.", "departreport_company.", "COMPANY_ADDRESS.", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -223,7 +242,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                depart_lot.add(map(resultSet));
+                depart_lot.add(map("DEPART_LOT.", "PART_REVISION.", "PRODUCT_PART.", "productpart_company.", "METAL.", "SPECIFICATION.", 
+                        "DEPART_REPORT.", "EMPLOYEE.", "departreport_company.", "COMPANY_ADDRESS.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -251,7 +271,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                depart_lot.add(map(resultSet));
+                depart_lot.add(map("DEPART_LOT.", "PART_REVISION.", "PRODUCT_PART.", "productpart_company.", "METAL.", "SPECIFICATION.", 
+                        "DEPART_REPORT.", "EMPLOYEE.", "departreport_company.", "COMPANY_ADDRESS.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -281,7 +302,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                depart_lot.add(map(resultSet));
+                depart_lot.add(map("DEPART_LOT.", "PART_REVISION.", "PRODUCT_PART.", "productpart_company.", "METAL.", "SPECIFICATION.", 
+                        "DEPART_REPORT.", "EMPLOYEE.", "departreport_company.", "COMPANY_ADDRESS.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -305,7 +327,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                incoming_lot.add(map(resultSet));
+                incoming_lot.add(map("DEPART_LOT.", "PART_REVISION.", "PRODUCT_PART.", "productpart_company.", "METAL.", "SPECIFICATION.", 
+                        "DEPART_REPORT.", "EMPLOYEE.", "departreport_company.", "COMPANY_ADDRESS.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -338,7 +361,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                depart_lot.add(map(resultSet));
+                depart_lot.add(map("DEPART_LOT.", "PART_REVISION.", "PRODUCT_PART.", "productpart_company.", "METAL.", "SPECIFICATION.", 
+                        "DEPART_REPORT.", "EMPLOYEE.", "departreport_company.", "COMPANY_ADDRESS.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -521,7 +545,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                departlot_list.add(map(resultSet));
+                departlot_list.add(map("DEPART_LOT.", "PART_REVISION.", "PRODUCT_PART.", "productpart_company.", "METAL.", "SPECIFICATION.", 
+                        "DEPART_REPORT.", "EMPLOYEE.", "departreport_company.", "COMPANY_ADDRESS.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -534,29 +559,38 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
 
     /**
      * Map the current row of the given ResultSet to an DepartLot.
+     * @param departlot_label
+     * @param partrevision_label
+     * @param productpart_label
+     * @param productpartcompany_label
+     * @param metal_label
+     * @param specification_label
+     * @param departreport_label
+     * @param employee_label
+     * @param departreportcompany_label
+     * @param companyaddress_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an DepartLot.
      * @return The mapped DepartLot from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static DepartLot map(ResultSet resultSet) throws SQLException{
-        DepartLot depart_lot = new DepartLot();
-        depart_lot.setId(resultSet.getInt("DEPART_LOT.id"));
-        depart_lot.setLot_number(resultSet.getString("DEPART_LOT.lot_number"));
-        depart_lot.setQuantity(resultSet.getInt("DEPART_LOT.quantity"));
-        depart_lot.setBox_quantity(resultSet.getInt("DEPART_LOT.box_quantity"));
-        depart_lot.setProcess(resultSet.getString("DEPART_LOT.process"));
-        depart_lot.setPo_number(resultSet.getString("DEPART_LOT.po_number"));
-        depart_lot.setLine_number(resultSet.getString("DEPART_LOT.line_number"));
-        depart_lot.setComments(resultSet.getString("DEPART_LOT.comments"));
-        depart_lot.setRejected(resultSet.getBoolean("DEPART_LOT.rejected"));
-        depart_lot.setPending(resultSet.getBoolean("DEPART_LOT.pending"));
+    public static DepartLot map(String departlot_label, 
+            String partrevision_label, String productpart_label, String productpartcompany_label, String metal_label, String specification_label, 
+            String departreport_label, String employee_label, String departreportcompany_label, String companyaddress_label, ResultSet resultSet) throws SQLException {
         
-        //INNER JOINS
-        depart_lot.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
-        depart_lot.setPart_revision(resultSet.getString("PART_REVISION.rev"));
-        depart_lot.setReport_date(resultSet.getDate("DEPART_REPORT.report_date"));
-        depart_lot.setDepartreport_id(resultSet.getInt("DEPART_LOT.DEPART_REPORT_ID"));
-        depart_lot.setPartrevision_id(resultSet.getInt("DEPART_LOT.PART_REVISION_ID"));
+        DepartLot depart_lot = new DepartLot();
+        depart_lot.setId(resultSet.getInt(departlot_label+"id"));
+        depart_lot.setLot_number(resultSet.getString(departlot_label+"lot_number"));
+        depart_lot.setQuantity(resultSet.getInt(departlot_label+"quantity"));
+        depart_lot.setBox_quantity(resultSet.getInt(departlot_label+"box_quantity"));
+        depart_lot.setProcess(resultSet.getString(departlot_label+"process"));
+        depart_lot.setPo_number(resultSet.getString(departlot_label+"po_number"));
+        depart_lot.setLine_number(resultSet.getString(departlot_label+"line_number"));
+        depart_lot.setComments(resultSet.getString(departlot_label+"comments"));
+        depart_lot.setRejected(resultSet.getBoolean(departlot_label+"rejected"));
+        depart_lot.setPending(resultSet.getBoolean(departlot_label+"pending"));
+        depart_lot.setPart_revision(PartRevisionDAOJDBC.map(partrevision_label, productpart_label, productpartcompany_label, metal_label, specification_label, resultSet));
+        depart_lot.setDepart_report(DepartReportDAOJDBC.map(departreport_label, employee_label, departreportcompany_label, companyaddress_label, resultSet));
+        
         return depart_lot;
     }    
 }

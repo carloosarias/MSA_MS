@@ -23,15 +23,15 @@ import model.Company;
 public class CompanyDAOJDBC implements CompanyDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY WHERE id = ?";
+            "SELECT * FROM COMPANY WHERE id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY ORDER BY id";
+            "SELECT * FROM COMPANY ORDER BY id";
     private static final String SQL_LIST_SUPPLIER_ORDER_BY_ID =
-            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY WHERE supplier = TRUE AND active = ? ORDER BY id";
+            "SELECT * FROM COMPANY WHERE supplier = TRUE AND active = ? ORDER BY id";
     private static final String SQL_LIST_CLIENT_ORDER_BY_ID = 
-            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY WHERE client = TRUE AND active = ? ORDER BY id";
+            "SELECT * FROM COMPANY WHERE client = TRUE AND active = ? ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT COMPANY.id, COMPANY.name, COMPANY.rfc, COMPANY.tax_id, COMPANY.payment_terms, COMPANY.supplier, COMPANY.client, COMPANY.active FROM COMPANY WHERE active = ? ORDER BY id";
+            "SELECT * FROM COMPANY WHERE active = ? ORDER BY id";
     private static final String SQL_INSERT = 
             "INSERT INTO COMPANY (name, rfc, tax_id, payment_terms, supplier, client, active) "
             +"VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -78,7 +78,7 @@ public class CompanyDAOJDBC implements CompanyDAO{
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                company = map(resultSet);
+                company = map("", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -97,7 +97,7 @@ public class CompanyDAOJDBC implements CompanyDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                company.add(map(resultSet));
+                company.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -120,7 +120,7 @@ public class CompanyDAOJDBC implements CompanyDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                company.add(map(resultSet));
+                company.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -143,7 +143,7 @@ public class CompanyDAOJDBC implements CompanyDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                company.add(map(resultSet));
+                company.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -166,7 +166,7 @@ public class CompanyDAOJDBC implements CompanyDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                company.add(map(resultSet));
+                company.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -268,20 +268,21 @@ public class CompanyDAOJDBC implements CompanyDAO{
 
     /**
      * Map the current row of the given ResultSet to an Employee.
+     * @param company_label REFERENCE TO THE COMPANY
      * @param resultSet The ResultSet of which the current row is to be mapped to an Employee.
      * @return The mapped Employee from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static Company map(ResultSet resultSet) throws SQLException {
+    public static Company map(String company_label, ResultSet resultSet) throws SQLException {
         Company company = new Company();
-        company.setId(resultSet.getInt("COMPANY.id"));
-        company.setName(resultSet.getString("COMPANY.name"));
-        company.setRfc(resultSet.getString("COMPANY.rfc"));
-        company.setTax_id(resultSet.getString("COMPANY.tax_id"));
-        company.setPayment_terms(resultSet.getString("COMPANY.payment_terms"));
-        company.setSupplier(resultSet.getBoolean("COMPANY.supplier"));
-        company.setClient(resultSet.getBoolean("COMPANY.client"));
-        company.setActive(resultSet.getBoolean("COMPANY.active"));
+        company.setId(resultSet.getInt(company_label+"id"));
+        company.setName(resultSet.getString(company_label+"name"));
+        company.setRfc(resultSet.getString(company_label+"rfc"));
+        company.setTax_id(resultSet.getString(company_label+"tax_id"));
+        company.setPayment_terms(resultSet.getString(company_label+"payment_terms"));
+        company.setSupplier(resultSet.getBoolean(company_label+"supplier"));
+        company.setClient(resultSet.getBoolean(company_label+"client"));
+        company.setActive(resultSet.getBoolean(company_label+"active"));
         return company;
     }
 }

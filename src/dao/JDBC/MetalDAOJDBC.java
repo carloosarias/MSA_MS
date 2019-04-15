@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Metal;
-import model.Specification;
 
 /**
  *
@@ -24,11 +23,11 @@ import model.Specification;
 public class MetalDAOJDBC implements MetalDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT id, metal_name, density, active FROM METAL WHERE id = ?";
+            "SELECT * FROM METAL WHERE METAL.id = ?";
     private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, metal_name, density, active FROM METAL ORDER BY metal_name, density";
+            "SELECT * FROM METAL ORDER BY METAL.metal_name, METAL.density";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, metal_name, density, active FROM METAL WHERE active = ? ORDER BY metal_name, density";
+            "SELECT * FROM METAL WHERE METAL.active = ? ORDER BY METAL.metal_name, METAL.density";
     private static final String SQL_INSERT = 
             "INSERT INTO METAL (metal_name, density, active) "
             + "VALUES(?, ?, ?)";
@@ -74,7 +73,7 @@ public class MetalDAOJDBC implements MetalDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                metal = map(resultSet);
+                metal = map("", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -93,7 +92,7 @@ public class MetalDAOJDBC implements MetalDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                metals.add(map(resultSet));
+                metals.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -116,7 +115,7 @@ public class MetalDAOJDBC implements MetalDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                metals.add(map(resultSet));
+                metals.add(map("", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -209,16 +208,17 @@ public class MetalDAOJDBC implements MetalDAO {
 
     /**
      * Map the current row of the given ResultSet to an Specification.
+     * @param metal_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an Specification.
      * @return The mapped Specification from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static Metal map(ResultSet resultSet) throws SQLException{
+    public static Metal map(String metal_label, ResultSet resultSet) throws SQLException{
         Metal metal = new Metal();
-        metal.setId(resultSet.getInt("id"));
-        metal.setMetal_name(resultSet.getString("metal_name"));
-        metal.setDensity(resultSet.getDouble("density"));
-        metal.setActive(resultSet.getBoolean("active"));
+        metal.setId(resultSet.getInt(metal_label+"id"));
+        metal.setMetal_name(resultSet.getString(metal_label+"metal_name"));
+        metal.setDensity(resultSet.getDouble(metal_label+"density"));
+        metal.setActive(resultSet.getBoolean(metal_label+"active"));
         return metal;
     }
 }
