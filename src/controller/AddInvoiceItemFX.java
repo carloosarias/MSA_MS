@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -99,7 +98,7 @@ public class AddInvoiceItemFX implements Initializable {
     
     public Quote getQuote(DepartLot depart_lot){
         try{
-            return msabase.getQuoteDAO().findLatest(depart_lot.getDepartreport_id(), depart_lot.getPartrevision_id(), true);
+            return msabase.getQuoteDAO().findLatest(depart_lot.getDepart_report().getId(), depart_lot.getPart_revision().getId(), true);
         }catch(Exception e){
             return new Quote();
         }
@@ -112,14 +111,14 @@ public class AddInvoiceItemFX implements Initializable {
     public void mapInvoiceItems(){
         ArrayList<DepartLot> remove_queue = new ArrayList();
         for(DepartLot depart_lot : CreateInvoiceFX.getDepartlot_list()){
-            if(depart_lot.getDepartreport_id().equals(departlot_tableview.getSelectionModel().getSelectedItem().getDepartreport_id()) && depart_lot.getPartrevision_id().equals(departlot_tableview.getSelectionModel().getSelectedItem().getPartrevision_id())){
+            if(depart_lot.getDepart_report().equals(departlot_tableview.getSelectionModel().getSelectedItem().getDepart_report()) && depart_lot.getPart_revision().equals(departlot_tableview.getSelectionModel().getSelectedItem().getPart_revision())){
                 InvoiceItem invoice_item = new InvoiceItem();
                 invoice_item.setTemp_departlot(depart_lot);
                 invoice_item.setTemp_quote(quote_combo.getSelectionModel().getSelectedItem());
                 invoice_item.setComments("");
-                invoice_item.setDepartreport_id(depart_lot.getDepartreport_id());
-                invoice_item.setPart_number(depart_lot.getPart_number());
-                invoice_item.setPart_revision(depart_lot.getPart_revision());
+                invoice_item.setDepartreport_id(depart_lot.getDepart_report().getId());
+                invoice_item.setPart_number(depart_lot.getPart_revision().getProduct_part().getPart_number());
+                invoice_item.setPart_revision(depart_lot.getPart_revision().getRev());
                 invoice_item.setLot_number(depart_lot.getLot_number());
                 invoice_item.setQuantity(depart_lot.getQuantity());
                 invoice_item.setBox_quantity(depart_lot.getBox_quantity());
@@ -149,6 +148,7 @@ public class AddInvoiceItemFX implements Initializable {
         ArrayList<String> partnumber = new ArrayList();
         ArrayList<String> part_revision = new ArrayList();
         ArrayList<DepartLot> mergedList = new ArrayList();
+        /*
         for(DepartLot depart_lot : unfilteredList){
             if(departreport_id.contains(depart_lot.getDepartreport_id()) && partnumber.contains(depart_lot.getPart_number()) && part_revision.contains(depart_lot.getPart_revision())){
                 for(DepartLot listitem : mergedList){
@@ -174,7 +174,7 @@ public class AddInvoiceItemFX implements Initializable {
                 mergedList.add(item);
             }
         }
-        
+        */
         return mergedList;
     }
 }

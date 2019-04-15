@@ -266,7 +266,7 @@ public class TransactionHistoryFXNEW implements Initializable {
     
     public void setDepartLotTable(){
         id_column2.setCellValueFactory(new PropertyValueFactory<>("departreport_id"));
-        date_column2.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        date_column2.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getDepart_report().getReport_date()))));
         part_column2.setCellValueFactory(new PropertyValueFactory<>("part_number"));
         rev_column2.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
         lot_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
@@ -337,7 +337,7 @@ public class TransactionHistoryFXNEW implements Initializable {
         ArrayList<String> status = new ArrayList();
         ArrayList<String> process = new ArrayList();
         ArrayList<DepartLot> mergedList = new ArrayList();
-        
+        /*
         for(DepartLot depart_lot : unfilteredList){
             if(process.contains(depart_lot.getProcess()) && status.contains(depart_lot.getStatus()) && lot_number.contains(depart_lot.getLot_number()) && departreport_id.contains(depart_lot.getDepartreport_id())){
                 for(DepartLot listitem : mergedList){
@@ -368,7 +368,7 @@ public class TransactionHistoryFXNEW implements Initializable {
                 item.setRejected(depart_lot.isPending());
                 mergedList.add(item);
             }
-        }
+        }*/
         
         return mergedList;
     }

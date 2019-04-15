@@ -267,7 +267,7 @@ public class AnalysisReportDAOJDBC implements AnalysisReportDAO {
         analysis_report.setActive(resultSet.getBoolean("ANALYSIS_REPORT.active"));
         analysis_report.setTank(TankDAOJDBC.map(resultSet));
         analysis_report.setAnalysis_type(AnalysisTypeDAOJDBC.map(resultSet));
-        analysis_report.setEmployee(EmployeeDAOJDBC.map(resultSet));
+        analysis_report.setEmployee(EmployeeDAOJDBC.map("EMPLOYEE.", resultSet));
         
         return analysis_report;
     }

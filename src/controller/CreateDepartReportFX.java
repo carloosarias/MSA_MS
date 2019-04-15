@@ -11,16 +11,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,13 +27,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -44,7 +37,6 @@ import model.Company;
 import model.CompanyAddress;
 import model.DepartLot;
 import model.DepartReport;
-import msa_ms.MainApp;
 import static msa_ms.MainApp.setDatePicker;
 
 /**
@@ -163,8 +155,8 @@ public class CreateDepartReportFX implements Initializable {
     
     public void setDepartLotTable(){
         lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_productpart().toString()));
-        rev_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTemp_partrevision().getRev()));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getPart_number().toString()));
+        rev_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getRev()));
         process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
         ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
         linenumber_column.setCellValueFactory(new PropertyValueFactory<>("line_number"));  
@@ -203,7 +195,7 @@ public class CreateDepartReportFX implements Initializable {
     
     public void saveDepartLots(DepartReport depart_report){
         for(DepartLot depart_lot : departlot_queue){
-            msabase.getDepartLotDAO().create(depart_report, depart_lot.getTemp_partrevision(), depart_lot);
+            msabase.getDepartLotDAO().create(depart_report, depart_lot.getPart_revision(), depart_lot);
         }
     }
     

@@ -144,8 +144,7 @@ public class AddDepartLotFX implements Initializable {
             depart_lot.setQuantity(Integer.parseInt(quantity_field.getText()));
             depart_lot.setBox_quantity(1);
             depart_lot.setComments("N/A");
-            depart_lot.setTemp_partrevision(partrevcombo_selection);
-            depart_lot.setTemp_productpart(partcombo_selection);
+            depart_lot.setPart_revision(partrevcombo_selection);
             depart_lot.setPending(true);
             departlot_queue.add(depart_lot);
             clearFields();

@@ -126,8 +126,8 @@ public class EditDepartReportFX implements Initializable {
             depart_lot.setPo_number("N/A");
             depart_lot.setLine_number(("N/A"));
             depart_lot.setComments("N/A");
-            depart_lot.setTemp_partrevision(partrevcombo_selection);
-            depart_lot.setTemp_productpart(partcombo_selection);
+            depart_lot.setPart_revision(partrevcombo_selection);
+            depart_lot.setDepart_report(departreport_selection);
             depart_lot.setPending(true);
             msabase.getDepartLotDAO().create(departreport_selection, partrevcombo_selection, depart_lot);
             

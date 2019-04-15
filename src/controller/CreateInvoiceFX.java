@@ -28,7 +28,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -142,7 +141,7 @@ public class CreateInvoiceFX implements Initializable {
     public void sortQueues(){
         Collections.sort(departlot_list, new Comparator<DepartLot>(){
             public int compare(DepartLot lot1, DepartLot lot2) {
-               return lot1.getDepartreport_id().compareTo(lot2.getDepartreport_id());
+               return lot1.getDepart_report().getId().compareTo(lot2.getDepart_report().getId());
             }
         });
         
