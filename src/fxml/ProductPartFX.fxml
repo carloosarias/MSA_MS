@@ -4,8 +4,6 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -14,128 +12,108 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProductPartFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints vgrow="SOMETIMES" />
-      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints vgrow="SOMETIMES" />
       <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab text="Números de Parte">
+      <TableView fx:id="productpart_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="counter_column" minWidth="-Infinity" prefWidth="50.0" sortable="false" text="#" />
+            <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="200.0" text="Compañía" />
+            <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+            <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="425.0" text="Descripción" />
+         </columns>
+         <GridPane.margin>
+            <Insets left="4.0" right="4.0" />
+         </GridPane.margin>
+      </TableView>
+      <Accordion>
+         <panes>
+            <TitledPane animated="false" text="Filtros de Busqueda">
                <content>
                   <GridPane>
                      <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                         <ColumnConstraints hgrow="SOMETIMES" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints />
+                     </rowConstraints>
+                     <children>
+                        <ComboBox fx:id="company_combo1" prefWidth="200.0" promptText="Compañía">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                        <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="2">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <TextField fx:id="part_field" prefWidth="150.0" promptText="Número de Parte" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TextField>
+                     </children>
+                  </GridPane>
+               </content>
+            </TitledPane>
+            <TitledPane animated="false" text="Registrar Nuevo Número de Parte">
+               <content>
+                  <GridPane>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                         <ColumnConstraints hgrow="SOMETIMES" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints vgrow="SOMETIMES" />
-                        <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TableView fx:id="productpart_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
-                           <columns>
-                              <TableColumn fx:id="counter_column" minWidth="-Infinity" prefWidth="50.0" sortable="false" text="#" />
-                              <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="200.0" text="Compañía" />
-                              <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-                              <TableColumn fx:id="description_column" minWidth="-Infinity" prefWidth="425.0" text="Descripción" />
-                           </columns>
+                        <Button fx:id="add_button" disable="true" mnemonicParsing="false" text="Registrar Número de Parte" GridPane.columnIndex="1">
                            <GridPane.margin>
-                              <Insets left="4.0" right="4.0" />
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
-                        </TableView>
-                        <Accordion>
-                           <panes>
-                              <TitledPane animated="false" text="Filtros de Busqueda">
-                                 <content>
-                                    <GridPane>
-                                       <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" />
-                                       </columnConstraints>
-                                       <rowConstraints>
-                                          <RowConstraints />
-                                       </rowConstraints>
-                                       <children>
-                                          <ComboBox fx:id="company_combo1" prefWidth="200.0" promptText="Compañía">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </ComboBox>
-                                          <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="2">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </Button>
-                                          <TextField fx:id="part_field" prefWidth="150.0" promptText="Número de Parte" GridPane.columnIndex="1">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </TextField>
-                                       </children>
-                                    </GridPane>
-                                 </content>
-                              </TitledPane>
-                              <TitledPane animated="false" text="Registrar Nuevo Número de Parte">
-                                 <content>
-                                    <GridPane>
-                                       <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" />
-                                       </columnConstraints>
-                                       <rowConstraints>
-                                          <RowConstraints vgrow="SOMETIMES" />
-                                       </rowConstraints>
-                                       <children>
-                                          <Button fx:id="add_button" disable="true" mnemonicParsing="false" text="Registrar Número de Parte" GridPane.columnIndex="1">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </Button>
-                                          <ComboBox fx:id="company_combo2" prefWidth="200.0" promptText="Compañía">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </ComboBox>
-                                       </children>
-                                    </GridPane>
-                                 </content>
-                              </TitledPane>
-                           </panes>
+                        </Button>
+                        <ComboBox fx:id="company_combo2" prefWidth="200.0" promptText="Compañía">
                            <GridPane.margin>
-                              <Insets left="4.0" right="4.0" top="4.0" />
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
-                        </Accordion>
-                        <GridPane GridPane.rowIndex="2">
-                          <columnConstraints>
-                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Button>
-                           </children>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </GridPane>
+                        </ComboBox>
                      </children>
                   </GridPane>
                </content>
-          </Tab>
-        </tabs>
-      </TabPane>
+            </TitledPane>
+         </panes>
+         <GridPane.margin>
+            <Insets left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Accordion>
+      <GridPane GridPane.rowIndex="2">
+         <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección">
+               <GridPane.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </GridPane>
    </children>
 </GridPane>

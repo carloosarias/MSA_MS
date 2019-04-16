@@ -88,7 +88,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                part = map("PRODUCT_PART", "COMPANY", resultSet);
+                part = map("PRODUCT_PART.", "COMPANY.", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -107,7 +107,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                part.add(map("PRODUCT_PART", "COMPANY", resultSet));
+                part.add(map("PRODUCT_PART.", "COMPANY.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -134,7 +134,7 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                productpart_list.add(map("PRODUCT_PART", "COMPANY", resultSet));
+                productpart_list.add(map("PRODUCT_PART.", "COMPANY.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -239,10 +239,10 @@ public class ProductPartDAOJDBC implements ProductPartDAO{
      */
     public static ProductPart map(String productpart_label, String company_label, ResultSet resultSet) throws SQLException{
         ProductPart part = new ProductPart();
-        part.setId(resultSet.getInt(productpart_label+".id"));
-        part.setPart_number(resultSet.getString(productpart_label+".part_number"));
-        part.setDescription(resultSet.getString(productpart_label+".description"));
-        part.setActive(resultSet.getBoolean(productpart_label+".active"));
+        part.setId(resultSet.getInt(productpart_label+"id"));
+        part.setPart_number(resultSet.getString(productpart_label+"part_number"));
+        part.setDescription(resultSet.getString(productpart_label+"description"));
+        part.setActive(resultSet.getBoolean(productpart_label+"active"));
         part.setCompany(CompanyDAOJDBC.map(company_label, resultSet));
         return part;
     }

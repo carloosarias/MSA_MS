@@ -43,6 +43,7 @@ import model.CompanyAddress;
 import model.DepartLot;
 import model.DepartReport;
 import model.Employee;
+import model.PartRevision;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
 import static msa_ms.MainApp.setDatePicker;
@@ -80,6 +81,12 @@ public class DepartReportFX_1 implements Initializable {
     @FXML
     private DatePicker end_datepicker;
     @FXML
+    private TextField partnumber_field1;
+    @FXML
+    private TextField lotnumber_field1;
+    @FXML
+    private TextField ponumber_field;
+    @FXML
     private Button reset_button;
     @FXML
     private Button save_button;
@@ -94,7 +101,9 @@ public class DepartReportFX_1 implements Initializable {
     @FXML
     private ComboBox<String> pdf_combo;
     @FXML
-    private TextField partnumber_field;
+    private TextField lotnumber_field2;
+    @FXML
+    private TextField partnumber_field2;
     @FXML
     private TextField rev_field;
     @FXML
@@ -104,25 +113,23 @@ public class DepartReportFX_1 implements Initializable {
     @FXML
     private Button save_button2;
     @FXML
-    private TextField lotnumber_field;
-    @FXML
     private TableView<DepartLot> departlot_tableview;
     @FXML
-    private TableColumn<DepartLot, String> partnumber_column3;
+    private TableColumn<DepartLot, String> partnumber_column;
     @FXML
-    private TableColumn<DepartLot, String> partrevision_column;
+    private TableColumn<DepartLot, PartRevision> partrevision_column;
     @FXML
-    private TableColumn<DepartLot, String> lotnumber_column2;
+    private TableColumn<DepartLot, String> lotnumber_column;
     @FXML
-    private TableColumn<DepartLot, String> process_column2;
+    private TableColumn<DepartLot, String> process_column;
     @FXML
-    private TableColumn<DepartLot, String> ponumber_column2;
+    private TableColumn<DepartLot, String> ponumber_column;
     @FXML
-    private TableColumn<DepartLot, String> linenumber_column2;
+    private TableColumn<DepartLot, String> linenumber_column;
     @FXML
-    private TableColumn<DepartLot, String> quantity_column3;
+    private TableColumn<DepartLot, String> quantity_column;
     @FXML
-    private TableColumn<DepartLot, String> boxquantity_column3;
+    private TableColumn<DepartLot, String> boxquantity_column;
     @FXML
     private TableColumn<DepartLot, String> comments_column;
     @FXML
@@ -140,6 +147,12 @@ public class DepartReportFX_1 implements Initializable {
         updateDepartReportTable();
         updateComboItems();
         
+        details_tab.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        pdf_button.disableProperty().bind(pdf_combo.getSelectionModel().selectedItemProperty().isNull());
+        
+        reset_button.setOnAction((ActionEvent) -> {
+            updateDepartReportTable();
+        });
         pdf_button.setOnAction((ActionEvent) -> {
             switch(pdf_combo.getSelectionModel().getSelectedIndex()){
                 case 0:
@@ -166,42 +179,42 @@ public class DepartReportFX_1 implements Initializable {
     }
     
     public void setDepartLotTable(){
-        partnumber_column3.setCellValueFactory(new PropertyValueFactory<>("part_number"));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().toString()));
         partrevision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
-        lotnumber_column2.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
-        lotnumber_column2.setCellFactory(TextFieldTableCell.forTableColumn());
-        lotnumber_column2.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+        lotnumber_column.setCellValueFactory(new PropertyValueFactory<>("lot_number"));
+        lotnumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        lotnumber_column.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setLot_number(t.getNewValue().replace(" ", "").toUpperCase());
             msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             departlot_tableview.refresh();
         });
-        process_column2.setCellValueFactory(new PropertyValueFactory<>("process"));
-        ponumber_column2.setCellValueFactory(new PropertyValueFactory<>("po_number"));
-        ponumber_column2.setCellFactory(TextFieldTableCell.forTableColumn());
-        ponumber_column2.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+        process_column.setCellValueFactory(new PropertyValueFactory<>("process"));
+        ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
+        ponumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        ponumber_column.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setPo_number(t.getNewValue().replace(" ", "").toUpperCase());
             msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             departlot_tableview.refresh();
         });
-        linenumber_column2.setCellValueFactory(new PropertyValueFactory<>("line_number"));
-        linenumber_column2.setCellFactory(TextFieldTableCell.forTableColumn());
-        linenumber_column2.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+        linenumber_column.setCellValueFactory(new PropertyValueFactory<>("line_number"));
+        linenumber_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        linenumber_column.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
             (t.getTableView().getItems().get(t.getTablePosition().getRow())).setLine_number(t.getNewValue().replace(" ", "").toUpperCase());
             msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             departlot_tableview.refresh();
         });
         
-        quantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
-        quantity_column3.setCellFactory(TextFieldTableCell.forTableColumn());
-        quantity_column3.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
+        quantity_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        quantity_column.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setQuantity(getQuantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             departlot_tableview.refresh();
         });
         
-        boxquantity_column3.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBox_quantity()));
-        boxquantity_column3.setCellFactory(TextFieldTableCell.forTableColumn());
-        boxquantity_column3.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
+        boxquantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getBox_quantity()));
+        boxquantity_column.setCellFactory(TextFieldTableCell.forTableColumn());
+        boxquantity_column.setOnEditCommit((TableColumn.CellEditEvent<DepartLot, String> t) -> {
             t.getTableView().getItems().get(t.getTablePosition().getRow()).setBox_quantity(getBox_quantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
             msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             departlot_tableview.refresh();
@@ -217,12 +230,15 @@ public class DepartReportFX_1 implements Initializable {
     }
     
     public void updateDepartReportTable(){
-        System.out.println(start_datepicker.getValue());
-        departreport_tableview.getItems().setAll(msabase.getDepartReportDAO().list(company_combo1.getValue(), DAOUtil.toUtilDate(start_datepicker.getValue()), DAOUtil.toUtilDate(end_datepicker.getValue())));
+        departreport_tableview.getItems().setAll(msabase.getDepartReportDAO().list(company_combo1.getValue(), DAOUtil.toUtilDate(start_datepicker.getValue()), DAOUtil.toUtilDate(end_datepicker.getValue()), partnumber_field1.getText(), lotnumber_field1.getText(), ponumber_field.getText()));
     }
     
     public void updateDepartLotTable(){
-        departlot_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreport_tableview.getSelectionModel().getSelectedItem())));
+        try{
+            departlot_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreport_tableview.getSelectionModel().getSelectedItem())));
+        }catch(Exception e){
+            departlot_tableview.getItems().clear();
+        }
     }
     
     public void updateComboItems(){

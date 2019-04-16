@@ -28,13 +28,14 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
+            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, "
+            +"(SELECT SUM(DEPART_LOT.quantity) FROM DEPART_LOT AS total_qty WHERE DEPART_REPORT.id <= DEPART_LOT.id), SUM(DEPART_LOT.box_quantity) total_box "
             +"FROM DEPART_REPORT "
             +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             +"INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
             +"INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            +"WHERE DEPART_REPORT.id = ? AND DEPART_LOT.rejected = 0 ";
+            +"WHERE (DEPART_REPORT.id = ? AND DEPART_REPORT.active = 1) AND DEPART_LOT.active = 1";
     private static final String SQL_LIST_ACTIVE = 
             "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
             +"FROM DEPART_REPORT "
@@ -42,18 +43,21 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             +"INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
             +"INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            +"WHERE DEPART_REPORT.active = 1 AND DEPART_LOT.rejected = 0 "
+            +"WHERE DEPART_REPORT.active = 1 AND DEPART_LOT.active = 1 "
             +"GROUP BY DEPART_REPORT.id "
             +"ORDER BY DEPART_REPORT.id DESC";
     private static final String SQL_LIST_ACTIVE_FILTER = 
-            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
+            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
             +"FROM DEPART_REPORT "
             +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             +"INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
             +"INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            +"WHERE (COMPANY.id = ? OR ? IS NULL) AND (DEPART_REPORT.report_date BETWEEN ? AND ?) AND DEPART_REPORT.active = 1 AND DEPART_LOT.rejected = 0 "
+            +"INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            +"INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            +"WHERE DEPART_REPORT.active = 1 AND DEPART_LOT.active = 1 "
             +"GROUP BY DEPART_REPORT.id "
+            +"HAVING ((COMPANY.id = ? OR ? IS NULL) AND (DEPART_REPORT.report_date BETWEEN ? AND ?) AND (PRODUCT_PART.part_number LIKE ?) AND (DEPART_LOT.lot_number LIKE ?) AND (DEPART_LOT.po_number LIKE ?))"
             +"ORDER BY DEPART_REPORT.id DESC";
     private static final String SQL_INSERT =
             "INSERT INTO DEPART_REPORT (COMPANY_ID, COMPANY_ADDRESS_ID, EMPLOYEE_ID, report_date, active) "
@@ -129,7 +133,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     }
 
     @Override
-    public List<DepartReport> list(Company company, Date start_date, Date end_date) throws IllegalArgumentException, DAOException {
+    public List<DepartReport> list(Company company, Date start_date, Date end_date, String partnumber_pattern, String lotnumber_pattern, String po_pattern) throws IllegalArgumentException, DAOException {
         if(company == null) company = new Company();
         if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
         if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
@@ -140,7 +144,10 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             company.getId(),
             company.getId(),
             start_date,
-            end_date
+            end_date,
+            partnumber_pattern+"%",
+            lotnumber_pattern+"%",
+            po_pattern+"%"
         };
         
         try(
@@ -253,8 +260,8 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
         depart_report.setId(resultSet.getInt(departreport_label+"id"));
         depart_report.setReport_date(resultSet.getDate(departreport_label+"report_date"));
         depart_report.setActive(resultSet.getBoolean(departreport_label+"active"));
-        depart_report.setTotal_qty(resultSet.getInt(departreport_label+"total_qty"));
-        depart_report.setTotal_box(resultSet.getInt(departreport_label+"total_box"));
+        depart_report.setTotal_qty(resultSet.getInt("total_qty"));
+        depart_report.setTotal_box(resultSet.getInt("total_box"));
         depart_report.setEmployee(EmployeeDAOJDBC.map(employee_label, resultSet));
         depart_report.setCompany(CompanyDAOJDBC.map(company_label, resultSet));
         depart_report.setCompany_address(CompanyAddressDAOJDBC.map(companyaddress_label, resultSet));

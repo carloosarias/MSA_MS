@@ -45,7 +45,7 @@ public interface DepartReportDAO {
      * @throws IllegalArgumentException If Company ID is null.
      * @throws DAOException If something fails at database level.
      */    
-    public List<DepartReport> list(Company company, Date start_date, Date end_date) throws IllegalArgumentException, DAOException;
+    public List<DepartReport> list(Company company, Date start_date, Date end_date, String partnumber_pattern, String lotnumber_pattern, String ponumber_pattern) throws IllegalArgumentException, DAOException;
     
     /**
      * Create the given DepartReport in the database.

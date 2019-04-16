@@ -137,8 +137,8 @@ public class PartRevision implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%s-%s",
-                product_part, rev);
+        return String.format("%s",
+                rev);
     }
     
 }

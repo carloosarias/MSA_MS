@@ -59,47 +59,93 @@
                                  <content>
                                     <GridPane>
                                       <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                       </columnConstraints>
                                       <rowConstraints>
                                         <RowConstraints vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <ComboBox fx:id="company_combo1" prefWidth="200.0" promptText="Cliente">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </ComboBox>
-                                          <Label text="Desde:" GridPane.columnIndex="1">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <DatePicker fx:id="start_datepicker" maxWidth="150.0" promptText="DD/MMM/AAAA" GridPane.columnIndex="2">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </DatePicker>
-                                          <DatePicker fx:id="end_datepicker" promptText="DD/MMM/AAAA" GridPane.columnIndex="4">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </DatePicker>
-                                          <Label text="Hasta:" GridPane.columnIndex="3">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="5">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </Button>
+                                          <GridPane>
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" prefWidth="208.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" prefWidth="208.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" prefWidth="208.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints vgrow="SOMETIMES" />
+                                                <RowConstraints vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <ComboBox fx:id="company_combo1" prefWidth="200.0" promptText="Cliente">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </GridPane.margin>
+                                                </ComboBox>
+                                                <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </GridPane.margin>
+                                                </Button>
+                                                <GridPane GridPane.columnIndex="1">
+                                                  <columnConstraints>
+                                                    <ColumnConstraints hgrow="SOMETIMES" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                    <RowConstraints vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                   <children>
+                                                      <DatePicker fx:id="start_datepicker" maxWidth="150.0" promptText="DD/MMM/AAAA" GridPane.columnIndex="1">
+                                                         <GridPane.margin>
+                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                         </GridPane.margin>
+                                                      </DatePicker>
+                                                      <Label text="Desde:">
+                                                         <GridPane.margin>
+                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                         </GridPane.margin>
+                                                      </Label>
+                                                   </children>
+                                                </GridPane>
+                                                <GridPane GridPane.columnIndex="2">
+                                                  <columnConstraints>
+                                                    <ColumnConstraints hgrow="SOMETIMES" />
+                                                    <ColumnConstraints hgrow="SOMETIMES" />
+                                                  </columnConstraints>
+                                                  <rowConstraints>
+                                                    <RowConstraints vgrow="SOMETIMES" />
+                                                  </rowConstraints>
+                                                   <children>
+                                                      <DatePicker fx:id="end_datepicker" prefWidth="150.0" promptText="DD/MMM/AAAA" GridPane.columnIndex="1">
+                                                         <GridPane.margin>
+                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                         </GridPane.margin>
+                                                      </DatePicker>
+                                                      <Label text="Hasta:">
+                                                         <GridPane.margin>
+                                                            <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                         </GridPane.margin>
+                                                      </Label>
+                                                   </children>
+                                                </GridPane>
+                                                <TextField fx:id="partnumber_field1" prefWidth="150.0" promptText="Número de Parte" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                <TextField fx:id="lotnumber_field1" prefWidth="150.0" promptText="Número de Lote" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                <TextField fx:id="ponumber_field" prefWidth="150.0" promptText="PO#" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                   <GridPane.margin>
+                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                             </children>
+                                          </GridPane>
                                        </children>
                                     </GridPane>
                                  </content>
@@ -166,7 +212,7 @@
                      <children>
                         <Accordion>
                           <panes>
-                              <TitledPane text="Herramientas de PDF">
+                              <TitledPane text="Ver PDF">
                                  <content>
                                     <GridPane>
                                       <columnConstraints>
@@ -178,7 +224,7 @@
                                         <RowConstraints vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver como PDF" GridPane.columnIndex="2">
+                                          <Button fx:id="pdf_button" disable="true" mnemonicParsing="false" text="Ver PDF" GridPane.columnIndex="2">
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
@@ -212,7 +258,7 @@
                                         <RowConstraints vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <TextField fx:id="partnumber_field" prefWidth="150.0" promptText="Número de Parte" GridPane.columnIndex="1">
+                                          <TextField fx:id="partnumber_field2" prefWidth="120.0" promptText="Número de Parte" GridPane.columnIndex="1">
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
@@ -222,12 +268,12 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
                                           </TextField>
-                                          <ComboBox fx:id="po_combo" prefWidth="120.0" promptText="PO# Abiertos" GridPane.columnIndex="4">
+                                          <ComboBox fx:id="po_combo" prefWidth="75.0" promptText="PO#" GridPane.columnIndex="4">
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
                                           </ComboBox>
-                                          <TextField fx:id="quantity_field" prefWidth="100.0" promptText="Cantidad" GridPane.columnIndex="3">
+                                          <TextField fx:id="quantity_field" prefWidth="75.0" promptText="Cantidad" GridPane.columnIndex="3">
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
@@ -237,7 +283,7 @@
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
                                           </Button>
-                                          <TextField fx:id="lotnumber_field" prefWidth="150.0" promptText="Número de Lote">
+                                          <TextField fx:id="lotnumber_field2" prefWidth="120.0" promptText="Número de Lote">
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
@@ -253,15 +299,15 @@
                         </Accordion>
                         <TableView fx:id="departlot_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                            <columns>
-                              <TableColumn fx:id="partnumber_column3" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
+                              <TableColumn fx:id="partnumber_column" editable="false" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
                               <TableColumn fx:id="partrevision_column" editable="false" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-                              <TableColumn fx:id="lotnumber_column2" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-                              <TableColumn fx:id="process_column2" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Proceso" />
-                              <TableColumn fx:id="ponumber_column2" minWidth="-Infinity" prefWidth="75.0" text="PO#" />
-                              <TableColumn fx:id="linenumber_column2" minWidth="-Infinity" prefWidth="75.0" text="Line/Rel." />
-                              <TableColumn fx:id="quantity_column3" minWidth="-Infinity" prefWidth="100.0" text="Cantidad" />
-                              <TableColumn fx:id="boxquantity_column3" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
-                              <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="200.0" text="Comentarios" />
+                              <TableColumn fx:id="lotnumber_column" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+                              <TableColumn fx:id="process_column" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Proceso" />
+                              <TableColumn fx:id="ponumber_column" minWidth="-Infinity" prefWidth="75.0" text="PO#" />
+                              <TableColumn fx:id="linenumber_column" minWidth="-Infinity" prefWidth="75.0" text="Line/Rel." />
+                              <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="75.0" text="Cantidad" />
+                              <TableColumn fx:id="boxquantity_column" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
+                              <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" />
