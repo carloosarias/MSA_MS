@@ -20,7 +20,12 @@ import model.DepartLot;
 import model.DepartReport;
 import model.PartRevision;
 import model.ProductPart;
-
+/*SELECT DEPART_LOT.po_number, SUM(DEPART_LOT.quantity) totald, sum(INCOMING_LOT.quantity) totali, (sum(INCOMING_LOT.quantity) - SUM(DEPART_LOT.quantity)) AS balance FROM DEPART_LOT
+INNER JOIN INCOMING_REPORT
+INNER JOIN INCOMING_LOT ON INCOMING_LOT.INCOMING_REPORT_ID = INCOMING_REPORT.id
+WHERE DEPART_LOT.po_number = INCOMING_REPORT.po_number
+GROUP BY INCOMING_REPORT.po_number
+HAVING DEPART_LOT.po_number = INCOMING_REPORT.po_number AND (balance > 0);
 /**
  *
  * @author Pavilion Mini
