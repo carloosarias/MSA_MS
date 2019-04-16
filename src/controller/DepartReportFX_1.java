@@ -40,6 +40,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import model.Company;
 import model.CompanyAddress;
+import model.CompanyContact;
 import model.DepartLot;
 import model.DepartReport;
 import model.Employee;
@@ -153,6 +154,7 @@ public class DepartReportFX_1 implements Initializable {
         reset_button.setOnAction((ActionEvent) -> {
             updateDepartReportTable();
         });
+        
         pdf_button.setOnAction((ActionEvent) -> {
             switch(pdf_combo.getSelectionModel().getSelectedIndex()){
                 case 0:
@@ -165,7 +167,10 @@ public class DepartReportFX_1 implements Initializable {
         departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
             updateDepartLotTable();
         });
-        
+    }
+    
+    public void updatePOCombo(){
+        //po_combo.getItems().setAll(msabase.getDepartLotDAO().listPO(departreport_tableview.getSelectionModel().getSelectedItem(), lotnumber_field2.getText(), partnumber_field2.getText(), rev_field.getText(), quantity_field.getText()));
     }
     
     public void setDepartReportTable(){
@@ -230,7 +235,7 @@ public class DepartReportFX_1 implements Initializable {
     }
     
     public void updateDepartReportTable(){
-        departreport_tableview.getItems().setAll(msabase.getDepartReportDAO().list(company_combo1.getValue(), DAOUtil.toUtilDate(start_datepicker.getValue()), DAOUtil.toUtilDate(end_datepicker.getValue()), partnumber_field1.getText(), lotnumber_field1.getText(), ponumber_field.getText()));
+        departreport_tableview.getItems().setAll(msabase.getDepartReportDAO().list(null, company_combo1.getValue(), DAOUtil.toUtilDate(start_datepicker.getValue()), DAOUtil.toUtilDate(end_datepicker.getValue()), partnumber_field1.getText(), lotnumber_field1.getText(), ponumber_field.getText()));
     }
     
     public void updateDepartLotTable(){
@@ -325,7 +330,7 @@ public class DepartReportFX_1 implements Initializable {
             //fields.get("employee_name").setValue(depart_report.getEmployee_name());
             //fields.get("client_name").setValue(depart_report.getCompany_name());
             //fields.get("client_address").setValue(depart_report.getCompany_address());
-            /*List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(msabase.getDepartReportDAO().findCompany(depart_report), true);
+            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(depart_report.getCompany(), true);
             if(company_contact.isEmpty()){
                 fields.get("contact_name").setValue("N/A");
                 fields.get("contact_email").setValue("N/A");
@@ -334,7 +339,7 @@ public class DepartReportFX_1 implements Initializable {
                 fields.get("contact_name").setValue(company_contact.get(0).getName());
                 fields.get("contact_email").setValue(company_contact.get(0).getEmail());
                 fields.get("contact_phone").setValue(company_contact.get(0).getPhone_number());
-            }*/
+            }
             int current_row = 1;
             for(DepartLot item : departlot_list){
                 if(current_row > 41) break;

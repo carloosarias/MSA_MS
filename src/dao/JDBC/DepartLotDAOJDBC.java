@@ -187,7 +187,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         return depart_lot;
     }
     
-    @Override
+    /*@Override
     public DepartReport findDepartReport(DepartLot depart_lot) throws IllegalArgumentException, DAOException {
         if(depart_lot.getId() == null) {
             throw new IllegalArgumentException("DepartLot is not created yet, the DepartLot ID is null.");
@@ -212,8 +212,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         }
         
         return depart_report;
-    }
-    
+    }*/
+    /*
     @Override public PartRevision findPartRevision(DepartLot depart_lot) throws IllegalArgumentException, DAOException {
         if(depart_lot.getId() == null){
             throw new IllegalArgumentException("DepartLot is not created yet, the DepartLot ID is null.");
@@ -238,7 +238,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         }
         
         return part_revision;
-    }
+    }*/
 
     @Override
     public List<DepartLot> list(DepartReport depart_report) throws IllegalArgumentException, DAOException {
@@ -267,7 +267,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         
         return depart_lot;
     }
-    
+    /*
     @Override
     public List<DepartLot> list(DepartReport depart_report, boolean rejected) throws IllegalArgumentException, DAOException {
         if(depart_report.getId() == null) {
@@ -295,7 +295,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         }
         
         return depart_lot;
-    }
+    }*/
     
     
     @Override
@@ -329,12 +329,12 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
     }
     
     @Override
-    public List<DepartLot> list(String lot_number) throws DAOException{
+    public List<DepartLot> list(DepartReport depart_report, Boolean rejected, Company company, Date start_date, Date end_date, String partnumber_pattern, String rev_pattern, String lotnumber_pattern) throws DAOException{
         
         List<DepartLot> incoming_lot = new ArrayList<>();
         
         Object[] values = {
-            lot_number
+            lotnumber_pattern
         };
         
         try(
@@ -352,7 +352,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         
         return incoming_lot;
     }
-    
+    /*
     @Override
     public List<DepartLot> list(PartRevision part_revision, String process, DepartReport depart_report) throws IllegalArgumentException, DAOException{
         if(part_revision.getId() == null) {
@@ -385,8 +385,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         }
         
         return depart_lot;
-    }
-    
+    }*/
+    /*
     @Override
     public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException, DAOException{
         
@@ -410,7 +410,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         
         return depart_report;
     }
-    
+    */
+    /*
     @Override
         public List<String> listProcess(PartRevision part_revision, DepartReport depart_report) throws IllegalArgumentException, DAOException {
             if(part_revision.getId() == null){
@@ -442,6 +443,8 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
 
             return process;
     }
+    */
+    
     @Override
     public void create(DepartReport depart_report, PartRevision part_revision, DepartLot depart_lot) throws IllegalArgumentException, DAOException {
         if (depart_report.getId() == null) {
@@ -545,7 +548,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             throw new DAOException(e);
         }
     }   
-    
+    /*
     @Override
     public List<DepartLot> listDateRange(ProductPart product_part, Date start, Date end){
         List<DepartLot> departlot_list = new ArrayList<DepartLot>();
@@ -569,7 +572,7 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
         }
         
         return departlot_list;
-    }
+    }*/
     
     // Helpers ------------------------------------------------------------------------------------
 

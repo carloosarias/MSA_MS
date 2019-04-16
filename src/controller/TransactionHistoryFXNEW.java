@@ -196,7 +196,7 @@ public class TransactionHistoryFXNEW implements Initializable {
     
     public void updateDepartLotTable(){
         try{
-            departlot_list = msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()));
+            departlot_list = msabase.getDepartLotDAO().list(null, null, null, DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()), partnumber_combo.getValue().getPart_number(), null, null);
             departlot_tableview.getItems().setAll(mergeByDepartReport_Lotnumber(departlot_list));
             departlotbalance_label.setText(""+(getDepartLotStatusValue("Pendiente", false)+getDepartLotStatusValue("Facturado", false)));
             departlotrejected_label.setText(""+getDepartLotStatusValue("Rechazado", false));

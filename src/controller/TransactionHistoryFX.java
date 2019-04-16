@@ -192,7 +192,7 @@ public class TransactionHistoryFX implements Initializable {
     }
     
     public void updateDepartLotTable(){
-        departlot_list = msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()));
+        //departlot_list = msabase.getDepartLotDAO().listDateRange(partnumber_combo.getValue(), DAOUtil.toUtilDate(startdate_picker.getValue().minusDays(1)), DAOUtil.toUtilDate(enddate_picker.getValue()));
         departlot_tableview.getItems().setAll(mergeByDepartReport_Partnumber(departlot_list));
     }
     
@@ -363,7 +363,7 @@ public class TransactionHistoryFX implements Initializable {
         
         public weekly_summary(ProductPart product_part, Date start_date, Date end_date){
             List<IncomingLot> incoming_list = msabase.getIncomingLotDAO().listDateRange(product_part, false, start_date, end_date);
-            List<DepartLot> depart_list = msabase.getDepartLotDAO().listDateRange(product_part, start_date, end_date);
+            //List<DepartLot> depart_list = msabase.getDepartLotDAO().listDateRange(product_part, start_date, end_date);
             List<ProcessReport> process_list = msabase.getProcessReportDAO().listProductPartDateRange(product_part, start_date, end_date);
             this.start_date = start_date;
             this.end_date = end_date;
@@ -373,8 +373,8 @@ public class TransactionHistoryFX implements Initializable {
             process_total = getProcessQuantity(process_list);
             process_good = getProcessStatus(process_list, "Bueno");
             process_bad = getProcessStatus(process_list, "Malo");
-            depart_total = getDepartQuantity(depart_list);
-            depart_rejected = getDepartStatus(depart_list, "Rechazado");
+            //depart_total = getDepartQuantity(depart_list);
+            //depart_rejected = getDepartStatus(depart_list, "Rechazado");
             depart_accepted = depart_total - depart_rejected;
         }
 

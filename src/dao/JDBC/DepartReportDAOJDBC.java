@@ -55,7 +55,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             +"INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             +"INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
             +"INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            +"WHERE DEPART_REPORT.active = 1 AND DEPART_LOT.active = 1 "
+            +"WHERE DEPART_REPORT.active = 1 AND DEPART_LOT.active = 1 AND (DEPART_LOT.rejected = ? OR ? IS NULL) "
             +"GROUP BY DEPART_REPORT.id "
             +"HAVING ((COMPANY.id = ? OR ? IS NULL) AND (DEPART_REPORT.report_date BETWEEN ? AND ?) AND (PRODUCT_PART.part_number LIKE ?) AND (DEPART_LOT.lot_number LIKE ?) AND (DEPART_LOT.po_number LIKE ?))"
             +"ORDER BY DEPART_REPORT.id DESC";
@@ -133,7 +133,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     }
 
     @Override
-    public List<DepartReport> list(Company company, Date start_date, Date end_date, String partnumber_pattern, String lotnumber_pattern, String po_pattern) throws IllegalArgumentException, DAOException {
+    public List<DepartReport> list(Boolean rejected, Company company, Date start_date, Date end_date, String partnumber_pattern, String lotnumber_pattern, String po_pattern) throws IllegalArgumentException, DAOException {
         if(company == null) company = new Company();
         if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
         if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
@@ -141,6 +141,8 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
         List<DepartReport> depart_reports = new ArrayList<>();
         
         Object[] values = {
+            rejected,
+            rejected,
             company.getId(),
             company.getId(),
             start_date,

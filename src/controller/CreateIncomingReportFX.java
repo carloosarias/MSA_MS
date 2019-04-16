@@ -162,7 +162,7 @@ public class CreateIncomingReportFX implements Initializable {
         status_combo.setOnAction((ActionEvent) -> {
             if(status_combo.getSelectionModel().getSelectedItem().equals("Rechazo")){
                 departreport_vbox.getChildren().addAll(departreport_label, departreport_combo, departlot_label, departlot_combo);
-                departreport_combo.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().listDepartReport(false)));
+                departreport_combo.setItems(FXCollections.observableArrayList(msabase.getDepartReportDAO().list(false, null, null, null, null, null, null)));
                 departreport_combo.requestFocus();
             }else{
                 departreport_vbox.getChildren().removeAll(departreport_label, departreport_combo, departlot_label, departlot_combo);
@@ -264,7 +264,7 @@ public class CreateIncomingReportFX implements Initializable {
             if(incoming_lot.getStatus().equals("Rechazo")){
                 incoming_lot.setTemp_departlot(departlotcombo_selection);
                 departlot_queue.add(departlotcombo_selection);
-                incoming_lot.setComments(incoming_lot.getComments()+"Folio de Remisión #"+msabase.getDepartLotDAO().findDepartReport(departlotcombo_selection));
+                incoming_lot.setComments(incoming_lot.getComments()+"Folio de Remisión #"+departlotcombo_selection.getDepart_report().getId());
             }
             incoming_lots.add(incoming_lot);
             clearFields();
@@ -429,7 +429,7 @@ public class CreateIncomingReportFX implements Initializable {
     }
     
     public void updateDepartLotCombo(){
-        departlot_combo.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreportcombo_selection, false)));
+        departlot_combo.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreportcombo_selection, false, null, null, null, null, null, null)));
         departlot_combo.getItems().removeAll(departlot_queue);
         departlot_combo.setDisable(departlot_combo.getItems().isEmpty());
     }
