@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <TableView GridPane.rowIndex="1">
+        <columns>
+            <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
+          <TableColumn minWidth="-Infinity" prefWidth="100.0" text="PO#" />
+            <TableColumn minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+            <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
+               <columns>
+                <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Reciba" />
+                  <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Remisión" />
+                  <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Scrap" />
+               </columns>
+            </TableColumn>
+            <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Balance" />
+        </columns>
+         <GridPane.margin>
+            <Insets bottom="4.0" left="4.0" right="4.0" />
+         </GridPane.margin>
+      </TableView>
+   </children>
+</GridPane>
