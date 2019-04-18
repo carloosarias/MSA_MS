@@ -1,38 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.POQueryFX">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints vgrow="SOMETIMES" />
     <RowConstraints vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TableView GridPane.rowIndex="1">
+      <TableView fx:id="poquery_tableview" GridPane.rowIndex="1">
         <columns>
-            <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
-          <TableColumn minWidth="-Infinity" prefWidth="100.0" text="PO#" />
-            <TableColumn minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+            <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
+          <TableColumn fx:id="ponumber_column" minWidth="-Infinity" prefWidth="100.0" text="PO#" />
+            <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
+            <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
             <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
                <columns>
-                <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Reciba" />
-                  <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Remisión" />
-                  <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Scrap" />
+                <TableColumn fx:id="incoming_column" minWidth="-Infinity" prefWidth="100.0" text="Reciba" />
+                  <TableColumn fx:id="depart_column" minWidth="-Infinity" prefWidth="100.0" text="Remisión" />
+                  <TableColumn fx:id="scrap_column" minWidth="-Infinity" prefWidth="100.0" text="Scrap" />
                </columns>
             </TableColumn>
-            <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Balance" />
+            <TableColumn fx:id="balance_column" minWidth="-Infinity" prefWidth="100.0" text="Balance" />
         </columns>
          <GridPane.margin>
             <Insets bottom="4.0" left="4.0" right="4.0" />
          </GridPane.margin>
       </TableView>
+      <Accordion>
+        <panes>
+          <TitledPane animated="false" text="Filtros de Búsqueda">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <ComboBox fx:id="company_combo" prefWidth="200.0" promptText="Cliente" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                        <TextField fx:id="partnumber_field" prefWidth="150.0" promptText="Número de Parte" GridPane.columnIndex="2">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TextField>
+                        <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Búsqueda" GridPane.columnIndex="3">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <TextField fx:id="ponumber_field" prefWidth="100.0" promptText="PO#">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TextField>
+                     </children>
+                  </GridPane>
+               </content>
+            </TitledPane>
+        </panes>
+         <GridPane.margin>
+            <Insets left="4.0" right="4.0" top="4.0" />
+         </GridPane.margin>
+      </Accordion>
    </children>
 </GridPane>
