@@ -26,8 +26,8 @@ import model.POQuery;
 public class POQueryDAOJDBC implements POQueryDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_LIST_FILTER = 
-        "SELECT COMPANY.`name`, IR.po_number, PRODUCT_PART.part_number, PART_REVISION.rev, "
-        + "SUM(IFNULL(IL.quantity, 0)) incoming_quantity, SUM(IFNULL(departlot.quantity, 0)) depart_qty, (SUM(IFNULL(IL.quantity,0)) - SUM(IFNULL(departlot.quantity, 0))) AS balance "
+        "SELECT IR.po_number, PART_REVISION.*, PRODUCT_PART.*, COMPANY.*, METAL.*, SPECIFICATION.*, "
+        + "SUM(IFNULL(IL.quantity, 0)) incoming_qty, SUM(IFNULL(departlot.quantity, 0)) depart_qty, (SUM(IFNULL(IL.quantity,0)) - SUM(IFNULL(departlot.quantity, 0))) AS balance_qty "
         + "FROM (SELECT * FROM DEPART_LOT WHERE DEPART_LOT.active = 1 AND DEPART_LOT.rejected = 0 GROUP BY DEPART_LOT.id) departlot "
         + "RIGHT JOIN (SELECT * FROM INCOMING_REPORT WHERE INCOMING_REPORT.discrepancy = 0 GROUP BY po_number) IR ON departlot.po_number = IR.po_number "
         + "LEFT OUTER JOIN (SELECT * FROM INCOMING_LOT GROUP BY INCOMING_LOT.id) IL ON (IL.INCOMING_REPORT_ID = IR.id) "
@@ -38,7 +38,7 @@ public class POQueryDAOJDBC implements POQueryDAO{
         + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
         + "GROUP BY IR.po_number, PART_REVISION.id "
         + "HAVING IR.po_number LIKE ? AND (COMPANY.id = ? OR ? IS NULL) AND PRODUCT_PART.part_number LIKE ? "
-        + "ORDER BY IR.po_number, PART_REVISION.id DESC, balance DESC";
+        + "ORDER BY IR.po_number, PART_REVISION.id DESC, balance_qty DESC";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -57,10 +57,10 @@ public class POQueryDAOJDBC implements POQueryDAO{
     
     // Actions ------------------------------------------------------------------------------------
     @Override
-    public List<POQueryDAO> list(String ponumber_pattern, Company company, String partnumber_pattern) throws IllegalArgumentException, DAOException {
+    public List<POQuery> list(String ponumber_pattern, Company company, String partnumber_pattern) throws IllegalArgumentException, DAOException {
         if(company == null) company = new Company(); 
         
-        List<POQueryDAO> poquery_list = new ArrayList<>();
+        List<POQuery> poquery_list = new ArrayList<>();
         
         Object[] values = {
             ponumber_pattern+"%",
@@ -75,8 +75,7 @@ public class POQueryDAOJDBC implements POQueryDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                poquery_list.add(map("DEPART_LOT.", "PART_REVISION.", "PRODUCT_PART.", "productpart_company.", "METAL.", "SPECIFICATION.", 
-                        "DEPART_REPORT.", "EMPLOYEE.", "departreport_company.", "COMPANY_ADDRESS.", resultSet));
+                poquery_list.add(map("IR.", "PART_REVISION.", "PRODUCT_PART.", "COMPANY.", "METAL.", "SPECIFICATION.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -86,7 +85,7 @@ public class POQueryDAOJDBC implements POQueryDAO{
     }
 
     @Override
-    public List<POQueryDAO> listAvailable(Company company, String partnumber_pattern, String rev_pattern) throws IllegalArgumentException, DAOException {
+    public List<POQuery> listAvailable(Company company, String partnumber_pattern, String rev_pattern) throws IllegalArgumentException, DAOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
@@ -94,27 +93,24 @@ public class POQueryDAOJDBC implements POQueryDAO{
 
     /**
      * Map the current row of the given ResultSet to an DepartLot.
+     * @param incomingreport_label
+     * @param partrevision_label
+     * @param productpart_label
+     * @param company_label
+     * @param metal_label
+     * @param specification_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an DepartLot.
      * @return The mapped DepartLot from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static DepartLot map(String incomingreport_label, ResultSet resultSet) throws SQLException {
-        
+    public static POQuery map(String incomingreport_label, String partrevision_label, String productpart_label, String company_label, String metal_label, String specification_label, ResultSet resultSet) throws SQLException {
         POQuery poquery = new POQuery();
         poquery.setPo_number(resultSet.getString(incomingreport_label+"po_number"));
-        depart_lot.setId(resultSet.getInt(departlot_label+"id"));
-        depart_lot.setLot_number(resultSet.getString(departlot_label+"lot_number"));
-        depart_lot.setQuantity(resultSet.getInt(departlot_label+"quantity"));
-        depart_lot.setBox_quantity(resultSet.getInt(departlot_label+"box_quantity"));
-        depart_lot.setProcess(resultSet.getString(departlot_label+"process"));
-        depart_lot.setPo_number(resultSet.getString(departlot_label+"po_number"));
-        depart_lot.setLine_number(resultSet.getString(departlot_label+"line_number"));
-        depart_lot.setComments(resultSet.getString(departlot_label+"comments"));
-        depart_lot.setRejected(resultSet.getBoolean(departlot_label+"rejected"));
-        depart_lot.setPending(resultSet.getBoolean(departlot_label+"pending"));
-        depart_lot.setPart_revision(PartRevisionDAOJDBC.map(partrevision_label, productpart_label, productpartcompany_label, metal_label, specification_label, resultSet));
-        depart_lot.setDepart_report(DepartReportDAOJDBC.map(departreport_label, employee_label, departreportcompany_label, companyaddress_label, resultSet));
-        
-        return depart_lot;
+        poquery.setIncoming_qty(resultSet.getInt("incoming_qty"));
+        poquery.setDepart_qty(resultSet.getInt("depart_qty"));
+        poquery.setScrap_qty(0);
+        poquery.setBalance_qty(resultSet.getInt("balance_qty"));
+        poquery.setPart_revision(PartRevisionDAOJDBC.map(partrevision_label, productpart_label, company_label, metal_label, specification_label, resultSet));
+        return poquery;
     }    
 }

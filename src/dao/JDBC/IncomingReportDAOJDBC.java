@@ -292,8 +292,8 @@ public class IncomingReportDAOJDBC implements IncomingReportDAO{
             DAOUtil.toSqlDate(incoming_report.getReport_date()),
             incoming_report.getPo_number(),
             incoming_report.getPacking_list(),
-            incoming_report.getId(),
-            incoming_report.getDiscrepancy()
+            incoming_report.getDiscrepancy(),
+            incoming_report.getId()
         };
         
         try(

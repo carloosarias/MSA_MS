@@ -12,16 +12,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.POQueryFX">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints vgrow="SOMETIMES" />
-    <RowConstraints vgrow="SOMETIMES" />
-  </rowConstraints>
+<GridPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.POQueryFX">
    <children>
-      <TableView fx:id="poquery_tableview" GridPane.rowIndex="1">
+      <TableView fx:id="poquery_tableview" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
           <TableColumn fx:id="ponumber_column" minWidth="-Infinity" prefWidth="100.0" text="PO#" />
@@ -40,7 +33,7 @@
             <Insets bottom="4.0" left="4.0" right="4.0" />
          </GridPane.margin>
       </TableView>
-      <Accordion>
+      <Accordion GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
         <panes>
           <TitledPane animated="false" text="Filtros de Búsqueda">
                <content>

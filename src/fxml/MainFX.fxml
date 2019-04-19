@@ -51,6 +51,7 @@
                   <Tab fx:id="tank_tab" closable="false" text="Tanques" />
                   <Tab fx:id="orderpurchase_tab" closable="false" text="Historial de Orden de Compra" />
                   <Tab fx:id="orderpurchasecart_tab" closable="false" text="Carrito de Compras" />
+                  <Tab fx:id="poquery_tab" closable="false" text="Consulta de PO#" />
                   <Tab fx:id="incoming_tab" closable="false" text="Reciba" />
                   <Tab fx:id="orderpurchaseincomingreport_tab" closable="false" text="Reciba de Orden de Compra" />
                   <Tab fx:id="depart_tab" closable="false" text="Remisiones" />

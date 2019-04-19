@@ -28,6 +28,7 @@ import dao.interfaces.ModuleEmployeeDAO;
 import dao.interfaces.OrderPurchaseDAO;
 import dao.interfaces.OrderPurchaseIncomingItemDAO;
 import dao.interfaces.OrderPurchaseIncomingReportDAO;
+import dao.interfaces.POQueryDAO;
 import dao.interfaces.PartRevisionDAO;
 import dao.interfaces.ProcessReportDAO;
 import dao.interfaces.ProductDAO;
@@ -461,6 +462,14 @@ public abstract class DAOFactory {
      */   
     public ActivityReportDAO getActivityReportDAO(){
         return new ActivityReportDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the POQuery DAO associated with the current DAOFactory.
+     * @return The POQuery DAO associated with the current DAOFactory.
+     */   
+    public POQueryDAO getPOQueryDAO(){
+        return new POQueryDAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.

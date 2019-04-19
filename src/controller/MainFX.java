@@ -59,6 +59,8 @@ public class MainFX implements Initializable {
     @FXML
     private Tab orderpurchase_tab;
     @FXML
+    private Tab poquery_tab;
+    @FXML
     private Tab incoming_tab;
     @FXML
     private Tab depart_tab;
@@ -147,10 +149,11 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(partrevision_tab, productpart_tab, specification_tab, metal_tab);
                         break;
                     case "Reciba":
+                        poquery_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/POQueryFX.fxml")));
                         incoming_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
                         orderpurchaseincomingreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
                         depart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX_1.fxml")));
-                        root_tabpane.getTabs().setAll(incoming_tab, orderpurchaseincomingreport_tab, depart_tab);
+                        root_tabpane.getTabs().setAll(poquery_tab, incoming_tab, orderpurchaseincomingreport_tab, depart_tab);
                         break;
                     case "Facturación":
                         invoice_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));

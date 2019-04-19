@@ -8,6 +8,7 @@ package dao.interfaces;
 import dao.DAOException;
 import java.util.List;
 import model.Company;
+import model.POQuery;
 
 /**
  *
@@ -17,7 +18,7 @@ public interface POQueryDAO {
     
     // Actions ------------------------------------------------------------------------------------
     
-    public List<POQueryDAO> list(String ponumber_pattern, Company company, String partnumber_pattern) throws IllegalArgumentException, DAOException;
+    public List<POQuery> list(String ponumber_pattern, Company company, String partnumber_pattern) throws IllegalArgumentException, DAOException;
     
-    public List<POQueryDAO> listAvailable(Company company, String partnumber_pattern, String rev_pattern) throws IllegalArgumentException, DAOException;
+    public List<POQuery> listAvailable(Company company, String partnumber_pattern, String rev_pattern) throws IllegalArgumentException, DAOException;
 }
