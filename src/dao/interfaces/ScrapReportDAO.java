@@ -8,6 +8,7 @@ package dao.interfaces;
 import dao.DAOException;
 import java.util.Date;
 import java.util.List;
+import model.Company;
 import model.Employee;
 import model.PartRevision;
 import model.ProductPart;
@@ -29,57 +30,25 @@ public interface ScrapReportDAO {
     public ScrapReport find(Integer id) throws DAOException;
     
     /**
-     * Returns the Employee from the database matching the given ScrapReport ID, otherwise null.
-     * ScrapReport ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param scrap_report The ScrapReport to get the Employee from.
-     * @return The Employee from the database matching the given ScrapReport ID, otherwise null.
-     * @throws IllegalArgumentException If ScrapReport ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public Employee findEmployee(ScrapReport scrap_report) throws IllegalArgumentException, DAOException;
-    
-    /**
-     * Returns the PartRevision from the database matching the given ScrapReport ID, otherwise null.
-     * ScrapReport ID must not be null, otherwise it will throw IllegalArgumentException.
-     * @param scrap_report The ScrapReport to get the PartRevision from.
-     * @return The PartRevision from the database matching the given ScrapReport ID, otherwise null.
-     * @throws IllegalArgumentException If ScrapReport ID is null.
-     * @throws DAOException If something fails at database level.
-     */
-    public PartRevision findPartRevision(ScrapReport scrap_report) throws IllegalArgumentException, DAOException;
-    
-    /**
      * Returns a list of all ScrapReport from the database ordered by ScrapReport ID. The list is never null and
      * is empty when the database does not contain any ScrapReport.
      * @return A list of all ScrapReport from the database ordered by ScrapReport ID.
      * @throws DAOException If something fails at database level.
      */        
-    public List<ScrapReport> list() throws DAOException;
-    
-    /**
-     * Returns a list of all ScrapReport from the database matching ProductPart ordered by ScrapReport ID.
-     * The list is never null and is empty when the database does not contain any ScrapReport matching ProductPart.
-     * @param product_part the ProductPart to be searched for.
-     * @return A list of all ScrapReport matching ProductPart from the database ordered by ScrapReport ID.
-     * @throws IllegalArgumentException If ProductPart ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<ScrapReport> listProductPart(ProductPart product_part) throws IllegalArgumentException, DAOException;
+    public List<ScrapReport> list(Company company, String partnumber_pattern, String ponumber_pattern, Date start_date, Date end_date) throws DAOException;
     
     /**
      * Create the given ScrapReport in the database.
      * The Employee ID must not be null, The PartRevision ID must not be null,
      * and the ScrapReport ID must be null, otherwise it will throw IllegalArgumentException.
      * After creating, the DAO will set the obtained ID in the given ScrapReport.
-     * @param employee The Employee to be assigned to this ScrapReport.
-     * @param part_revision The PartRevision to be assigned to this ScrapReport.
      * @param scrap_report The ScrapReport to be created.
      * @throws IllegalArgumentException If the Employee ID is null.
      * @throws IllegalArgumentException If the PartRevision ID is null.
      * @throws IllegalArgumentException If the ScrapReport ID is not null.
      * @throws DAOException If something fails at database level.
      */    
-    public void create(Employee employee, PartRevision part_revision, ScrapReport scrap_report) throws IllegalArgumentException, DAOException;
+    public void create(ScrapReport scrap_report) throws IllegalArgumentException, DAOException;
     
     /**
      * Update the given ScrapReport in the database. The ScrapReport ID must not be null, 
@@ -97,7 +66,4 @@ public interface ScrapReportDAO {
      * @throws DAOException If something fails at database level.
      */
     public void delete(ScrapReport scrap_report) throws DAOException;
-    
-    public List<ScrapReport> listDateRange(ProductPart product_part, Date start, Date end);
-
 }

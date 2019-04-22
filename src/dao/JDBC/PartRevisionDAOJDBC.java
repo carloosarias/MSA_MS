@@ -270,7 +270,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
      * @return The mapped PartRevision from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static PartRevision map(String partrevision_label, String productpart_label, String productpartcompany_label, String metal_label, String specification_label, ResultSet resultSet) throws SQLException{
+    public static PartRevision map(String partrevision_label, String productpart_label, String company_label, String metal_label, String specification_label, ResultSet resultSet) throws SQLException{
         PartRevision part_revision = new PartRevision();
         part_revision.setId(resultSet.getInt(partrevision_label+"id"));
         part_revision.setRev(resultSet.getString(partrevision_label+"rev"));
@@ -279,7 +279,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         part_revision.setBase_weight(resultSet.getDouble(partrevision_label+"base_weight"));
         part_revision.setFinal_weight(resultSet.getDouble(partrevision_label+"final_weight"));
         part_revision.setActive(resultSet.getBoolean(partrevision_label+"active"));
-        part_revision.setProduct_part(ProductPartDAOJDBC.map(productpart_label, productpartcompany_label, resultSet));
+        part_revision.setProduct_part(ProductPartDAOJDBC.map(productpart_label, company_label, resultSet));
         part_revision.setMetal(MetalDAOJDBC.map(metal_label, resultSet));
         part_revision.setSpecification(SpecificationDAOJDBC.map(specification_label, resultSet));
         

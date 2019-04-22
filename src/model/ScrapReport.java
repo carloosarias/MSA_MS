@@ -16,13 +16,12 @@ public class ScrapReport implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Date report_date;
+    private String po_number;
     private Integer quantity;
     private String comments;
-    
-    //INNER JOINS
-    private String employee_name;
-    private String part_number;
-    private String part_revision;
+    private boolean active;
+    private Employee employee;
+    private PartRevision part_revision;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -41,7 +40,15 @@ public class ScrapReport implements Serializable{
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
     }
+    
+    public String getPo_number() {
+        return po_number;
+    }
 
+    public void setPo_number(String po_number) {
+        this.po_number = po_number;
+    }
+    
     public Integer getQuantity() {
         return quantity;
     }
@@ -58,31 +65,29 @@ public class ScrapReport implements Serializable{
         this.comments = comments;
     }
     
-    //INNER JOINS
-    public String getEmployee_name() {
-        return employee_name;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setEmployee_name(String employee_name) {
-        this.employee_name = employee_name;
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public String getPart_number() {
-        return part_number;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
-    public void setPart_number(String part_number) {
-        this.part_number = part_number;
-    }
-
-    public String getPart_revision() {
+    public PartRevision getPart_revision() {
         return part_revision;
     }
 
-    public void setPart_revision(String part_revision) {
+    public void setPart_revision(PartRevision part_revision) {
         this.part_revision = part_revision;
     }
-    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -113,7 +118,7 @@ public class ScrapReport implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%d",
-                id);
+        return String.format("PO#: %s Parte: %s Cantidad: %d",
+                po_number, part_revision, quantity);
     }
 }

@@ -7,7 +7,6 @@ package dao.JDBC;
 
 import dao.DAOException;
 import static dao.DAOUtil.prepareStatement;
-import static dao.JDBC.DepartLotDAOJDBC.map;
 import dao.interfaces.POQueryDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Company;
-import model.DepartLot;
 import model.POQuery;
 
 /**
@@ -26,19 +24,19 @@ import model.POQuery;
 public class POQueryDAOJDBC implements POQueryDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_LIST_FILTER = 
-        "SELECT IR.po_number, PART_REVISION.*, PRODUCT_PART.*, COMPANY.*, METAL.*, SPECIFICATION.*, "
-        + "SUM(IFNULL(IL.quantity, 0)) incoming_qty, SUM(IFNULL(departlot.quantity, 0)) depart_qty, (SUM(IFNULL(IL.quantity,0)) - SUM(IFNULL(departlot.quantity, 0))) AS balance_qty "
-        + "FROM (SELECT * FROM DEPART_LOT WHERE DEPART_LOT.active = 1 AND DEPART_LOT.rejected = 0 GROUP BY DEPART_LOT.id) departlot "
-        + "RIGHT JOIN (SELECT * FROM INCOMING_REPORT WHERE INCOMING_REPORT.discrepancy = 0 GROUP BY po_number) IR ON departlot.po_number = IR.po_number "
-        + "LEFT OUTER JOIN (SELECT * FROM INCOMING_LOT GROUP BY INCOMING_LOT.id) IL ON (IL.INCOMING_REPORT_ID = IR.id) "
-        + "INNER JOIN PART_REVISION ON IL.PART_REVISION_ID = PART_REVISION.id "
-        + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-        + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-        + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-        + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
-        + "GROUP BY IR.po_number, PART_REVISION.id "
-        + "HAVING IR.po_number LIKE ? AND (COMPANY.id = ? OR ? IS NULL) AND PRODUCT_PART.part_number LIKE ? "
-        + "ORDER BY IR.po_number, PART_REVISION.id DESC, balance_qty DESC";
+            "SELECT INCOMING_REPORT.po_number, PART_REVISION.*, PRODUCT_PART.*, COMPANY.*, METAL.*, SPECIFICATION.*, "
+            + "IFNULL(incominglot.sum_qty,0) incoming_qty, IFNULL(departlot.sum_qty,0) depart_qty, "
+            + "(IFNULL(incominglot.sum_qty,0) - IFNULL(departlot.sum_qty,0)) balance_qty FROM INCOMING_REPORT "
+            + "INNER JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, INCOMING_REPORT_ID FROM INCOMING_LOT GROUP BY PART_REVISION_ID, INCOMING_REPORT_ID) incominglot ON INCOMING_REPORT.id = incominglot.INCOMING_REPORT_ID "
+            + "LEFT JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, po_number FROM DEPART_LOT GROUP BY PART_REVISION_ID, po_number) departlot ON (INCOMING_REPORT.po_number = departlot.po_number AND incominglot.PART_REVISION_ID = departlot.PART_REVISION_ID) "
+            + "INNER JOIN PART_REVISION ON incominglot.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
+            + "GROUP BY incominglot.PART_REVISION_ID, INCOMING_REPORT.po_number "
+            + "HAVING INCOMING_REPORT.po_number LIKE ? AND (COMPANY.id = ? OR ? IS NULL) AND PRODUCT_PART.part_number LIKE ? "
+            + "ORDER BY po_number, COMPANY.id, PART_REVISION.id, balance_qty DESC";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -75,7 +73,7 @@ public class POQueryDAOJDBC implements POQueryDAO{
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                poquery_list.add(map("IR.", "PART_REVISION.", "PRODUCT_PART.", "COMPANY.", "METAL.", "SPECIFICATION.", resultSet));
+                poquery_list.add(map("INCOMING_REPORT.", "PART_REVISION.", "PRODUCT_PART.", "COMPANY.", "METAL.", "SPECIFICATION.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);

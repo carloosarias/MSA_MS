@@ -13,9 +13,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import model.Company;
 import model.Employee;
 import model.PartRevision;
 import model.ProductPart;
@@ -28,50 +30,32 @@ import model.ScrapReport;
 public class ScrapReportDAOJDBC implements ScrapReportDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.quantity, SCRAP_REPORT.comments, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev "
-            + "FROM SCRAP_REPORT "
+            "SELECT * FROM SCRAP_REPORT "
             + "INNER JOIN EMPLOYEE ON SCRAP_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE SCRAP_REPORT.id = ?";
-    private static final String SQL_FIND_EMPLOYEE_BY_ID = 
-            "SELECT EMPLOYEE_ID FROM SCRAP_REPORT WHERE id = ?";
-    private static final String SQL_FIND_PART_REVISION_BY_ID = 
-            "SELECT PART_REVISION_ID FROM SCRAP_REPORT WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.quantity, SCRAP_REPORT.comments, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev "
-            + "FROM SCRAP_REPORT "
+    private static final String SQL_LIST_ACTIVE_FILTER = 
+            "SELECT * FROM SCRAP_REPORT "
             + "INNER JOIN EMPLOYEE ON SCRAP_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "ORDER BY SCRAP_REPORT.report_date, SCRAP_REPORT.id";
-    private static final String SQL_LIST_PRODUCT_PART_ORDER_BY_ID = 
-            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.quantity, SCRAP_REPORT.comments, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev "
-            + "FROM SCRAP_REPORT "
-            + "INNER JOIN EMPLOYEE ON SCRAP_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? "
-            + "ORDER BY SCRAP_REPORT.report_date, SCRAP_REPORT.id";
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "WHERE SCRAP_REPORT.active = 1 "
+            + "HAVING (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (SCRAP_REPORT.po_number LIKE ?) AND (SCRAP_REPORT.report_date BETWEEN ? AND ?) "
+            + "ORDER BY SCRAP_REPORT.id";
     private static final String SQL_INSERT = 
-            "INSERT INTO SCRAP_REPORT (EMPLOYEE_ID, PART_REVISION_ID, report_date, quantity, comments) "
-            + "VALUES(?, ?, ?, ?, ?)";
+            "INSERT INTO SCRAP_REPORT (EMPLOYEE_ID, PART_REVISION_ID, report_date, quantity, comments, po_number, active) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SCRAP_REPORT SET report_date = ?, quantity = ?, comments = ? WHERE id = ?";
+            "UPDATE SCRAP_REPORT SET report_date = ?, quantity = ?, comments = ?, po_number = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM SCRAP_REPORT WHERE id = ?";
-    private static final String LIST_SCRAP_REPORT_BY_PRODUCT_PART_DATE_RANGE = 
-            "SELECT SCRAP_REPORT.id, SCRAP_REPORT.report_date, SCRAP_REPORT.quantity, SCRAP_REPORT.comments, "
-            + "EMPLOYEE.first_name, EMPLOYEE.last_name, PRODUCT_PART.part_number, PART_REVISION.rev "
-            + "FROM SCRAP_REPORT "
-            + "INNER JOIN EMPLOYEE ON SCRAP_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN PART_REVISION ON SCRAP_REPORT.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "WHERE PART_REVISION.PRODUCT_PART_ID = ? AND SCRAP_REPORT.report_date BETWEEN ? AND ? "
-            + "ORDER BY SCRAP_REPORT.report_date, SCRAP_REPORT.id";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -118,68 +102,26 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
 
         return scrap_report;
     }
-    
-    @Override
-    public Employee findEmployee(ScrapReport scrap_report) throws IllegalArgumentException, DAOException {
-        if(scrap_report.getId() == null) {
-            throw new IllegalArgumentException("ScrapReport is not created yet, the ScrapReport ID is null.");
-        }
-        
-        Employee employee = null;
-        
-        Object[] values = {
-            scrap_report.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_EMPLOYEE_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                employee = daoFactory.getEmployeeDAO().find(resultSet.getInt("EMPLOYEE_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return employee;
-    }
-    
-    @Override
-    public PartRevision findPartRevision(ScrapReport scrap_report) throws IllegalArgumentException, DAOException {
-        if(scrap_report.getId() == null) {
-            throw new IllegalArgumentException("ScrapReport is not created yet, the ScrapReport ID is null.");
-        }
-        
-        PartRevision part_revision = null;
-        
-        Object[] values = {
-            scrap_report.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_PART_REVISION_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                part_revision = daoFactory.getPartRevisionDAO().find(resultSet.getInt("PART_REVISION_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return part_revision;
-    }
-    
-    @Override
-    public List<ScrapReport> list() throws DAOException {
-        List<ScrapReport> scrap_report = new ArrayList<>();
 
+    @Override
+    public List<ScrapReport> list(Company company, String partnumber_pattern, String ponumber_pattern, Date start_date, Date end_date) throws IllegalArgumentException, DAOException {
+        if(company == null) company = new Company();
+        if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
+        if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
+        List<ScrapReport> scrap_report = new ArrayList<>();
+        
+        Object[] values = {
+            company.getId(),
+            company.getId(),
+            partnumber_pattern+"%",
+            ponumber_pattern+"%",
+            start_date,
+            end_date
+        };
+        
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_FILTER, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -193,52 +135,19 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
     }
 
     @Override
-    public List<ScrapReport> listProductPart(ProductPart product_part) throws IllegalArgumentException, DAOException {
-        if(product_part.getId() == null) {
-            throw new IllegalArgumentException("ProductPart is not created yet, the ProductPart ID is null.");
-        }    
-        
-        List<ScrapReport> scrap_report = new ArrayList<>();
-        
-        Object[] values = {
-            product_part.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PRODUCT_PART_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                scrap_report.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return scrap_report;
-    }
-
-    @Override
-    public void create(Employee employee, PartRevision part_revision, ScrapReport scrap_report) throws IllegalArgumentException, DAOException {
-        if (employee.getId() == null) {
-            throw new IllegalArgumentException("Employee is not created yet, the Employee ID is null.");
-        }
-        
-        if(part_revision.getId() == null){
-            throw new IllegalArgumentException("PartRevision is not created yet, the PartRevision ID is null.");
-        }
-        
+    public void create(ScrapReport scrap_report) throws IllegalArgumentException, DAOException {
         if(scrap_report.getId() != null){
             throw new IllegalArgumentException("ScrapReport is already created, the ScrapReport ID is not null.");
         }
         
         Object[] values = {
-            employee.getId(),
-            part_revision.getId(),
+            scrap_report.getEmployee().getId(),
+            scrap_report.getPart_revision().getId(),
             DAOUtil.toSqlDate(scrap_report.getReport_date()),
             scrap_report.getQuantity(),
             scrap_report.getComments(),
+            scrap_report.getPo_number(),
+            scrap_report.isActive()
         };
         
         try(
@@ -310,30 +219,6 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
         }
     }
     
-    @Override
-    public List<ScrapReport> listDateRange(ProductPart product_part, Date start, Date end){
-        List<ScrapReport> scrapreport_list = new ArrayList<ScrapReport>();
-        Object[] values = {
-            product_part.getId(),
-            start,
-            end
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, LIST_SCRAP_REPORT_BY_PRODUCT_PART_DATE_RANGE, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                scrapreport_list.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return scrapreport_list;
-    }
-    
     // Helpers ------------------------------------------------------------------------------------
 
     /**
@@ -342,17 +227,16 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
      * @return The mapped PartRevision from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static ScrapReport map(ResultSet resultSet) throws SQLException{
+    public static ScrapReport map(String scrapreport_label, String employee_label, String partrevision_label, String productpart_label, 
+            String metal_label, String specificiation_label, String company_label, ResultSet resultSet) throws SQLException{
         ScrapReport scrap_report = new ScrapReport();
-        scrap_report.setId(resultSet.getInt("SCRAP_REPORT.id"));
-        scrap_report.setReport_date(resultSet.getDate("SCRAP_REPORT.report_date"));
-        scrap_report.setQuantity(resultSet.getInt("SCRAP_REPORT.quantity"));
-        scrap_report.setComments(resultSet.getString("SCRAP_REPORT.comments"));
-        
-        //INNER JOINS
-        scrap_report.setEmployee_name(resultSet.getString("EMPLOYEE.first_name") + resultSet.getString("EMPLOYEE.last_name"));
-        scrap_report.setPart_number(resultSet.getString("PRODUCT_PART.part_number"));
-        scrap_report.setPart_revision(resultSet.getString("PART_REVISION.rev"));
+        scrap_report.setId(resultSet.getInt(scrapreport_label+"id"));
+        scrap_report.setReport_date(resultSet.getDate(scrapreport_label+"report_date"));
+        scrap_report.setQuantity(resultSet.getInt(scrapreport_label+"quantity"));
+        scrap_report.setComments(resultSet.getString(scrapreport_label+"comments"));
+        scrap_report.setPo_number(resultSet.getString(scrapreport_label+"po_number"));
+        scrap_report.setEmployee(EmployeeDAOJDBC.map(employee_label, resultSet));
+        scrap_report.setPart_revision(PartRevisionDAOJDBC.map(partrevision_label, productpart_label, company_label, metal_label, specificiation_label, resultSet));
         return scrap_report;
     }
     
