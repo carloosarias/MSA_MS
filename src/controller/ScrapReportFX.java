@@ -69,7 +69,7 @@ public class ScrapReportFX implements Initializable {
     @FXML
     private TableView<ScrapReport> scrapreport_tableview;
     @FXML
-    private TableColumn<ScrapReport, Integer> id_column;
+    private TableColumn<ScrapReport, String> counter_column;
     @FXML
     private TableColumn<ScrapReport, String> company_column;
     @FXML
@@ -123,6 +123,7 @@ public class ScrapReportFX implements Initializable {
                 if(Integer.parseInt(quantity_field2.getText()) > po_combo.getValue().getBalance_qty() || Integer.parseInt(quantity_field2.getText()) <= 0) throw new Exception();
                 createScrapReport();
                 updateScrapReportTable();
+                updatePOQueryCombo();
             }catch(Exception e){
                 e.printStackTrace();
                 quantity_field2.setStyle("-fx-background-color: lightpink;");
@@ -133,6 +134,7 @@ public class ScrapReportFX implements Initializable {
         delete_button.setOnAction((ActionEvent) -> {
             deleteScrapReport();
             updateScrapReportTable();
+            updatePOQueryCombo();
         });
         
         company_combo1.setOnAction((ActionEvent) -> {updateScrapReportTable();});
@@ -180,7 +182,7 @@ public class ScrapReportFX implements Initializable {
     }
     
     public void setScrapReportTable(){
-        id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
+        counter_column.setCellValueFactory(c -> new SimpleStringProperty(Integer.toString(c.getTableView().getItems().indexOf(c.getValue())+1)));
         company_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getCompany().getName()));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee"));
         reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));

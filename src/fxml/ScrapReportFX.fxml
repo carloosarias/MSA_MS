@@ -39,7 +39,7 @@
       </GridPane>
       <TableView fx:id="scrapreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="id_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
+            <TableColumn fx:id="counter_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
             <TableColumn fx:id="reportdate_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
             <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="100.0" text="Empleado" />
             <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="200.0" text="Compañía" />

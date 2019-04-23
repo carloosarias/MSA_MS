@@ -25,10 +25,11 @@ public class POQueryDAOJDBC implements POQueryDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_LIST_FILTER = 
             "SELECT INCOMING_REPORT.po_number, PART_REVISION.*, PRODUCT_PART.*, COMPANY.*, METAL.*, SPECIFICATION.*, "
-            + "IFNULL(incominglot.sum_qty,0) incoming_qty, IFNULL(departlot.sum_qty,0) depart_qty, "
-            + "(IFNULL(incominglot.sum_qty,0) - IFNULL(departlot.sum_qty,0)) balance_qty FROM INCOMING_REPORT "
+            + "IFNULL(incominglot.sum_qty,0) incoming_qty, IFNULL(departlot.sum_qty,0) depart_qty, IFNULL(scrapreport.sum_qty,0) scrap_qty, "
+            + "(IFNULL(incominglot.sum_qty,0) - ((IFNULL(departlot.sum_qty,0)) + IFNULL(scrapreport.sum_qty, 0))) balance_qty FROM INCOMING_REPORT "
             + "INNER JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, INCOMING_REPORT_ID FROM INCOMING_LOT GROUP BY PART_REVISION_ID, INCOMING_REPORT_ID) incominglot ON INCOMING_REPORT.id = incominglot.INCOMING_REPORT_ID "
             + "LEFT JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, po_number FROM DEPART_LOT GROUP BY PART_REVISION_ID, po_number) departlot ON (INCOMING_REPORT.po_number = departlot.po_number AND incominglot.PART_REVISION_ID = departlot.PART_REVISION_ID) "
+            + "LEFT JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, po_number FROM SCRAP_REPORT GROUP BY PART_REVISION_ID, po_number) scrapreport ON (INCOMING_REPORT.po_number = scrapreport.po_number AND incominglot.PART_REVISION_ID = scrapreport.PART_REVISION_ID) "
             + "INNER JOIN PART_REVISION ON incominglot.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
@@ -39,10 +40,11 @@ public class POQueryDAOJDBC implements POQueryDAO{
             + "ORDER BY po_number, COMPANY.id, PART_REVISION.id, balance_qty DESC";
     private static final String SQL_LIST_AVAILABLE = 
             "SELECT INCOMING_REPORT.po_number, PART_REVISION.*, PRODUCT_PART.*, COMPANY.*, METAL.*, SPECIFICATION.*, "
-            + "IFNULL(incominglot.sum_qty,0) incoming_qty, IFNULL(departlot.sum_qty,0) depart_qty, "
-            + "(IFNULL(incominglot.sum_qty,0) - IFNULL(departlot.sum_qty,0)) balance_qty FROM INCOMING_REPORT "
+            + "IFNULL(incominglot.sum_qty,0) incoming_qty, IFNULL(departlot.sum_qty,0) depart_qty, IFNULL(scrapreport.sum_qty,0) scrap_qty, "
+            + "(IFNULL(incominglot.sum_qty,0) - ((IFNULL(departlot.sum_qty,0)) + IFNULL(scrapreport.sum_qty, 0))) balance_qty FROM INCOMING_REPORT "
             + "INNER JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, INCOMING_REPORT_ID FROM INCOMING_LOT GROUP BY PART_REVISION_ID, INCOMING_REPORT_ID) incominglot ON INCOMING_REPORT.id = incominglot.INCOMING_REPORT_ID "
             + "LEFT JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, po_number FROM DEPART_LOT GROUP BY PART_REVISION_ID, po_number) departlot ON (INCOMING_REPORT.po_number = departlot.po_number AND incominglot.PART_REVISION_ID = departlot.PART_REVISION_ID) "
+            + "LEFT JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, po_number FROM SCRAP_REPORT GROUP BY PART_REVISION_ID, po_number) scrapreport ON (INCOMING_REPORT.po_number = scrapreport.po_number AND incominglot.PART_REVISION_ID = scrapreport.PART_REVISION_ID) "
             + "INNER JOIN PART_REVISION ON incominglot.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
@@ -142,7 +144,7 @@ public class POQueryDAOJDBC implements POQueryDAO{
         poquery.setPo_number(resultSet.getString(incomingreport_label+"po_number"));
         poquery.setIncoming_qty(resultSet.getInt("incoming_qty"));
         poquery.setDepart_qty(resultSet.getInt("depart_qty"));
-        poquery.setScrap_qty(0);
+        poquery.setScrap_qty(resultSet.getInt("scrap_qty"));
         poquery.setBalance_qty(resultSet.getInt("balance_qty"));
         poquery.setPart_revision(PartRevisionDAOJDBC.map(partrevision_label, productpart_label, company_label, metal_label, specification_label, resultSet));
         return poquery;
