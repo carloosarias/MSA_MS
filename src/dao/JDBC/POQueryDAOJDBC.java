@@ -35,9 +35,22 @@ public class POQueryDAOJDBC implements POQueryDAO{
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "GROUP BY incominglot.PART_REVISION_ID, INCOMING_REPORT.po_number "
-            + "HAVING INCOMING_REPORT.po_number LIKE ? AND (COMPANY.id = ? OR ? IS NULL) AND PRODUCT_PART.part_number LIKE ? "
+            + "HAVING (COMPANY.id = ? OR ? IS NULL) AND (INCOMING_REPORT.po_number LIKE ?) AND (PRODUCT_PART.part_number LIKE ?)"
             + "ORDER BY po_number, COMPANY.id, PART_REVISION.id, balance_qty DESC";
-    
+    private static final String SQL_LIST_AVAILABLE = 
+            "SELECT INCOMING_REPORT.po_number, PART_REVISION.*, PRODUCT_PART.*, COMPANY.*, METAL.*, SPECIFICATION.*, "
+            + "IFNULL(incominglot.sum_qty,0) incoming_qty, IFNULL(departlot.sum_qty,0) depart_qty, "
+            + "(IFNULL(incominglot.sum_qty,0) - IFNULL(departlot.sum_qty,0)) balance_qty FROM INCOMING_REPORT "
+            + "INNER JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, INCOMING_REPORT_ID FROM INCOMING_LOT GROUP BY PART_REVISION_ID, INCOMING_REPORT_ID) incominglot ON INCOMING_REPORT.id = incominglot.INCOMING_REPORT_ID "
+            + "LEFT JOIN (SELECT SUM(quantity) sum_qty, PART_REVISION_ID, po_number FROM DEPART_LOT GROUP BY PART_REVISION_ID, po_number) departlot ON (INCOMING_REPORT.po_number = departlot.po_number AND incominglot.PART_REVISION_ID = departlot.PART_REVISION_ID) "
+            + "INNER JOIN PART_REVISION ON incominglot.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
+            + "GROUP BY incominglot.PART_REVISION_ID, INCOMING_REPORT.po_number "
+            + "HAVING (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) AND (balance_qty > 0)"
+            + "ORDER BY po_number, COMPANY.id, PART_REVISION.id, balance_qty DESC";
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -55,15 +68,15 @@ public class POQueryDAOJDBC implements POQueryDAO{
     
     // Actions ------------------------------------------------------------------------------------
     @Override
-    public List<POQuery> list(String ponumber_pattern, Company company, String partnumber_pattern) throws IllegalArgumentException, DAOException {
+    public List<POQuery> list(Company company, String ponumber_pattern, String partnumber_pattern) throws IllegalArgumentException, DAOException {
         if(company == null) company = new Company(); 
         
         List<POQuery> poquery_list = new ArrayList<>();
         
         Object[] values = {
+            company.getId(),
+            company.getId(),
             ponumber_pattern+"%",
-            company.getId(),
-            company.getId(),
             partnumber_pattern+"%"
         };
         
@@ -84,7 +97,30 @@ public class POQueryDAOJDBC implements POQueryDAO{
 
     @Override
     public List<POQuery> listAvailable(Company company, String partnumber_pattern, String rev_pattern) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(company == null) company = new Company(); 
+        
+        List<POQuery> poquery_list = new ArrayList<>();
+        
+        Object[] values = {
+            company.getId(),
+            company.getId(),
+            partnumber_pattern+"%",
+            rev_pattern+"%"
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_AVAILABLE, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                poquery_list.add(map("INCOMING_REPORT.", "PART_REVISION.", "PRODUCT_PART.", "COMPANY.", "METAL.", "SPECIFICATION.", resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return poquery_list;
     }
     
     // Helpers ------------------------------------------------------------------------------------

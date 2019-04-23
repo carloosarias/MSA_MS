@@ -99,7 +99,7 @@ public class POQuery implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%s %s",
-                po_number, part_revision);
+        return String.format("%s - %s %s",
+                po_number, part_revision.getProduct_part().getPart_number(), part_revision.getRev());
     }
 }

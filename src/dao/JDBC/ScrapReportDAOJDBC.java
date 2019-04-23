@@ -94,7 +94,7 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                scrap_report = map(resultSet);
+                scrap_report = map("SCRAP_REPORT.", "EMPLOYEE.", "PART_REVISION.", "PRODUCT_PART.", "METAL.", "SPECIFICATION.", "COMPANY.", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -125,7 +125,7 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                scrap_report.add(map(resultSet));
+                scrap_report.add(map("SCRAP_REPORT.", "EMPLOYEE.", "PART_REVISION.", "PRODUCT_PART.", "METAL.", "SPECIFICATION.", "COMPANY.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -223,20 +223,28 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
 
     /**
      * Map the current row of the given ResultSet to an PartRevision.
+     * @param scrapreport_label
+     * @param employee_label
+     * @param partrevision_label
+     * @param productpart_label
+     * @param metal_label
+     * @param specification_label
+     * @param company_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an PartRevision.
      * @return The mapped PartRevision from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
     public static ScrapReport map(String scrapreport_label, String employee_label, String partrevision_label, String productpart_label, 
-            String metal_label, String specificiation_label, String company_label, ResultSet resultSet) throws SQLException{
+            String metal_label, String specification_label, String company_label, ResultSet resultSet) throws SQLException{
         ScrapReport scrap_report = new ScrapReport();
         scrap_report.setId(resultSet.getInt(scrapreport_label+"id"));
         scrap_report.setReport_date(resultSet.getDate(scrapreport_label+"report_date"));
+        scrap_report.setPo_number(resultSet.getString(scrapreport_label+"po_number"));
         scrap_report.setQuantity(resultSet.getInt(scrapreport_label+"quantity"));
         scrap_report.setComments(resultSet.getString(scrapreport_label+"comments"));
-        scrap_report.setPo_number(resultSet.getString(scrapreport_label+"po_number"));
+        scrap_report.setActive(resultSet.getBoolean(scrapreport_label+"active"));
         scrap_report.setEmployee(EmployeeDAOJDBC.map(employee_label, resultSet));
-        scrap_report.setPart_revision(PartRevisionDAOJDBC.map(partrevision_label, productpart_label, company_label, metal_label, specificiation_label, resultSet));
+        scrap_report.setPart_revision(PartRevisionDAOJDBC.map(partrevision_label, productpart_label, company_label, metal_label, specification_label, resultSet));
         return scrap_report;
     }
     

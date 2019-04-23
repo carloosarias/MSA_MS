@@ -68,7 +68,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <ComboBox fx:id="company_combo" prefWidth="200.0" promptText="Compañía">
+                        <ComboBox fx:id="company_combo1" prefWidth="200.0" promptText="Compañía">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
@@ -96,6 +96,7 @@
                <content>
                   <GridPane>
                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                       <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                       <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                         <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
@@ -106,31 +107,36 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField fx:id="partnumber_field2" prefWidth="150.0" promptText="Número de Parte">
+                        <TextField fx:id="partnumber_field2" prefWidth="150.0" promptText="Número de Parte" GridPane.columnIndex="1">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="rev_field2" prefWidth="75.0" promptText="Rev" GridPane.columnIndex="1">
+                        <TextField fx:id="rev_field2" prefWidth="75.0" promptText="Rev" GridPane.columnIndex="2">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <ComboBox fx:id="po_combo" prefWidth="100.0" promptText="PO#" GridPane.columnIndex="3">
+                        <ComboBox fx:id="po_combo" disable="true" prefWidth="100.0" promptText="PO#" GridPane.columnIndex="3">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </ComboBox>
-                        <TextField fx:id="quantity_field2" prefWidth="100.0" promptText="Cantidad" GridPane.columnIndex="2">
+                        <TextField fx:id="quantity_field2" disable="true" prefWidth="100.0" promptText="Cantidad" GridPane.columnIndex="4">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <Button fx:id="save_button" mnemonicParsing="false" text="Generar Reporte de Scrap" GridPane.columnIndex="4">
+                        <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Generar Reporte de Scrap" GridPane.columnIndex="5">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </Button>
+                        <ComboBox fx:id="company_combo2" prefWidth="200.0" promptText="Compañía">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </ComboBox>
                      </children>
                   </GridPane>
                </content>

@@ -29,7 +29,7 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     private static final String SQL_FIND_BY_ID =
             "SELECT * FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_FIND_BY_USER_AND_PASSWORD =
-            "SELECT * FROM EMPLOYEE WHERE user = ? AND password =  MD5(?)";
+            "SELECT * FROM EMPLOYEE WHERE user = BINARY ? AND password = BINARY MD5(?) AND active = 1";
     private static final String SQL_LIST_ORDER_BY_ID =
             "SELECT * FROM EMPLOYEE ORDER BY id";
     private static final String SQL_LIST_ACTIVE_ORDER_BY_ID =
@@ -42,11 +42,11 @@ public class EmployeeDAOJDBC implements EmployeeDAO{
     private static final String SQL_DELETE =
             "DELETE FROM EMPLOYEE WHERE id = ?";
     private static final String SQL_EXIST_USER =
-            "SELECT id FROM EMPLOYEE WHERE user = ?";
+            "SELECT id FROM EMPLOYEE WHERE user = BINARY ? AND active = 1";
     private static final String SQL_EXIST_ACTIVE =
             "SELECT id FROM EMPLOYEE WHERE user = ? AND active = ?";
     private static final String SQL_CHANGE_PASSWORD = 
-            "UPDATE EMPLOYEE SET password = MD5(?) WHERE id = ?";
+            "UPDATE EMPLOYEE SET password = BINARY MD5(?) WHERE id = ?";
     
     // Vars ---------------------------------------------------------------------------------------
 
