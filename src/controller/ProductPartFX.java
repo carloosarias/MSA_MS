@@ -135,7 +135,6 @@ public class ProductPartFX implements Initializable {
             msabase.getProductPartDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             productpart_tableview.refresh();
         });
-        
         description_column.setCellValueFactory(new PropertyValueFactory<>("description"));
         description_column.setCellFactory(TextFieldTableCell.forTableColumn());
         description_column.setOnEditCommit((TableColumn.CellEditEvent<ProductPart, String> t) -> {

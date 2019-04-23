@@ -9,6 +9,7 @@ import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,7 @@ import model.Company;
 import model.POQuery;
 import model.PartRevision;
 import model.ScrapReport;
+import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
 
 /**
@@ -89,6 +91,7 @@ public class ScrapReportFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
+    private ScrapReport scrap_report;
     /**
      * Initializes the controller class.
      */
@@ -101,11 +104,30 @@ public class ScrapReportFX implements Initializable {
         updatePOQueryCombo();
         
         po_combo.disableProperty().bind(Bindings.isEmpty(po_combo.getItems()));
+        quantity_field2.disableProperty().bind(po_combo.getSelectionModel().selectedItemProperty().isNull());
+        save_button.disableProperty().bind(po_combo.getSelectionModel().selectedItemProperty().isNull());
         delete_button.disableProperty().bind(scrapreport_tableview.getSelectionModel().selectedItemProperty().isNull());
         
+        po_combo.setOnAction((ActionEvent) -> {
+            try{
+                quantity_field2.setStyle(null);
+                quantity_field2.setText(""+po_combo.getValue().getBalance_qty());
+            }catch(Exception e){
+                quantity_field2.setText("");
+            }
+        });
+        
         save_button.setOnAction((ActionEvent) -> {
-            createScrapReport();
-            updateScrapReportTable();
+            try{
+                quantity_field2.setStyle(null);
+                if(Integer.parseInt(quantity_field2.getText()) > po_combo.getValue().getBalance_qty() || Integer.parseInt(quantity_field2.getText()) <= 0) throw new Exception();
+                createScrapReport();
+                updateScrapReportTable();
+            }catch(Exception e){
+                e.printStackTrace();
+                quantity_field2.setStyle("-fx-background-color: lightpink;");
+                quantity_field2.requestFocus();
+            }
         });
         
         delete_button.setOnAction((ActionEvent) -> {
@@ -135,23 +157,37 @@ public class ScrapReportFX implements Initializable {
     }
     
     public void createScrapReport(){
-        
+        scrap_report = new ScrapReport();
+        scrap_report.setReport_date(DAOUtil.toUtilDate(LocalDate.now()));
+        scrap_report.setEmployee(MainApp.current_employee);
+        scrap_report.setPart_revision(po_combo.getValue().getPart_revision());
+        scrap_report.setPo_number(po_combo.getValue().getPo_number());
+        scrap_report.setQuantity(Integer.parseInt(quantity_field2.getText()));
+        scrap_report.setComments("N/A");
+        scrap_report.setActive(true);
+        msabase.getScrapReportDAO().create(scrap_report);
+        clearFields();
+    }
+    
+    public void clearFields(){
+        company_combo1.getSelectionModel().clearSelection();
+        company_combo2.getSelectionModel().clearSelection();
+        partnumber_field1.setText("");
+        partnumber_field2.setText("");
+        ponumber_field1.setText("");
+        rev_field2.setText("");
+        po_combo.getItems().clear();
     }
     
     public void setScrapReportTable(){
         id_column.setCellValueFactory(new PropertyValueFactory<>("id"));
-        employee_column.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
+        company_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getCompany().getName()));
+        employee_column.setCellValueFactory(new PropertyValueFactory<>("employee"));
         reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
-        partnumber_column.setCellValueFactory(new PropertyValueFactory<>("part_number"));
-        revision_column.setCellValueFactory(new PropertyValueFactory<>("part_revision"));
+        partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getPart_number()));
+        revision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getRev()));
+        ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        quantity_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().getQuantity()));
-        quantity_column.setCellFactory(TextFieldTableCell.forTableColumn());
-        quantity_column.setOnEditCommit((TableColumn.CellEditEvent<ScrapReport, String> t) -> {
-            (t.getTableView().getItems().get(t.getTablePosition().getRow())).setQuantity(getQuantityValue(t.getTableView().getItems().get(t.getTablePosition().getRow()), t.getNewValue()));
-            msabase.getScrapReportDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
-            scrapreport_tableview.refresh();
-        });
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());
         comments_column.setOnEditCommit((TableColumn.CellEditEvent<ScrapReport, String> t) -> {

@@ -117,7 +117,7 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <ComboBox fx:id="po_combo" disable="true" prefWidth="100.0" promptText="PO#" GridPane.columnIndex="3">
+                        <ComboBox fx:id="po_combo" disable="true" prefWidth="200.0" promptText="PO#" GridPane.columnIndex="3">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
