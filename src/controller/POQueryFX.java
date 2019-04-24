@@ -83,7 +83,7 @@ public class POQueryFX implements Initializable {
     }
     
     public void updatePOQueryTable(){
-        poquery_tableview.getItems().setAll(msabase.getPOQueryDAO().list(company_combo.getSelectionModel().getSelectedItem(), ponumber_field.getText(), partnumber_field.getText()));
+        poquery_tableview.getItems().setAll(msabase.getPOQueryDAO().list(company_combo.getSelectionModel().getSelectedItem(), ponumber_field.getText(),"", partnumber_field.getText()));
     }
     
     public void setPOQueryTable(){

@@ -11,9 +11,7 @@ import java.util.List;
 import model.Company;
 import model.DepartLot;
 import model.DepartReport;
-import model.IncomingReport;
 import model.PartRevision;
-import model.ProductPart;
 
 /**
  *
@@ -40,6 +38,8 @@ public interface DepartLotDAO {
      * @throws DAOException If something fails at database level.
      */
     public List<DepartLot> list(DepartReport depart_report) throws IllegalArgumentException, DAOException;
+    
+    //public List<DepartLot> listPending(Company company) throws IllegalArgumentException, DAOException;
     
     //public List<DepartLot> list(DepartReport depart_report, boolean rejected) throws IllegalArgumentException, DAOException;
     

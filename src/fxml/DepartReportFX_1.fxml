@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DepartReportFX_1">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DepartReportFX_1">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -308,6 +308,7 @@
                               <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="75.0" text="Cantidad" />
                               <TableColumn fx:id="boxquantity_column" minWidth="-Infinity" prefWidth="75.0" text="Cajas" />
                               <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
+                              <TableColumn minWidth="-Infinity" prefWidth="75.0" text="Rechazo" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" />

@@ -14,6 +14,7 @@ import java.io.Serializable;
 public class POQuery implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private String po_number;
+    private String line_number;
     private Integer incoming_qty;
     private Integer depart_qty;
     private Integer scrap_qty;
@@ -25,7 +26,15 @@ public class POQuery implements Serializable {
     public String getPo_number() {
         return po_number;
     }
+    
+    public String getLine_number() {
+        return line_number;
+    }
 
+    public void setLine_number(String line_number) {
+        this.line_number = line_number;
+    }
+    
     public void setPo_number(String po_number) {
         this.po_number = po_number;
     }
@@ -77,8 +86,8 @@ public class POQuery implements Serializable {
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof POQuery) && (po_number != null) && (part_revision != null)
-            ? (po_number.equals(((POQuery) other).po_number) && part_revision.equals(((POQuery) other).part_revision))
+        return (other instanceof POQuery) && (po_number != null) && (part_revision != null) && (line_number != null)
+            ? (po_number.equals(((POQuery) other).po_number) && line_number.equals(((POQuery) other).line_number) && part_revision.equals(((POQuery) other).part_revision))
             : (other == this);
     }
 
@@ -88,8 +97,8 @@ public class POQuery implements Serializable {
      */
     @Override
     public int hashCode() {
-        return (po_number != null) && (part_revision != null) 
-             ? (this.getClass().hashCode() + po_number.hashCode() + part_revision.hashCode()) 
+        return (po_number != null) && (part_revision != null) && (line_number != null)
+             ? (this.getClass().hashCode() + po_number.hashCode() + line_number.hashCode() + part_revision.hashCode()) 
              : super.hashCode();
     }
 
@@ -99,7 +108,7 @@ public class POQuery implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%s - %s %s",
-                po_number, part_revision.getProduct_part().getPart_number(), part_revision.getRev());
+        return String.format("[PO# %s Line/Rel. %s] Parte# %s Rev# %s",
+                po_number, line_number, part_revision.getProduct_part().getPart_number(), part_revision.getRev());
     }
 }
