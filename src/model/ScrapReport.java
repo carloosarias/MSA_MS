@@ -17,6 +17,7 @@ public class ScrapReport implements Serializable{
     private Integer id;
     private Date report_date;
     private String po_number;
+    private String line_number;
     private Integer quantity;
     private String comments;
     private boolean active;
@@ -47,6 +48,14 @@ public class ScrapReport implements Serializable{
 
     public void setPo_number(String po_number) {
         this.po_number = po_number;
+    }
+    
+    public String getLine_number() {
+        return line_number;
+    }
+
+    public void setLine_number(String line_number) {
+        this.line_number = line_number;
     }
     
     public Integer getQuantity() {
@@ -118,7 +127,8 @@ public class ScrapReport implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("PO#: %s Parte: %s Cantidad: %d",
-                po_number, part_revision, quantity);
+        return String.format("PO#: %s Line/Rel. %s Parte: %s Cantidad: %d",
+                po_number, line_number, part_revision, quantity);
     }
+    
 }

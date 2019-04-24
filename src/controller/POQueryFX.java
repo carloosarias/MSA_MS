@@ -34,6 +34,8 @@ public class POQueryFX implements Initializable {
     @FXML
     private TableColumn<POQuery, String> ponumber_column;
     @FXML
+    private TableColumn<POQuery, String> line_column;
+    @FXML
     private TableColumn<POQuery, String> partnumber_column;
     @FXML
     private TableColumn<POQuery, String> rev_column;
@@ -89,6 +91,7 @@ public class POQueryFX implements Initializable {
     public void setPOQueryTable(){
         company_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getCompany().getName()));
         ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
+        line_column.setCellValueFactory(new PropertyValueFactory<>("line_number"));
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getPart_number()));
         rev_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getRev()));
         incoming_column.setCellValueFactory(new PropertyValueFactory<>("incoming_qty"));

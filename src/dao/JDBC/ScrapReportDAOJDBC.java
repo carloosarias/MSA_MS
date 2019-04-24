@@ -53,7 +53,7 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
             "INSERT INTO SCRAP_REPORT (EMPLOYEE_ID, PART_REVISION_ID, report_date, quantity, comments, po_number, active) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE SCRAP_REPORT SET report_date = ?, quantity = ?, comments = ?, po_number = ?, active = ? WHERE id = ?";
+            "UPDATE SCRAP_REPORT SET comments = ?, active = ? WHERE id = ?";
     private static final String SQL_DELETE = 
             "DELETE FROM SCRAP_REPORT WHERE id = ?";
     
@@ -147,6 +147,7 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
             scrap_report.getQuantity(),
             scrap_report.getComments(),
             scrap_report.getPo_number(),
+            scrap_report.getLine_number(),
             scrap_report.isActive()
         };
         
@@ -179,9 +180,8 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
         }
         
         Object[] values = {
-            DAOUtil.toSqlDate(scrap_report.getReport_date()),
-            scrap_report.getQuantity(),
             scrap_report.getComments(),
+            scrap_report.isActive(),
             scrap_report.getId()
         };
         
@@ -240,6 +240,7 @@ public class ScrapReportDAOJDBC implements ScrapReportDAO {
         scrap_report.setId(resultSet.getInt(scrapreport_label+"id"));
         scrap_report.setReport_date(resultSet.getDate(scrapreport_label+"report_date"));
         scrap_report.setPo_number(resultSet.getString(scrapreport_label+"po_number"));
+        scrap_report.setLine_number(resultSet.getString(scrapreport_label+"line_number"));
         scrap_report.setQuantity(resultSet.getInt(scrapreport_label+"quantity"));
         scrap_report.setComments(resultSet.getString(scrapreport_label+"comments"));
         scrap_report.setActive(resultSet.getBoolean(scrapreport_label+"active"));

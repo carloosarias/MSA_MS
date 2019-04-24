@@ -83,6 +83,8 @@ public class ScrapReportFX implements Initializable {
     @FXML
     private TableColumn<ScrapReport, String> ponumber_column;
     @FXML
+    private TableColumn<ScrapReport, String> linenumber_column;
+    @FXML
     private TableColumn<ScrapReport, String> quantity_column;
     @FXML
     private TableColumn<ScrapReport, String> comments_column;
@@ -164,6 +166,7 @@ public class ScrapReportFX implements Initializable {
         scrap_report.setEmployee(MainApp.current_employee);
         scrap_report.setPart_revision(po_combo.getValue().getPart_revision());
         scrap_report.setPo_number(po_combo.getValue().getPo_number());
+        scrap_report.setLine_number(po_combo.getValue().getLine_number());
         scrap_report.setQuantity(Integer.parseInt(quantity_field2.getText()));
         scrap_report.setComments("N/A");
         scrap_report.setActive(true);

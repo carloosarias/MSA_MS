@@ -12,12 +12,13 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.POQueryFX">
+<GridPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.POQueryFX">
    <children>
       <TableView fx:id="poquery_tableview" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
           <TableColumn fx:id="ponumber_column" minWidth="-Infinity" prefWidth="100.0" text="PO#" />
+            <TableColumn fx:id="line_column" minWidth="-Infinity" prefWidth="100.0" text="Line/Rel." />
             <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
             <TableColumn fx:id="rev_column" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
             <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Cantidad">
@@ -78,4 +79,11 @@
          </GridPane.margin>
       </Accordion>
    </children>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
 </GridPane>
