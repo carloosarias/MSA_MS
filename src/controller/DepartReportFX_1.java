@@ -43,6 +43,7 @@ import model.CompanyContact;
 import model.DepartLot;
 import model.DepartReport;
 import model.Employee;
+import model.POQuery;
 import model.PartRevision;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
@@ -85,7 +86,7 @@ public class DepartReportFX_1 implements Initializable {
     @FXML
     private TextField lotnumber_field1;
     @FXML
-    private TextField ponumber_field;
+    private TextField ponumber_field1;
     @FXML
     private Button reset_button;
     @FXML
@@ -101,13 +102,13 @@ public class DepartReportFX_1 implements Initializable {
     @FXML
     private ComboBox<String> pdf_combo;
     @FXML
-    private TextField lotnumber_field2;
-    @FXML
     private TextField partnumber_field2;
     @FXML
-    private TextField rev_field;
+    private TextField ponumber_field2;
     @FXML
-    private ComboBox<String> po_combo;
+    private TextField linenumber_field2;
+    @FXML
+    private ComboBox<POQuery> po_combo;
     @FXML
     private TextField quantity_field;
     @FXML
@@ -133,6 +134,8 @@ public class DepartReportFX_1 implements Initializable {
     @FXML
     private TableColumn<DepartLot, String> comments_column;
     @FXML
+    private TableColumn<DepartLot, String> rejected_column;
+    @FXML
     private Button delete_button2;
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -148,7 +151,8 @@ public class DepartReportFX_1 implements Initializable {
         updateComboItems();
         
         details_tab.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
-        pdf_button.disableProperty().bind(pdf_combo.getSelectionModel().selectedItemProperty().isNull());
+        pdf_button.disableProperty().bind(pdf_combo.valueProperty().isNull());
+        save_button.disableProperty().bind(company_combo2.valueProperty().isNull());
         
         reset_button.setOnAction((ActionEvent) -> {
             updateDepartReportTable();
@@ -167,11 +171,29 @@ public class DepartReportFX_1 implements Initializable {
         
         departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
             updateDepartLotTable();
+            updatePOCombo();
+        });
+        
+        company_combo1.setOnAction((ActionEvent) -> {
+            updateDepartReportTable();
+        });
+        start_datepicker.setOnAction(company_combo1.getOnAction());
+        end_datepicker.setOnAction(company_combo1.getOnAction());
+        partnumber_field1.setOnAction(company_combo1.getOnAction());
+        lotnumber_field1.setOnAction(company_combo1.getOnAction());
+        ponumber_field1.setOnAction(company_combo1.getOnAction());
+        reset_button.setOnAction((ActionEvent) ->{
+            start_datepicker.setValue(null);
+            end_datepicker.setValue(null);
+            partnumber_field1.setText("");
+            lotnumber_field1.setText("");
+            ponumber_field1.setText("");
+            updateDepartReportTable();
         });
     }
     
     public void updatePOCombo(){
-        //po_combo.getItems().setAll(msabase.getDepartLotDAO().listPO(departreport_tableview.getSelectionModel().getSelectedItem(), lotnumber_field2.getText(), partnumber_field2.getText(), rev_field.getText(), quantity_field.getText()));
+        po_combo.getItems().setAll(msabase.getPOQueryDAO().listAvailable(departreport_tableview.getSelectionModel().getSelectedItem().getCompany(), "", "", partnumber_field2.getText()));
     }
     
     public void setDepartReportTable(){
@@ -179,7 +201,7 @@ public class DepartReportFX_1 implements Initializable {
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee"));
         reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
         client_column.setCellValueFactory(new PropertyValueFactory<>("company"));
-        address_column.setCellValueFactory(new PropertyValueFactory<>("company"));
+        address_column.setCellValueFactory(new PropertyValueFactory<>("company_address"));
         totalqty_column.setCellValueFactory(new PropertyValueFactory<>("total_qty"));
         totalbox_column.setCellValueFactory(new PropertyValueFactory<>("total_box"));
     }
@@ -233,10 +255,11 @@ public class DepartReportFX_1 implements Initializable {
             msabase.getDepartLotDAO().update(t.getTableView().getItems().get(t.getTablePosition().getRow()));
             departlot_tableview.refresh();
         });
+        rejected_column.setCellValueFactory(c -> new SimpleStringProperty(""+c.getValue().isRejected()));
     }
     
     public void updateDepartReportTable(){
-        departreport_tableview.getItems().setAll(msabase.getDepartReportDAO().list(null, company_combo1.getValue(), DAOUtil.toUtilDate(start_datepicker.getValue()), DAOUtil.toUtilDate(end_datepicker.getValue()), partnumber_field1.getText(), lotnumber_field1.getText(), ponumber_field.getText()));
+        departreport_tableview.getItems().setAll(msabase.getDepartReportDAO().list(null, company_combo1.getValue(), DAOUtil.toUtilDate(start_datepicker.getValue()), DAOUtil.toUtilDate(end_datepicker.getValue()), partnumber_field1.getText(), lotnumber_field1.getText(), ponumber_field1.getText()));
     }
     
     public void updateDepartLotTable(){
@@ -246,7 +269,7 @@ public class DepartReportFX_1 implements Initializable {
             e.printStackTrace();
             departlot_tableview.getItems().clear();
         }
-    }
+    } 
     
     public void updateComboItems(){
         setDatePicker(start_datepicker);

@@ -38,6 +38,7 @@ public class POQueryDAOJDBC implements POQueryDAO{
             + "GROUP BY incominglot.PART_REVISION_ID, INCOMING_REPORT.po_number, line_number "
             + "HAVING (COMPANY.id = ? OR ? IS NULL) AND (INCOMING_REPORT.po_number LIKE ?) AND (line_number LIKE ?) AND (PRODUCT_PART.part_number LIKE ?)"
             + "ORDER BY po_number, line_number, COMPANY.id, PART_REVISION.id, balance_qty DESC";
+    
     private static final String SQL_LIST_AVAILABLE = 
             "SELECT INCOMING_REPORT.po_number, (incominglot.line_number) line_number, PART_REVISION.*, PRODUCT_PART.*, COMPANY.*, METAL.*, SPECIFICATION.*, "
             + "IFNULL(incominglot.sum_qty,0) incoming_qty, IFNULL(departlot.sum_qty,0) depart_qty, IFNULL(scrapreport.sum_qty,0) scrap_qty, "
@@ -51,10 +52,11 @@ public class POQueryDAOJDBC implements POQueryDAO{
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "GROUP BY incominglot.PART_REVISION_ID, INCOMING_REPORT.po_number, line_number "
-            + "HAVING (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) AND (balance_qty > 0)"
+            + "HAVING (COMPANY.id = ? OR ? IS NULL) AND (INCOMING_REPORT.po_number LIKE ?) AND (line_number LIKE ?) AND (PRODUCT_PART.part_number LIKE ?) AND (balance_qty > 0) "
             + "ORDER BY po_number, line_number, COMPANY.id, PART_REVISION.id, balance_qty DESC";
+    
     // Vars ---------------------------------------------------------------------------------------
-
+    
     private DAOFactory daoFactory;
 
     // Constructors -------------------------------------------------------------------------------
@@ -99,7 +101,7 @@ public class POQueryDAOJDBC implements POQueryDAO{
     }
 
     @Override
-    public List<POQuery> listAvailable(Company company, String partnumber_pattern, String rev_pattern) throws IllegalArgumentException, DAOException {
+    public List<POQuery> listAvailable(Company company, String ponumber_pattern, String linenumber_pattern, String partnumber_pattern) throws IllegalArgumentException, DAOException {
         if(company == null) company = new Company(); 
         
         List<POQuery> poquery_list = new ArrayList<>();
@@ -107,8 +109,9 @@ public class POQueryDAOJDBC implements POQueryDAO{
         Object[] values = {
             company.getId(),
             company.getId(),
-            partnumber_pattern+"%",
-            rev_pattern+"%"
+            ponumber_pattern+"%",
+            linenumber_pattern+"%",
+            partnumber_pattern+"%"
         };
         
         try(

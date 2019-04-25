@@ -59,7 +59,9 @@ public class ScrapReportFX implements Initializable {
     @FXML
     private TextField partnumber_field2;
     @FXML
-    private TextField rev_field2;
+    private TextField ponumber_field2;
+    @FXML
+    private TextField linenumber_field2;
     @FXML
     private ComboBox<POQuery> po_combo;
     @FXML
@@ -94,6 +96,7 @@ public class ScrapReportFX implements Initializable {
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
     private ScrapReport scrap_report;
+    
     /**
      * Initializes the controller class.
      */
@@ -145,11 +148,12 @@ public class ScrapReportFX implements Initializable {
         
         company_combo2.setOnAction((ActionEvent) -> {updatePOQueryCombo();});
         partnumber_field2.setOnAction(company_combo2.getOnAction());
-        rev_field2.setOnAction(company_combo2.getOnAction());
+        ponumber_field2.setOnAction(company_combo2.getOnAction());
+        linenumber_field2.setOnAction(company_combo2.getOnAction());
     }    
     
     public void updatePOQueryCombo(){
-        po_combo.getItems().setAll(msabase.getPOQueryDAO().listAvailable(company_combo2.getValue(), partnumber_field2.getText(), rev_field2.getText()));
+        po_combo.getItems().setAll(msabase.getPOQueryDAO().listAvailable(company_combo2.getValue(), ponumber_field2.getText(), linenumber_field2.getText(), partnumber_field2.getText()));
     }
     
     public void deleteScrapReport(){
@@ -180,7 +184,8 @@ public class ScrapReportFX implements Initializable {
         partnumber_field1.setText("");
         partnumber_field2.setText("");
         ponumber_field1.setText("");
-        rev_field2.setText("");
+        ponumber_field2.setText("");
+        linenumber_field2.setText("");
         po_combo.getItems().clear();
     }
     
@@ -192,6 +197,7 @@ public class ScrapReportFX implements Initializable {
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getPart_number()));
         revision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getRev()));
         ponumber_column.setCellValueFactory(new PropertyValueFactory<>("po_number"));
+        linenumber_column.setCellValueFactory(new PropertyValueFactory<>("line_number"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
         comments_column.setCellFactory(TextFieldTableCell.forTableColumn());

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ScrapReportFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ScrapReportFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -102,6 +102,7 @@
                       <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                         <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                         <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                         <ColumnConstraints hgrow="SOMETIMES" />
                     </columnConstraints>
                     <rowConstraints>
@@ -113,22 +114,22 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="rev_field2" prefWidth="75.0" promptText="Rev" GridPane.columnIndex="2">
+                        <TextField fx:id="ponumber_field2" prefWidth="75.0" promptText="PO#" GridPane.columnIndex="2">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <ComboBox fx:id="po_combo" disable="true" prefWidth="300.0" promptText="PO#" GridPane.columnIndex="3">
+                        <ComboBox fx:id="po_combo" disable="true" prefWidth="275.0" promptText="PO#" GridPane.columnIndex="4">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </ComboBox>
-                        <TextField fx:id="quantity_field2" disable="true" prefWidth="100.0" promptText="Cantidad" GridPane.columnIndex="4">
+                        <TextField fx:id="quantity_field2" disable="true" prefWidth="100.0" promptText="Cantidad" GridPane.columnIndex="5">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Generar Reporte de Scrap" GridPane.columnIndex="5">
+                        <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Generar Reporte de Scrap" GridPane.columnIndex="6">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
@@ -138,6 +139,11 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </ComboBox>
+                        <TextField fx:id="linenumber_field2" prefWidth="75.0" promptText="Line/Rel." GridPane.columnIndex="3">
+                           <GridPane.margin>
+                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                           </GridPane.margin>
+                        </TextField>
                      </children>
                   </GridPane>
                </content>

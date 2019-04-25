@@ -108,7 +108,7 @@ public class POQuery implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("[PO# %s Line/Rel. %s] Parte# %s Rev# %s",
+        return String.format("Número de Parte: %s Rev: %s\nPO#: %s Line/Rel: %s",
                 po_number, line_number, part_revision.getProduct_part().getPart_number(), part_revision.getRev());
     }
 }

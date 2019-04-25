@@ -20,5 +20,5 @@ public interface POQueryDAO {
     
     public List<POQuery> list(Company company, String ponumber_pattern, String linenumber_pattern, String partnumber_pattern) throws IllegalArgumentException, DAOException;
     
-    public List<POQuery> listAvailable(Company company, String partnumber_pattern, String rev_pattern) throws IllegalArgumentException, DAOException;
+    public List<POQuery> listAvailable(Company company, String ponumber_pattern, String linenumber_pattern, String partnumber_pattern) throws IllegalArgumentException, DAOException;
 }
