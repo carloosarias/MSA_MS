@@ -22,6 +22,7 @@ import model.POQuery;
  * @author Pavilion Mini
  */
 public class POQueryDAOJDBC implements POQueryDAO{
+    
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_LIST_FILTER = 
             "SELECT INCOMING_REPORT.po_number, (incominglot.line_number) line_number, PART_REVISION.*, PRODUCT_PART.*, COMPANY.*, METAL.*, SPECIFICATION.*, "
