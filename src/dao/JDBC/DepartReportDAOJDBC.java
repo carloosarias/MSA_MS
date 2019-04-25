@@ -29,7 +29,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
             "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, "
-            +"(SELECT SUM(DEPART_LOT.quantity) FROM DEPART_LOT AS total_qty WHERE DEPART_REPORT.id <= DEPART_LOT.id), SUM(DEPART_LOT.box_quantity) total_box "
+            +"(SELECT SUM(DEPART_LOT.quantity) FROM DEPART_LOT AS total_qty WHERE DEPART_REPORT.id = DEPART_LOT.DEPART_REPORT_ID), SUM(DEPART_LOT.box_quantity) total_box "
             +"FROM DEPART_REPORT "
             +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "

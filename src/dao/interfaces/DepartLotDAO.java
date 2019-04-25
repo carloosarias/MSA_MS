@@ -39,13 +39,9 @@ public interface DepartLotDAO {
      */
     public List<DepartLot> list(DepartReport depart_report) throws IllegalArgumentException, DAOException;
     
-    //public List<DepartLot> listPending(Company company) throws IllegalArgumentException, DAOException;
+    public List<DepartLot> listGroup(DepartReport depart_report) throws IllegalArgumentException, DAOException;
     
-    //public List<DepartLot> list(DepartReport depart_report, boolean rejected) throws IllegalArgumentException, DAOException;
-    
-    public List<DepartLot> list(Company company, boolean pending, boolean rejected) throws IllegalArgumentException, DAOException;
-    
-    //public List<DepartLot> list(PartRevision part_revision, String process, DepartReport depart_report) throws IllegalArgumentException, DAOException;
+    public List<DepartLot> listPending(Company company) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all DepartLot matching a given lot_number from the database ordered by IncomingLot ID.
@@ -56,8 +52,6 @@ public interface DepartLotDAO {
      */    
     public List<DepartLot> list(DepartReport depart_report, Boolean rejected, Company company, Date start_date, Date end_date, String partnumber_pattern, String rev_pattern, String lotnumber_pattern) throws IllegalArgumentException;
     
-    //public List<DepartReport> listDepartReport(boolean rejected) throws IllegalArgumentException, DAOException;
-    //public List<String> listProcess(PartRevision part_revision, DepartReport depart_report) throws IllegalArgumentException, DAOException;
     /**
      * Create the given DepartLot for a given DepartReport in the database. 
      * The DepartReport ID must not be null, the PartRevision ID must not be null
@@ -90,5 +84,4 @@ public interface DepartLotDAO {
      */    
     public void delete(DepartLot depart_lot) throws DAOException;
     
-    //public List<DepartLot> listDateRange(ProductPart product_part, Date start, Date end);
 }

@@ -18,7 +18,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -159,8 +158,10 @@ public class DepartReportFX_1 implements Initializable {
             switch(pdf_combo.getSelectionModel().getSelectedIndex()){
                 case 0:
                     buildPDF(departlot_tableview.getItems());
+                    break;
                 case 1:
-                    //buildPDF(msabase.getDepartLotDAO().listGroup(departreport_tableview.getSelectionModel().getSelectedItem()));
+                    buildPDF(msabase.getDepartLotDAO().listGroup(departreport_tableview.getSelectionModel().getSelectedItem()));
+                    break;
             }
         });
         
@@ -242,6 +243,7 @@ public class DepartReportFX_1 implements Initializable {
         try{
             departlot_tableview.setItems(FXCollections.observableArrayList(msabase.getDepartLotDAO().list(departreport_tableview.getSelectionModel().getSelectedItem())));
         }catch(Exception e){
+            e.printStackTrace();
             departlot_tableview.getItems().clear();
         }
     }
@@ -327,9 +329,9 @@ public class DepartReportFX_1 implements Initializable {
             fields.get("page_number").setValue(page_offset+" / "+total_pages);
             fields.get("report_id").setValue(""+depart_report.getId());
             fields.get("report_date").setValue(depart_report.getReport_date().toString());
-            //fields.get("employee_name").setValue(depart_report.getEmployee_name());
-            //fields.get("client_name").setValue(depart_report.getCompany_name());
-            //fields.get("client_address").setValue(depart_report.getCompany_address());
+            fields.get("employee_name").setValue(depart_report.getEmployee().toString());
+            fields.get("client_name").setValue(depart_report.getCompany().getName());
+            fields.get("client_address").setValue(depart_report.getCompany_address().getAddress());
             List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(depart_report.getCompany(), true);
             if(company_contact.isEmpty()){
                 fields.get("contact_name").setValue("N/A");
@@ -344,7 +346,7 @@ public class DepartReportFX_1 implements Initializable {
             for(DepartLot item : departlot_list){
                 if(current_row > 41) break;
                 int offset = 0;
-               // fields.get("part_number"+current_row).setValue(item.getPart_number());
+                fields.get("part_number"+current_row).setValue(item.getPart_revision().getProduct_part().getPart_number());
                 fields.get("process"+current_row).setValue(item.getProcess());
                 fields.get("po_number"+current_row).setValue(item.getPo_number());
                 fields.get("line_number"+current_row).setValue(item.getLine_number());
@@ -358,8 +360,8 @@ public class DepartReportFX_1 implements Initializable {
                 current_row += offset;
             }
             
-            //fields.get("total_quantity").setValue(""+getQuantity_total());
-            //fields.get("total_boxquantity").setValue(""+getBoxquantity_total());
+            fields.get("total_quantity").setValue(""+depart_report.getTotal_qty());
+            fields.get("total_boxquantity").setValue(""+depart_report.getTotal_box());
             
             form.flattenFields();
             pdf.close();

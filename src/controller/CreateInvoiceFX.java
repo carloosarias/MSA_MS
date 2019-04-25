@@ -213,7 +213,7 @@ public class CreateInvoiceFX implements Initializable {
     public void updateClient_combo(){
         invoiceitem_queue.clear();
         try{
-            departlot_list = msabase.getDepartLotDAO().list(client_combo.getSelectionModel().getSelectedItem(), true, false);
+            departlot_list = msabase.getDepartLotDAO().listPending(client_combo.getSelectionModel().getSelectedItem());
         }catch(Exception e){
             departlot_list.clear();
         }
