@@ -16,6 +16,8 @@ import java.util.Objects;
 public class IncomingLot implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
+    private String po_number;
+    private String line_number;
     private String lot_number;
     private Integer quantity;
     private Integer box_quantity;
@@ -171,5 +173,21 @@ public class IncomingLot implements Serializable {
         return String.format("%s",
                 lot_number);
     }    
+
+    public String getPo_number() {
+        return po_number;
+    }
+
+    public void setPo_number(String po_number) {
+        this.po_number = po_number;
+    }
+
+    public String getLine_number() {
+        return line_number;
+    }
+
+    public void setLine_number(String line_number) {
+        this.line_number = line_number;
+    }
     
 }
