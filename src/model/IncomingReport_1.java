@@ -5,10 +5,12 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Carlos
  */
-public class IncomingReport_1 {
+public class IncomingReport_1 implements Serializable {
     
 }
