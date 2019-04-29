@@ -25,9 +25,9 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <TableView fx:id="incominglot_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <TableView fx:id="incomingreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <columns>
-            <TableColumn fx:id="reportid_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
+            <TableColumn fx:id="counter_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
             <TableColumn fx:id="rejected_column" minWidth="-Infinity" prefWidth="40.0" text="R" />
             <TableColumn fx:id="reportdate_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
             <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="100.0" text="Empleado" />

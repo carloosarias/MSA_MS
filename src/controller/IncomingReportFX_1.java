@@ -17,6 +17,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import model.IncomingLot;
+import model.IncomingReport_1;
 
 /**
  * FXML Controller class
@@ -28,9 +30,9 @@ public class IncomingReportFX_1 implements Initializable {
     @FXML
     private GridPane root_gridpane;
     @FXML
-    private TableView<?> incominglot_tableview;
+    private TableView<IncomingReport_1> incomingreport_tableview;
     @FXML
-    private TableColumn<?, ?> reportid_column;
+    private TableColumn<?, ?> counter_column;
     @FXML
     private TableColumn<?, ?> rejected_column;
     @FXML
