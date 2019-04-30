@@ -13,20 +13,19 @@ import java.util.Date;
  * @author Carlos
  */
 public class IncomingReport_1 implements Serializable {
+    
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Date report_date;
-    private String po_number;
-    private String packing_list;
-    private String line_number;
-    private String lot_number;
-    private Integer quantity;
-    private Integer box_quantity;
-    private String status;
-    private String comments;
-    
     private Employee employee;
     private PartRevision part_revision;
+    private Date date;
+    private String packing;
+    private String po;
+    private String line;
+    private String lot;
+    private Integer qty_in;
+    private String comments;
+    private boolean open;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -37,79 +36,7 @@ public class IncomingReport_1 implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public Date getReport_date() {
-        return report_date;
-    }
-
-    public void setReport_date(Date report_date) {
-        this.report_date = report_date;
-    }
-
-    public String getPo_number() {
-        return po_number;
-    }
-
-    public void setPo_number(String po_number) {
-        this.po_number = po_number;
-    }
-
-    public String getPacking_list() {
-        return packing_list;
-    }
-
-    public void setPacking_list(String packing_list) {
-        this.packing_list = packing_list;
-    }
-
-    public String getLine_number() {
-        return line_number;
-    }
-
-    public void setLine_number(String line_number) {
-        this.line_number = line_number;
-    }
-
-    public String getLot_number() {
-        return lot_number;
-    }
-
-    public void setLot_number(String lot_number) {
-        this.lot_number = lot_number;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getBox_quantity() {
-        return box_quantity;
-    }
-
-    public void setBox_quantity(Integer box_quantity) {
-        this.box_quantity = box_quantity;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
+    
     public Employee getEmployee() {
         return employee;
     }
@@ -124,6 +51,70 @@ public class IncomingReport_1 implements Serializable {
 
     public void setPart_revision(PartRevision part_revision) {
         this.part_revision = part_revision;
+    }
+    
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getPacking() {
+        return packing;
+    }
+
+    public void setPacking(String packing) {
+        this.packing = packing;
+    }
+
+    public String getPo() {
+        return po;
+    }
+
+    public void setPo(String po) {
+        this.po = po;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getLot() {
+        return lot;
+    }
+
+    public void setLot(String lot) {
+        this.lot = lot;
+    }
+
+    public Integer getQty_in() {
+        return qty_in;
+    }
+
+    public void setQty_in(Integer qty_in) {
+        this.qty_in = qty_in;
+    }
+    
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+    
+    public boolean isOpen(){
+        return open;
+    }
+    
+    public void setOpen(boolean open){
+        this.open = open;
     }
     
     // Object overrides ---------------------------------------------------------------------------
@@ -157,7 +148,8 @@ public class IncomingReport_1 implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%s",
-                lot_number);
-    }    
+        return String.format("PO#: %s Line/Rel. %s Parte: %s Qty: %d",
+                po, line, part_revision, qty_in);
+    }
+    
 }

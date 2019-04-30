@@ -9,9 +9,6 @@ import dao.DAOException;
 import java.util.Date;
 import java.util.List;
 import model.Company;
-import model.Employee;
-import model.PartRevision;
-import model.ProductPart;
 import model.ScrapReport;
 
 /**

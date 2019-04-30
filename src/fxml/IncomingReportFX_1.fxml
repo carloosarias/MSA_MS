@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -15,7 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.IncomingReportFX_1">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.IncomingReportFX_1">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -28,17 +27,16 @@
       <TableView fx:id="incomingreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="counter_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
-            <TableColumn fx:id="rejected_column" minWidth="-Infinity" prefWidth="40.0" text="R" />
             <TableColumn fx:id="reportdate_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
             <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="100.0" text="Empleado" />
-            <TableColumn fx:id="client_column" minWidth="-Infinity" prefWidth="200.0" text="Compañía" />
+            <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="200.0" text="Compañía" />
             <TableColumn fx:id="partnumber_column" editable="false" minWidth="-Infinity" prefWidth="120.0" text="Número de Parte" />
-            <TableColumn fx:id="partrevision_column" editable="false" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
-            <TableColumn fx:id="lotnumber_column" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
-            <TableColumn fx:id="packinglist_column" minWidth="-Infinity" prefWidth="75.0" text="Packing#" />
-            <TableColumn fx:id="ponumber_column" minWidth="-Infinity" prefWidth="75.0" text="PO#" />
-            <TableColumn fx:id="linenumber_column" minWidth="-Infinity" prefWidth="75.0" text="Line/Rel." />
-            <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="100.0" text="Cantidad" />
+            <TableColumn fx:id="rev_column" editable="false" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
+            <TableColumn fx:id="lot_column" minWidth="-Infinity" prefWidth="120.0" text="Número de Lote" />
+            <TableColumn fx:id="packing_column" minWidth="-Infinity" prefWidth="75.0" text="Packing#" />
+            <TableColumn fx:id="po_column" minWidth="-Infinity" prefWidth="75.0" text="PO#" />
+            <TableColumn fx:id="line_column" minWidth="-Infinity" prefWidth="75.0" text="Line/Rel." />
+            <TableColumn fx:id="qtyin_column" minWidth="-Infinity" prefWidth="100.0" text="Cantidad" />
             <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
          </columns>
          <GridPane.margin>
@@ -60,8 +58,6 @@
                      <children>
                         <GridPane>
                            <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" prefWidth="208.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" prefWidth="208.0" />
                               <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                               <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                            </columnConstraints>
@@ -69,11 +65,6 @@
                               <RowConstraints vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ComboBox fx:id="company_combo1" prefWidth="200.0" promptText="Compañía" GridPane.columnIndex="2">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </ComboBox>
                               <GridPane>
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" />
@@ -83,7 +74,7 @@
                                     <RowConstraints vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <DatePicker fx:id="start_datepicker11" maxWidth="150.0" promptText="DD/MMM/AAAA" GridPane.columnIndex="1">
+                                    <DatePicker fx:id="start_datepicker1" maxWidth="150.0" promptText="DD/MMM/AAAA" GridPane.columnIndex="1">
                                        <GridPane.margin>
                                           <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                        </GridPane.margin>
@@ -116,11 +107,11 @@
                                     </Label>
                                  </children>
                               </GridPane>
-                              <CheckBox fx:id="rejected_checkbox1" allowIndeterminate="true" indeterminate="true" mnemonicParsing="false" text="Material Rechazado" GridPane.columnIndex="3" />
                            </children>
                         </GridPane>
                         <GridPane GridPane.rowIndex="1">
                           <columnConstraints>
+                              <ColumnConstraints percentWidth="0.0" />
                               <ColumnConstraints />
                               <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                               <ColumnConstraints percentWidth="0.0" />
@@ -133,37 +124,42 @@
                             <RowConstraints vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <TextField fx:id="packinglist_field1" prefWidth="75.0" promptText="Packing#" GridPane.columnIndex="3">
+                              <TextField fx:id="packing_field1" prefWidth="75.0" promptText="Packing#" GridPane.columnIndex="4">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="ponumber_field1" prefWidth="75.0" promptText="PO#" GridPane.columnIndex="4">
+                              <TextField fx:id="po_field1" prefWidth="75.0" promptText="PO#" GridPane.columnIndex="5">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="linenumber_field1" prefWidth="75.0" promptText="Line/Rel." GridPane.columnIndex="5">
+                              <TextField fx:id="line_field1" prefWidth="75.0" promptText="Line/Rel." GridPane.columnIndex="6">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="partnumber_field1" prefWidth="150.0" promptText="Número de Parte">
+                              <TextField fx:id="partnumber_field1" prefWidth="150.0" promptText="Número de Parte" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="lotnumber_field1" prefWidth="150.0" promptText="Número de Lote" GridPane.columnIndex="2">
+                              <TextField fx:id="lot_field1" prefWidth="150.0" promptText="Número de Lote" GridPane.columnIndex="3">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <TextField fx:id="rev_field1" prefWidth="75.0" promptText="Rev" GridPane.columnIndex="1">
+                              <TextField fx:id="rev_field1" prefWidth="75.0" promptText="Rev" GridPane.columnIndex="2">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="6" />
+                              <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="7" />
+                              <ComboBox fx:id="company_combo1" prefWidth="200.0" promptText="Compañía">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin>
+                              </ComboBox>
                            </children>
                         </GridPane>
                      </children>
@@ -203,128 +199,36 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="lotnumber_field2" promptText="Número de Lote" GridPane.columnIndex="3">
+                        <TextField fx:id="lot_field2" promptText="Número de Lote" GridPane.columnIndex="3">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="quantity_field2" prefWidth="100.0" promptText="Cantidad" GridPane.columnIndex="4">
+                        <TextField fx:id="qtyin_field2" prefWidth="100.0" promptText="Cantidad" GridPane.columnIndex="4">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="packinglist_field2" prefWidth="75.0" promptText="Packing#" GridPane.columnIndex="5">
+                        <TextField fx:id="packing_field2" prefWidth="75.0" promptText="Packing#" GridPane.columnIndex="5">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="ponumber_field2" prefWidth="75.0" promptText="PO#" GridPane.columnIndex="6">
+                        <TextField fx:id="po_field2" prefWidth="75.0" promptText="PO#" GridPane.columnIndex="6">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextField fx:id="linenumber_field2" prefWidth="75.0" promptText="Line/Rel." GridPane.columnIndex="7">
+                        <TextField fx:id="line_field2" prefWidth="75.0" promptText="Line/Rel." GridPane.columnIndex="7">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TextField>
-                        <Button fx:id="save_button2" mnemonicParsing="false" text="Agregar Reporte de Reciba" GridPane.columnIndex="8">
+                        <Button fx:id="save_button2" disable="true" mnemonicParsing="false" text="Registrar Reciba de Material" GridPane.columnIndex="8">
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </Button>
-                     </children>
-                  </GridPane>
-               </content></TitledPane>
-            <TitledPane text="Registrar Reciba de Material Rechazado">
-               <content>
-                  <GridPane>
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <GridPane GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                              <ComboBox fx:id="company_combo3" prefWidth="200.0" promptText="Compañía">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </ComboBox>
-                              <TextField fx:id="departreport_field3" prefWidth="75.0" promptText="Remisión#" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="partnumber_field3" promptText="Número de Parte" GridPane.columnIndex="2">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="rev_field3" prefWidth="75.0" promptText="Rev" GridPane.columnIndex="3">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="lotnumber_field3" promptText="Número de Lote" GridPane.columnIndex="4">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="ponumber_field3" prefWidth="75.0" promptText="PO#" GridPane.columnIndex="5">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <TextField fx:id="linenumber_field3" prefWidth="75.0" promptText="Line/Rel." GridPane.columnIndex="6">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                           </children>
-                        </GridPane>
-                        <GridPane GridPane.rowIndex="1">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <ComboBox fx:id="departlot_combo3" prefWidth="300.0" promptText="Remisiones">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </ComboBox>
-                              <TextField fx:id="quantity_field3" prefWidth="100.0" promptText="Cantidad" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </TextField>
-                              <Button fx:id="save_button3" mnemonicParsing="false" text="Agregar Reporte  a reciba" GridPane.columnIndex="2">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Button>
-                           </children>
-                        </GridPane>
                      </children>
                   </GridPane>
                </content></TitledPane>
@@ -341,7 +245,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="disable_button" disable="true" mnemonicParsing="false" text="Eliminar Selección">
+            <Button fx:id="delete_button" disable="true" mnemonicParsing="false" text="Eliminar Selección">
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" />
                </GridPane.margin>

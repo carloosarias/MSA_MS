@@ -17,7 +17,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import model.IncomingLot;
+import model.Company;
+import model.DepartLot;
+import model.Employee;
 import model.IncomingReport_1;
 
 /**
@@ -32,93 +34,69 @@ public class IncomingReportFX_1 implements Initializable {
     @FXML
     private TableView<IncomingReport_1> incomingreport_tableview;
     @FXML
-    private TableColumn<?, ?> counter_column;
+    private TableColumn<IncomingReport_1, String> counter_column;
     @FXML
-    private TableColumn<?, ?> rejected_column;
+    private TableColumn<IncomingReport_1, String> date_column;
     @FXML
-    private TableColumn<?, ?> reportdate_column;
+    private TableColumn<IncomingReport_1, Employee> employee_column;
     @FXML
-    private TableColumn<?, ?> employee_column;
+    private TableColumn<IncomingReport_1, Company> client_column;
     @FXML
-    private TableColumn<?, ?> client_column;
+    private TableColumn<IncomingReport_1, String> partnumber_column;
     @FXML
-    private TableColumn<?, ?> partnumber_column;
+    private TableColumn<IncomingReport_1, String> partrevision_column;
     @FXML
-    private TableColumn<?, ?> partrevision_column;
+    private TableColumn<IncomingReport_1, String> lot_column;
     @FXML
-    private TableColumn<?, ?> lotnumber_column;
+    private TableColumn<IncomingReport_1, String> packing_column;
     @FXML
-    private TableColumn<?, ?> packinglist_column;
+    private TableColumn<IncomingReport_1, String> po_column;
     @FXML
-    private TableColumn<?, ?> ponumber_column;
+    private TableColumn<IncomingReport_1, String> line_column;
     @FXML
-    private TableColumn<?, ?> linenumber_column;
+    private TableColumn<IncomingReport_1, Integer> qtyin_column;
     @FXML
-    private TableColumn<?, ?> quantity_column;
+    private TableColumn<IncomingReport_1, String> comments_column;
     @FXML
-    private TableColumn<?, ?> comments_column;
-    @FXML
-    private ComboBox<?> company_combo1;
+    private ComboBox<Company> company_combo1;
     @FXML
     private DatePicker start_datepicker11;
     @FXML
     private DatePicker end_datepicker1;
     @FXML
-    private CheckBox rejected_checkbox1;
+    private TextField packing_field1;
     @FXML
-    private TextField packinglist_field1;
+    private TextField po_field1;
     @FXML
-    private TextField ponumber_field1;
-    @FXML
-    private TextField linenumber_field1;
+    private TextField line_field1;
     @FXML
     private TextField partnumber_field1;
     @FXML
-    private TextField lotnumber_field1;
+    private TextField lot_field1;
     @FXML
     private TextField rev_field1;
     @FXML
     private Button reset_button;
     @FXML
-    private ComboBox<?> company_combo2;
+    private ComboBox<Company> company_combo2;
     @FXML
     private TextField partnumber_field2;
     @FXML
     private TextField rev_field2;
     @FXML
-    private TextField lotnumber_field2;
+    private TextField lot_field2;
     @FXML
-    private TextField quantity_field2;
+    private TextField qtyin_field2;
     @FXML
-    private TextField packinglist_field2;
+    private TextField packing_field2;
     @FXML
-    private TextField ponumber_field2;
+    private TextField po_field2;
     @FXML
-    private TextField linenumber_field2;
+    private TextField line_field2;
     @FXML
     private Button save_button2;
     @FXML
-    private ComboBox<?> company_combo3;
-    @FXML
-    private TextField departreport_field3;
-    @FXML
-    private TextField partnumber_field3;
-    @FXML
-    private TextField rev_field3;
-    @FXML
-    private TextField lotnumber_field3;
-    @FXML
-    private TextField ponumber_field3;
-    @FXML
-    private TextField linenumber_field3;
-    @FXML
-    private ComboBox<?> departlot_combo3;
-    @FXML
-    private TextField quantity_field3;
-    @FXML
-    private Button save_button3;
-    @FXML
-    private Button disable_button;
+    private Button delete_button;
 
     /**
      * Initializes the controller class.
