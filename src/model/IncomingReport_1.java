@@ -125,4 +125,39 @@ public class IncomingReport_1 implements Serializable {
     public void setPart_revision(PartRevision part_revision) {
         this.part_revision = part_revision;
     }
+    
+    // Object overrides ---------------------------------------------------------------------------
+    
+    /**
+     * This should compare IncomingReport_1 by ID only.
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        return (other instanceof IncomingReport_1) && (id != null)
+            ? id.equals(((IncomingReport_1) other).id)
+            : (other == this);
+    }
+    
+    
+    /**
+     * IncomingReport_1 with same ID should return same hashcode.
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return (id != null) 
+             ? (this.getClass().hashCode() + id.hashCode()) 
+             : super.hashCode();
+    }
+
+    /**
+     * Returns the String representation of this IncomingLot. Not required, it just pleases reading logs.
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return String.format("%s",
+                lot_number);
+    }    
 }
