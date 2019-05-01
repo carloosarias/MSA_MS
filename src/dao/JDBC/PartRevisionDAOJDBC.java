@@ -37,7 +37,7 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
             + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE (COMPANY.id = ? AND COMPANY.active = 1) AND (PRODUCT_PART.part_number = ? AND PRODUCT_PART.active = 1) AND (PART_REVISION.rev = ? AND PART_REVISION.active = 1)";
+            + "WHERE (PRODUCT_PART.part_number = ? AND PRODUCT_PART.active = 1) AND (PART_REVISION.rev = ? AND PART_REVISION.active = 1)";
     private static final String SQL_LIST_ACTIVE = 
             "SELECT * FROM PART_REVISION INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
@@ -83,11 +83,8 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
     }
     
     @Override
-    public PartRevision find(Company company, String part_number, String rev) throws DAOException {
-        if(company.getId() == null) {
-            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
-        }   
-        return find(SQL_FIND_BY_PATTERN, company, part_number, rev);
+    public PartRevision find(String part_number, String rev) throws DAOException {
+        return find(SQL_FIND_BY_PATTERN, part_number, rev);
     }
     
     /**

@@ -31,14 +31,13 @@ public interface PartRevisionDAO {
     /**
      * Returns the PartRevision matching Company.id, ProductPart.part_number and PartRevision.rev
      * If null otherwise it will throw IllegalArgumentException..
-     * @param company Company.id
      * @param part_number ProductPart.part_number string pattern
      * @param rev PartRevision.rev string pattern
      * @return The PartRevision from the database matching the given ProductPart ID and rev, otherwise null.
      * @throws IllegalArgumentException If ProductPart ID is null.
      * @throws DAOException If something fails at database level.
      */
-    public PartRevision find(Company company, String part_number, String rev) throws IllegalArgumentException, DAOException;
+    public PartRevision find(String part_number, String rev) throws IllegalArgumentException, DAOException;
     
     /**
      * Returns a list of all PartRevisions from the database ordered by PartRevision ID. The list is never null and

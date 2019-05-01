@@ -36,8 +36,8 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE INCOMING_REPORT_1.id = ?";
     private static final String SQL_LIST_ACTIVE_FILTER = 
-            "SELECT * (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_REPORT_1) "
-            +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as open FROM INCOMING_REPORT_1 "
+            "SELECT *, (INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
+            +"AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as open FROM INCOMING_REPORT_1 "
             + "INNER JOIN EMPLOYEE ON INCOMING_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
@@ -234,11 +234,13 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
         IncomingReport_1 incoming_report = new IncomingReport_1();
         incoming_report.setId(resultSet.getInt(String.format("%s%s",incomingreport_label, "id")));
         incoming_report.setDate(resultSet.getDate(String.format("%s%s",incomingreport_label, "date")));
+        incoming_report.setLot(resultSet.getString(String.format("%s%s",incomingreport_label, "lot")));
+        incoming_report.setPacking(resultSet.getString(String.format("%s%s",incomingreport_label, "packing")));
         incoming_report.setPo(resultSet.getString(String.format("%s%s",incomingreport_label, "po")));
         incoming_report.setLine(resultSet.getString(String.format("%s%s",incomingreport_label, "line")));
         incoming_report.setQty_in(resultSet.getInt(String.format("%s%s",incomingreport_label, "qty_in")));
         incoming_report.setComments(resultSet.getString(String.format("%s%s",incomingreport_label, "comments")));
-        incoming_report.setOpen(resultSet.getBoolean(String.format("%s%s",incomingreport_label, "open")));
+        incoming_report.setOpen(resultSet.getBoolean(String.format("%s", "open")));
         incoming_report.setEmployee(EmployeeDAOJDBC.map(employee_label, resultSet));
         incoming_report.setPart_revision(PartRevisionDAOJDBC.map(partrevision_label, productpart_label, company_label, metal_label, specification_label, resultSet));
         return incoming_report;

@@ -26,6 +26,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.IncomingLot;
+import model.IncomingReport;
 import model.Module;
 import model.ProductPart;
 import model.Quote;
@@ -150,7 +152,7 @@ public class MainFX implements Initializable {
                         break;
                     case "Reciba":
                         poquery_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/POQueryFX.fxml")));
-                        incoming_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX.fxml")));
+                        incoming_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX_1.fxml")));
                         orderpurchaseincomingreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
                         depart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX_1.fxml")));
                         root_tabpane.getTabs().setAll(poquery_tab, incoming_tab, orderpurchaseincomingreport_tab, depart_tab);
