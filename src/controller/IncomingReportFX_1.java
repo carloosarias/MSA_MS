@@ -11,10 +11,12 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -52,8 +54,6 @@ public class IncomingReportFX_1 implements Initializable {
     private TableColumn<IncomingReport_1, String> date_column;
     @FXML
     private TableColumn<IncomingReport_1, Employee> employee_column;
-    @FXML
-    private TableColumn<IncomingReport_1, String> company_column;
     @FXML
     private TableColumn<IncomingReport_1, String> partnumber_column;
     @FXML
@@ -112,6 +112,7 @@ public class IncomingReportFX_1 implements Initializable {
     private IncomingReport_1 incoming_report;
     private ObjectProperty<PartRevision> part_revision = new SimpleObjectProperty();
     private ObjectProperty<Integer> qty_in = new SimpleObjectProperty();
+    private BooleanProperty open_property = new SimpleBooleanProperty(false);
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     
@@ -122,6 +123,25 @@ public class IncomingReportFX_1 implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         setIncomingReportTable();
         updateIncomingReportTable();
+        company_combo1.getItems().setAll(msabase.getCompanyDAO().listClient(true));
+        company_combo1.setOnAction((ActionEvent) -> {
+            updateIncomingReportTable();
+        });
+        start_datepicker1.setOnAction(company_combo1.getOnAction());
+        end_datepicker1.setOnAction(company_combo1.getOnAction());
+        packing_field1.setOnAction(company_combo1.getOnAction());
+        po_field1.setOnAction(company_combo1.getOnAction());
+        line_field1.setOnAction(company_combo1.getOnAction());
+        partnumber_field1.setOnAction(company_combo1.getOnAction());
+        lot_field1.setOnAction(company_combo1.getOnAction());
+        rev_field1.setOnAction(company_combo1.getOnAction());
+        incomingreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport_1> observable, IncomingReport_1 oldValue, IncomingReport_1 newValue) -> {
+            try{
+                open_property.setValue(newValue.isOpen());
+            }catch(Exception e){
+                open_property.setValue(false);
+            }
+        });
         reset_button.setOnAction((ActionEvent) -> {
             clearSearchFields();
         });             
@@ -129,10 +149,13 @@ public class IncomingReportFX_1 implements Initializable {
             createIncomingReport();
             clearSearchFields();
             updateIncomingReportTable();
+            clearCreateFields();
             part_revision.setValue(null);
+            qty_in.setValue(null);
         });
         delete_button.setOnAction((ActionEvent) -> {
             msabase.getIncomingReport_1DAO().delete(incomingreport_tableview.getSelectionModel().getSelectedItem());
+            updateIncomingReportTable();
         });
         partnumber_field2.setOnAction((ActionEvent) -> {
             setPartRevision();
@@ -172,15 +195,13 @@ public class IncomingReportFX_1 implements Initializable {
         packing_field2.disableProperty().bind(part_revision.isNull());
         po_field2.disableProperty().bind(part_revision.isNull());
         line_field2.disableProperty().bind(part_revision.isNull());
-        delete_button.disableProperty().bind(incomingreport_tableview.getSelectionModel().selectedItemProperty().isNull());
-                
+        delete_button.disableProperty().bind(open_property.not());  
         save_button2.disableProperty().bind(part_revision.isNull().or(lot_field2.textProperty().isEmpty()).or(qty_in.isNull())
                 .or(packing_field2.textProperty().isEmpty()).or(po_field2.textProperty().isEmpty()).or(line_field2.textProperty().isEmpty()));
     }
     
     public void setIncomingReportTable(){
         counter_column.setCellValueFactory(c -> new SimpleStringProperty(Integer.toString(c.getTableView().getItems().indexOf(c.getValue())+1)));
-        company_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getCompany().getName()));
         employee_column.setCellValueFactory(new PropertyValueFactory<>("employee"));
         date_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getDate()))));
         partnumber_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getPart_number()));
@@ -236,13 +257,16 @@ public class IncomingReportFX_1 implements Initializable {
         rev_field2.setStyle("-fx-background-color: lightgreen;");
         part_revision.setValue(msabase.getPartRevisionDAO().find(partnumber_field2.getText().trim(), rev_field2.getText().trim()));
         if(part_revision.isNull().getValue()){
+            clearCreateFields();
             partnumber_field2.setStyle("-fx-background-color: lightpink;");
             rev_field2.setStyle("-fx-background-color: lightpink;");
-            clearCreateFields();
         }
     }
     
     public void clearCreateFields(){
+        partnumber_field2.setStyle(null);
+        rev_field2.setStyle(null);
+        partnumber_field2.clear();
         rev_field2.clear();
         lot_field2.clear();
         qtyin_field2.clear();
@@ -251,4 +275,5 @@ public class IncomingReportFX_1 implements Initializable {
         line_field2.clear();
         partnumber_field2.requestFocus();
     }
+    
 }

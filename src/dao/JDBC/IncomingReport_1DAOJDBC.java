@@ -46,17 +46,17 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "HAVING (INCOMING_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
             + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) "
-            + "ORDER BY INCOMING_REPORT_1.id";
+            + "ORDER BY INCOMING_REPORT_1.id DESC";
     private static final String SQL_INSERT = 
             "INSERT INTO INCOMING_REPORT_1 (EMPLOYEE_ID, PART_REVISION_ID, date, packing, po, line, lot, qty_in, comments) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE INCOMING_REPORT_1"
             +"SET packing = ?, po = ?, line = ?, lot = ?, qty_in = ?, comments = ? WHERE id = ? "
-            +"AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_REPORT_1) "
+            +"AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
             +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1))";
     private static final String SQL_DELETE = 
-            "DELETE FROM INCOMING_REPORT_1 WHERE id = ? AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_REPORT_1) "
+            "DELETE FROM INCOMING_REPORT_1 WHERE id = ? AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
             +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1))";
     
     // Vars ---------------------------------------------------------------------------------------
@@ -212,7 +212,23 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
 
     @Override
     public void delete(IncomingReport_1 incoming_report) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object[] values = {
+            incoming_report.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Deleting IncomingReport_1 failed, no rows affected.");
+            } else{
+                incoming_report.setId(null);
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     // Helpers ------------------------------------------------------------------------------------
 

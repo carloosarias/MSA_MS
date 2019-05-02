@@ -7,8 +7,6 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  *
@@ -117,10 +115,6 @@ public class IncomingReport_1 implements Serializable {
 
     public void setOpen(boolean open) {
         this.open = open;
-    }
-    
-    public BooleanProperty openProperty(){
-            return new SimpleBooleanProperty(open);
     }
     
     // Object overrides ---------------------------------------------------------------------------

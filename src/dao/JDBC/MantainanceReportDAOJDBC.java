@@ -56,8 +56,8 @@ public class MantainanceReportDAOJDBC implements MantainanceReportDAO{
             + "WHERE (EQUIPMENT.EQUIPMENT_TYPE_ID = ? OR ? = 0) AND (MANTAINANCE_REPORT.EQUIPMENT_ID = ? OR ? = 0) AND MANTAINANCE_REPORT.active = ? "
             + "ORDER BY MANTAINANCE_REPORT.report_date";
     private static final String SQL_INSERT = 
-            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date) "
-            + "VALUES(?, ?, ?)";
+            "INSERT INTO MANTAINANCE_REPORT (EMPLOYEE_ID, EQUIPMENT_ID, report_date, active) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE MANTAINANCE_REPORT SET report_date = ? WHERE id = ?";
     private static final String SQL_DELETE = 

@@ -28,9 +28,9 @@
       <TableView fx:id="incomingreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="counter_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
+            <TableColumn minWidth="-Infinity" prefWidth="75.0" text="ID Reciba" />
             <TableColumn fx:id="date_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
-            <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="100.0" text="Empleado" />
-            <TableColumn fx:id="company_column" minWidth="-Infinity" prefWidth="150.0" text="Compañía" />
+            <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="120.0" text="Empleado" />
             <TableColumn fx:id="partnumber_column" editable="false" minWidth="-Infinity" prefWidth="120.0" text="Núm. de Parte" />
             <TableColumn fx:id="rev_column" editable="false" minWidth="-Infinity" prefWidth="50.0" text="Rev" />
             <TableColumn fx:id="lot_column" minWidth="-Infinity" prefWidth="100.0" text="Núm de Lote" />
