@@ -158,8 +158,12 @@ public class IncomingReportFX_1 implements Initializable {
             updateIncomingReportTable();
         });
         partnumber_field2.setOnAction((ActionEvent) -> {
-            setPartRevision();
-            rev_field2.requestFocus();
+            if(rev_field2.textProperty().isEmpty().not().getValue()){
+                setPartRevision();
+            }
+            else{
+                rev_field2.requestFocus();
+            }
         });
         rev_field2.setOnAction((ActionEvent) -> {
             setPartRevision();

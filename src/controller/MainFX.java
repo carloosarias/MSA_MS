@@ -114,6 +114,7 @@ public class MainFX implements Initializable {
         menu_listview.getItems().setAll(msabase.getModuleDAO().list(MainApp.current_employee));
         menu_listview.getSelectionModel().selectFirst();
         
+        
         setTabs(menu_listview.getSelectionModel().getSelectedItem());
         
         menu_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
