@@ -152,11 +152,11 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(partrevision_tab, productpart_tab, specification_tab, metal_tab);
                         break;
                     case "Reciba":
-                        poquery_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/POQueryFX.fxml")));
+                        //poquery_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/POQueryFX.fxml")));
                         incoming_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX_1.fxml")));
-                        orderpurchaseincomingreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
-                        depart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX_1.fxml")));
-                        root_tabpane.getTabs().setAll(poquery_tab, incoming_tab, orderpurchaseincomingreport_tab, depart_tab);
+                        //orderpurchaseincomingreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
+                        //depart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX_1.fxml")));
+                        root_tabpane.getTabs().setAll(incoming_tab);
                         break;
                     case "Facturación":
                         invoice_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));

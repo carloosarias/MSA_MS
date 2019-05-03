@@ -5,27 +5,21 @@
  */
 package model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
- * @author Carlos
+ * @author Pavilion Mini
  */
-public class IncomingReport_1 implements Serializable {
+public class ScrapReport_1 {
     
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
     private Employee employee;
-    private PartRevision part_revision;
+    private IncomingReport_1 incoming_report;
     private Date date;
-    private String packing;
-    private String po;
-    private String line;
-    private String lot;
-    private Integer qty_in;
+    private Integer qty_scrap;
     private String comments;
-    private boolean open;
     
     // Getters/setters ----------------------------------------------------------------------------
 
@@ -36,7 +30,7 @@ public class IncomingReport_1 implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public Employee getEmployee() {
         return employee;
     }
@@ -45,14 +39,14 @@ public class IncomingReport_1 implements Serializable {
         this.employee = employee;
     }
 
-    public PartRevision getPart_revision() {
-        return part_revision;
+    public IncomingReport_1 getIncoming_report() {
+        return incoming_report;
     }
 
-    public void setPart_revision(PartRevision part_revision) {
-        this.part_revision = part_revision;
+    public void setIncoming_report(IncomingReport_1 incoming_report) {
+        this.incoming_report = incoming_report;
     }
-    
+
     public Date getDate() {
         return date;
     }
@@ -61,46 +55,14 @@ public class IncomingReport_1 implements Serializable {
         this.date = date;
     }
 
-    public String getPacking() {
-        return packing;
+    public Integer getQty_scrap() {
+        return qty_scrap;
     }
 
-    public void setPacking(String packing) {
-        this.packing = packing;
+    public void setQty_scrap(Integer qty_scrap) {
+        this.qty_scrap = qty_scrap;
     }
 
-    public String getPo() {
-        return po;
-    }
-
-    public void setPo(String po) {
-        this.po = po;
-    }
-
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
-    }
-
-    public String getLot() {
-        return lot;
-    }
-
-    public void setLot(String lot) {
-        this.lot = lot;
-    }
-
-    public Integer getQty_in() {
-        return qty_in;
-    }
-
-    public void setQty_in(Integer qty_in) {
-        this.qty_in = qty_in;
-    }
-    
     public String getComments() {
         return comments;
     }
@@ -108,15 +70,6 @@ public class IncomingReport_1 implements Serializable {
     public void setComments(String comments) {
         this.comments = comments;
     }
-    
-    public boolean isOpen() {
-        return open;
-    }
-
-    public void setOpen(boolean open) {
-        this.open = open;
-    }
-    
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -125,8 +78,8 @@ public class IncomingReport_1 implements Serializable {
      */
     @Override
     public boolean equals(Object other) {
-        return (other instanceof IncomingReport_1) && (id != null)
-            ? id.equals(((IncomingReport_1) other).id)
+        return (other instanceof ScrapReport_1) && (id != null)
+            ? id.equals(((ScrapReport_1) other).id)
             : (other == this);
     }
     
@@ -148,8 +101,7 @@ public class IncomingReport_1 implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("FOLIO: %d Packing: %s PO: %s Line/Rel: %s\n%s Lote: %s",
-                id, packing, po, line, part_revision, lot);
+        return String.format("FOLIO: %d",
+                id);
     }
-    
 }

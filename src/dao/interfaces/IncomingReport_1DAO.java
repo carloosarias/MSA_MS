@@ -29,6 +29,7 @@ public interface IncomingReport_1DAO {
     /**
      * Returns a list of all IncomingReport_1 matching a given lot_number from the database ordered by IncomingReport_1 ID.
      * The list is never null and is empty when the database does not contain any IncomingReport_1 matching.
+     * @param id
      * @param start_date
      * @param end_date
      * @param company
@@ -41,7 +42,7 @@ public interface IncomingReport_1DAO {
      * @return A list of all DepartLot matching lot_number from the database ordered by DepartLot ID.
      * @throws DAOException If something fails at database level.
      */    
-    public List<IncomingReport_1> list(Date start_date, Date end_date, Company company, String part_number, String rev, 
+    public List<IncomingReport_1> list(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, 
         String lot, String packing, String po, String line) throws IllegalArgumentException;
     
     /**
