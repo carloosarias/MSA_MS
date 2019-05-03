@@ -26,6 +26,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.DepartLot;
+import model.DepartReport;
 import model.IncomingLot;
 import model.IncomingReport;
 import model.Module;
@@ -113,7 +115,6 @@ public class MainFX implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         menu_listview.getItems().setAll(msabase.getModuleDAO().list(MainApp.current_employee));
         menu_listview.getSelectionModel().selectFirst();
-        
         
         setTabs(menu_listview.getSelectionModel().getSelectedItem());
         

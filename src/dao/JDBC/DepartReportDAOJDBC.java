@@ -28,14 +28,16 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, "
-            +"(SELECT SUM(DEPART_LOT.quantity) FROM DEPART_LOT AS total_qty WHERE DEPART_REPORT.id = DEPART_LOT.DEPART_REPORT_ID), SUM(DEPART_LOT.box_quantity) total_box "
+            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
             +"FROM DEPART_REPORT "
             +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
             +"INNER JOIN COMPANY ON DEPART_REPORT.COMPANY_ID = COMPANY.id "
             +"INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            +"WHERE (DEPART_REPORT.id = ? AND DEPART_REPORT.active = 1) AND DEPART_LOT.active = 1";
+            +"INNER JOIN PART_REVISION ON DEPART_LOT.PART_REVISION_ID = PART_REVISION.id "
+            +"INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            +"WHERE (DEPART_REPORT.id = ? AND DEPART_REPORT.active = 1) AND DEPART_LOT.active = 1 "
+            +"GROUP BY DEPART_REPORT.id DESC";
     private static final String SQL_LIST_ACTIVE = 
             "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
             +"FROM DEPART_REPORT "
