@@ -46,6 +46,25 @@ public interface IncomingReport_1DAO {
         String lot, String packing, String po, String line) throws IllegalArgumentException;
     
     /**
+     * Returns a list of all IncomingReport_1 matching a given lot_number from the database ordered by IncomingReport_1 ID.
+     * The list is never null and is empty when the database does not contain any IncomingReport_1 matching.
+     * @param id
+     * @param start_date
+     * @param end_date
+     * @param company
+     * @param part_number
+     * @param rev
+     * @param packing
+     * @param po
+     * @param line
+     * @param lot
+     * @return A list of all DepartLot matching lot_number from the database ordered by DepartLot ID.
+     * @throws DAOException If something fails at database level.
+     */    
+    public List<IncomingReport_1> listAva(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, 
+        String lot, String packing, String po, String line) throws IllegalArgumentException;
+    
+    /**
      * Create the given IncomingReport_1 in the database. 
      * and the IncomingReport_1 ID must be null, otherwise it will throw IllegalArgumentException. 
      * After creating, the DAO will set the obtained ID in the given IncomingReport_1.

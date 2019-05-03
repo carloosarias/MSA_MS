@@ -44,30 +44,63 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
     GROUP BY INCOMING_REPORT_1.id
     HAVING INCOMING_REPORT_1.id;*/
     private static final String SQL_FIND_BY_ID = 
-            "SELECT *, (INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
-            +"AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as open FROM INCOMING_REPORT_1 "
+            "SELECT *, "
+            +"COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`, "
+            +"(IFNULL(sum(qty_in),0) - IFNULL(sum(qty_scrap),0) - IFNULL(sum(qty_out),0) + IFNULL(sum(qty_rej),0)) as `qty_ava`, "
+            +"(INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as `open` "
+            +"FROM INCOMING_REPORT_1 "
+            +"LEFT JOIN SCRAP_REPORT_1 ON INCOMING_REPORT_1.id = SCRAP_REPORT_1.INCOMING_REPORT_ID "
+            +"LEFT JOIN DEPART_LOT_1 ON INCOMING_REPORT_1.id = DEPART_LOT_1.INCOMING_REPORT_ID "
+            +"LEFT JOIN REJECT_REPORT ON DEPART_LOT_1.id = REJECT_REPORT.DEPART_LOT_ID "
+            +"INNER JOIN EMPLOYEE ON INCOMING_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
+            +"INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
+            +"INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            +"INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
+            +"INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            +"INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            +"WHERE INCOMING_REPORT_1.id = ?"
+            +"GROUP BY INCOMING_REPORT_1.id";
+    private static final String SQL_LIST_FILTER = 
+            "SELECT *, "
+            + "COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`, "
+            + "(IFNULL(sum(qty_in),0) - IFNULL(sum(qty_scrap),0) - IFNULL(sum(qty_out),0) + IFNULL(sum(qty_rej),0)) as `qty_ava`, "
+            + "(INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as `open` "
+            + "FROM INCOMING_REPORT_1 "
+            + "LEFT JOIN SCRAP_REPORT_1 ON INCOMING_REPORT_1.id = SCRAP_REPORT_1.INCOMING_REPORT_ID "
+            + "LEFT JOIN DEPART_LOT_1 ON INCOMING_REPORT_1.id = DEPART_LOT_1.INCOMING_REPORT_ID "
+            + "LEFT JOIN REJECT_REPORT ON DEPART_LOT_1.id = REJECT_REPORT.DEPART_LOT_ID "
             + "INNER JOIN EMPLOYEE ON INCOMING_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
             + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
             + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "WHERE INCOMING_REPORT_1.id = ?";
-    private static final String SQL_LIST_ACTIVE_FILTER = 
-            "SELECT *, (INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
-            +"AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as open FROM INCOMING_REPORT_1 "
-            + "INNER JOIN EMPLOYEE ON INCOMING_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "GROUP BY INCOMING_REPORT_1.id "
             + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (INCOMING_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
             + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) "
             + "ORDER BY INCOMING_REPORT_1.id DESC";
+    private static final String SQL_LIST_AVAILABLE_FILTER = 
+            "SELECT *, "
+            + "COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`, "
+            + "(IFNULL(sum(qty_in),0) - IFNULL(sum(qty_scrap),0) - IFNULL(sum(qty_out),0) + IFNULL(sum(qty_rej),0)) as `qty_ava`, "
+            + "(INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as `open` "
+            + "FROM INCOMING_REPORT_1 "
+            + "LEFT JOIN SCRAP_REPORT_1 ON INCOMING_REPORT_1.id = SCRAP_REPORT_1.INCOMING_REPORT_ID "
+            + "LEFT JOIN DEPART_LOT_1 ON INCOMING_REPORT_1.id = DEPART_LOT_1.INCOMING_REPORT_ID "
+            + "LEFT JOIN REJECT_REPORT ON DEPART_LOT_1.id = REJECT_REPORT.DEPART_LOT_ID "
+            + "INNER JOIN EMPLOYEE ON INCOMING_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
+            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
+            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
+            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
+            + "GROUP BY INCOMING_REPORT_1.id "
+            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (INCOMING_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
+            + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) AND qty_ava > 0"
+            + "ORDER BY INCOMING_REPORT_1.id DESC";
     private static final String SQL_INSERT = 
             "INSERT INTO INCOMING_REPORT_1 (EMPLOYEE_ID, PART_REVISION_ID, date, packing, po, line, lot, qty_in, comments) "
-            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            +"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
             "UPDATE INCOMING_REPORT_1"
             +"SET packing = ?, po = ?, line = ?, lot = ?, qty_in = ?, comments = ? WHERE id = ? "
@@ -148,7 +181,7 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_FILTER, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_FILTER, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -160,7 +193,45 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
         
         return incoming_report;
     }
-
+    
+    @Override
+    public List<IncomingReport_1> listAva(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
+        if(company == null) company = new Company();
+        if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
+        if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
+        
+        List<IncomingReport_1> incoming_report = new ArrayList<>();
+        
+        Object[] values = {
+            id,
+            id,
+            start_date,
+            end_date,
+            company.getId(),
+            company.getId(),
+            String.format("%s%%", part_number),
+            String.format("%s%%", rev),
+            String.format("%s%%", lot),
+            String.format("%s%%", packing),
+            String.format("%s%%", po),
+            String.format("%s%%", line)
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_AVAILABLE_FILTER, false, values);
+            ResultSet resultSet = statement.executeQuery();
+        ){
+            while(resultSet.next()){
+                incoming_report.add(map("INCOMING_REPORT_1.", "EMPLOYEE.", "PART_REVISION.", "PRODUCT_PART.", "METAL.", "SPECIFICATION.", "COMPANY.", resultSet));
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
+        
+        return incoming_report;
+    }
+    
     @Override
     public void create(IncomingReport_1 incoming_report) throws IllegalArgumentException, DAOException {
         if(incoming_report.getId() != null){
@@ -269,12 +340,14 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
             String metal_label, String specification_label, String company_label, ResultSet resultSet) throws SQLException{
         IncomingReport_1 incoming_report = new IncomingReport_1();
         incoming_report.setId(resultSet.getInt(String.format("%s%s",incomingreport_label, "id")));
+        incoming_report.setCount(resultSet.getInt(String.format("%s", "count")));
         incoming_report.setDate(resultSet.getDate(String.format("%s%s",incomingreport_label, "date")));
         incoming_report.setLot(resultSet.getString(String.format("%s%s",incomingreport_label, "lot")));
         incoming_report.setPacking(resultSet.getString(String.format("%s%s",incomingreport_label, "packing")));
         incoming_report.setPo(resultSet.getString(String.format("%s%s",incomingreport_label, "po")));
         incoming_report.setLine(resultSet.getString(String.format("%s%s",incomingreport_label, "line")));
         incoming_report.setQty_in(resultSet.getInt(String.format("%s%s",incomingreport_label, "qty_in")));
+        incoming_report.setQty_ava(resultSet.getInt(String.format("%s", "qty_ava")));
         incoming_report.setComments(resultSet.getString(String.format("%s%s",incomingreport_label, "comments")));
         incoming_report.setOpen(resultSet.getBoolean(String.format("%s", "open")));
         incoming_report.setEmployee(EmployeeDAOJDBC.map(employee_label, resultSet));

@@ -16,6 +16,7 @@ public class IncomingReport_1 implements Serializable {
     
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
+    private Integer count;
     private Employee employee;
     private PartRevision part_revision;
     private Date date;
@@ -24,6 +25,7 @@ public class IncomingReport_1 implements Serializable {
     private String line;
     private String lot;
     private Integer qty_in;
+    private Integer qty_ava;
     private String comments;
     private boolean open;
     
@@ -35,6 +37,14 @@ public class IncomingReport_1 implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+    
+    public Integer getCount(){
+        return count;
+    }
+    
+    public void setCount(Integer count) {
+        this.count = count;
     }
     
     public Employee getEmployee() {
@@ -99,6 +109,14 @@ public class IncomingReport_1 implements Serializable {
 
     public void setQty_in(Integer qty_in) {
         this.qty_in = qty_in;
+    }
+    
+    public Integer getQty_ava() {
+        return qty_ava;
+    }
+
+    public void setQty_ava(Integer qty_ava) {
+        this.qty_ava = qty_ava;
     }
     
     public String getComments() {
