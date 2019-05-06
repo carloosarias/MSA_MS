@@ -122,7 +122,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </ComboBox>
-                              <TextField fx:id="id_field1" prefWidth="75.0" promptText="Folio#" GridPane.columnIndex="3">
+                              <TextField fx:id="id_field1" prefWidth="75.0" promptText="RECIBA" GridPane.columnIndex="3">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
@@ -173,7 +173,10 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </TextField>
-                              <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="6" />
+                              <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="6">
+                                 <GridPane.margin>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </GridPane.margin></Button>
                            </children>
                         </GridPane>
                      </children>
@@ -322,7 +325,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </ComboBox>
-                              <TextField fx:id="id_field2" prefWidth="75.0" promptText="Folio#" GridPane.columnIndex="3">
+                              <TextField fx:id="id_field2" prefWidth="75.0" promptText="RECIBA" GridPane.columnIndex="3">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
