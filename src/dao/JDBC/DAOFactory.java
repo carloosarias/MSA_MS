@@ -39,6 +39,7 @@ import dao.interfaces.PurchaseItemDAO;
 import dao.interfaces.QuoteDAO;
 import dao.interfaces.QuoteItemDAO;
 import dao.interfaces.ScrapReportDAO;
+import dao.interfaces.ScrapReport_1DAO;
 import dao.interfaces.SpecificationDAO;
 import dao.interfaces.SpecificationItemDAO;
 import dao.interfaces.TankDAO;
@@ -257,14 +258,6 @@ public abstract class DAOFactory {
     }
     
     /**
-     * Returns the IncomingReport_1 DAO associated with the current DAOFactory.
-     * @return The IncomingReport_1 DAO associated with the current DAOFactory.
-     */   
-    public IncomingReport_1DAO getIncomingReport_1DAO(){
-        return new IncomingReport_1DAOJDBC(this);
-    }
-    
-    /**
      * Returns the IncomingLot DAO associated with the current DAOFactory.
      * @return The IncomingLot DAO associated with the current DAOFactory.
      */   
@@ -479,6 +472,22 @@ public abstract class DAOFactory {
      */   
     public POQueryDAO getPOQueryDAO(){
         return new POQueryDAOJDBC(this);
+    }
+    
+    /**
+     * Returns the IncomingReport_1 DAO associated with the current DAOFactory.
+     * @return The IncomingReport_1 DAO associated with the current DAOFactory.
+     */   
+    public IncomingReport_1DAO getIncomingReport_1DAO(){
+        return new IncomingReport_1DAOJDBC(this);
+    }
+    
+    /**
+     * Returns the ScrapReport_1 DAO associated with the current DAOFactory.
+     * @return The ScrapReport_1 DAO associated with the current DAOFactory.
+     */   
+    public ScrapReport_1DAO getScrapReport_1DAO(){
+        return new ScrapReport_1DAOJDBC(this);
     }
     
     // You can add more DAO implementation getters here.

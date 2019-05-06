@@ -177,7 +177,7 @@ public class MainFX implements Initializable {
                         root_tabpane.getTabs().setAll(transactionhistory_tab);
                         break;
                     case "Scrap":
-                        scrap_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX.fxml")));
+                        scrap_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ScrapReportFX_1.fxml")));
                         root_tabpane.getTabs().setAll(scrap_tab);
                         break;
                     case "Análisis":

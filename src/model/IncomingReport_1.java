@@ -166,7 +166,7 @@ public class IncomingReport_1 implements Serializable {
      */
     @Override
     public String toString() {
-        return String.format("FOLIO: %d Packing: %s PO: %s Line/Rel: %s\n%s Lote: %s",
+        return String.format("RECIBA: %d Packing: %s PO: %s Line/Rel: %s\n%s Lote: %s",
                 id, packing, po, line, part_revision, lot);
     }
     

@@ -15,6 +15,7 @@ public class ScrapReport_1 {
     
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
+    private Integer count;
     private Employee employee;
     private IncomingReport_1 incoming_report;
     private Date date;
@@ -30,7 +31,15 @@ public class ScrapReport_1 {
     public void setId(Integer id) {
         this.id = id;
     }
+    
+    public Integer getCount() {
+        return count;
+    }
 
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+    
     public Employee getEmployee() {
         return employee;
     }

@@ -184,6 +184,8 @@ public class IncomingReportFX_1 implements Initializable {
                 qtyin_field2.selectAll();
             }
         });
+        
+        incomingreport_tableview.editableProperty().bind(open_property);
         partnumber_field2.disableProperty().bind(packing_field2.textProperty().isEmpty().or(po_field2.textProperty().isEmpty()).or(line_field2.textProperty().isEmpty()));
         rev_field2.disableProperty().bind(partnumber_field2.textProperty().isEmpty());
         lot_field2.disableProperty().bind(part_revision.isNull());

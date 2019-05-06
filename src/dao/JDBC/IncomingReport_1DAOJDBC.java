@@ -26,23 +26,6 @@ import model.IncomingReport_1;
  */
 public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
     // Constants ----------------------------------------------------------------------------------
-    /*
-    SELECT *, 
-    COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`,
-    (IFNULL(sum(qty_in),0) - IFNULL(sum(qty_scrap),0) - IFNULL(sum(qty_out),0) + IFNULL(sum(qty_rej),0)) as `qty_ava`,
-    (INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as `open` 
-    FROM INCOMING_REPORT_1
-    LEFT JOIN SCRAP_REPORT_1 ON INCOMING_REPORT_1.id = SCRAP_REPORT_1.INCOMING_REPORT_ID
-    LEFT JOIN DEPART_LOT_1 ON INCOMING_REPORT_1.id = DEPART_LOT_1.INCOMING_REPORT_ID
-    LEFT JOIN REJECT_REPORT ON DEPART_LOT_1.id = REJECT_REPORT.DEPART_LOT_ID
-    INNER JOIN EMPLOYEE ON INCOMING_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id 
-    INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id 
-    INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id 
-    INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id 
-    INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id 
-    INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id
-    GROUP BY INCOMING_REPORT_1.id
-    HAVING INCOMING_REPORT_1.id;*/
     private static final String SQL_FIND_BY_ID = 
             "SELECT *, "
             +"COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`, "
@@ -96,7 +79,7 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "GROUP BY INCOMING_REPORT_1.id "
             + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (INCOMING_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
-            + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) AND qty_ava > 0"
+            + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) AND qty_ava > 0 "
             + "ORDER BY INCOMING_REPORT_1.id DESC";
     private static final String SQL_INSERT = 
             "INSERT INTO INCOMING_REPORT_1 (EMPLOYEE_ID, PART_REVISION_ID, date, packing, po, line, lot, qty_in, comments) "
@@ -107,7 +90,8 @@ public class IncomingReport_1DAOJDBC implements IncomingReport_1DAO {
             +"AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
             +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1))";
     private static final String SQL_DELETE = 
-            "DELETE FROM INCOMING_REPORT_1 WHERE id = ? AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
+            "DELETE FROM INCOMING_REPORT_1 WHERE id = ? "
+            +"AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
             +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1))";
     
     // Vars ---------------------------------------------------------------------------------------
