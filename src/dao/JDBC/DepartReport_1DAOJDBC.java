@@ -46,53 +46,32 @@ ORDER BY DEPART_REPORT_1.id DESC*/
             + "WHERE DEPART_REPORT_1.id = ? "
             + "GROUP BY DEPART_REPORT_1.id";
     private static final String SQL_LIST_FILTER = 
-            "SELECT *, (SELECT COUNT(DISTINCT(id)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `depart_count`, "
+            "SELECT *, "
+            + "(SELECT COUNT(DISTINCT(id)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `depart_count`, "
             + "(SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `total_qty`, "
             + "DEPART_REPORT_1.id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1) as `depart_open` "
-            + "FROM DEPART_LOT_1 "
-            + "INNER JOIN DEPART_REPORT_1 ON DEPART_LOT_1.DEPART_REPORT_ID = DEPART_REPORT_1.id "
+            + "FROM DEPART_REPORT_1 "
             + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT_1.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id "
             + "INNER JOIN EMPLOYEE ON DEPART_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.INCOMING_REPORT_ID = DEPART_REPORT_1.id "
-            + "INNER JOIN EMPLOYEE AS incoming_employee ON INCOMING_REPORT_1.EMPLOYEE_ID = incoming_employee.id "
-            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "GROUP BY INCOMING_REPORT_1.id "
-            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (INCOMING_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
+            + "LEFT JOIN DEPART_LOT_1 ON DEPART_LOT_1.`DEPART_REPORT_ID` = DEPART_REPORT_1.id "
+            + "INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.`INCOMING_REPORT_ID` = INCOMING_REPORT_1.id "
+            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.`PART_REVISION_ID` = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.`PRODUCT_PART_ID` = PRODUCT_PART.id "
+            + "GROUP BY DEPART_REPORT_1.id "
+            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (DEPART_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
             + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) "
             + "ORDER BY DEPART_REPORT_1.id DESC";
-    private static final String SQL_LIST_AVAILABLE_FILTER = 
-            "SELECT *, "
-            + "COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`, "
-            + "sum(qty_in - IFNULL((SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE INCOMING_REPORT_1.id = `INCOMING_REPORT_ID`),0) - IFNULL((SELECT sum(qty_scrap) FROM SCRAP_REPORT_1 WHERE INCOMING_REPORT_1.id = `INCOMING_REPORT_ID`),0)) as `qty_ava`, "
-            + "(INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as `open` "
-            + "FROM INCOMING_REPORT_1 "
-            + "INNER JOIN EMPLOYEE ON INCOMING_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "GROUP BY INCOMING_REPORT_1.id "
-            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (INCOMING_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
-            + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) AND qty_ava > 0 "
-            + "ORDER BY INCOMING_REPORT_1.id DESC";
     private static final String SQL_INSERT = 
-            "INSERT INTO INCOMING_REPORT_1 (EMPLOYEE_ID, PART_REVISION_ID, date, packing, po, line, lot, qty_in, comments) "
-            +"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO DEPART_REPORT_1 (EMPLOYEE_ID, COMPANY_ADDRESS_ID, date, comments) "
+            + "VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE INCOMING_REPORT_1"
-            +"SET packing = ?, po = ?, line = ?, lot = ?, qty_in = ?, comments = ? WHERE id = ? "
-            +"AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
-            +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1))";
+            "UPDATE DEPART_REPORT_1"
+            + "SET date = ?, comments = ? WHERE id = ? "
+            + "AND id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1)";
     private static final String SQL_DELETE = 
-            "DELETE FROM INCOMING_REPORT_1 WHERE id = ? "
-            +"AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
-            +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1))";
+            "DELETE FROM DEPART_REPORT_1 WHERE id = ? "
+            + "AND id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1)";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -166,44 +145,6 @@ ORDER BY DEPART_REPORT_1.id DESC*/
         try(
             Connection connection = daoFactory.getConnection();
             PreparedStatement statement = prepareStatement(connection, SQL_LIST_FILTER, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                incoming_report.add(map("INCOMING_REPORT_1.", "EMPLOYEE.", "PART_REVISION.", "PRODUCT_PART.", "METAL.", "SPECIFICATION.", "COMPANY.", resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return incoming_report;
-    }
-    
-    @Override
-    public List<IncomingReport_1> listAva(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
-        if(company == null) company = new Company();
-        if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
-        if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
-        
-        List<IncomingReport_1> incoming_report = new ArrayList<>();
-        
-        Object[] values = {
-            id,
-            id,
-            start_date,
-            end_date,
-            company.getId(),
-            company.getId(),
-            String.format("%s%%", part_number),
-            String.format("%s%%", rev),
-            String.format("%s%%", lot),
-            String.format("%s%%", packing),
-            String.format("%s%%", po),
-            String.format("%s%%", line)
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_AVAILABLE_FILTER, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
