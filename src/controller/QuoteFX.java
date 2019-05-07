@@ -296,7 +296,7 @@ public class QuoteFX implements Initializable {
         fields.get("contact").setValue(quote.getContact_name());
         fields.get("contact_email").setValue(quote.getContact_email());
         fields.get("contact_number").setValue(quote.getContact_number());
-        List<CompanyAddress> company_address = msabase.getCompanyAddressDAO().listActive(msabase.getCompanyDAO().find(quote.getCompany_id()), true);
+        List<CompanyAddress> company_address = msabase.getCompanyAddressDAO().list(msabase.getCompanyDAO().find(quote.getCompany_id()));
         if(company_address.isEmpty()){
             fields.get("client_address").setValue("n/a");
         }else{

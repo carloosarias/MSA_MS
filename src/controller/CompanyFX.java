@@ -94,6 +94,9 @@ public class CompanyFX implements Initializable {
         "Clientes",
         "Proveedores"
     );
+    
+    private BooleanProperty addopen_property = new SimpleBooleanProperty(false);
+    
     /**
      * Initializes the controller class.
      */
@@ -107,7 +110,7 @@ public class CompanyFX implements Initializable {
         contact_tab.disableProperty().bind(company_tableview.getSelectionModel().selectedItemProperty().isNull());
         address_tab.disableProperty().bind(company_tableview.getSelectionModel().selectedItemProperty().isNull());
         
-        deleteaddress_button.disableProperty().bind(address_tableview.getSelectionModel().selectedItemProperty().isNull());
+        deleteaddress_button.disableProperty().bind(addopen_property.not());
         deletecontact_button.disableProperty().bind(contact_tableview.getSelectionModel().selectedItemProperty().isNull());
         
         setCompanyTable();
@@ -128,7 +131,14 @@ public class CompanyFX implements Initializable {
             }
             
         });
-
+        
+        address_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends CompanyAddress> observable, CompanyAddress oldValue, CompanyAddress newValue) -> {
+            try{
+                addopen_property.setValue(newValue.isOpen());
+            }catch(Exception e){
+                addopen_property.setValue(false);
+            }
+        });
         
         companytype_combo.setOnAction(ActionEvent -> {
             updateCompanyTable();
@@ -169,8 +179,7 @@ public class CompanyFX implements Initializable {
     }
     
     public void disableAddress(){
-        address_tableview.getSelectionModel().getSelectedItem().setActive(false);
-        msabase.getCompanyAddressDAO().update(address_tableview.getSelectionModel().getSelectedItem());
+        msabase.getCompanyAddressDAO().delete(address_tableview.getSelectionModel().getSelectedItem());
     }
     
     public void disableContact(){
@@ -180,9 +189,9 @@ public class CompanyFX implements Initializable {
     
     public void createAddress(Company company){
         CompanyAddress address = new CompanyAddress();
+        address.setCompany(company);
         address.setAddress("N/A");
-        address.setActive(true);
-        msabase.getCompanyAddressDAO().create(company, address);
+        msabase.getCompanyAddressDAO().create(address);
     }
     
     public void createContact(Company company){
@@ -197,7 +206,7 @@ public class CompanyFX implements Initializable {
     
     public void updateAddressTable(){
         try{
-            address_tableview.getItems().setAll(msabase.getCompanyAddressDAO().listActive(company_tableview.getSelectionModel().getSelectedItem(), true));
+            address_tableview.getItems().setAll(msabase.getCompanyAddressDAO().list(company_tableview.getSelectionModel().getSelectedItem()));
         }catch(Exception e){
             address_tableview.getItems().clear();
         }

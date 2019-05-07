@@ -14,8 +14,9 @@ import java.io.Serializable;
 public class CompanyAddress implements Serializable{
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
+    private Company company;
     private String address;
-    private boolean active;
+    private boolean open;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -24,17 +25,24 @@ public class CompanyAddress implements Serializable{
     public void setId(Integer id) {
         this.id = id;
     }
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
     public String getAddress() {
         return address;
     }
     public void setAddress(String address) {
         this.address = address;
     }
-    public boolean isActive() {
-        return active;
+    public boolean isOpen() {
+        return open;
     }
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setOpen(boolean open) {
+        this.open = open;
     }
     // Object overrides ---------------------------------------------------------------------------
     

@@ -112,7 +112,7 @@ public class CreateDepartReportFX implements Initializable {
         setDatePicker(reportdate_picker);
         
         company_combo.setOnAction((ActionEvent) -> {
-            address_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyAddressDAO().listActive(company_combo.getSelectionModel().getSelectedItem(), true)));
+            address_combo.setItems(FXCollections.observableArrayList(msabase.getCompanyAddressDAO().list(company_combo.getSelectionModel().getSelectedItem())));
         });
         
         disable_button.setOnAction((ActionEvent) -> {

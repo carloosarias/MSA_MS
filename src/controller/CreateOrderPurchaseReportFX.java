@@ -111,7 +111,7 @@ public class CreateOrderPurchaseReportFX implements Initializable {
         company_combo.getItems().setAll(company_selection);
         company_combo.getSelectionModel().selectFirst();
         
-        companyaddress_combo.getItems().setAll(msabase.getCompanyAddressDAO().listActive(company_selection, true));
+        companyaddress_combo.getItems().setAll(msabase.getCompanyAddressDAO().list(company_selection));
         companyaddress_combo.getSelectionModel().selectFirst();
         companyaddress_combo.disableProperty().bind(companyaddress_combo.itemsProperty().isNull());
         

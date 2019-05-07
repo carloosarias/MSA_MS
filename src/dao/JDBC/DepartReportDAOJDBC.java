@@ -268,7 +268,7 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
         depart_report.setTotal_box(resultSet.getInt("total_box"));
         depart_report.setEmployee(EmployeeDAOJDBC.map(employee_label, resultSet));
         depart_report.setCompany(CompanyDAOJDBC.map(company_label, resultSet));
-        depart_report.setCompany_address(CompanyAddressDAOJDBC.map(companyaddress_label, resultSet));
+        depart_report.setCompany_address(CompanyAddressDAOJDBC.map(companyaddress_label, company_label, resultSet));
         
         return depart_report;
     }

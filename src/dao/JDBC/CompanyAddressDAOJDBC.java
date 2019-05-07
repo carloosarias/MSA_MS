@@ -24,16 +24,27 @@ import model.CompanyAddress;
 public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
-            "SELECT * FROM COMPANY_ADDRESS WHERE id = ?";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT * FROM COMPANY_ADDRESS WHERE COMPANY_ID = ? AND active = ? ORDER BY id";
+            "SELECT *, "
+            + "(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
+            + "FROM COMPANY_ADDRESS "
+            + "INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id "
+            + "WHERE COMPANY_ADDRESS.id = ?";
+    private static final String SQL_LIST_ORDER_BY_ID = 
+            "SELECT *, "
+            + "(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
+            + "FROM COMPANY_ADDRESS "
+            + "INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id "
+            + "WHERE COMPANY_ADDRESS.COMPANY_ID = ? "
+            + "ORDER BY COMPANY_ADDRESS.id";
     private static final String SQL_INSERT = 
-            "INSERT INTO COMPANY_ADDRESS (COMPANY_ID, address, active) "
-            +"VALUES (?, ?, ?)";
+            "INSERT INTO COMPANY_ADDRESS (COMPANY_ID, address) "
+            + "VALUES (?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE COMPANY_ADDRESS SET address = ?, active = ? WHERE id = ?";
+            "UPDATE COMPANY_ADDRESS SET address = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM COMPANY_ADDRESS WHERE id = ?";
+            "DELETE FROM COMPANY_ADDRESS WHERE id = ? "
+            + "AND id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) "
+            + "AND id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)";
 
     // Vars ---------------------------------------------------------------------------------------
 
@@ -73,7 +84,7 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                address = map("", resultSet);
+                address = map("", "COMPANY.", resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -83,25 +94,22 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
     }    
 
     @Override
-    public List<CompanyAddress> listActive(Company company, boolean active) throws DAOException {
-        if(company.getId() == null){
-            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
-        }
+    public List<CompanyAddress> list(Company company) throws DAOException {
+        if(company == null) company = new Company();
         
         List<CompanyAddress> companyAddresses = new ArrayList<>();
         
         Object[] values = {
-            company.getId(),
-            active
+            company.getId()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ORDER_BY_ID, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                companyAddresses.add(map("", resultSet));
+                companyAddresses.add(map("", "COMPANY.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -111,18 +119,14 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
     }
 
     @Override
-    public void create(Company company, CompanyAddress address) throws IllegalArgumentException, DAOException {
-        if(company.getId() == null){
-            throw new IllegalArgumentException("Company is not created yet, the Company ID is null.");
-        }
+    public void create(CompanyAddress address) throws IllegalArgumentException, DAOException {
         if(address.getId() != null){
             throw new IllegalArgumentException("CompanyAddress is already created, the CompanyAddress ID is not null.");
         }
         
         Object[] values = {
-            company.getId(),
-            address.getAddress(),
-            address.isActive(),
+            address.getCompany().getId(),
+            address.getAddress()
         };
         
         try(
@@ -155,7 +159,6 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
         
         Object[] values = {
             address.getAddress(),
-            address.isActive(),
             address.getId()
         };
         
@@ -197,15 +200,18 @@ public class CompanyAddressDAOJDBC implements CompanyAddressDAO {
 
     /**
      * Map the current row of the given ResultSet to an CompanyAddress.
+     * @param companyaddress_label
+     * @param company_label
      * @param resultSet The ResultSet of which the current row is to be mapped to a CompanyAddress.
      * @return The mapped CompanyAddress from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static CompanyAddress map(String companyaddress_label, ResultSet resultSet) throws SQLException {
+    public static CompanyAddress map(String companyaddress_label, String company_label, ResultSet resultSet) throws SQLException {
         CompanyAddress address = new CompanyAddress();
-        address.setId(resultSet.getInt(companyaddress_label+"id"));
-        address.setAddress(resultSet.getString(companyaddress_label+"address"));
-        address.setActive(resultSet.getBoolean(companyaddress_label+"active"));
+        address.setId(resultSet.getInt(String.format("%s%s", companyaddress_label, "id")));
+        address.setAddress(resultSet.getString(String.format("%s%s", companyaddress_label, "address")));
+        address.setOpen(resultSet.getBoolean(String.format("%s", "add_open")));
+        address.setCompany(CompanyDAOJDBC.map(company_label, resultSet));
         return address;
     }
 }
