@@ -6,10 +6,18 @@
 package dao.JDBC;
 
 import dao.DAOException;
+import dao.DAOUtil;
+import static dao.DAOUtil.prepareStatement;
 import dao.interfaces.DepartReport_1DAO;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import model.Company;
 import model.DepartReport_1;
 
 /**
@@ -37,8 +45,9 @@ ORDER BY DEPART_REPORT_1.id DESC*/
     private static final String SQL_FIND_BY_ID = 
             "SELECT *, "
             + "(SELECT COUNT(DISTINCT(id)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `depart_count`, "
-            + "(SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `total_qty`, "
-            + "DEPART_REPORT_1.id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1) as `depart_open` "
+            + "IFNULL((SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`),0) as `qty_total`, "
+            + "DEPART_REPORT_1.id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1) as `depart_open`, "
+            + "(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
             + "FROM DEPART_REPORT_1 "
             + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT_1.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id "
@@ -46,53 +55,33 @@ ORDER BY DEPART_REPORT_1.id DESC*/
             + "WHERE DEPART_REPORT_1.id = ? "
             + "GROUP BY DEPART_REPORT_1.id";
     private static final String SQL_LIST_FILTER = 
-            "SELECT *, (SELECT COUNT(DISTINCT(id)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `depart_count`, "
-            + "(SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `total_qty`, "
-            + "DEPART_REPORT_1.id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1) as `depart_open` "
-            + "FROM DEPART_LOT_1 "
-            + "INNER JOIN DEPART_REPORT_1 ON DEPART_LOT_1.DEPART_REPORT_ID = DEPART_REPORT_1.id "
+            "SELECT *, "
+            + "(SELECT COUNT(DISTINCT(id)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `depart_count`, "
+            + "IFNULL((SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`),0) as `qty_total`, "
+            + "DEPART_REPORT_1.id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1) as `depart_open`, "
+            + "(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
+            + "FROM DEPART_REPORT_1 "
             + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT_1.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
             + "INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id "
             + "INNER JOIN EMPLOYEE ON DEPART_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.INCOMING_REPORT_ID = DEPART_REPORT_1.id "
-            + "INNER JOIN EMPLOYEE AS incoming_employee ON INCOMING_REPORT_1.EMPLOYEE_ID = incoming_employee.id "
-            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "GROUP BY INCOMING_REPORT_1.id "
-            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (INCOMING_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
+            + "LEFT JOIN DEPART_LOT_1 ON DEPART_LOT_1.`DEPART_REPORT_ID` = DEPART_REPORT_1.id "
+            + "INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.`INCOMING_REPORT_ID` = INCOMING_REPORT_1.id "
+            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.`PART_REVISION_ID` = PART_REVISION.id "
+            + "INNER JOIN PRODUCT_PART ON PART_REVISION.`PRODUCT_PART_ID` = PRODUCT_PART.id "
+            + "INNER JOIN COMPANY AS PRODUCTPART_COMPANY ON PRODUCT_PART.`COMPANY_ID` = PRODUCTPART_COMPANY.id "
+            + "GROUP BY DEPART_REPORT_1.id "
+            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (DEPART_REPORT_1.date BETWEEN ? AND ?) AND (PRODUCTPART_COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
             + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) "
             + "ORDER BY DEPART_REPORT_1.id DESC";
-    private static final String SQL_LIST_AVAILABLE_FILTER = 
-            "SELECT *, "
-            + "COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`, "
-            + "sum(qty_in - IFNULL((SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE INCOMING_REPORT_1.id = `INCOMING_REPORT_ID`),0) - IFNULL((SELECT sum(qty_scrap) FROM SCRAP_REPORT_1 WHERE INCOMING_REPORT_1.id = `INCOMING_REPORT_ID`),0)) as `qty_ava`, "
-            + "(INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as `open` "
-            + "FROM INCOMING_REPORT_1 "
-            + "INNER JOIN EMPLOYEE ON INCOMING_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
-            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
-            + "INNER JOIN COMPANY ON PRODUCT_PART.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "GROUP BY INCOMING_REPORT_1.id "
-            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (INCOMING_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
-            + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) AND qty_ava > 0 "
-            + "ORDER BY INCOMING_REPORT_1.id DESC";
     private static final String SQL_INSERT = 
-            "INSERT INTO INCOMING_REPORT_1 (EMPLOYEE_ID, PART_REVISION_ID, date, packing, po, line, lot, qty_in, comments) "
-            +"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO DEPART_REPORT_1 (EMPLOYEE_ID, COMPANY_ADDRESS_ID, date, comments) "
+            +"VALUES(?, ?, ?, ?)";
     private static final String SQL_UPDATE = 
-            "UPDATE INCOMING_REPORT_1"
-            +"SET packing = ?, po = ?, line = ?, lot = ?, qty_in = ?, comments = ? WHERE id = ? "
-            +"AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
-            +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1))";
+            "UPDATE DEPART_REPORT_1"
+            +"SET comments = ? WHERE id = ?";
     private static final String SQL_DELETE = 
-            "DELETE FROM INCOMING_REPORT_1 WHERE id = ? "
-            +"AND (id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) "
-            +"AND id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1))";
+            "DELETE FROM DEPART_REPORT_1 WHERE id = ? "
+            +"AND id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1)";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -122,6 +111,7 @@ ORDER BY DEPART_REPORT_1.id DESC*/
      * @return The ScrapReport from the database matching the given SQL query with the given values.
      * @throws DAOException If something fails at database level.
      */
+    
     private DepartReport_1 find(String sql, Object... values) throws DAOException {
         DepartReport_1 depart_report = null;
 
@@ -141,12 +131,12 @@ ORDER BY DEPART_REPORT_1.id DESC*/
     }
     
     @Override
-    public List<IncomingReport_1> list(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
+    public List<DepartReport_1> list(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
         if(company == null) company = new Company();
         if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
         if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
         
-        List<IncomingReport_1> incoming_report = new ArrayList<>();
+        List<DepartReport_1> depart_report = new ArrayList<>();
         
         Object[] values = {
             id,
@@ -169,69 +159,26 @@ ORDER BY DEPART_REPORT_1.id DESC*/
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                incoming_report.add(map("INCOMING_REPORT_1.", "EMPLOYEE.", "PART_REVISION.", "PRODUCT_PART.", "METAL.", "SPECIFICATION.", "COMPANY.", resultSet));
+                depart_report.add(map("DEPART_REPORT_1.", "COMPANY_ADDRESS.", "COMPANY.", "EMPLOYEE.", resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
         }
         
-        return incoming_report;
+        return depart_report;
     }
     
     @Override
-    public List<IncomingReport_1> listAva(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
-        if(company == null) company = new Company();
-        if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
-        if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
-        
-        List<IncomingReport_1> incoming_report = new ArrayList<>();
-        
-        Object[] values = {
-            id,
-            id,
-            start_date,
-            end_date,
-            company.getId(),
-            company.getId(),
-            String.format("%s%%", part_number),
-            String.format("%s%%", rev),
-            String.format("%s%%", lot),
-            String.format("%s%%", packing),
-            String.format("%s%%", po),
-            String.format("%s%%", line)
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_AVAILABLE_FILTER, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                incoming_report.add(map("INCOMING_REPORT_1.", "EMPLOYEE.", "PART_REVISION.", "PRODUCT_PART.", "METAL.", "SPECIFICATION.", "COMPANY.", resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return incoming_report;
-    }
-    
-    @Override
-    public void create(IncomingReport_1 incoming_report) throws IllegalArgumentException, DAOException {
-        if(incoming_report.getId() != null){
-            throw new IllegalArgumentException("IncomingReport_1 is already created, the IncomingReport_1 ID is not null.");
+    public void create(DepartReport_1 depart_report) throws IllegalArgumentException, DAOException {
+        if(depart_report.getId() != null){
+            throw new IllegalArgumentException("DepartReport_1 is already created, the DepartReport_1 ID is not null.");
         }
         
         Object[] values = {
-            incoming_report.getEmployee().getId(),
-            incoming_report.getPart_revision().getId(),
-            DAOUtil.toSqlDate(incoming_report.getDate()),
-            incoming_report.getPacking(),
-            incoming_report.getPo(),
-            incoming_report.getLine(),
-            incoming_report.getLot(),
-            incoming_report.getQty_in(),
-            incoming_report.getComments(),
+            depart_report.getEmployee().getId(),
+            depart_report.getCompany_address().getId(),
+            DAOUtil.toSqlDate(depart_report.getDate()),
+            depart_report.getComments()
         };
         
         try(
@@ -240,14 +187,14 @@ ORDER BY DEPART_REPORT_1.id DESC*/
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
-                throw new DAOException("Creating IncomingReport_1 failed, no rows affected.");
+                throw new DAOException("Creating DepartReport_1 failed, no rows affected.");
             }
             
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    incoming_report.setId(generatedKeys.getInt(1));
+                    depart_report.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new DAOException("Creating IncomingReport_1 failed, no generated key obtained.");
+                    throw new DAOException("Creating DepartReport_1 failed, no generated key obtained.");
                 }
             }
             
@@ -257,17 +204,12 @@ ORDER BY DEPART_REPORT_1.id DESC*/
     }
 
     @Override
-    public void update(IncomingReport_1 incoming_report) throws IllegalArgumentException, DAOException {
+    public void update(DepartReport_1 incoming_report) throws IllegalArgumentException, DAOException {
         if (incoming_report.getId() == null) {
-            throw new IllegalArgumentException("IncomingReport_1 is not created yet, the IncomingReport_1 ID is null.");
+            throw new IllegalArgumentException("DepartReport_1 is not created yet, the DepartReport_1 ID is null.");
         }
         
         Object[] values = {
-            incoming_report.getPacking(),
-            incoming_report.getPo(),
-            incoming_report.getLine(),
-            incoming_report.getLot(),
-            incoming_report.getQty_in(),
             incoming_report.getComments(),
             incoming_report.getId()
         };
@@ -278,7 +220,7 @@ ORDER BY DEPART_REPORT_1.id DESC*/
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Updating IncomingReport_1 failed, no rows affected.");
+                throw new DAOException("Updating DepartReport_1 failed, no rows affected.");
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -286,7 +228,7 @@ ORDER BY DEPART_REPORT_1.id DESC*/
     }
 
     @Override
-    public void delete(IncomingReport_1 incoming_report) throws DAOException {
+    public void delete(DepartReport_1 incoming_report) throws DAOException {
         Object[] values = {
             incoming_report.getId()
         };
@@ -297,7 +239,7 @@ ORDER BY DEPART_REPORT_1.id DESC*/
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Deleting IncomingReport_1 failed, no rows affected.");
+                throw new DAOException("Deleting DepartReport_1 failed, no rows affected.");
             } else{
                 incoming_report.setId(null);
             }
@@ -305,6 +247,7 @@ ORDER BY DEPART_REPORT_1.id DESC*/
             throw new DAOException(e);
         }
     }
+    
     // Helpers ------------------------------------------------------------------------------------
 
     /**
@@ -330,4 +273,5 @@ ORDER BY DEPART_REPORT_1.id DESC*/
         depart_report.setEmployee(EmployeeDAOJDBC.map(employee_label, resultSet));
         return depart_report;
     }
+
 }

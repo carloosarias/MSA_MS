@@ -156,8 +156,8 @@ public class MainFX implements Initializable {
                         //poquery_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/POQueryFX.fxml")));
                         incoming_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX_1.fxml")));
                         //orderpurchaseincomingreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
-                        //depart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX_1.fxml")));
-                        root_tabpane.getTabs().setAll(incoming_tab);
+                        depart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX_1.fxml")));
+                        root_tabpane.getTabs().setAll(incoming_tab, depart_tab);
                         break;
                     case "Facturación":
                         invoice_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));

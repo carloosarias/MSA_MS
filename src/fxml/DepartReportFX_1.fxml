@@ -45,9 +45,9 @@
                               <TableColumn fx:id="date_column" editable="false" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Fecha" />
                               <TableColumn fx:id="employee_column" editable="false" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Empleado" />
                               <TableColumn fx:id="client_column" editable="false" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
-                              <TableColumn minWidth="-Infinity" prefWidth="200.0" text="Dirección de Envío" />
-                              <TableColumn fx:id="totalqty_column" minWidth="-Infinity" prefWidth="100.0" text="Cant. Total" />
-                              <TableColumn fx:id="totalbox_column" minWidth="-Infinity" prefWidth="100.0" text="Cant. Bultos" />
+                              <TableColumn fx:id="companyaddress_column" minWidth="-Infinity" prefWidth="200.0" text="Dirección de Envío" />
+                              <TableColumn fx:id="qtytotal_column" minWidth="-Infinity" prefWidth="100.0" text="Cant. Total" />
+                              <TableColumn fx:id="count_column" minWidth="-Infinity" prefWidth="100.0" text="Cant. Bultos" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" />
@@ -175,7 +175,7 @@
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </GridPane.margin>
                                                 </TextField>
-                                                <Button fx:id="reset_button" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="6">
+                                                <Button fx:id="reset_button1" mnemonicParsing="false" text="Limpiar Filtros de Busqueda" GridPane.columnIndex="6">
                                                    <GridPane.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </GridPane.margin>
@@ -191,18 +191,24 @@
                                     <GridPane>
                                        <columnConstraints>
                                           <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                                           <ColumnConstraints hgrow="SOMETIMES" />
                                        </columnConstraints>
                                        <rowConstraints>
                                           <RowConstraints vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Button fx:id="save_button" disable="true" mnemonicParsing="false" text="Crear Reporte de Remisión" GridPane.columnIndex="1">
+                                          <Button fx:id="save_button2" disable="true" mnemonicParsing="false" text="Crear Reporte de Remisión" GridPane.columnIndex="2">
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
                                           </Button>
                                           <ComboBox fx:id="company_combo2" prefWidth="200.0" promptText="Cliente">
+                                             <GridPane.margin>
+                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                             </GridPane.margin>
+                                          </ComboBox>
+                                          <ComboBox fx:id="companyaddress_combo2" prefWidth="250.0" promptText="Dirección de Envío" GridPane.columnIndex="1">
                                              <GridPane.margin>
                                                 <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                              </GridPane.margin>
