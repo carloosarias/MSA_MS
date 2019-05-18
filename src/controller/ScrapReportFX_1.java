@@ -11,6 +11,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -135,16 +136,16 @@ public class ScrapReportFX_1 implements Initializable {
         reset_button.setOnAction((ActionEvent) -> {
             clearSearchFields();
         });
-        incomingreport_combo2.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport_1> observable, IncomingReport_1 oldValue, IncomingReport_1 newValue) -> {
-            try{
-                qty_scrap.setValue(null);
-                qtyscrap_field2.setText(newValue.getQty_ava()+"");
-            }catch(Exception e){
-                qty_scrap.setValue(null);
-                incomingreport_combo2.getSelectionModel().clearSelection();
-                qtyscrap_field2.clear();
-            }
-        });
+    incomingreport_combo2.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport_1> observable, IncomingReport_1 oldValue, IncomingReport_1 newValue) -> {
+        try{
+            qty_scrap.setValue(null);
+            qtyscrap_field2.setText(newValue.getQty_ava()+"");
+        }catch(Exception e){
+            qty_scrap.setValue(null);
+            incomingreport_combo2.getSelectionModel().clearSelection();
+            qtyscrap_field2.clear();
+        }
+    });
         company_combo2.setOnAction((ActionEvent) -> {
             updateIncomingReportCombo();
         });
@@ -196,7 +197,7 @@ public class ScrapReportFX_1 implements Initializable {
             updateScrapReportTable();
             updateIncomingReportCombo();
         });
-        incomingreport_combo2.disableProperty().bind(incomingreport_combo2.itemsProperty().isNull());
+        incomingreport_combo2.disableProperty().bind(Bindings.size(incomingreport_combo2.getItems()).isEqualTo(0));
         qtyscrap_field2.disableProperty().bind(incomingreport_combo2.valueProperty().isNull());
         save_button2.disableProperty().bind(qty_scrap.isNull());
         delete_button.disableProperty().bind(scrapreport_tableview.getSelectionModel().selectedItemProperty().isNull());  

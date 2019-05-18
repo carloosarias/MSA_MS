@@ -436,10 +436,10 @@
                         </Accordion>
                         <TableView fx:id="departlot_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                            <columns>
-                              <TableColumn minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
-                              <TableColumn minWidth="-Infinity" prefWidth="120.0" text="Empleado" />
-                              <TableColumn minWidth="-Infinity" prefWidth="300.0" text="Detalles de Material" />
-                              <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="100.0" text="Cantd. Remisión" />
+                              <TableColumn fx:id="date_column2" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
+                              <TableColumn fx:id="employee_column2" minWidth="-Infinity" prefWidth="120.0" text="Empleado" />
+                              <TableColumn fx:id="details_column" minWidth="-Infinity" prefWidth="300.0" text="Detalles de Material" />
+                              <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="100.0" text="Cant. Remisión" />
                               <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
                            </columns>
                            <GridPane.margin>

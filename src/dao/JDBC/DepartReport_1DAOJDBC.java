@@ -41,6 +41,7 @@ GROUP BY DEPART_REPORT_1.id
 HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (DEPART_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) 
 AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) 
 ORDER BY DEPART_REPORT_1.id DESC*/
+    
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID = 
             "SELECT *, "
@@ -65,13 +66,13 @@ ORDER BY DEPART_REPORT_1.id DESC*/
             + "INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id "
             + "INNER JOIN EMPLOYEE ON DEPART_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
             + "LEFT JOIN DEPART_LOT_1 ON DEPART_LOT_1.`DEPART_REPORT_ID` = DEPART_REPORT_1.id "
-            + "INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.`INCOMING_REPORT_ID` = INCOMING_REPORT_1.id "
-            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.`PART_REVISION_ID` = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.`PRODUCT_PART_ID` = PRODUCT_PART.id "
-            + "INNER JOIN COMPANY AS PRODUCTPART_COMPANY ON PRODUCT_PART.`COMPANY_ID` = PRODUCTPART_COMPANY.id "
+            + "LEFT JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.`INCOMING_REPORT_ID` = INCOMING_REPORT_1.id "
+            + "LEFT JOIN PART_REVISION ON INCOMING_REPORT_1.`PART_REVISION_ID` = PART_REVISION.id "
+            + "LEFT JOIN PRODUCT_PART ON PART_REVISION.`PRODUCT_PART_ID` = PRODUCT_PART.id "
+            + "LEFT JOIN COMPANY AS PRODUCTPART_COMPANY ON PRODUCT_PART.`COMPANY_ID` = PRODUCTPART_COMPANY.id "
             + "GROUP BY DEPART_REPORT_1.id "
-            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (DEPART_REPORT_1.date BETWEEN ? AND ?) AND (PRODUCTPART_COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) "
-            + "AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?) "
+            + "HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (DEPART_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ? OR ? = '') AND (PART_REVISION.rev LIKE ? OR ? = '') "
+            + "AND (INCOMING_REPORT_1.lot LIKE ? OR ? = '') AND (INCOMING_REPORT_1.packing LIKE ? OR ? = '') AND (INCOMING_REPORT_1.po LIKE ? OR ? = '') AND (INCOMING_REPORT_1.line LIKE ? OR ? = '') "
             + "ORDER BY DEPART_REPORT_1.id DESC";
     private static final String SQL_INSERT = 
             "INSERT INTO DEPART_REPORT_1 (EMPLOYEE_ID, COMPANY_ADDRESS_ID, date, comments) "
@@ -137,7 +138,8 @@ ORDER BY DEPART_REPORT_1.id DESC*/
         if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
         
         List<DepartReport_1> depart_report = new ArrayList<>();
-        
+        System.out.println(String.format("%s%%", part_number));
+        System.out.println(part_number.isEmpty());
         Object[] values = {
             id,
             id,
@@ -146,11 +148,17 @@ ORDER BY DEPART_REPORT_1.id DESC*/
             company.getId(),
             company.getId(),
             String.format("%s%%", part_number),
+            part_number,
             String.format("%s%%", rev),
+            rev,
             String.format("%s%%", lot),
+            lot,
             String.format("%s%%", packing),
+            packing,
             String.format("%s%%", po),
-            String.format("%s%%", line)
+            po,
+            String.format("%s%%", line),
+            line
         };
         
         try(
