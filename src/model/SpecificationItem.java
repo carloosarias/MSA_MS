@@ -14,14 +14,16 @@ import java.io.Serializable;
 public class SpecificationItem implements Serializable {
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
+    private Integer metal_id;
+    private Integer specification_id;
     private double minimum_thickness;
     private double maximum_thickness;
     private boolean active;
-    private Metal temp_metal;
     
     //INNER JOINS
     private String metal_name;
-    private Double metal_density;
+    private String metal_density;
+
     // Getters/setters ----------------------------------------------------------------------------
     
     public Integer getId() {
@@ -30,6 +32,22 @@ public class SpecificationItem implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+    
+    public Integer getMetal_id() {
+        return metal_id;
+    }
+
+    public void setMetal_id(Integer metal_id) {
+        this.metal_id = metal_id;
+    }
+
+    public Integer getSpecification_id() {
+        return specification_id;
+    }
+
+    public void setSpecification_id(Integer specification_id) {
+        this.specification_id = specification_id;
     }
     
     public double getMinimum_thickness() {
@@ -46,14 +64,6 @@ public class SpecificationItem implements Serializable {
     
     public void setMaximum_thickness(double maximum_thickness) {
         this.maximum_thickness = maximum_thickness;
-    }
-    
-    public Metal getTemp_metal(){
-        return temp_metal;
-    }
-    
-    public void setTemp_metal(Metal temp_metal){
-        this.temp_metal = temp_metal;
     }
     
     public boolean isActive() {
@@ -73,11 +83,11 @@ public class SpecificationItem implements Serializable {
         this.metal_name = metal_name;
     }
 
-    public double getMetal_density() {
+    public String getMetal_density() {
         return metal_density;
     }
 
-    public void setMetal_density(double metal_density) {
+    public void setMetal_density(String metal_density) {
         this.metal_density = metal_density;
     }
     

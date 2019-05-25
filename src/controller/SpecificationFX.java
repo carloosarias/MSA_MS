@@ -97,6 +97,8 @@ public class SpecificationFX implements Initializable {
                 updateSpecificationItemTable();
             }catch(Exception e){
                 specificationitem_tableview.getItems().clear();
+                //NEED TO PUT THIS IN OTHER PLACES TOO :^)
+                e.printStackTrace();
             }
         });
         
@@ -105,8 +107,8 @@ public class SpecificationFX implements Initializable {
             createSpecification();
             updateSpecificationTable();
             if(current_size < specification_tableview.getItems().size()){
-                specification_tableview.scrollTo(specification);
-                specification_tableview.getSelectionModel().select(specification);
+                specification_tableview.getSelectionModel().selectLast();
+                specification_tableview.scrollTo(specification_tableview.getSelectionModel().getSelectedItem());
             }
         });
         
@@ -147,26 +149,19 @@ public class SpecificationFX implements Initializable {
     }
     
     public void disableSpecification(){
-        specification_tableview.getSelectionModel().getSelectedItem().setActive(false);
-        msabase.getSpecificationDAO().update(specification_tableview.getSelectionModel().getSelectedItem());
+        msabase.getSpecificationDAO().delete(specification_tableview.getSelectionModel().getSelectedItem());
     }
     
     public void createSpecification(){
-        specification = new Specification();
-        specification.setSpecification_number("N/A");
-        specification.setSpecification_name("N/A");
-        specification.setProcess("N/A");
-        specification.setActive(true);
-        
-        msabase.getSpecificationDAO().create(specification);
+        msabase.getSpecificationDAO().create(new Specification());
     }
     
     public void updateSpecificationItemTable(){
-        specificationitem_tableview.getItems().setAll(msabase.getSpecificationItemDAO().list(specification_tableview.getSelectionModel().getSelectedItem(), true));
+        specificationitem_tableview.getItems().setAll(msabase.getSpecificationItemDAO().list(specification_tableview.getSelectionModel().getSelectedItem()));
     }
     
     public void updateSpecificationTable(){
-        specification_tableview.getItems().setAll(msabase.getSpecificationDAO().list(true));
+        specification_tableview.getItems().setAll(msabase.getSpecificationDAO().list());
     }
     
     public void setSpecificationTable(){

@@ -277,9 +277,8 @@ public class PartRevisionDAOJDBC implements PartRevisionDAO{
         part_revision.setFinal_weight(resultSet.getDouble(partrevision_label+"final_weight"));
         part_revision.setActive(resultSet.getBoolean(partrevision_label+"active"));
         part_revision.setProduct_part(ProductPartDAOJDBC.map(productpart_label, company_label, resultSet));
-        part_revision.setMetal(MetalDAOJDBC.map(metal_label, resultSet));
+        //part_revision.setMetal(MetalDAOJDBC.map(metal_label, resultSet));
         part_revision.setSpecification(SpecificationDAOJDBC.map(specification_label, resultSet));
-        
         return part_revision;
     }
 }

@@ -42,7 +42,7 @@ public class AddSpecificationItemFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        metal_combo.setItems(FXCollections.observableArrayList(msabase.getMetalDAO().list(true)));
+        metal_combo.setItems(FXCollections.observableArrayList(msabase.getMetalDAO().list()));
         
         submit_button.setOnAction((ActionEvent) -> {
             if(!testFields()){

@@ -60,8 +60,8 @@ public class MetalFX implements Initializable {
             createMetal();
             updateMetalTable();
             if(current_size < metal_tableview.getItems().size()){
-                metal_tableview.scrollTo(metal);
-                metal_tableview.getSelectionModel().select(metal);
+                metal_tableview.getSelectionModel().selectLast();
+                metal_tableview.scrollTo(metal_tableview.getSelectionModel().getSelectedItem());
             }
         });
         
@@ -72,20 +72,15 @@ public class MetalFX implements Initializable {
     }
     
     public void disableMetal(){
-        metal_tableview.getSelectionModel().getSelectedItem().setActive(false);
-        msabase.getMetalDAO().update(metal_tableview.getSelectionModel().getSelectedItem());
+        msabase.getMetalDAO().delete(metal_tableview.getSelectionModel().getSelectedItem());
     }
     
     public void createMetal(){
-        metal = new Metal();
-        metal.setMetal_name("N/A");
-        metal.setDensity(0.0);
-        metal.setActive(true);
-        msabase.getMetalDAO().create(metal);
+        msabase.getMetalDAO().create(new Metal());
     }
     
     public void updateMetalTable(){
-        metal_tableview.getItems().setAll(msabase.getMetalDAO().list(true));
+        metal_tableview.getItems().setAll(msabase.getMetalDAO().list());
     }
     
     public void setMetalTable(){

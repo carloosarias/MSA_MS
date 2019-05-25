@@ -19,6 +19,12 @@ public class Metal implements Serializable{
     private boolean active;
     
     // Getters/setters ----------------------------------------------------------------------------
+    public Metal(){
+        id = null;
+        metal_name = "N/A";
+        density = 0.0;
+        active = false;
+    }
     
     public Integer getId() {
         return id;

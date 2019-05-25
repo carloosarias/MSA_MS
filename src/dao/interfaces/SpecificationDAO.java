@@ -30,17 +30,8 @@ public interface SpecificationDAO {
      * @return A list of all Specification from the database ordered by Specification ID.
      * @throws DAOException If something fails at database level.
      */        
-    //public List<Specification> list() throws DAOException;
-    public List<Specification> list(boolean active) throws DAOException;
-    
-    /**
-     * Returns a list of all Specification matching process from the database ordered by Specification ID. 
-     * The list is never null and is empty when the database does not contain any Specification matching process.
-     * @param process the process to be searched for.
-     * @return A list of all Specification matching process from the database ordered by Specification ID.
-     * @throws DAOException If something fails at database level.
-     */    
-    public List<Specification> listByProcess(String process) throws DAOException;
+    public List<Specification> list() throws DAOException;
+    public List<Specification> list(String specification_number, String specification_name, String process) throws DAOException;
     
     /**
      * Create the given Specification in the database.

@@ -21,6 +21,14 @@ public class Specification implements Serializable {
     
     // Getters/setters ----------------------------------------------------------------------------
     
+    public Specification(){
+        id = null;
+        specification_number = "N/A";
+        specification_name = "N/A";
+        process = "N/A";
+        active = false;
+    }
+    
     public Integer getId() {
         return id;
     }

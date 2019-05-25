@@ -22,25 +22,45 @@ import model.Module;
  * @author Pavilion Mini
  */
 public class ModuleDAOJDBC implements ModuleDAO {
+    
+    /*
+    DELIMITER //
+Use msadb //
+DROP PROCEDURE IF EXISTS getModule //
+CREATE PROCEDURE getModule(IN module_id INT(32))
+BEGIN
+SELECT `MODULE`.*
+FROM `MODULE`
+WHERE `MODULE`.ID = module_id;
+END //
+DROP PROCEDURE IF EXISTS listModule //
+CREATE PROCEDURE listModule()
+BEGIN
+SELECT `MODULE`.*
+FROM `MODULE`
+WHERE `MODULE`.active = 1
+ORDER BY `MODULE`.id;
+END //
+DROP PROCEDURE IF EXISTS listModuleOfEmployee //
+CREATE PROCEDURE listModuleOfEmployee(IN employee_id INT(32))
+BEGIN
+SELECT `MODULE`.*
+FROM MODULE_EMPLOYEE
+INNER JOIN `MODULE` ON `MODULE`.id = MODULE_EMPLOYEE.MODULE_ID
+WHERE employee_id = MODULE_EMPLOYEE.EMPLOYEE_ID
+AND `MODULE`.active = 1
+ORDER BY `MODULE`.id;
+END //
+DELIMITER ;
+    */
+    
     // Constants ----------------------------------------------------------------------------------
-    private static final String SQL_FIND_BY_ID =
-            "SELECT id, name FROM MODULE WHERE id = ?";
-    private static final String SQL_FIND_BY_NAME =
-            "SELECT id, name FROM MODULE WHERE name = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT id, name FROM MODULE ORDER BY id";
-    private static final String SQL_LIST_MODULE_ORDER_BY_ID = 
-            "SELECT MODULE.id, MODULE.name "
-            + "FROM MODULE_EMPLOYEE "
-            + "INNER JOIN MODULE ON MODULE_EMPLOYEE.MODULE_ID = MODULE.id "
-            + "WHERE MODULE_EMPLOYEE.EMPLOYEE_ID = ? ORDER BY MODULE.id";
-    private static final String SQL_INSERT =
-            "INSERT INTO MODULE (name) "
-            + "VALUES (?)";
-    private static final String SQL_UPDATE = 
-            "UPDATE MODULE SET name = ? WHERE id = ?";
-    private static final String SQL_DELETE =
-            "DELETE FROM MODULE WHERE id = ?";
+    private final String SQL_getModule =
+            "CALL getModule(?)";
+    private final String SQL_listModule = 
+            "CALL listModule()";
+    private final String SQL_listModuleOfEmployee = 
+            "CALL listModuleOfEmployee(?)";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -61,12 +81,7 @@ public class ModuleDAOJDBC implements ModuleDAO {
 
     @Override
     public Module find(Integer id) throws DAOException {
-        return find(SQL_FIND_BY_ID, id);
-    }
-    
-    @Override
-    public Module find(String name) throws DAOException {
-        return find(SQL_FIND_BY_NAME, name);
+        return find(SQL_getModule, id);
     }
     
     /**
@@ -100,7 +115,7 @@ public class ModuleDAOJDBC implements ModuleDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = connection.prepareStatement(SQL_listModule);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -127,7 +142,7 @@ public class ModuleDAOJDBC implements ModuleDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_MODULE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_listModuleOfEmployee, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -140,83 +155,6 @@ public class ModuleDAOJDBC implements ModuleDAO {
         return modules;
     }
     
-    @Override
-    public void create(Module module) throws IllegalArgumentException, DAOException {
-        if(module.getId() != null){
-            throw new IllegalArgumentException("Module is already created, the Module ID is not null.");
-        }
-
-        Object[] values = {
-            module.getName()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
-        ){
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 0){
-                throw new DAOException("Creating Module failed, no rows affected.");
-            }
-            
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    module.setId(generatedKeys.getInt(1));
-                } else {
-                    throw new DAOException("Creating Module failed, no generated key obtained.");
-                }
-            }
-            
-        } catch (SQLException e){
-            throw new DAOException(e);
-        }    
-    }
-
-    @Override
-    public void update(Module module) throws IllegalArgumentException, DAOException {
-        if (module.getId() == null) {
-            throw new IllegalArgumentException("Module is not created yet, the Module ID is null.");
-        }
-        
-        Object[] values = {
-            module.getName(),
-            module.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
-        ){
-            int affectedRows = statement.executeUpdate();
-            if(affectedRows == 0){
-                throw new DAOException("Updating Module failed, no rows affected.");
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-    }
-
-    @Override
-    public void delete(Module module) throws DAOException {
-        Object[] values = {
-            module.getId()
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
-        ){
-            int affectedRows = statement.executeUpdate();
-            if(affectedRows == 0){
-                throw new DAOException("Deleting Module failed, no rows affected.");
-            } else{
-                module.setId(null);
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-    }
-    
     // Helpers ------------------------------------------------------------------------------------
 
     /**
@@ -227,8 +165,8 @@ public class ModuleDAOJDBC implements ModuleDAO {
      */
     public static Module map(ResultSet resultSet) throws SQLException{
         Module module = new Module();
-        module.setId(resultSet.getInt("id"));
-        module.setName(resultSet.getString("name"));
+        module.setId(resultSet.getInt("MODULE.id"));
+        module.setName(resultSet.getString("MODULE.name"));
         return module;
     }
 }

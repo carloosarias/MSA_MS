@@ -24,40 +24,75 @@ import model.SpecificationItem;
  * @author Pavilion Mini
  */
 public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
+    /*
+DELIMITER //
+Use msadb //
+DROP PROCEDURE IF EXISTS getSpecificationItem //
+CREATE PROCEDURE getSpecificationItem(IN specificationitem_id INT(32))
+BEGIN
+SELECT SPECIFICATION_ITEM.*, METAL.metal_name, METAL.density
+FROM SPECIFICATION_ITEM
+INNER JOIN METAL ON METAL_ID = METAL.id
+WHERE SPECIFICATION_ITEM.ID = specificationitem_id;
+END //
+DROP PROCEDURE IF EXISTS listSpecificationItem //
+CREATE PROCEDURE listSpecificationItem(IN specification_id INT(32))
+BEGIN
+SELECT SPECIFICATION_ITEM.*, METAL.metal_name, METAL.density
+FROM SPECIFICATION_ITEM
+INNER JOIN METAL ON METAL_ID = METAL.id
+WHERE SPECIFICATION_ITEM.SPECIFICATION_ID = specification_id
+AND SPECIFICATION_ITEM.active = 1
+ORDER BY SPECIFICATION_ITEM.id;
+END //
+DROP PROCEDURE IF EXISTS listSpecificationItemOfQuote //
+CREATE PROCEDURE listSpecificationItemOfQuote(IN quote_id INT(32))
+BEGIN
+SELECT SPECIFICATION_ITEM.*, METAL.metal_name, METAL.density
+FROM SPECIFICATION_ITEM
+INNER JOIN METAL ON METAL_ID = METAL.id
+INNER JOIN QUOTE ON quote_id = QUOTE.id
+INNER JOIN PART_REVISION ON QUOTE.PART_REVISION_ID = PART_REVISION.id
+WHERE PART_REVISION.SPECIFICATION_ID = SPECIFICATION_ITEM.SPECIFICATION_ID
+AND SPECIFICATION_ITEM.active = 1
+ORDER BY SPECIFICATION_ITEM.id;
+END //
+DROP PROCEDURE IF EXISTS createSpecificationItem //
+CREATE PROCEDURE createSpecificationItem(IN specification_id INT(32), IN metal_id INT(32), minimum_thickness DOUBLE, maximum_thickness DOUBLE)
+BEGIN
+INSERT INTO SPECIFICATION_ITEM (SPECIFICATION_ID, METAL_ID, minimum_thickness, maximum_thickness) VALUES(specification_id, metal_id, minimum_thickness, maximum_thickness);
+END //
+DROP PROCEDURE IF EXISTS updateSpecificationItem //
+CREATE PROCEDURE updateSpecificationItem( IN specificationitem_id INT(32), IN metal_id INT(32), IN minimum_thickness DOUBLE, IN maximum_thickness DOUBLE)
+BEGIN
+UPDATE SPECIFICATION_ITEM 
+SET SPECIFICATION_ITEM.METAL_ID = metal_id, SPECIFICATION_ITEM.minimum_thickness = minimum_thickness, SPECIFICATION_ITEM.maximum_thickness = maximum_thickness
+WHERE SPECIFICATION_ITEM.id = specificationitem_id;
+END //
+DROP PROCEDURE IF EXISTS disableSpecificationItem
+ //
+CREATE PROCEDURE disableSpecificationItem(IN specificationitem_id INT(32))
+BEGIN
+UPDATE SPECIFICATION_ITEM 
+SET SPECIFICATION_ITEM.active = 0
+WHERE SPECIFICATION_ITEM.id = specificationitem_id;
+END //
+DELIMITER ;
+    */
+    
     // Constants ----------------------------------------------------------------------------------
-    private static final String SQL_FIND_BY_ID = 
-            "SELECT SPECIFICATION_ITEM.id, SPECIFICATION_ITEM.minimum_thickness, SPECIFICATION_ITEM.maximum_thickness, SPECIFICATION_ITEM.active, "
-            + "METAL.metal_name, METAL.density "
-            + "FROM SPECIFICATION_ITEM "
-            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
-            + "WHERE SPECIFICATION_ITEM.id = ?";
-    private static final String SQL_FIND_SPECIFICATION_BY_ID = 
-            "SELECT SPECIFICATION_ID FROM SPECIFICATION_ITEM WHERE id = ?";
-    private static final String SQL_FIND_METAL_BY_ID = 
-            "SELECT METAL_ID FROM SPECIFICATION_ITEM WHERE id = ?";
-    private static final String SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID = 
-            "SELECT SPECIFICATION_ITEM.id, SPECIFICATION_ITEM.minimum_thickness, SPECIFICATION_ITEM.maximum_thickness, SPECIFICATION_ITEM.active, "
-            + "METAL.metal_name, METAL.density "
-            + "FROM SPECIFICATION_ITEM "
-            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
-            + "WHERE SPECIFICATION_ITEM.SPECIFICATION_ID = ? AND SPECIFICATION_ITEM.active = ? "
-            + "ORDER BY SPECIFICATION_ITEM.id";
-    private static final String SQL_LIST_ACTIVE_OF_QUOTE_ORDER_BY_ID = 
-            "SELECT SPECIFICATION_ITEM.id, SPECIFICATION_ITEM.minimum_thickness, SPECIFICATION_ITEM.maximum_thickness, SPECIFICATION_ITEM.active, "
-            + "METAL.metal_name, METAL.density "
-            + "FROM SPECIFICATION_ITEM "
-            + "INNER JOIN METAL ON SPECIFICATION_ITEM.METAL_ID = METAL.id "
-            + "INNER JOIN QUOTE ON ? = QUOTE.id "
-            + "INNER JOIN PART_REVISION ON QUOTE.PART_REVISION_ID = PART_REVISION.id "
-            + "WHERE PART_REVISION.SPECIFICATION_ID = SPECIFICATION_ITEM.SPECIFICATION_ID AND SPECIFICATION_ITEM.active = ? "
-            + "ORDER BY SPECIFICATION_ITEM.id";
-    private static final String SQL_INSERT = 
-            "INSERT INTO SPECIFICATION_ITEM (SPECIFICATION_ID, METAL_ID, minimum_thickness, maximum_thickness, active) "
-            + "VALUES(?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE = 
-            "UPDATE SPECIFICATION_ITEM SET minimum_thickness = ?, maximum_thickness = ?, active = ? WHERE id = ?";
-    private static final String SQL_DELETE = 
-            "DELETE FROM SPECIFICATION_ITEM WHERE id = ?";
+    private final String SQL_getSpecificationItem = 
+            "CALL getSpecificationItem(?)";
+    private final String SQL_listSpecificationItem = 
+            "CALL listSpecificationItem(?)";
+    private final String SQL_listSpecificationItemOfQuote = 
+            "CALL listSpecificationItemOfQuote(?)";
+    private final String SQL_createSpecificationItem = 
+            "CALL createSpecificationItem(?,?,?,?)";
+    private final String SQL_updateSpecificationItem = 
+            "CALL updateSpecificationUpdate(?,?,?,?)";
+    private final String SQL_disableSpecificationItem = 
+            "CALL disableSpecificationItem(?)";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -77,7 +112,7 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
     // Actions ------------------------------------------------------------------------------------
     @Override
     public SpecificationItem find(Integer id) throws DAOException {
-        return find(SQL_FIND_BY_ID, id);
+        return find(SQL_getSpecificationItem, id);
     }
     
     /**
@@ -106,61 +141,7 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
     }
     
     @Override
-    public Specification findSpecification(SpecificationItem specification_item) throws IllegalArgumentException, DAOException {
-        if(specification_item.getId() == null) {
-            throw new IllegalArgumentException("SpecificationItem is not created yet, the SpecificationItem ID is null.");
-        }
-        
-        Specification specification = null;
-        
-        Object[] values = {
-            specification_item.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_SPECIFICATION_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                specification = daoFactory.getSpecificationDAO().find(resultSet.getInt("SPECIFICATION_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return specification;
-    }
-
-    @Override
-    public Metal findMetal(SpecificationItem specification_item) throws IllegalArgumentException, DAOException {
-        if(specification_item.getId() == null) {
-            throw new IllegalArgumentException("SpecificationItem is not created yet, the SpecificationItem ID is null.");
-        }
-        
-        Metal metal = null;
-        
-        Object[] values = {
-            specification_item.getId()
-        };
-        
-        try (
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_FIND_METAL_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ) {
-            if (resultSet.next()) {
-                metal = daoFactory.getMetalDAO().find(resultSet.getInt("METAL_ID"));
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e);
-        }        
-        
-        return metal;
-    }
-    
-    @Override
-    public List<SpecificationItem> list(Specification specification, boolean active) throws IllegalArgumentException, DAOException {
+    public List<SpecificationItem> list(Specification specification) throws IllegalArgumentException, DAOException {
         if(specification.getId() == null){
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
         }
@@ -168,13 +149,12 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
         List<SpecificationItem> specification_items = new ArrayList<>();
         
         Object[] values = {
-            specification.getId(),
-            active
+            specification.getId()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_SPECIFICATION_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_listSpecificationItem, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -188,7 +168,7 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
     }
     
     @Override
-    public List<SpecificationItem> list(Quote quote, boolean active) throws IllegalArgumentException, DAOException {
+    public List<SpecificationItem> list(Quote quote) throws IllegalArgumentException, DAOException {
         if(quote.getId() == null){
             throw new IllegalArgumentException("Quote is not created yet, the Quote ID is null.");
         }
@@ -196,13 +176,12 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
         List<SpecificationItem> specification_items = new ArrayList<>();
         
         Object[] values = {
-            quote.getId(),
-            active
+            quote.getId()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_OF_QUOTE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_listSpecificationItemOfQuote, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -216,7 +195,7 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
     }
     
     @Override
-    public void create(Specification specification, Metal metal,SpecificationItem specification_item) throws IllegalArgumentException, DAOException {
+    public void create(Specification specification, Metal metal, SpecificationItem specification_item) throws IllegalArgumentException, DAOException {
         if(specification.getId() == null){
             throw new IllegalArgumentException("Specification is not created yet, the Specification ID is null.");
         }
@@ -237,7 +216,7 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+            PreparedStatement statement = prepareStatement(connection, SQL_createSpecificationItem, true, values);          
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
@@ -264,15 +243,14 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
         }
         
         Object[] values = {
+            specification_item.getId(),
             specification_item.getMinimum_thickness(),
-            specification_item.getMaximum_thickness(),
-            specification_item.isActive(),
-            specification_item.getId()
+            specification_item.getMaximum_thickness()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_updateSpecificationItem, false, values);
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
@@ -291,7 +269,7 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_disableSpecificationItem, false, values);
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
@@ -318,10 +296,13 @@ public class SpecificationItemDAOJDBC implements SpecificationItemDAO {
         specification_item.setMinimum_thickness(resultSet.getDouble("SPECIFICATION_ITEM.minimum_thickness"));
         specification_item.setMaximum_thickness(resultSet.getDouble("SPECIFICATION_ITEM.maximum_thickness"));
         specification_item.setActive(resultSet.getBoolean("SPECIFICATION_ITEM.active"));
+        specification_item.setMetal_id(resultSet.getInt("SPECIFICATION_ITEM.METAL_ID"));
+        specification_item.setSpecification_id(resultSet.getInt("SPECIFICATION_ITEM.SPECIFICATION_ID"));
         
         //INNER JOINS
         specification_item.setMetal_name(resultSet.getString("METAL.metal_name"));
-        specification_item.setMetal_density(resultSet.getDouble("METAL.density"));
+        specification_item.setMetal_density(resultSet.getString("METAL.density"));
+        
         return specification_item;
     }
 }

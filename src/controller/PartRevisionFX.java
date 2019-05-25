@@ -164,8 +164,8 @@ public class PartRevisionFX implements Initializable {
     
     public void updateComboItems(){
         company_combo1.getItems().setAll(msabase.getCompanyDAO().listClient(true));
-        metal_combo1.getItems().setAll(msabase.getMetalDAO().list(true));
-        spec_combo1.getItems().setAll(msabase.getSpecificationDAO().list(true));
+        metal_combo1.getItems().setAll(msabase.getMetalDAO().list());
+        spec_combo1.getItems().setAll(msabase.getSpecificationDAO().list());
         part_combo2.getItems().setAll(msabase.getProductPartDAO().list());
 
         company_combo2.itemsProperty().bind(company_combo1.itemsProperty());

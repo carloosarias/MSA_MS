@@ -104,7 +104,7 @@ public class CreateQuoteFX implements Initializable {
     }
     
     public void createQuoteItems(){
-        for(SpecificationItem specification_item : msabase.getSpecificationItemDAO().list(quote, true)){
+        for(SpecificationItem specification_item : msabase.getSpecificationItemDAO().list(quote)){
             QuoteItem quote_item = new QuoteItem();
             quote_item.setUnit_price(0.0);
             msabase.getQuoteItemDAO().create(specification_item, quote, quote_item);

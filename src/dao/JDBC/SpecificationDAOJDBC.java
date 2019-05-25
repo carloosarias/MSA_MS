@@ -21,22 +21,60 @@ import model.Specification;
  * @author Pavilion Mini
  */
 public class SpecificationDAOJDBC implements SpecificationDAO {
+    /*
+DELIMITER //
+Use msadb //
+DROP PROCEDURE IF EXISTS getSpecification //
+CREATE PROCEDURE getSpecification(IN specification_id INT(32))
+BEGIN
+SELECT *
+FROM SPECIFICATION
+WHERE SPECIFICATION.ID = specification_id;
+END //
+DROP PROCEDURE IF EXISTS listSpecification //
+CREATE PROCEDURE listSpecification(IN specification_number VARCHAR(256), IN specification_name VARCHAR(256), IN process VARCHAR(256))
+BEGIN
+SELECT *
+FROM SPECIFICATION
+WHERE (SPECIFICATION.specification_number LIKE concat(IFNULL(specification_number,''),'%'))
+AND (SPECIFICATION.specification_name LIKE concat(IFNULL(specification_name,''),'%')) 
+AND (SPECIFICATION.process LIKE concat(IFNULL(process,''),'%'))
+AND SPECIFICATION.active = 1
+ORDER BY SPECIFICATION.id;
+END //
+DROP PROCEDURE IF EXISTS createSpecification //
+CREATE PROCEDURE createSpecification(IN specification_number VARCHAR(256), IN specification_name VARCHAR(256), IN process VARCHAR(256))
+BEGIN
+INSERT INTO SPECIFICATION (SPECIFICATION.specification_number, SPECIFICATION.specification_name, SPECIFICATION.process) VALUES(specification_number, specification_name, process);
+END //
+DROP PROCEDURE IF EXISTS updateSpecification //
+CREATE PROCEDURE updateSpecification(IN specification_id INT(32), IN specification_number VARCHAR(256), IN specification_name VARCHAR(256), IN process VARCHAR(256))
+BEGIN
+UPDATE SPECIFICATION 
+SET SPECIFICATION.specification_number = specification_number, SPECIFICATION.specification_name = specification_name, SPECIFICATION.process = process
+WHERE SPECIFICATION.id = specification_id;
+END //
+DROP PROCEDURE IF EXISTS disableSpecification //
+CREATE PROCEDURE disableSpecification(IN specification_id INT(32))
+BEGIN
+UPDATE SPECIFICATION 
+SET SPECIFICATION.active = 0
+WHERE SPECIFICATION.id = specification_id;
+END //
+DELIMITER ;
+    */
+    
     // Constants ----------------------------------------------------------------------------------
-    private static final String SQL_FIND_BY_ID = 
-            "SELECT * FROM SPECIFICATION WHERE id = ?";
-    private static final String SQL_LIST_ORDER_BY_PROCESS = 
-            "SELECT * FROM SPECIFICATION ORDER BY process, specification_number";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_PROCESS = 
-            "SELECT * FROM SPECIFICATION WHERE active = ? ORDER BY process, specification_number";
-    private static final String SQL_LIST_PROCESS_ORDER_BY_PROCESS = 
-            "SELECT * FROM SPECIFICATION WHERE process = ? ORDER BY process, specification_number";
-    private static final String SQL_INSERT = 
-            "INSERT INTO SPECIFICATION (specification_number, specification_name, process, active) "
-            + "VALUES(?, ?, ?, ?)";
-    private static final String SQL_UPDATE = 
-            "UPDATE SPECIFICATION SET specification_number = ?, specification_name = ?, process = ?, active = ? WHERE id = ?";
-    private static final String SQL_DELETE = 
-            "DELETE FROM SPECIFICATION WHERE id = ?";
+    private static final String SQL_getSpecification = 
+            "CALL getSpecification(?)";
+    private static final String SQL_listSpecification = 
+            "CALL listSpecification(?,?,?)";
+    private static final String SQL_createSpecification = 
+            "CALL createSpecification(?,?,?)";
+    private static final String SQL_updateSpecification = 
+            "CALL updateSpecification(?,?,?,?)";
+    private static final String SQL_disableSpecification = 
+            "CALL disableSpecification(?)";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -56,7 +94,7 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
     // Actions ------------------------------------------------------------------------------------
     @Override
     public Specification find(Integer id) throws DAOException {
-        return find(SQL_FIND_BY_ID, id);
+        return find(SQL_getSpecification, id);
     }
     
     /**
@@ -84,59 +122,24 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         return specification;
     }
     
-    /*@Override
+    @Override 
     public List<Specification> list() throws DAOException {
-        List<Specification> specifications = new ArrayList<>();
-
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_PROCESS);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                specifications.add(map(resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return specifications;
-    }*/
-    
-    @Override
-    public List<Specification> list(boolean active) throws DAOException {
-        List<Specification> specifications = new ArrayList<>();
-
-        Object[] values = {
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_PROCESS, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                specifications.add(map("", resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return specifications;
+        return list(null, null, null);
     }
     
     @Override
-    public List<Specification> listByProcess(String process) throws DAOException {
+    public List<Specification> list(String specification_number, String specification_name, String process) throws DAOException {
         List<Specification> specifications = new ArrayList<>();
-        
+
         Object[] values = {
+            specification_number,
+            specification_name,
             process
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_PROCESS_ORDER_BY_PROCESS, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_listSpecification, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -158,25 +161,16 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         Object[] values = {
             specification.getSpecification_number(),
             specification.getSpecification_name(),
-            specification.getProcess(),
-            specification.isActive()
+            specification.getProcess()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+            PreparedStatement statement = prepareStatement(connection, SQL_createSpecification, false, values);          
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
                 throw new DAOException("Creating Specification failed, no rows affected.");
-            }
-            
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    specification.setId(generatedKeys.getInt(1));
-                } else {
-                    throw new DAOException("Creating Specification failed, no generated key obtained.");
-                }
             }
             
         } catch (SQLException e){
@@ -191,16 +185,15 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         }
         
         Object[] values = {
+            specification.getId(),
             specification.getSpecification_number(),
             specification.getSpecification_name(),
-            specification.getProcess(),
-            specification.isActive(),
-            specification.getId()
+            specification.getProcess()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_updateSpecification, false, values);
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
@@ -219,13 +212,11 @@ public class SpecificationDAOJDBC implements SpecificationDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_disableSpecification, false, values);
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
                 throw new DAOException("Deleting Specification failed, no rows affected.");
-            } else{
-                specification.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);

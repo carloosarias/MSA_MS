@@ -32,8 +32,6 @@ public interface MetalDAO {
      */        
     public List<Metal> list() throws DAOException;
     
-    public List<Metal> list(boolean active) throws DAOException;
-    
     /**
      * Create the given Metal in the database.
      * The Metal ID must not be null otherwise it will throw IllegalArgumentException.

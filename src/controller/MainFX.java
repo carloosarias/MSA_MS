@@ -132,37 +132,37 @@ public class MainFX implements Initializable {
     public void setTabs(Module module){
         
         try {
+            if(module.getName().equals("Recursos Humanos")){
+                employee_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/EmployeeFX.fxml")));
+                company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
+                root_tabpane.getTabs().setAll(employee_tab, company_tab);
+            }
+            else if(module.getName().equals("Compras")){
+                product_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
+                productsupplier_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
+                orderpurchasecart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
+                orderpurchase_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
+                root_tabpane.getTabs().setAll(product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
+            }
+            else if(module.getName().equals("Números de Parte")){
+                partrevision_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
+                productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
+                specification_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/SpecificationFX.fxml")));
+                metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));
+                root_tabpane.getTabs().setAll(partrevision_tab, productpart_tab, specification_tab, metal_tab);
+            }
+            else if(module.getName().equals("Reciba")){
+                incoming_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX_1.fxml")));
+                //orderpurchaseincomingreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
+                depart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX_1.fxml")));
+                root_tabpane.getTabs().setAll(incoming_tab, depart_tab);
+            }
+            else if(module.getName().equals("Facturación")){
+                invoice_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
+                root_tabpane.getTabs().setAll(invoice_tab);
+            }
+            /*
                 switch(module.getName()){
-                    case "Recursos Humanos":
-                        employee_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/EmployeeFX.fxml")));
-                        company_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/CompanyFX.fxml")));
-                        root_tabpane.getTabs().setAll(employee_tab, company_tab);
-                        break;
-                    case "Compras":
-                        product_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductFX.fxml")));
-                        productsupplier_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductSupplierFX.fxml")));
-                        orderpurchasecart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseCartFX.fxml")));
-                        orderpurchase_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseFX.fxml")));
-                        root_tabpane.getTabs().setAll(product_tab, productsupplier_tab, orderpurchasecart_tab, orderpurchase_tab);
-                        break;
-                    case "Números de Parte":
-                        partrevision_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/PartRevisionFX.fxml")));
-                        productpart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/ProductPartFX.fxml")));
-                        specification_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/SpecificationFX.fxml")));
-                        metal_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/MetalFX.fxml")));
-                        root_tabpane.getTabs().setAll(partrevision_tab, productpart_tab, specification_tab, metal_tab);
-                        break;
-                    case "Reciba":
-                        //poquery_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/POQueryFX.fxml")));
-                        incoming_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/IncomingReportFX_1.fxml")));
-                        //orderpurchaseincomingreport_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/OrderPurchaseIncomingReportFX.fxml")));
-                        depart_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/DepartReportFX_1.fxml")));
-                        root_tabpane.getTabs().setAll(incoming_tab, depart_tab);
-                        break;
-                    case "Facturación":
-                        invoice_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceFX.fxml")));
-                        root_tabpane.getTabs().setAll(invoice_tab);
-                        break;
                     case "Cotización":
                         quote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/QuoteFX.fxml")));
                         invoicequote_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/InvoiceQuoteFX.fxml")));
@@ -193,7 +193,7 @@ public class MainFX implements Initializable {
                         equipmenttype_tab.setContent((GridPane) FXMLLoader.load(getClass().getResource("/fxml/EquipmentTypeFX.fxml")));
                         root_tabpane.getTabs().setAll(mantainance_tab, activityreport_tab, equipment_tab, equipmenttype_tab);
                         break;
-                }
+                }*/
             } catch (IOException ex) {
                 Logger.getLogger(MainFX.class.getName()).log(Level.SEVERE, null, ex);
             }

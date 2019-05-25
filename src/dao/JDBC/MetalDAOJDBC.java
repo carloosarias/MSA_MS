@@ -21,20 +21,58 @@ import model.Metal;
  * @author Pavilion Mini
  */
 public class MetalDAOJDBC implements MetalDAO {
+    /*
+    StoredProcs
+DELIMITER //
+Use msadb //
+DROP PROCEDURE IF EXISTS getMetal //
+CREATE PROCEDURE getMetal(IN metal_id INT(32))
+BEGIN
+SELECT * 
+FROM METAL
+WHERE METAL.ID = metal_id;
+END //
+DROP PROCEDURE IF EXISTS listMetal //
+CREATE PROCEDURE listMetal()
+BEGIN
+SELECT * 
+FROM METAL
+WHERE METAL.active = 1
+ORDER BY METAL.id;
+END //
+DROP PROCEDURE IF EXISTS createMetal //
+CREATE PROCEDURE createMetal(IN metal_name VARCHAR(256), IN density DOUBLE)
+BEGIN
+INSERT INTO METAL (METAL.metal_name, METAL.density) VALUES(metal_name, density);
+END //
+DROP PROCEDURE IF EXISTS updateMetal //
+CREATE PROCEDURE updateMetal(IN metal_id INT(32), IN metal_name VARCHAR(256), IN density DOUBLE)
+BEGIN
+UPDATE METAL 
+SET METAL.metal_name = metal_name, METAL.density = density
+WHERE METAL.id = metal_id;
+END //
+DROP PROCEDURE IF EXISTS disableMetal //
+CREATE PROCEDURE disableMetal(IN metal_id INT(32))
+BEGIN
+UPDATE METAL 
+SET METAL.active = 0
+WHERE METAL.id = metal_id;
+END //
+DELIMITER ;
+    */
+    
     // Constants ----------------------------------------------------------------------------------
-    private static final String SQL_FIND_BY_ID = 
-            "SELECT * FROM METAL WHERE METAL.id = ?";
-    private static final String SQL_LIST_ORDER_BY_ID = 
-            "SELECT * FROM METAL ORDER BY METAL.metal_name, METAL.density";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT * FROM METAL WHERE METAL.active = ? ORDER BY METAL.metal_name, METAL.density";
-    private static final String SQL_INSERT = 
-            "INSERT INTO METAL (metal_name, density, active) "
-            + "VALUES(?, ?, ?)";
-    private static final String SQL_UPDATE = 
-            "UPDATE METAL SET  metal_name = ?, density = ?, active = ? WHERE id = ?";
-    private static final String SQL_DELETE = 
-            "DELETE FROM METAL WHERE id = ?";
+    private static final String SQL_getMetal = 
+            "CALL getMetal(?)";
+    private static final String SQL_listMetal = 
+            "CALL listMetal()";
+    private static final String SQL_createMetal = 
+            "CALL createMetal(?,?)";
+    private static final String SQL_updateMetal = 
+            "CALL updateMetal(?,?,?)";
+    private static final String SQL_disableMetal = 
+            "CALL disableMetal(?)";
     
     // Vars ---------------------------------------------------------------------------------------
 
@@ -54,7 +92,7 @@ public class MetalDAOJDBC implements MetalDAO {
     // Actions ------------------------------------------------------------------------------------
     @Override
     public Metal find(Integer id) throws DAOException {
-        return find(SQL_FIND_BY_ID, id);
+        return find(SQL_getMetal, id);
     }
     
     /**
@@ -73,7 +111,7 @@ public class MetalDAOJDBC implements MetalDAO {
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                metal = map("", resultSet);
+                metal = map(resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -88,34 +126,11 @@ public class MetalDAOJDBC implements MetalDAO {
 
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_ID);
+            PreparedStatement statement = connection.prepareStatement(SQL_listMetal);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                metals.add(map("", resultSet));
-            }
-        } catch(SQLException e){
-            throw new DAOException(e);
-        }
-        
-        return metals;
-    }
-    
-    @Override
-    public List<Metal> list(boolean active) throws DAOException {
-        List<Metal> metals = new ArrayList<>();
-        
-        Object[] values = {
-            active
-        };
-        
-        try(
-            Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
-            ResultSet resultSet = statement.executeQuery();
-        ){
-            while(resultSet.next()){
-                metals.add(map("", resultSet));
+                metals.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -132,27 +147,17 @@ public class MetalDAOJDBC implements MetalDAO {
         
         Object[] values = {
             metal.getMetal_name(),
-            metal.getDensity(),
-            metal.isActive()
+            metal.getDensity()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+            PreparedStatement statement = prepareStatement(connection, SQL_createMetal, false, values);          
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
                 throw new DAOException("Creating Metal failed, no rows affected.");
             }
-            
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    metal.setId(generatedKeys.getInt(1));
-                } else {
-                    throw new DAOException("Creating Metal failed, no generated key obtained.");
-                }
-            }
-            
         } catch (SQLException e){
             throw new DAOException(e);
         }
@@ -165,14 +170,14 @@ public class MetalDAOJDBC implements MetalDAO {
         }
         
         Object[] values = {
+            metal.getId(),
             metal.getMetal_name(),
-            metal.getDensity(),
-            metal.getId()
+            metal.getDensity()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_updateMetal, false, values);
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
@@ -184,20 +189,22 @@ public class MetalDAOJDBC implements MetalDAO {
     }
 
     @Override
-    public void delete(Metal metal) throws DAOException {
+    public void delete(Metal metal) throws IllegalArgumentException, DAOException {
+        if (metal.getId() == null) {
+            throw new IllegalArgumentException("Metal is not created yet, the Metal ID is null.");
+        }
+        
         Object[] values = {
             metal.getId()
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_disableMetal, false, values);
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
-                throw new DAOException("Deleting Metal failed, no rows affected.");
-            } else{
-                metal.setId(null);
+                throw new DAOException("Updating Metal failed, no rows affected.");
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -208,17 +215,16 @@ public class MetalDAOJDBC implements MetalDAO {
 
     /**
      * Map the current row of the given ResultSet to an Specification.
-     * @param metal_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an Specification.
      * @return The mapped Specification from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static Metal map(String metal_label, ResultSet resultSet) throws SQLException{
+    public static Metal map(ResultSet resultSet) throws SQLException{
         Metal metal = new Metal();
-        metal.setId(resultSet.getInt(metal_label+"id"));
-        metal.setMetal_name(resultSet.getString(metal_label+"metal_name"));
-        metal.setDensity(resultSet.getDouble(metal_label+"density"));
-        metal.setActive(resultSet.getBoolean(metal_label+"active"));
+        metal.setId(resultSet.getInt("METAL.id"));
+        metal.setMetal_name(resultSet.getString("METAL.metal_name"));
+        metal.setDensity(resultSet.getDouble("METAL.density"));
+        metal.setActive(resultSet.getBoolean("METAL.active"));
         return metal;
     }
 }
