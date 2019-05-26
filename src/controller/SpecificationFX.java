@@ -98,7 +98,7 @@ public class SpecificationFX implements Initializable {
             }catch(Exception e){
                 specificationitem_tableview.getItems().clear();
                 //NEED TO PUT THIS IN OTHER PLACES TOO :^)
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         });
         

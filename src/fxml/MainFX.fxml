@@ -5,13 +5,12 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -39,36 +38,6 @@
          </rowConstraints>
          <children>
             <TabPane fx:id="root_tabpane" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-               <tabs>
-                  <Tab fx:id="employee_tab" closable="false" text="Empleados" />
-                  <Tab fx:id="company_tab" closable="false" text="Compañías" />
-                  <Tab fx:id="partrevision_tab" closable="false" text="Revisiones" />
-                  <Tab fx:id="productpart_tab" closable="false" text="Números de Parte" />
-                  <Tab fx:id="metal_tab" closable="false" text="Lista de Metales y Densidades" />
-                  <Tab fx:id="specification_tab" closable="false" text="Especificaciones" />
-                  <Tab fx:id="product_tab" closable="false" text="Productos" />
-                  <Tab fx:id="productsupplier_tab" closable="false" text="Cotizaciones de Productos" />
-                  <Tab fx:id="tank_tab" closable="false" text="Tanques" />
-                  <Tab fx:id="orderpurchase_tab" closable="false" text="Historial de Orden de Compra" />
-                  <Tab fx:id="orderpurchasecart_tab" closable="false" text="Carrito de Compras" />
-                  <Tab fx:id="poquery_tab" closable="false" text="Consulta de PO#" />
-                  <Tab fx:id="incoming_tab" closable="false" text="Reciba" />
-                  <Tab fx:id="orderpurchaseincomingreport_tab" closable="false" text="Reciba de Orden de Compra" />
-                  <Tab fx:id="depart_tab" closable="false" text="Remisiones" />
-                  <Tab fx:id="invoice_tab" closable="false" text="Facturación" />
-                  <Tab fx:id="quote_tab" closable="false" text="Cotización" />
-                  <Tab fx:id="invoicequote_tab" closable="false" text="Historial de Ventas" />
-                  <Tab fx:id="invoicepayment_tab" closable="false" text="Pago de Facturas" />
-                  <Tab fx:id="process_tab" closable="false" text="Producción" />
-                  <Tab fx:id="transactionhistory_tab" closable="false" text="Historial de Transacciones" />
-                  <Tab fx:id="scrap_tab" closable="false" text="Scrap" />
-                  <Tab fx:id="analysistype_tab" closable="false" text="Tipos de Análisis" />
-                  <Tab fx:id="analysisreport_tab" closable="false" text="Reportes de Análisis Químicos" />
-                  <Tab fx:id="mantainance_tab" closable="false" text="Reportes de Mantenimiento" />
-                  <Tab fx:id="equipment_tab" closable="false" text="Equipos" />
-                  <Tab fx:id="equipmenttype_tab" closable="false" text="Categorías de Equipo" />
-                  <Tab fx:id="activityreport_tab" closable="false" text="Reporte de Trabajos" />
-               </tabs>
                <GridPane.margin>
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </GridPane.margin>
