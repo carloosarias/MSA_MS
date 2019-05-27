@@ -103,7 +103,10 @@ DELIMITER ;*/
             "CALL searchAvaDepartLot(?,?,?,?,?,?,?,?,?,?)";
     private final String SQL_createDepartLot =
             "CALL createDepartLot(?,?,?,?,?,?)";
-    
+    private final String SQL_updateDepartLot = 
+            "CALL updateDepartLot(?,?,?)";
+    private final String SQL_deleteDepartLot = 
+            "CALL deleteDepartLot(?)";
     // Vars ---------------------------------------------------------------------------------------
     private DAOFactory daoFactory;
 
@@ -214,17 +217,78 @@ DELIMITER ;*/
 
     @Override
     public void create(DepartLot_1 depart_lot) throws IllegalArgumentException, DAOException {
-
+        if(depart_lot.getId() != null){
+            throw new IllegalArgumentException("DepartLot_1 is already created, the DepartLot_1 ID is not null.");
+        }
+        
+        Object[] values = {
+            depart_lot.getDepartreport_id(),
+            depart_lot.getEmployee_id(),
+            depart_lot.getIncomingreport_id(),
+            depart_lot.getDate(),
+            depart_lot.getQty_out(),
+            depart_lot.getComments()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_createDepartLot, false, values);          
+        ){
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DAOException("Creating DepartLot_1 failed, no rows affected.");
+            }
+        } catch (SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void update(DepartLot_1 depart_lot) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (depart_lot.getId() == null) {
+            throw new IllegalArgumentException("DepartLot_1 is not created yet, the DepartLot_1 ID is null.");
+        }
+        
+        Object[] values = {
+            depart_lot.getId(),
+            depart_lot.getQty_out(),
+            depart_lot.getComments()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_updateDepartLot, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating DepartLot_1 failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
 
     @Override
     public void delete(DepartLot_1 depart_lot) throws DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (depart_lot.getId() == null) {
+            throw new IllegalArgumentException("DepartLot_1 is not created yet, the DepartLot_1 ID is null.");
+        }
+        
+        Object[] values = {
+            depart_lot.getId()
+        };
+        
+        try(
+            Connection connection = daoFactory.getConnection();
+            PreparedStatement statement = prepareStatement(connection, SQL_deleteDepartLot, false, values);
+        ){
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DAOException("Updating DepartLot_1 failed, no rows affected.");
+            }
+        } catch(SQLException e){
+            throw new DAOException(e);
+        }
     }
     
     // Helpers ------------------------------------------------------------------------------------
@@ -238,8 +302,8 @@ DELIMITER ;*/
     public static DepartLot_1 map(ResultSet resultSet) throws SQLException{
         DepartLot_1 depart_lot = new DepartLot_1();
         depart_lot.setId(resultSet.getInt("DEPART_LOT_1.id"));
-        depart_lot.setEmployee_id(resultSet.getInt("EMPLOYEE_ID"));
         depart_lot.setDepartreport_id(resultSet.getInt("DEPART_REPORT_ID"));
+        depart_lot.setEmployee_id(resultSet.getInt("EMPLOYEE_ID"));
         depart_lot.setIncomingreport_id(resultSet.getInt("INCOMING_REPORT_ID"));
         depart_lot.setDate(resultSet.getDate("DEPART_LOT_1.date"));
         depart_lot.setQty_out(resultSet.getInt("DEPART_LOT_1.qty_out"));

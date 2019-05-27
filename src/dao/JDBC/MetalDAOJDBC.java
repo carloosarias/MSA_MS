@@ -22,7 +22,6 @@ import model.Metal;
  */
 public class MetalDAOJDBC implements MetalDAO {
     /*
-    StoredProcs
 DELIMITER //
 Use msadb //
 DROP PROCEDURE IF EXISTS getMetal //

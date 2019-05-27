@@ -151,7 +151,7 @@ public class DepartReportFX_1 implements Initializable {
 
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     private ObjectProperty<Integer> qty_out = new SimpleObjectProperty();
-    private BooleanProperty open_property = new SimpleBooleanProperty(false);
+    private BooleanProperty departreport_open = new SimpleBooleanProperty(false);
 
     /**
      * Initializes the controller class.
@@ -186,9 +186,9 @@ public class DepartReportFX_1 implements Initializable {
         departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport_1> observable, DepartReport_1 oldValue, DepartReport_1 newValue) -> {
             updateDepartLotTable();
             try{
-                open_property.setValue(newValue.isOpen());
+                departreport_open.setValue(newValue.isOpen());
             }catch(Exception e){
-                open_property.setValue(false);
+                departreport_open.setValue(false);
             }
         });
         
@@ -220,10 +220,10 @@ public class DepartReportFX_1 implements Initializable {
             }
         });
         details_tab.disableProperty().bind(Bindings.size(departlot_tableview.getItems()).isEqualTo(0));
-        departreport_tableview.editableProperty().bind(open_property);
+        departreport_tableview.editableProperty().bind(departreport_open);
         companyaddress_combo2.disableProperty().bind(Bindings.size(companyaddress_combo2.getItems()).isEqualTo(0));
         save_button2.disableProperty().bind(companyaddress_combo2.valueProperty().isNull());
-        delete_button1.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull().and(open_property.not()));  
+        delete_button1.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull().or(departreport_open.not()));
     }
     
     public void setDepartReportTable(){

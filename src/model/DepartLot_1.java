@@ -16,8 +16,8 @@ public class DepartLot_1 implements Serializable{
     
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Integer employee_id;
     private Integer departreport_id;
+    private Integer employee_id;
     private Integer incomingreport_id;
     private Date date;
     private Integer qty_out;
@@ -43,14 +43,6 @@ public class DepartLot_1 implements Serializable{
     public void setId(Integer id) {
         this.id = id;
     }
-    
-    public Integer getEmployee_id() {
-        return employee_id;
-    }
-
-    public void setEmployee_id(Integer employee_id) {
-        this.employee_id = employee_id;
-    }
 
     public Integer getDepartreport_id() {
         return departreport_id;
@@ -59,7 +51,15 @@ public class DepartLot_1 implements Serializable{
     public void setDepartreport_id(Integer departreport_id) {
         this.departreport_id = departreport_id;
     }
+    
+    public Integer getEmployee_id() {
+        return employee_id;
+    }
 
+    public void setEmployee_id(Integer employee_id) {
+        this.employee_id = employee_id;
+    }
+    
     public Integer getIncomingreport_id() {
         return incomingreport_id;
     }
