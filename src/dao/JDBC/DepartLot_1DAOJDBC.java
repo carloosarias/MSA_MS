@@ -101,6 +101,8 @@ DELIMITER ;*/
             "CALL listDepartLot(?)";
     private final String SQL_searchAvaDepartLot =
             "CALL searchAvaDepartLot(?,?,?,?,?,?,?,?,?,?)";
+    private final String SQL_createDepartLot =
+            "CALL createDepartLot(?,?,?,?,?,?)";
     
     // Vars ---------------------------------------------------------------------------------------
     private DAOFactory daoFactory;
@@ -212,7 +214,7 @@ DELIMITER ;*/
 
     @Override
     public void create(DepartLot_1 depart_lot) throws IllegalArgumentException, DAOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
