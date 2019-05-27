@@ -219,7 +219,7 @@ public class DepartReportFX_1 implements Initializable {
                 qtyout_field3.clear();
             }
         });
-        details_tab.disableProperty().bind(Bindings.size(departlot_tableview.getItems()).isEqualTo(0));
+        details_tab.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
         departreport_tableview.editableProperty().bind(departreport_open);
         companyaddress_combo2.disableProperty().bind(Bindings.size(companyaddress_combo2.getItems()).isEqualTo(0));
         save_button2.disableProperty().bind(companyaddress_combo2.valueProperty().isNull());
