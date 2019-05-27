@@ -186,7 +186,6 @@ public class DepartReportFX_1 implements Initializable {
         departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport_1> observable, DepartReport_1 oldValue, DepartReport_1 newValue) -> {
             updateDepartLotTable();
             try{
-                
                 open_property.setValue(newValue.isOpen());
             }catch(Exception e){
                 open_property.setValue(false);
