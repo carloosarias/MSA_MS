@@ -253,7 +253,6 @@ DELIMITER ;*/
         depart_lot.setIncomingreport_lot(resultSet.getString("INCOMING_REPORT_1.lot"));
         depart_lot.setIncomingreport_po(resultSet.getString("INCOMING_REPORT_1.po"));
         depart_lot.setIncomingreport_line(resultSet.getString("INCOMING_REPORT_1.line"));
-        System.out.println(resultSet.getString("INCOMING_REPORT_1.packing"));
         depart_lot.setIncomingreport_packing(resultSet.getString("INCOMING_REPORT_1.packing"));
         return depart_lot;
     }

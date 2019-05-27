@@ -133,6 +133,7 @@ public class MainFX implements Initializable {
                 case "Scrap":
                     tabs.add(new Tab("Reporte de Scrap"));
                     //tabs.add(new Tab("Reporte de Rechazo"));
+                    break;
                 case "Facturación":
                     tabs.add(new Tab("Facturas"));
                     break;
