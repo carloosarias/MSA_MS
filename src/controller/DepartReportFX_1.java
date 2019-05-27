@@ -127,21 +127,32 @@ public class DepartReportFX_1 implements Initializable {
     @FXML
     private TableView<DepartLot_1> departlot_tableview;
     @FXML
-    private TableColumn<?, ?> date_column2;
+    private TableColumn<DepartLot_1, String> date_column2;
     @FXML
-    private TableColumn<?, ?> employee_column2;
+    private TableColumn<DepartLot_1, String> employee_column2;
     @FXML
-    private TableColumn<DepartLot_1, String> details_column;
+    private TableColumn<DepartLot_1, Integer> incomingreportid_column;
+    @FXML
+    private TableColumn<DepartLot_1, String> partnumber_column;
+    @FXML
+    private TableColumn<DepartLot_1, String> lot_column;
+    @FXML
+    private TableColumn<DepartLot_1, String> po_column;
+    @FXML
+    private TableColumn<DepartLot_1, String> line_column;
+    @FXML
+    private TableColumn<DepartLot_1, String> packing_column;
     @FXML
     private TableColumn<DepartLot_1, Integer> quantity_column;
     @FXML
-    private TableColumn<?, ?> comments_column;
+    private TableColumn<DepartLot_1, String> comments_column;
     @FXML
     private Button delete_button2;
 
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
     private ObjectProperty<Integer> qty_out = new SimpleObjectProperty();
     private BooleanProperty open_property = new SimpleBooleanProperty(false);
+
     /**
      * Initializes the controller class.
      */
@@ -227,8 +238,16 @@ public class DepartReportFX_1 implements Initializable {
     }
     
     public void setDepartLotTable(){
+        date_column2.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getDate()))));
+        employee_column2.setCellValueFactory(new PropertyValueFactory<>("employee_name"));
+        incomingreportid_column.setCellValueFactory(new PropertyValueFactory<>("incomingreport_id"));
+        partnumber_column.setCellValueFactory(new PropertyValueFactory<>("incomingreport_partnumber"));
+        lot_column.setCellValueFactory(new PropertyValueFactory<>("incomingreport_lot"));
+        po_column.setCellValueFactory(new PropertyValueFactory<>("incomingreport_po"));
+        line_column.setCellValueFactory(new PropertyValueFactory<>("incomingreport_line"));
+        packing_column.setCellValueFactory(new PropertyValueFactory<>("incomingreport_packing"));
         quantity_column.setCellValueFactory(new PropertyValueFactory<>("qty_out"));
-        details_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().toString()));
+        comments_column.setCellValueFactory(new PropertyValueFactory<>("comments"));
     }
     
     public void updateDepartReportTable(){

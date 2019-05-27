@@ -60,7 +60,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
             + "WHERE INVOICE_ITEM.INVOICE_ID = ? "
-            + "ORDER BY INVOICE_ITEM.id";
+            + "ORDER BY PRODUCT_PART.part_number";
     private static final String SQL_LIST_OF_INVOICE_PART_REVISION_ORDER_BY_ID = 
             "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
             + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "
@@ -70,7 +70,7 @@ public class InvoiceItemDAOJDBC implements InvoiceItemDAO{
             + "INNER JOIN PRODUCT_PART ON PART_REVISION.PRODUCT_PART_ID = PRODUCT_PART.id "
             + "INNER JOIN QUOTE ON INVOICE_ITEM.QUOTE_ID = QUOTE.id "
             + "WHERE INVOICE_ITEM.INVOICE_ID = ? AND DEPART_LOT.PART_REVISION_ID = ? "
-            + "ORDER BY INVOICE_ITEM.id";
+            + "ORDER BY PRODUCT_PART.part_number";
     private static final String SQL_LIST_OF_QUOTE_DATE_RANGE_ORDER_BY_ID = 
             "SELECT INVOICE_ITEM.id, INVOICE_ITEM.comments, "
             + "PRODUCT_PART.part_number, PART_REVISION.rev, DEPART_LOT.DEPART_REPORT_ID, DEPART_LOT.lot_number, DEPART_LOT.quantity, DEPART_LOT.box_quantity, QUOTE.id, QUOTE.estimated_total "

@@ -25,76 +25,48 @@ import model.DepartReport_1;
  */
 public class DepartLot_1DAOJDBC implements DepartLot_1DAO {
 /*
-SELECT *, 
-(SELECT COUNT(DISTINCT(id)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `depart_count`, 
-qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_REPORT_ID`),0) as `qty_ava`,
-(SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `total_qty`, 
-DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM REJECT_REPORT) as `depart_open` 
-FROM DEPART_REPORT_1 
-INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT_1.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id 
-INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id 
-INNER JOIN EMPLOYEE ON DEPART_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id 
-LEFT JOIN DEPART_LOT_1 ON DEPART_LOT_1.`DEPART_REPORT_ID` = DEPART_REPORT_1.id
-INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.`INCOMING_REPORT_ID` = INCOMING_REPORT_1.id
-INNER JOIN PART_REVISION ON INCOMING_REPORT_1.`PART_REVISION_ID` = PART_REVISION.id
+DELIMITER //
+Use msadb //
+DROP PROCEDURE IF EXISTS getDepartLot //
+CREATE PROCEDURE getDepartLot(IN departlot_id INT(32))
+BEGIN
+SELECT DEPART_LOT_1.*,
+DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM REJECT_REPORT) as `open`,
+(DEPART_LOT_1.qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE REJECT_REPORT.DEPART_LOT_ID = DEPART_LOT_1.id),0)) as qty_ava,
+CONCAT(EMPLOYEE.first_name,' ', EMPLOYEE.last_name) as employee_name,
+CONCAT(PRODUCT_PART.part_number,'-',PART_REVISION.rev) as incomingreport_partnumber,
+INCOMING_REPORT_1.lot,INCOMING_REPORT_1.po,INCOMING_REPORT_1.line,INCOMING_REPORT_1.packing
+FROM DEPART_LOT_1
+INNER JOIN EMPLOYEE ON DEPART_LOT_1.EMPLOYEE_ID = EMPLOYEE.id
+INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.INCOMING_REPORT_ID = INCOMING_REPORT_1.id
+INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id
 INNER JOIN PRODUCT_PART ON PART_REVISION.`PRODUCT_PART_ID` = PRODUCT_PART.id
-GROUP BY DEPART_LOT_1.id 
-HAVING (INCOMING_REPORT_1.id = ? OR ? IS NULL) AND (DEPART_REPORT_1.date BETWEEN ? AND ?) AND (COMPANY.id = ? OR ? IS NULL) AND (PRODUCT_PART.part_number LIKE ?) AND (PART_REVISION.rev LIKE ?) 
-AND (INCOMING_REPORT_1.lot LIKE ?) AND (INCOMING_REPORT_1.packing LIKE ?) AND (INCOMING_REPORT_1.po LIKE ?) AND (INCOMING_REPORT_1.line LIKE ?)
-ORDER BY DEPART_LOT_1.id DESC
-    */
+WHERE DEPART_LOT_1.id = departlot_id;
+END //
+DROP PROCEDURE IF EXISTS listDepartLot //
+CREATE PROCEDURE listDepartLot(IN departreport_id INT(32))
+BEGIN
+SELECT DEPART_LOT_1.*,
+DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM REJECT_REPORT) as `open`,
+(DEPART_LOT_1.qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE REJECT_REPORT.DEPART_LOT_ID = DEPART_LOT_1.id),0)) as qty_ava,
+CONCAT(EMPLOYEE.first_name,' ', EMPLOYEE.last_name) as employee_name,
+CONCAT(PRODUCT_PART.part_number,'-',PART_REVISION.rev) as incomingreport_partnumber,
+INCOMING_REPORT_1.lot,INCOMING_REPORT_1.po,INCOMING_REPORT_1.line,INCOMING_REPORT_1.packing
+FROM DEPART_LOT_1
+INNER JOIN EMPLOYEE ON DEPART_LOT_1.EMPLOYEE_ID = EMPLOYEE.id
+INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.INCOMING_REPORT_ID = INCOMING_REPORT_1.id
+INNER JOIN PART_REVISION ON INCOMING_REPORT_1.PART_REVISION_ID = PART_REVISION.id
+INNER JOIN PRODUCT_PART ON PART_REVISION.`PRODUCT_PART_ID` = PRODUCT_PART.id
+WHERE DEPART_LOT_1.DEPART_REPORT_ID = departreport_id
+ORDER BY incomingreport_partnumber, DEPART_LOT_1.qty_out DESC;
+END //
+DELIMITER ;*/
     
     // Constants ----------------------------------------------------------------------------------
-    private static final String SQL_FIND_BY_ID =
-            "SELECT *, "
-            + "(SELECT COUNT(DISTINCT(id)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `depart_count`, "
-            + "COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`, "
-            + "qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_REPORT_ID`),0) as `qty_ava`, "
-            + "(SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `qty_total`, "
-            + "DEPART_REPORT_1.id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1) as `depart_open`, "
-            + "DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM REJECT_REPORT) as `departlot_open`, "
-            + "(INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as `open`, "
-            + "(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
-            + "FROM DEPART_REPORT_1 "
-            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT_1.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            + "INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN EMPLOYEE ON DEPART_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
-            + "LEFT JOIN DEPART_LOT_1 ON DEPART_LOT_1.`DEPART_REPORT_ID` = DEPART_REPORT_1.id "
-            + "INNER JOIN EMPLOYEE AS DEPARTLOT_EMPLOYEE ON DEPART_LOT_1.EMPLOYEE_ID = DEPARTLOT_EMPLOYEE.id "
-            + "INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.`INCOMING_REPORT_ID` = INCOMING_REPORT_1.id "
-            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.`PART_REVISION_ID` = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.`PRODUCT_PART_ID` = PRODUCT_PART.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "INNER JOIN COMPANY AS PRODUCTPART_COMPANY ON PRODUCT_PART.`COMPANY_ID` = PRODUCTPART_COMPANY.id "
-            + "GROUP BY DEPART_LOT_1.id "
-            + "HAVING DEPART_REPORT_1.id = ? "
-            + "ORDER BY DEPART_LOT_1.id DESC ";
-    private static final String SQL_LIST_OF_DEPARTREPORT = 
-            "SELECT *, "
-            + "(SELECT COUNT(DISTINCT(id)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `depart_count`, "
-            + "COUNT(DISTINCT(INCOMING_REPORT_1.id)) as `count`, "
-            + "qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_REPORT_ID`),0) as `qty_ava`, "
-            + "(SELECT sum(qty_out - IFNULL((SELECT sum(qty_rej) FROM REJECT_REPORT WHERE DEPART_LOT_1.id = `DEPART_LOT_ID`),0)) FROM DEPART_LOT_1 WHERE DEPART_REPORT_1.id = `DEPART_REPORT_ID`) as `qty_total`, "
-            + "DEPART_REPORT_1.id NOT IN (SELECT DEPART_REPORT_ID FROM DEPART_LOT_1) as `depart_open`, "
-            + "DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM REJECT_REPORT) as `departlot_open`, "
-            + "(INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM DEPART_LOT_1) AND INCOMING_REPORT_1.id NOT IN (SELECT INCOMING_REPORT_ID FROM SCRAP_REPORT_1)) as `open`, "
-            + "(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
-            + "FROM DEPART_REPORT_1 "
-            + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT_1.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
-            + "INNER JOIN COMPANY ON COMPANY_ADDRESS.COMPANY_ID = COMPANY.id "
-            + "INNER JOIN EMPLOYEE ON DEPART_REPORT_1.EMPLOYEE_ID = EMPLOYEE.id "
-            + "LEFT JOIN DEPART_LOT_1 ON DEPART_LOT_1.`DEPART_REPORT_ID` = DEPART_REPORT_1.id "
-            + "INNER JOIN EMPLOYEE AS DEPARTLOT_EMPLOYEE ON DEPART_LOT_1.EMPLOYEE_ID = DEPARTLOT_EMPLOYEE.id "
-            + "INNER JOIN INCOMING_REPORT_1 ON DEPART_LOT_1.`INCOMING_REPORT_ID` = INCOMING_REPORT_1.id "
-            + "INNER JOIN PART_REVISION ON INCOMING_REPORT_1.`PART_REVISION_ID` = PART_REVISION.id "
-            + "INNER JOIN PRODUCT_PART ON PART_REVISION.`PRODUCT_PART_ID` = PRODUCT_PART.id "
-            + "INNER JOIN METAL ON PART_REVISION.BASE_METAL_ID = METAL.id "
-            + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
-            + "INNER JOIN COMPANY AS PRODUCTPART_COMPANY ON PRODUCT_PART.`COMPANY_ID` = PRODUCTPART_COMPANY.id "
-            + "GROUP BY DEPART_LOT_1.id "
-            + "HAVING DEPART_REPORT_1.id = ? "
-            + "ORDER BY DEPART_LOT_1.id DESC ";
+    private final String SQL_getDepartLot =
+            "CALL getDepartLot(?)";
+    private final String SQL_listDepartLot = 
+            "CALL listDepartLot(?)";
     
     // Vars ---------------------------------------------------------------------------------------
     private DAOFactory daoFactory;
@@ -112,7 +84,7 @@ ORDER BY DEPART_LOT_1.id DESC
     // Actions ------------------------------------------------------------------------------------
     @Override
     public DepartLot_1 find(Integer id) throws DAOException {
-        return find(SQL_FIND_BY_ID, id);
+        return find(SQL_getDepartLot, id);
     }
     
     /**
@@ -132,8 +104,7 @@ ORDER BY DEPART_LOT_1.id DESC
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                depart_lot = map("DEPART_LOT_1.", "DEPART_REPORT_1.", "COMPANY_ADDRESS.", "COMPANY.", "EMPLOYEE.", "DEPARTLOT_EMPLOYEE.",
-                        "INCOMING_REPORT_1.", "PART_REVISION.", "PRODUCT_PART.", "METAL.", "SPECIFICATION.", resultSet);
+                depart_lot = map(resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -144,6 +115,10 @@ ORDER BY DEPART_LOT_1.id DESC
 
     @Override
     public List<DepartLot_1> list(DepartReport_1 depart_report) throws IllegalArgumentException {
+        if (depart_report.getId() == null) {
+            throw new IllegalArgumentException("DepartReport_1 is not created yet, the DepartReport_1 ID is null.");
+        }
+        
         List<DepartLot_1> depart_lot = new ArrayList<>();
         
         Object[] values = {
@@ -152,12 +127,11 @@ ORDER BY DEPART_LOT_1.id DESC
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_OF_DEPARTREPORT, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_listDepartLot, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                depart_lot.add(map("DEPART_LOT_1.", "DEPART_REPORT_1.", "COMPANY_ADDRESS.", "COMPANY.", "EMPLOYEE.", "DEPARTLOT_EMPLOYEE.",
-                        "INCOMING_REPORT_1.", "PART_REVISION.", "PRODUCT_PART.", "METAL.", "SPECIFICATION.", resultSet));
+                depart_lot.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -167,12 +141,7 @@ ORDER BY DEPART_LOT_1.id DESC
     }
 
     @Override
-    public List<DepartLot_1> list(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<DepartLot_1> listAva(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
+    public List<DepartLot_1> searchAva(Integer departreport_id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -195,33 +164,32 @@ ORDER BY DEPART_LOT_1.id DESC
 
     /**
      * Map the current row of the given ResultSet to an PartRevision.
-     * @param departlot_label
-     * @param departreport_label
-     * @param companyaddress_label
-     * @param company_label
-     * @param employee_label
-     * @param departlot_employee
-     * @param incomingreport_label
-     * @param partrevision_label
-     * @param productpart_label
-     * @param metal_label
-     * @param specification_label
      * @param resultSet The ResultSet of which the current row is to be mapped to an PartRevision.
      * @return The mapped PartRevision from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static DepartLot_1 map(String departlot_label, String departreport_label, String companyaddress_label, String company_label, String employee_label,
-            String departlot_employee, String incomingreport_label, String partrevision_label, String productpart_label, String metal_label, String specification_label, ResultSet resultSet) throws SQLException{
+    public static DepartLot_1 map(ResultSet resultSet) throws SQLException{
         DepartLot_1 depart_lot = new DepartLot_1();
-        depart_lot.setId(resultSet.getInt(String.format("%s%s", departlot_label, "id")));
-        depart_lot.setDate(resultSet.getDate(String.format("%s%s", departlot_label, "date")));
-        depart_lot.setQty_out(resultSet.getInt(String.format("%s%s", departlot_label, "qty_out")));
-        depart_lot.setComments(resultSet.getString(String.format("%s%s", departlot_label, "comments")));
-        depart_lot.setOpen(resultSet.getBoolean(String.format("%s", "departlot_open")));
-        depart_lot.setEmployee(EmployeeDAOJDBC.map(departlot_employee, resultSet));
-        depart_lot.setDepart_report(DepartReport_1DAOJDBC.map(departreport_label, companyaddress_label, company_label, employee_label, resultSet));
-        depart_lot.setIncoming_report(IncomingReport_1DAOJDBC.map(incomingreport_label, employee_label, partrevision_label, productpart_label,
-                metal_label, specification_label, company_label, resultSet));
+        depart_lot.setId(resultSet.getInt("DEPART_LOT_1.id"));
+        depart_lot.setEmployee_id(resultSet.getInt("EMPLOYEE_ID"));
+        depart_lot.setDepartreport_id(resultSet.getInt("DEPART_REPORT_ID"));
+        depart_lot.setIncomingreport_id(resultSet.getInt("INCOMING_REPORT_ID"));
+        depart_lot.setDate(resultSet.getDate("DEPART_LOT_1.date"));
+        depart_lot.setQty_out(resultSet.getInt("DEPART_LOT_1.qty_out"));
+        depart_lot.setComments(resultSet.getString("DEPART_LOT_1.comments"));
+        
+        //CALCULATED VALUES
+        depart_lot.setQty_ava(resultSet.getInt("qty_ava"));
+        depart_lot.setOpen(resultSet.getBoolean("open"));
+        
+        //INNER JOINS
+        depart_lot.setEmployee_name(resultSet.getString("employee_name"));
+        depart_lot.setIncomingreport_partnumber(resultSet.getString("incomingreport_partnumber"));
+        depart_lot.setIncomingreport_lot(resultSet.getString("INCOMING_REPORT_1.lot"));
+        depart_lot.setIncomingreport_po(resultSet.getString("INCOMING_REPORT_1.po"));
+        depart_lot.setIncomingreport_line(resultSet.getString("INCOMING_REPORT_1.line"));
+        System.out.println(resultSet.getString("INCOMING_REPORT_1.packing"));
+        depart_lot.setIncomingreport_packing(resultSet.getString("INCOMING_REPORT_1.packing"));
         return depart_lot;
     }
 }

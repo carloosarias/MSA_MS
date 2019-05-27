@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DepartReportFX_1">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DepartReportFX_1">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -41,13 +41,13 @@
                      <children>
                         <TableView fx:id="departreport_tableview" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                            <columns>
-                              <TableColumn fx:id="reportid_column" editable="false" minWidth="-Infinity" prefWidth="75.0" resizable="false" text="REMISIÓN" />
+                              <TableColumn fx:id="reportid_column" editable="false" minWidth="-Infinity" prefWidth="75.0" resizable="false" text="#Remisión" />
                               <TableColumn fx:id="date_column" editable="false" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Fecha" />
                               <TableColumn fx:id="employee_column" editable="false" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Empleado" />
                               <TableColumn fx:id="client_column" editable="false" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
                               <TableColumn fx:id="companyaddress_column" minWidth="-Infinity" prefWidth="200.0" text="Dirección de Envío" />
-                              <TableColumn fx:id="qtytotal_column" minWidth="-Infinity" prefWidth="100.0" text="Cant. Total" />
-                              <TableColumn fx:id="count_column" minWidth="-Infinity" prefWidth="100.0" text="Cant. Bultos" />
+                              <TableColumn fx:id="count_column" minWidth="-Infinity" prefWidth="100.0" text="Cantd. Bultos" />
+                              <TableColumn fx:id="qtytotal_column" minWidth="-Infinity" prefWidth="100.0" text="Cantd. Total" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" />
@@ -438,8 +438,17 @@
                            <columns>
                               <TableColumn fx:id="date_column2" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
                               <TableColumn fx:id="employee_column2" minWidth="-Infinity" prefWidth="120.0" text="Empleado" />
-                              <TableColumn fx:id="details_column" minWidth="-Infinity" prefWidth="300.0" text="Detalles de Material" />
-                              <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="100.0" text="Cant. Remisión" />
+                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Detalles de Lote">
+                                 <columns>
+                                    <TableColumn fx:id="incomingreportid_column" minWidth="-Infinity" prefWidth="75.0" text="#Reciba" />
+                                    <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="#Parte" />
+                                    <TableColumn fx:id="lot_column" minWidth="-Infinity" prefWidth="120.0" text="#Lote" />
+                                    <TableColumn fx:id="po_column" minWidth="-Infinity" prefWidth="75.0" text="#PO" />
+                                    <TableColumn fx:id="line_column" minWidth="-Infinity" prefWidth="75.0" text="#Line/Rel" />
+                                    <TableColumn fx:id="packing_column" minWidth="-Infinity" prefWidth="75.0" text="#Packing" />
+                                 </columns>
+                              </TableColumn>
+                              <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="100.0" text="Cantd. Enviada" />
                               <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
                            </columns>
                            <GridPane.margin>

@@ -16,14 +16,24 @@ public class DepartLot_1 implements Serializable{
     
     // Properties ---------------------------------------------------------------------------------
     private Integer id;
-    private Employee employee;
-    private DepartReport_1 depart_report;
-    private IncomingReport_1 incoming_report;
+    private Integer employee_id;
+    private Integer departreport_id;
+    private Integer incomingreport_id;
     private Date date;
     private Integer qty_out;
-    private Integer qty_ava;
     private String comments;
-    private boolean open;
+    
+    //CALCULATED VALUES
+    private Integer qty_ava;    //qty_out - sum(qty_scrap)
+    private boolean open;       //departlot_id not in scrapreport
+    
+    //INNER JOINS
+    private String employee_name;
+    private String incomingreport_partnumber;
+    private String incomingreport_lot;
+    private String incomingreport_po;
+    private String incomingreport_line;
+    private String incomingreport_packing;
     
     // Getters/setters ----------------------------------------------------------------------------
     public Integer getId() {
@@ -33,31 +43,31 @@ public class DepartLot_1 implements Serializable{
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public Employee getEmployee() {
-        return employee;
+    
+    public Integer getEmployee_id() {
+        return employee_id;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployee_id(Integer employee_id) {
+        this.employee_id = employee_id;
     }
 
-    public IncomingReport_1 getIncoming_report() {
-        return incoming_report;
+    public Integer getDepartreport_id() {
+        return departreport_id;
     }
 
-    public void setIncoming_report(IncomingReport_1 incoming_report) {
-        this.incoming_report = incoming_report;
+    public void setDepartreport_id(Integer departreport_id) {
+        this.departreport_id = departreport_id;
     }
 
-    public DepartReport_1 getDepart_report() {
-        return depart_report;
+    public Integer getIncomingreport_id() {
+        return incomingreport_id;
     }
 
-    public void setDepart_report(DepartReport_1 depart_report) {
-        this.depart_report = depart_report;
+    public void setIncomingreport_id(Integer incomingreport_id) {
+        this.incomingreport_id = incomingreport_id;
     }
-
+    
     public Date getDate() {
         return date;
     }
@@ -74,20 +84,21 @@ public class DepartLot_1 implements Serializable{
         this.qty_out = qty_out;
     }
     
-    public Integer getQty_ava() {
-        return qty_ava;
-    }
-
-    public void setQty_ava(Integer qty_ava) {
-        this.qty_ava = qty_ava;
-    }
-    
     public String getComments() {
         return comments;
     }
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+    
+    //CALCULATED VALUES
+    public Integer getQty_ava() {
+        return qty_ava;
+    }
+
+    public void setQty_ava(Integer qty_ava) {
+        this.qty_ava = qty_ava;
     }
     
     public boolean isOpen() {
@@ -98,6 +109,54 @@ public class DepartLot_1 implements Serializable{
         this.open = open;
     }
     
+    //INNER JOINS
+    public String getEmployee_name() {
+        return employee_name;
+    }
+
+    public void setEmployee_name(String employee_name) {
+        this.employee_name = employee_name;
+    }
+
+    public String getIncomingreport_partnumber() {
+        return incomingreport_partnumber;
+    }
+
+    public void setIncomingreport_partnumber(String incomingreport_partnumber) {
+        this.incomingreport_partnumber = incomingreport_partnumber;
+    }
+    
+    public String getIncomingreport_lot() {
+        return incomingreport_lot;
+    }
+
+    public void setIncomingreport_lot(String incomingreport_lot) {
+        this.incomingreport_lot = incomingreport_lot;
+    }
+
+    public String getIncomingreport_po() {
+        return incomingreport_po;
+    }
+
+    public void setIncomingreport_po(String incomingreport_po) {
+        this.incomingreport_po = incomingreport_po;
+    }
+
+    public String getIncomingreport_line() {
+        return incomingreport_line;
+    }
+
+    public void setIncomingreport_line(String incomingreport_line) {
+        this.incomingreport_line = incomingreport_line;
+    }
+
+    public String getIncomingreport_packing() {
+        return incomingreport_packing;
+    }
+
+    public void setIncomingreport_packing(String incomingreport_packing) {
+        this.incomingreport_packing = incomingreport_packing;
+    }
     // Object overrides ---------------------------------------------------------------------------
     
     /**
@@ -129,7 +188,7 @@ public class DepartLot_1 implements Serializable{
      */
     @Override
     public String toString() {
-        return String.format("%s %s",
-                depart_report.toString(), incoming_report.toString());
+        return String.format("Reciba#%d Parte#%s || Remisión#%d Qty.%d",
+                incomingreport_id, incomingreport_partnumber, departreport_id, qty_out);
     }
 }
