@@ -24,7 +24,7 @@
       <RowConstraints vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE">
+      <TabPane minHeight="517.0" minWidth="1025.0" tabClosingPolicy="UNAVAILABLE">
          <tabs>
             <Tab text="Reportes de Remisión">
                <content>
@@ -41,21 +41,21 @@
                      <children>
                         <TableView fx:id="departreport_tableview" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                            <columns>
-                              <TableColumn fx:id="reportid_column" editable="false" minWidth="-Infinity" prefWidth="75.0" resizable="false" text="#Remisión" />
+                              <TableColumn fx:id="reportid_column" editable="false" minWidth="-Infinity" prefWidth="75.0" resizable="false" text="Remisión#" />
                               <TableColumn fx:id="date_column" editable="false" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Fecha" />
-                              <TableColumn fx:id="employee_column" editable="false" minWidth="-Infinity" prefWidth="120.0" resizable="false" text="Empleado" />
+                              <TableColumn fx:id="employee_column" editable="false" minWidth="-Infinity" prefWidth="100.0" resizable="false" text="Empleado" />
                               <TableColumn fx:id="client_column" editable="false" minWidth="-Infinity" prefWidth="200.0" text="Cliente" />
                               <TableColumn fx:id="companyaddress_column" minWidth="-Infinity" prefWidth="200.0" text="Dirección de Envío" />
-                              <TableColumn fx:id="count_column" minWidth="-Infinity" prefWidth="100.0" text="Cantd. Bultos" />
-                              <TableColumn fx:id="qtytotal_column" minWidth="-Infinity" prefWidth="100.0" text="Cantd. Total" />
+                              <TableColumn fx:id="count_column" minWidth="-Infinity" prefWidth="50.0" text="Bultos" />
+                              <TableColumn fx:id="qtytotal_column" minWidth="-Infinity" prefWidth="75.0" text="Qty. Total" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" />
                            </GridPane.margin>
                         </TableView>
                         <Accordion GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
-                          <panes>
-                            <TitledPane animated="false" text="Filtros de Busqueda">
+                           <panes>
+                              <TitledPane animated="false" text="Filtros de Busqueda">
                                  <content>
                                     <GridPane>
                                        <columnConstraints>
@@ -124,7 +124,7 @@
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </GridPane.margin>
                                                 </ComboBox>
-                                                <TextField fx:id="id_field1" prefWidth="75.0" promptText="RECIBA" GridPane.columnIndex="3">
+                                                <TextField fx:id="id_field1" prefWidth="75.0" promptText="Reciba#" GridPane.columnIndex="3">
                                                    <GridPane.margin>
                                                       <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                                    </GridPane.margin>
@@ -186,7 +186,7 @@
                                     </GridPane>
                                  </content>
                               </TitledPane>
-                            <TitledPane animated="false" text="Crear Reporte de Remisión">
+                              <TitledPane animated="false" text="Crear Reporte de Remisión">
                                  <content>
                                     <GridPane>
                                        <columnConstraints>
@@ -215,20 +215,21 @@
                                           </ComboBox>
                                        </children>
                                     </GridPane>
-                                 </content></TitledPane>
-                          </panes>
+                                 </content>
+                              </TitledPane>
+                           </panes>
                            <GridPane.margin>
                               <Insets left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </Accordion>
                         <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
-                          <columnConstraints>
+                           <columnConstraints>
                               <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints vgrow="SOMETIMES" />
-                          </rowConstraints>
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints vgrow="SOMETIMES" />
+                           </rowConstraints>
                            <children>
                               <Button fx:id="delete_button1" disable="true" mnemonicParsing="false" text="Eliminar Selección" GridPane.columnIndex="1">
                                  <GridPane.margin>
@@ -275,8 +276,8 @@
                      </rowConstraints>
                      <children>
                         <Accordion>
-                          <panes>
-                            <TitledPane animated="false" text="Registrar Remisión de Material">
+                           <panes>
+                              <TitledPane animated="false" text="Registrar Remisión de Material">
                                  <content>
                                     <GridPane>
                                        <columnConstraints>
@@ -429,27 +430,24 @@
                                     </GridPane>
                                  </content>
                               </TitledPane>
-                          </panes>
+                           </panes>
                            <GridPane.margin>
                               <Insets left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </Accordion>
                         <TableView fx:id="departlot_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                            <columns>
+                              <TableColumn fx:id="counter_column" minWidth="-Infinity" prefWidth="40.0" text="#" />
                               <TableColumn fx:id="date_column2" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
-                              <TableColumn fx:id="employee_column2" minWidth="-Infinity" prefWidth="120.0" text="Empleado" />
-                              <TableColumn minWidth="-1.0" prefWidth="-1.0" text="Detalles de Lote">
-                                 <columns>
-                                    <TableColumn fx:id="incomingreportid_column" minWidth="-Infinity" prefWidth="75.0" text="#Reciba" />
-                                    <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="120.0" text="#Parte" />
-                                    <TableColumn fx:id="lot_column" minWidth="-Infinity" prefWidth="120.0" text="#Lote" />
-                                    <TableColumn fx:id="po_column" minWidth="-Infinity" prefWidth="75.0" text="#PO" />
-                                    <TableColumn fx:id="line_column" minWidth="-Infinity" prefWidth="75.0" text="#Line/Rel" />
-                                    <TableColumn fx:id="packing_column" minWidth="-Infinity" prefWidth="75.0" text="#Packing" />
-                                 </columns>
-                              </TableColumn>
-                              <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="100.0" text="Cantd. Enviada" />
-                              <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
+                              <TableColumn fx:id="employee_column2" minWidth="-Infinity" prefWidth="100.0" text="Empleado" />
+                              <TableColumn fx:id="incomingreportid_column" minWidth="-Infinity" prefWidth="75.0" text="Reciba#" />
+                              <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="100.0" text="Núm de Parte" />
+                              <TableColumn fx:id="lot_column" minWidth="-Infinity" prefWidth="100.0" text="Núm de Lote" />
+                              <TableColumn fx:id="po_column" minWidth="-Infinity" prefWidth="75.0" text="PO#" />
+                              <TableColumn fx:id="line_column" minWidth="-Infinity" prefWidth="75.0" text="Line/Rel" />
+                              <TableColumn fx:id="packing_column" minWidth="-Infinity" prefWidth="75.0" text="Packing#" />
+                              <TableColumn fx:id="quantity_column" minWidth="-Infinity" prefWidth="75.0" text="Qty." />
+                              <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="200.0" text="Comentarios" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="4.0" left="4.0" right="4.0" />
