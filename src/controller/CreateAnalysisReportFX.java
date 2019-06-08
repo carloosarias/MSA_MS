@@ -58,7 +58,7 @@ public class CreateAnalysisReportFX implements Initializable {
         reportdate_picker.setValue(LocalDate.now());
         setDatePicker(reportdate_picker);
         
-        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list(true)));
+        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
         analysistype_combo.setItems(FXCollections.observableArrayList(msabase.getAnalysisTypeDAO().list(true)));
         
         save_button.setOnAction((ActionEvent) -> {

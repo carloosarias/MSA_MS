@@ -92,6 +92,30 @@ AND INCOMING_REPORT_1.line LIKE line
 AND qty_ava > 0
 ORDER BY DEPART_LOT_1.id;
 END //
+DROP PROCEDURE IF EXISTS createDepartLot //
+CREATE PROCEDURE createDepartLot (IN departreport_id INT(32), IN employee_id INT(32), IN incomingreport_id INT(32),
+IN `date` DATE, IN qty_out INT(32), IN comments VARCHAR(32))
+BEGIN
+INSERT INTO DEPART_LOT_1 (DEPART_LOT_1.DEPART_REPORT_ID, DEPART_LOT_1.EMPLOYEE_ID, DEPART_LOT_1.INCOMING_REPORT_ID, DEPART_LOT_1.`date`, DEPART_LOT_1.qty_out, DEPART_LOT_1.comments)
+VALUES(departreport_id, employee_id, incomingreport_id, `date`, qty_out, comments);
+END //
+DROP PROCEDURE IF EXISTS updateDepartLot //
+CREATE PROCEDURE updateDepartLot(IN departlot_id INT(32), IN qty_out INT(32), IN comments VARCHAR(256))
+BEGIN
+UPDATE DEPART_LOT_1 
+SET DEPART_LOT_1.qty_out = qty_out, DEPART_LOT_1.comments = comments
+WHERE DEPART_LOT_1.id = departlot_id
+AND DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM REJECT_REPORT)
+AND DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM INVOICE_ITEM);
+END //
+DROP PROCEDURE IF EXISTS deleteDepartLot //
+CREATE PROCEDURE deleteDepartLot(IN departlot_id INT(32))
+BEGIN
+DELETE FROM DEPART_LOT_1 
+WHERE DEPART_LOT_1.ID = departlot_id 
+AND DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM REJECT_REPORT)
+AND DEPART_LOT_1.id NOT IN (SELECT DEPART_LOT_ID FROM INVOICE_ITEM);
+END //
 DELIMITER ;*/
     
     // Constants ----------------------------------------------------------------------------------
@@ -285,6 +309,8 @@ DELIMITER ;*/
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
                 throw new DAOException("Updating DepartLot_1 failed, no rows affected.");
+            }else{
+                depart_lot.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);

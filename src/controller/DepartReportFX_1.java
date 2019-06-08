@@ -5,10 +5,23 @@
  */
 package controller;
 
+import com.itextpdf.forms.PdfAcroForm;
+import com.itextpdf.forms.fields.PdfFormField;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
+import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -30,12 +43,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import model.Company;
 import model.CompanyAddress;
+import model.CompanyContact;
 import model.DepartLot_1;
 import model.DepartReport_1;
 import model.Employee;
 import model.IncomingReport_1;
 import msa_ms.MainApp;
 import static msa_ms.MainApp.getFormattedDate;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 
 /**
  * FXML Controller class
@@ -95,8 +110,6 @@ public class DepartReportFX_1 implements Initializable {
     @FXML
     private Button pdf_button1;
     @FXML
-    private ComboBox<String> pdf_combo1;
-    @FXML
     private Tab details_tab;
     @FXML
     private TextField packing_field3;
@@ -120,8 +133,6 @@ public class DepartReportFX_1 implements Initializable {
     private DatePicker start_datepicker3;
     @FXML
     private DatePicker end_datepicker3;
-    @FXML
-    private ComboBox<Company> company_combo3;
     @FXML
     private TextField id_field3;
     @FXML
@@ -182,9 +193,22 @@ public class DepartReportFX_1 implements Initializable {
             clearSearchFields();
         });
         
+        start_datepicker3.setOnAction((ActionEvent) -> {
+            updateIncomingReportCombo();
+        });
+        end_datepicker3.setOnAction(start_datepicker3.getOnAction());
+        id_field3.setOnAction(start_datepicker3.getOnAction());
+        packing_field3.setOnAction(start_datepicker3.getOnAction());
+        po_field3.setOnAction(start_datepicker3.getOnAction());
+        line_field3.setOnAction(start_datepicker3.getOnAction());
+        partnumber_field3.setOnAction(start_datepicker3.getOnAction());
+        lot_field3.setOnAction(start_datepicker3.getOnAction());
+        rev_field3.setOnAction(start_datepicker3.getOnAction());
+        
         //CHECK IF EDITING ALLOWED ON TABLE ITEM SELECTION
         departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport_1> observable, DepartReport_1 oldValue, DepartReport_1 newValue) -> {
             updateDepartLotTable();
+            updateIncomingReportCombo();
             try{
                 departreport_open.setValue(newValue.isOpen());
             }catch(Exception e){
@@ -211,7 +235,7 @@ public class DepartReportFX_1 implements Initializable {
         //LIMIT MAX-QTY ON COMBO ITEM SELECTION
         incomingreport_combo3.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends IncomingReport_1> observable, IncomingReport_1 oldValue, IncomingReport_1 newValue) -> {
             try{
-                qty_out.setValue(null);
+                qty_out.setValue(newValue.getQty_ava());
                 qtyout_field3.setText(newValue.getQty_ava()+"");
             }catch(Exception e){
                 qty_out.setValue(null);
@@ -219,11 +243,38 @@ public class DepartReportFX_1 implements Initializable {
                 qtyout_field3.clear();
             }
         });
+        
+        save_button3.setOnAction((ActionEvent) -> {
+            try{
+                qty_out.setValue(null);
+                qtyout_field3.setStyle(null);
+                qty_out.setValue(Integer.parseInt(qtyout_field3.getText().trim()));
+                if(qty_out.getValue() < 1 || qty_out.getValue() > incomingreport_combo3.getValue().getQty_ava()) throw new Exception();
+            }catch(Exception e){
+                qty_out.setValue(null);
+                qtyout_field3.setStyle("-fx-background-color: lightpink;");
+                qtyout_field3.requestFocus();
+                qtyout_field3.selectAll();
+                return;
+            }
+            createDepartLot();
+            updateIncomingReportCombo();
+            updateDepartLotTable();
+            qty_out.setValue(null);
+        });
+                
+        qtyout_field3.disableProperty().bind(incomingreport_combo3.getSelectionModel().selectedItemProperty().isNull());
+        save_button3.disableProperty().bind(incomingreport_combo3.getSelectionModel().selectedItemProperty().isNull());
+        incomingreport_combo3.disableProperty().bind(Bindings.size(incomingreport_combo3.getItems()).isEqualTo(0));
         details_tab.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
         departreport_tableview.editableProperty().bind(departreport_open);
         companyaddress_combo2.disableProperty().bind(Bindings.size(companyaddress_combo2.getItems()).isEqualTo(0));
         save_button2.disableProperty().bind(companyaddress_combo2.valueProperty().isNull());
         delete_button1.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull().or(departreport_open.not()));
+        pdf_button1.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        pdf_button1.setOnAction((ActionEvent) -> {
+            buildPDF(departlot_tableview.getItems());
+        });
     }
     
     public void setDepartReportTable(){
@@ -275,6 +326,32 @@ public class DepartReportFX_1 implements Initializable {
         po_field1.clear();
         line_field1.clear();
     }
+    public void createDepartLot() {
+        DepartLot_1 depart_lot = new DepartLot_1();
+        depart_lot.setDate(DAOUtil.toUtilDate(LocalDate.now()));
+        depart_lot.setEmployee_id(MainApp.current_employee.getId());
+        depart_lot.setIncomingreport_id(incomingreport_combo3.getValue().getId());
+        depart_lot.setDepartreport_id(departreport_tableview.getSelectionModel().getSelectedItem().getId());
+        depart_lot.setComments("");
+        depart_lot.setQty_out(Integer.parseInt(qtyout_field3.getText()));
+        
+        msabase.getDepartLot_1DAO().create(depart_lot);
+    }
+    
+    public void updateIncomingReportCombo() {
+        Company company = departreport_tableview.getSelectionModel().getSelectedItem().getCompany_address().getCompany();
+        if (company.getId() == null){
+            incomingreport_combo3.getItems().clear();
+            return;
+        }
+        try{
+            incomingreport_combo3.getItems().setAll(msabase.getIncomingReport_1DAO().listAva(Integer.parseInt(id_field3.getText().trim()), DAOUtil.toUtilDate(start_datepicker3.getValue()), DAOUtil.toUtilDate(end_datepicker3.getValue()), company, 
+                    partnumber_field3.getText(), rev_field3.getText(), lot_field3.getText(), packing_field3.getText(), po_field3.getText(), line_field3.getText()));
+        }catch(Exception e){
+            incomingreport_combo3.getItems().setAll(msabase.getIncomingReport_1DAO().listAva(null, DAOUtil.toUtilDate(start_datepicker3.getValue()), DAOUtil.toUtilDate(end_datepicker3.getValue()), company, 
+                partnumber_field3.textProperty().getValue(), rev_field3.textProperty().getValue(), lot_field3.textProperty().getValue(), packing_field3.textProperty().getValue(), po_field3.textProperty().getValue(), line_field3.textProperty().getValue()));
+        }
+    }
     
     public void createDepartReport(){
         DepartReport_1 depart_report = new DepartReport_1();
@@ -286,5 +363,100 @@ public class DepartReportFX_1 implements Initializable {
         msabase.getDepartReport_1DAO().create(depart_report);
     }
     
+    public void buildPDF(List<DepartLot_1> departlot_list){
+            try{
+                Path output = Files.createTempFile("RemisionPDF", ".pdf");
+                output.toFile().deleteOnExit();
+                //Instantiating PDFMergerUtility class
+                PDFMergerUtility PDFmerger = new PDFMergerUtility();
+
+                //Setting the destination file
+                PDFmerger.setDestinationFileName(output.toString());
+                int size = 35;
+                int page_offset = 1;
+                int total_pages = divideList(departlot_list, size).size();
+                for(List<DepartLot_1> divided_list : divideList(departlot_list, size)){
+                    PDFmerger.addSource(buildPDF(page_offset, departreport_tableview.getSelectionModel().getSelectedItem(), divided_list, total_pages));
+                    page_offset++;
+                }
+                //Merging the two documents
+                PDFmerger.mergeDocuments();
+                MainApp.openPDF(new File(PDFmerger.getDestinationFileName()));
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+    }
     
+    public List<List<DepartLot_1>> divideList(List<DepartLot_1> arrayList, int size){
+        List<List<DepartLot_1>> dividedList = new ArrayList();
+        for (int start = 0; start < arrayList.size(); start += size) {
+            int end = Math.min(start + size, arrayList.size());
+            List<DepartLot_1> sublist = arrayList.subList(start, end);
+            dividedList.add(sublist);
+        }
+        return dividedList;
+    }
+    
+    private File buildPDF(int page_offset, DepartReport_1 depart_report, List<DepartLot_1> departlot_list, int total_pages) throws Exception{
+
+            Path template = Files.createTempFile("Depart Report Template", ".pdf");
+            template.toFile().deleteOnExit();
+            
+            try (InputStream is = MainApp.class.getClassLoader().getResourceAsStream("template/Depart Report Template.pdf")) {
+                Files.copy(is, template, StandardCopyOption.REPLACE_EXISTING);
+            }
+            
+            Path output = Files.createTempFile("Remision_"+depart_report.getId(), ".pdf");
+            template.toFile().deleteOnExit();
+            
+            PdfDocument pdf = new PdfDocument(
+                new PdfReader(template.toFile()),
+                new PdfWriter(output.toFile())
+            );
+            
+            PdfAcroForm form = PdfAcroForm.getAcroForm(pdf, true);
+            Map<String, PdfFormField> fields = form.getFormFields();
+            fields.get("page_number").setValue(page_offset+" / "+total_pages);
+            fields.get("report_id").setValue(""+depart_report.getId());
+            fields.get("report_date").setValue(depart_report.getDate().toString());
+            fields.get("employee_name").setValue(depart_report.getEmployee().toString());
+            fields.get("client_name").setValue(depart_report.getCompany_address().getCompany().getName());
+            fields.get("client_address").setValue(depart_report.getCompany_address().getAddress());
+            List<CompanyContact> company_contact = msabase.getCompanyContactDAO().list(depart_report.getCompany_address().getCompany(), true);
+            if(company_contact.isEmpty()){
+                fields.get("contact_name").setValue("N/A");
+                fields.get("contact_email").setValue("N/A");
+                fields.get("contact_number").setValue("N/A");
+            }else{
+                fields.get("contact_name").setValue(company_contact.get(0).getName());
+                fields.get("contact_email").setValue(company_contact.get(0).getEmail());
+                fields.get("contact_phone").setValue(company_contact.get(0).getPhone_number());
+            }
+            int current_row = 1;
+            for(DepartLot_1 item : departlot_list){
+                if(current_row > 41) break;
+                int offset = 0;
+                fields.get("part_number"+current_row).setValue(item.getIncomingreport_partnumber());
+                fields.get("process"+current_row).setValue("n/a");
+                fields.get("po_number"+current_row).setValue(item.getIncomingreport_po());
+                fields.get("line_number"+current_row).setValue(item.getIncomingreport_line());
+                fields.get("comments"+current_row).setValue(item.getComments());
+                fields.get("quantity"+current_row).setValue(""+item.getQty_out());
+                fields.get("box_quantity"+current_row).setValue("1");
+                for(String lot_number : item.getIncomingreport_lot().split(",")){
+                    fields.get("lot_number"+(current_row+offset)).setValue(lot_number);
+                    offset++;
+                }
+                current_row += offset;
+            }
+            
+            fields.get("total_quantity").setValue(""+depart_report.getQty_total());
+            fields.get("total_boxquantity").setValue(""+depart_report.getCount());
+            
+            form.flattenFields();
+            pdf.close();
+            
+            return output.toFile();
+    }
 }

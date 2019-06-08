@@ -109,6 +109,8 @@ public class MainApp extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception 
     {
+        
+        
         Locale.setDefault(new Locale("es","ES"));
         df.setMaximumFractionDigits(6);
         TimeZone.setDefault(TimeZone.getTimeZone("CST"));

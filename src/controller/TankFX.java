@@ -87,7 +87,7 @@ public class TankFX implements Initializable {
     }
     
     public void updateTankTable(){
-        tank_tableview.getItems().setAll(msabase.getTankDAO().list(true));
+        tank_tableview.getItems().setAll(msabase.getTankDAO().list());
     }
         
     public void setTankTable(){   

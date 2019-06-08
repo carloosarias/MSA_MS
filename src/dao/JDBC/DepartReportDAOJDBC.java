@@ -28,7 +28,8 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
     
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
+            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box,"
+            +"(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
             +"FROM DEPART_REPORT "
             +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
@@ -39,7 +40,8 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             +"WHERE (DEPART_REPORT.id = ? AND DEPART_REPORT.active = 1) AND DEPART_LOT.active = 1 "
             +"GROUP BY DEPART_REPORT.id DESC";
     private static final String SQL_LIST_ACTIVE = 
-            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
+            "SELECT DEPART_REPORT.*, EMPLOYEE.*, COMPANY.*, COMPANY_ADDRESS.*, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box, "
+            +"(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
             +"FROM DEPART_REPORT "
             +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "
@@ -49,7 +51,8 @@ public class DepartReportDAOJDBC implements DepartReportDAO{
             +"GROUP BY DEPART_REPORT.id "
             +"ORDER BY DEPART_REPORT.id DESC";
     private static final String SQL_LIST_ACTIVE_FILTER = 
-            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box "
+            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box,"
+            +"(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
             +"FROM DEPART_REPORT "
             +"INNER JOIN DEPART_LOT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             +"INNER JOIN EMPLOYEE ON DEPART_REPORT.EMPLOYEE_ID = EMPLOYEE.id "

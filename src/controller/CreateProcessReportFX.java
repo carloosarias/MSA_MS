@@ -69,7 +69,7 @@ public class CreateProcessReportFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list(true)));
+        tank_combo.setItems(FXCollections.observableArrayList(msabase.getTankDAO().list()));
         equipmenttype_combo.setItems(FXCollections.observableArrayList(msabase.getEquipmentTypeDAO().list(true)));
         partnumber_combo.setItems(FXCollections.observableArrayList(msabase.getProductPartDAO().list()));
         reportdate_picker.setValue(LocalDate.now());

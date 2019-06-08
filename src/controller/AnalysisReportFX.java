@@ -173,7 +173,7 @@ public class AnalysisReportFX implements Initializable {
     }
     
     public void updateComboItems(){
-        tank_combo1.getItems().setAll(msabase.getTankDAO().list(true));
+        tank_combo1.getItems().setAll(msabase.getTankDAO().list());
         tank_combo2.itemsProperty().bind(tank_combo1.itemsProperty());
         analysistype_combo1.getItems().setAll(msabase.getAnalysisTypeDAO().list(true));
         analysistype_combo2.itemsProperty().bind(analysistype_combo1.itemsProperty());

@@ -113,7 +113,7 @@ DELIMITER ;
             ResultSet resultSet = statement.executeQuery();
         ) {
             if (resultSet.next()) {
-                specification = map("", resultSet);
+                specification = map(resultSet);
             }
         } catch (SQLException e) {
             throw new DAOException(e);
@@ -124,11 +124,11 @@ DELIMITER ;
     
     @Override 
     public List<Specification> list() throws DAOException {
-        return list(null, null, null);
+        return search(null, null, null);
     }
     
     @Override
-    public List<Specification> list(String specification_number, String specification_name, String process) throws DAOException {
+    public List<Specification> search(String specification_number, String specification_name, String process) throws DAOException {
         List<Specification> specifications = new ArrayList<>();
 
         Object[] values = {
@@ -143,7 +143,7 @@ DELIMITER ;
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
-                specifications.add(map("", resultSet));
+                specifications.add(map(resultSet));
             }
         } catch(SQLException e){
             throw new DAOException(e);
@@ -232,13 +232,13 @@ DELIMITER ;
      * @return The mapped Specification from the current row of the given ResultSet.
      * @throws SQLException If something fails at database level.
      */
-    public static Specification map(String specification_label, ResultSet resultSet) throws SQLException{
+    public static Specification map(ResultSet resultSet) throws SQLException{
         Specification specification = new Specification();
-        specification.setId(resultSet.getInt(specification_label+"id"));
-        specification.setSpecification_number(resultSet.getString(specification_label+"specification_number"));
-        specification.setSpecification_name(resultSet.getString(specification_label+"specification_name"));
-        specification.setProcess(resultSet.getString(specification_label+"process"));
-        specification.setActive(resultSet.getBoolean(specification_label+"active"));
+        specification.setId(resultSet.getInt("SPECIFICATION.id"));
+        specification.setSpecification_number(resultSet.getString("SPECIFICATION.specification_number"));
+        specification.setSpecification_name(resultSet.getString("SPECIFICATION.specification_name"));
+        specification.setProcess(resultSet.getString("SPECIFICATION.process"));
+        specification.setActive(resultSet.getBoolean("SPECIFICATION.active"));
         return specification;
     }
 }

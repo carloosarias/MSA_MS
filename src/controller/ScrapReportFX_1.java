@@ -219,10 +219,10 @@ public class ScrapReportFX_1 implements Initializable {
     
     public void updateScrapReportTable(){
         try{
-            scrapreport_tableview.getItems().setAll(msabase.getScrapReport_1DAO().list(Integer.parseInt(id_field1.getText().trim()), DAOUtil.toUtilDate(start_datepicker1.getValue()), DAOUtil.toUtilDate(end_datepicker1.getValue()), company_combo1.getValue(), 
+            scrapreport_tableview.getItems().setAll(msabase.getScrapReport_1DAO().search(Integer.parseInt(id_field1.getText().trim()), DAOUtil.toUtilDate(start_datepicker1.getValue()), DAOUtil.toUtilDate(end_datepicker1.getValue()), company_combo1.getValue(), 
                     partnumber_field1.getText(), rev_field1.getText(), lot_field1.getText(), packing_field1.getText(), po_field1.getText(), line_field1.getText()));
         }catch(Exception e){
-            scrapreport_tableview.getItems().setAll(msabase.getScrapReport_1DAO().list(null, DAOUtil.toUtilDate(start_datepicker1.getValue()), DAOUtil.toUtilDate(end_datepicker1.getValue()), company_combo1.getValue(), 
+            scrapreport_tableview.getItems().setAll(msabase.getScrapReport_1DAO().search(null, DAOUtil.toUtilDate(start_datepicker1.getValue()), DAOUtil.toUtilDate(end_datepicker1.getValue()), company_combo1.getValue(), 
                 partnumber_field1.getText(), rev_field1.getText(), lot_field1.getText(), packing_field1.getText(), po_field1.getText(), line_field1.getText()));
         }
     }

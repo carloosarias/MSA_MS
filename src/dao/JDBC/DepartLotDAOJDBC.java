@@ -27,7 +27,9 @@ import model.PartRevision;
 public class DepartLotDAOJDBC implements DepartLotDAO {
     // Constants ----------------------------------------------------------------------------------
     private static final String SQL_FIND_BY_ID =
-            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box FROM DEPART_LOT "
+            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box, "
+            +"(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "
+            + "FROM DEPART_LOT "
             + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
             + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
@@ -39,7 +41,9 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             + "INNER JOIN SPECIFICATION ON PART_REVISION.SPECIFICATION_ID = SPECIFICATION.id "
             + "WHERE DEPART_LOT.id = ?";
     private static final String SQL_LIST_DEPART_REPORT = 
-            "SELECT *, SUM(DEPART_LOT.quantity) group_qty, SUM(DEPART_LOT.box_quantity) group_boxqty, total_qty, total_box FROM DEPART_LOT "
+            "SELECT *, SUM(DEPART_LOT.quantity) group_qty, SUM(DEPART_LOT.box_quantity) group_boxqty, total_qty, total_box, "
+            +"(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "            
+            + "FROM DEPART_LOT "
             + "INNER JOIN (SELECT *, SUM(quantity) total_qty, SUM(box_quantity) total_box FROM DEPART_LOT GROUP BY DEPART_REPORT_ID) departlot ON departlot.DEPART_REPORT_ID = DEPART_LOT.DEPART_REPORT_ID "
             + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
@@ -53,7 +57,9 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             + "WHERE DEPART_LOT.DEPART_REPORT_ID = ? AND DEPART_LOT.active = 1 "
             + "GROUP BY DEPART_LOT.id";
     private static final String SQL_LIST_DEPART_REPORT_GROUP = 
-            "SELECT *, SUM(DEPART_LOT.quantity) group_qty, SUM(DEPART_LOT.box_quantity) group_boxqty, total_qty, total_box FROM DEPART_LOT "
+            "SELECT *, SUM(DEPART_LOT.quantity) group_qty, SUM(DEPART_LOT.box_quantity) group_boxqty, total_qty, total_box, "
+            +"(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "            
+            + "FROM DEPART_LOT "
             + "INNER JOIN (SELECT *, SUM(quantity) total_qty, SUM(box_quantity) total_box FROM DEPART_LOT GROUP BY DEPART_REPORT_ID) departlot ON departlot.DEPART_REPORT_ID = DEPART_LOT.DEPART_REPORT_ID "
             + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
@@ -67,7 +73,9 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             + "WHERE DEPART_LOT.DEPART_REPORT_ID = ? AND DEPART_LOT.active = 1 "
             + "GROUP BY DEPART_LOT.PART_REVISION_ID, DEPART_LOT.po_number, DEPART_LOT.line_number, DEPART_LOT.process, DEPART_LOT.comments";
     private static final String SQL_LIST_OF_LOT_NUMBER_ORDER_BY_ID =
-            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box FROM DEPART_LOT "
+            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box, "
+            +"(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "            
+            + "FROM DEPART_LOT "
             + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
             + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "
@@ -80,7 +88,9 @@ public class DepartLotDAOJDBC implements DepartLotDAO {
             + "WHERE DEPART_LOT.lot_number = ? "
             + "ORDER BY DEPART_LOT.id";
     private static final String SQL_LIST_PENDING = 
-            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box FROM DEPART_LOT "
+            "SELECT *, SUM(DEPART_LOT.quantity) total_qty, SUM(DEPART_LOT.box_quantity) total_box, "
+            +"(COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM DEPART_REPORT_1) AND COMPANY_ADDRESS.id NOT IN (SELECT COMPANY_ADDRESS_ID FROM ORDER_PURCHASE)) as `add_open` "            
+            + "FROM DEPART_LOT "
             + "INNER JOIN DEPART_REPORT ON DEPART_LOT.DEPART_REPORT_ID = DEPART_REPORT.id "
             + "INNER JOIN COMPANY AS departreport_company ON DEPART_REPORT.COMPANY_ID = departreport_company.id "
             + "INNER JOIN COMPANY_ADDRESS ON DEPART_REPORT.COMPANY_ADDRESS_ID = COMPANY_ADDRESS.id "

@@ -56,29 +56,25 @@ public interface DepartLot_1DAO  {
             String lot, String packing, String po, String line) throws IllegalArgumentException;
     
     /**
-     * Create the given DepartLot_1 in the database. 
-     * and the DepartLot_1 ID must be null, otherwise it will throw IllegalArgumentException. 
-     * After creating, the DAO will set the obtained ID in the given DepartLot_1.
-     * @param depart_lot The DepartLot_1 to be created.
-     * @throws IllegalArgumentException If the DepartLot_1 ID is not null.
-     * @throws DAOException If something fails at database level.
-     */    
+     * Create New DepartLot_1.
+     * @param depart_lot
+     * @throws IllegalArgumentException
+     * @throws DAOException 
+     */ 
     public void create(DepartLot_1 depart_lot) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given DepartLot_1 in the database.
-     * The DepartLot_1 ID must not be null otherwise it will throw IllegalArgumentException.
-     * @param depart_lot The DepartLot_1 to be updated in the database.
-     * @throws IllegalArgumentException If the DepartLot_1 ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
+     * Update DepartLot_1.
+     * @param depart_lot
+     * @throws IllegalArgumentException
+     * @throws DAOException
+     */       
     public void update(DepartLot_1 depart_lot) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given DepartLot_1 from the database. After deleting,
-     * the DAO will set the ID of the given DepartLot_1 to null.
-     * @param depart_lot The DepartLot_1 to be deleted from the database.
-     * @throws DAOException If something fails at database level.
-     */    
+     * Delete DepartLot_1 if not locked.
+     * @param depart_lot
+     * @throws DAOException 
+     */
     public void delete(DepartLot_1 depart_lot) throws DAOException;
 }

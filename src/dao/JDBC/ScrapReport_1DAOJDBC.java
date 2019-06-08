@@ -115,7 +115,7 @@ public class ScrapReport_1DAOJDBC implements ScrapReport_1DAO {
     }
     
     @Override
-    public List<ScrapReport_1> list(Integer id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
+    public List<ScrapReport_1> search(Integer incomingreport_id, Date start_date, Date end_date, Company company, String part_number, String rev, String lot, String packing, String po, String line) throws IllegalArgumentException {
         if(company == null) company = new Company();
         if(start_date == null) start_date = DAOUtil.toUtilDate(LocalDate.MIN);
         if(end_date == null) end_date = DAOUtil.toUtilDate(LocalDate.now().plusDays(1));
@@ -123,8 +123,8 @@ public class ScrapReport_1DAOJDBC implements ScrapReport_1DAO {
         List<ScrapReport_1> scrap_report = new ArrayList<>();
         
         Object[] values = {
-            id,
-            id,
+            incomingreport_id,
+            incomingreport_id,
             start_date,
             end_date,
             company.getId(),

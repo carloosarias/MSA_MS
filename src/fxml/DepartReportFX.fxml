@@ -21,14 +21,13 @@
    <children>
       <TabPane tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab text="Historial de Remisiones">
+            <Tab text="Remisiones">
                <content>
                   <GridPane>
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
                      </rowConstraints>
@@ -49,31 +48,11 @@
                               <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                            </GridPane.margin>
                         </TableView>
-                        <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
-                           <GridPane.margin>
-                              <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                           </GridPane.margin>
-                        </Separator>
-                        <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+                        <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" percentWidth="0.0" />
                               <ColumnConstraints hgrow="SOMETIMES" />
                            </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                              <Button fx:id="add_button" mnemonicParsing="false" text="Nuevo Reporte">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Button>
-                              <Button fx:id="edit_button" disable="true" mnemonicParsing="false" text="Agregar Lote" GridPane.columnIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                 </GridPane.margin>
-                              </Button>
-                           </children>
                         </GridPane>
                      </children>
                   </GridPane>
@@ -91,102 +70,6 @@
                      <children>
                         <TabPane tabClosingPolicy="UNAVAILABLE">
                            <tabs>
-                              <Tab text="Detalles Por Número de Parte">
-                                 <content>
-                                    <GridPane>
-                                       <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                       </columnConstraints>
-                                       <rowConstraints>
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       </rowConstraints>
-                                       <children>
-                                          <TableView fx:id="departlot_tableview1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                             <columns>
-                                                <TableColumn fx:id="partnumber_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
-                                                <TableColumn fx:id="quantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cantidad" />
-                                                <TableColumn fx:id="boxquantity_column1" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
-                                             </columns>
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </TableView>
-                                          <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
-                                            <columnConstraints>
-                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                            </columnConstraints>
-                                            <rowConstraints>
-                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                            </rowConstraints>
-                                             <children>
-                                                <Button fx:id="pdf_button1" mnemonicParsing="false" text="Abrir en PDF">
-                                                   <GridPane.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </GridPane.margin>
-                                                </Button>
-                                             </children>
-                                          </GridPane>
-                                          <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </Separator>
-                                       </children>
-                                    </GridPane>
-                                 </content>
-                              </Tab>
-                              <Tab text="Detalles por PO# / Línea">
-                                 <content>
-                                    <GridPane>
-                                       <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                       </columnConstraints>
-                                       <rowConstraints>
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       </rowConstraints>
-                                       <children>
-                                          <TableView fx:id="departlot_tableview2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                             <columns>
-                                                <TableColumn fx:id="partnumber_column2" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
-                                                <TableColumn fx:id="lotnumber_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Lote" />
-                                                <TableColumn fx:id="process_column1" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Proceso" />
-                                                <TableColumn fx:id="ponumber_column1" minWidth="-Infinity" prefWidth="75.0" text="PO#" />
-                                                <TableColumn fx:id="linenumber_column1" minWidth="-Infinity" prefWidth="75.0" text="Line/Rel." />
-                                                <TableColumn fx:id="quantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cantidad" />
-                                                <TableColumn fx:id="boxquantity_column2" editable="false" minWidth="-Infinity" prefWidth="100.0" text="Cajas" />
-                                             </columns>
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </TableView>
-                                          <GridPane GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Button fx:id="pdf_button2" mnemonicParsing="false" text="Abrir en PDF">
-                                                   <GridPane.margin>
-                                                      <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                                   </GridPane.margin>
-                                                </Button>
-                                             </children>
-                                          </GridPane>
-                                          <Separator GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
-                                             <GridPane.margin>
-                                                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
-                                             </GridPane.margin>
-                                          </Separator>
-                                       </children>
-                                    </GridPane>
-                                 </content>
-                              </Tab>
                               <Tab text="Detalles Por Caja">
                                  <content>
                                     <GridPane>
@@ -199,7 +82,7 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <TableView fx:id="departlot_tableview3" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                                          <TableView fx:id="departlot_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                              <columns>
                                                 <TableColumn fx:id="partnumber_column3" editable="false" minWidth="-Infinity" prefWidth="150.0" text="Número de Parte" />
                                                 <TableColumn fx:id="partrevision_column" editable="false" minWidth="-Infinity" prefWidth="75.0" text="Rev" />

@@ -17,45 +17,40 @@ public interface MetalDAO {
     // Actions ------------------------------------------------------------------------------------
     
     /**
-     * Returns the Metal from the database matching the given ID, otherwise null.
-     * @param id The ID of the Metal to be returned.
-     * @return The Metal from the database matching the given ID, otherwise null.
-     * @throws DAOException If something fails at database level.
+     * Return Metal From ID.
+     * @param id
+     * @return Metal
+     * @throws DAOException
      */
     public Metal find(Integer id) throws DAOException;
     
     /**
-     * Returns a list of all Metal from the database ordered by Metal ID. The list is never null and
-     * is empty when the database does not contain any Metal.
-     * @return A list of all Metal from the database ordered by Metal ID.
-     * @throws DAOException If something fails at database level.
+     * Returns List.
+     * @return List(Of Metal)
+     * @throws DAOException
      */        
     public List<Metal> list() throws DAOException;
     
     /**
-     * Create the given Metal in the database.
-     * The Metal ID must not be null otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given Metal.
-     * @param metal The Metal to be created.
-     * @throws IllegalArgumentException If the Metal ID is not null.
-     * @throws DAOException If something fails at database level.
-     */    
+     * Create New Metal.
+     * @param metal
+     * @throws IllegalArgumentException
+     * @throws DAOException 
+     */
     public void create(Metal metal) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given Metal in the database. The Metal ID must not be null, 
-     * otherwise it will throw IllegalArgumentException.
-     * @param metal The Metal to be updated.
-     * @throws IllegalArgumentException If the Metal ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
+     * Update Metal.
+     * @param metal
+     * @throws IllegalArgumentException
+     * @throws DAOException
+     */      
     public void update(Metal metal) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given Metal from the database. After deleting, the DAO will set the ID of the given
-     * Metal to null.
-     * @param metal The Metal to be deleted from the database.
-     * @throws DAOException If something fails at database level.
+     * Disable Metal.
+     * @param metal
+     * @throws DAOException 
      */
     public void delete(Metal metal) throws DAOException;
 }

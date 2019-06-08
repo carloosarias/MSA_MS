@@ -21,18 +21,58 @@ import model.Tank;
  * @author Pavilion Mini
  */
 public class TankDAOJDBC implements TankDAO {
+    /*
+    DELIMITER //
+Use msadb //
+DROP PROCEDURE IF EXISTS getTank //
+CREATE PROCEDURE getTank(IN tank_id INT(32))
+BEGIN
+SELECT *
+FROM TANK
+WHERE TANK.ID = tank_id;
+END //
+DROP PROCEDURE IF EXISTS listTank //
+CREATE PROCEDURE listTank(IN tank_name VARCHAR(256), IN description VARCHAR(256))
+BEGIN
+SELECT *
+FROM TANK
+WHERE (TANK.tank_name LIKE concat(IFNULL(tank_name,''),'%'))
+AND (TANK.description LIKE concat(IFNULL(description,''),'%')) 
+AND TANK.active = 1
+ORDER BY TANK.id;
+END //
+DROP PROCEDURE IF EXISTS createTank //
+CREATE PROCEDURE createTank(IN tank_name VARCHAR(256), IN description VARCHAR(256), IN volume DOUBLE)
+BEGIN
+INSERT INTO TANK (TANK.tank_name, TANK.description, TANK.volume, TANK.active) VALUES(tank_name, description, volume, 1);
+END //
+DROP PROCEDURE IF EXISTS updateTank //
+CREATE PROCEDURE updateTank(IN tank_id INT(32), IN tank_name VARCHAR(256), IN description VARCHAR(256), IN volume DOUBLE)
+BEGIN
+UPDATE TANK 
+SET TANK.tank_name = tank_name, TANK.description = description, TANK.volume = volume
+WHERE TANK.id = tank_id;
+END //
+DROP PROCEDURE IF EXISTS disableTank //
+CREATE PROCEDURE disableTank(IN tank_id INT(32))
+BEGIN
+UPDATE TANK 
+SET TANK.active = 0
+WHERE TANK.id = tank_id;
+END //
+DELIMITER ;
+    */
     // Constants ----------------------------------------------------------------------------------
-    private static final String SQL_FIND_BY_ID = 
-            "SELECT id, tank_name, description, volume, active FROM TANK WHERE id = ?";
-    private static final String SQL_LIST_ACTIVE_ORDER_BY_ID = 
-            "SELECT id, tank_name, description, volume, active FROM TANK WHERE active = ? ORDER BY id";
-    private static final String SQL_INSERT =
-            "INSERT INTO TANK (tank_name, description, volume, active) "
-            + "VALUES (?,?,?,?)";
-    private static final String SQL_UPDATE = 
-            "UPDATE TANK SET tank_name = ?, description = ?, volume = ?, active = ? WHERE id = ?";
-    private static final String SQL_DELETE =
-            "DELETE FROM TANK WHERE id = ?";
+    private static final String SQL_getTank = 
+            "CALL getTank(?)";
+    private static final String SQL_listTank = 
+            "CALL listTank(?,?)";
+    private static final String SQL_createTank =
+            "CALL createTank(?,?,?)";
+    private static final String SQL_updateTank = 
+            "CALL updateTank(?,?,?,?)";
+    private static final String SQL_disableTank =
+            "CALL disableTank";
     // Vars ---------------------------------------------------------------------------------------
 
     private DAOFactory daoFactory;
@@ -52,7 +92,7 @@ public class TankDAOJDBC implements TankDAO {
 
     @Override
     public Tank find(Integer id) throws DAOException {
-        return find(SQL_FIND_BY_ID, id);
+        return find(SQL_getTank, id);
     }
     
     /**
@@ -81,16 +121,22 @@ public class TankDAOJDBC implements TankDAO {
     }
     
     @Override
-    public List<Tank> list(boolean active) throws DAOException {
+    public List<Tank> list() throws DAOException {
+        return search(null, null);
+    }
+    
+    @Override
+    public List<Tank> search(String tank_name, String description) throws DAOException {
         List<Tank> tank = new ArrayList<>();
         
         Object[] values = {
-            active
+            tank_name,
+            description
         };
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_LIST_ACTIVE_ORDER_BY_ID, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_listTank, false, values);
             ResultSet resultSet = statement.executeQuery();
         ){
             while(resultSet.next()){
@@ -119,7 +165,7 @@ public class TankDAOJDBC implements TankDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_INSERT, true, values);          
+            PreparedStatement statement = prepareStatement(connection, SQL_createTank, true, values);          
         ){
             int affectedRows = statement.executeUpdate();
             if (affectedRows == 0){
@@ -155,7 +201,7 @@ public class TankDAOJDBC implements TankDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_UPDATE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_updateTank, false, values);
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
@@ -174,13 +220,11 @@ public class TankDAOJDBC implements TankDAO {
         
         try(
             Connection connection = daoFactory.getConnection();
-            PreparedStatement statement = prepareStatement(connection, SQL_DELETE, false, values);
+            PreparedStatement statement = prepareStatement(connection, SQL_disableTank, false, values);
         ){
             int affectedRows = statement.executeUpdate();
             if(affectedRows == 0){
                 throw new DAOException("Deleting Tank failed, no rows affected.");
-            } else{
-                tank.setId(null);
             }
         } catch(SQLException e){
             throw new DAOException(e);

@@ -31,6 +31,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import model.DepartLot;
 import model.Module;
 import msa_ms.MainApp;
 
@@ -79,6 +80,8 @@ public class MainFX implements Initializable {
             put("Reporte de Actividades No Programado","/fxml/ActivityReportFX.fxml");
             put("Control de Equipo","/fxml/EquipmentFX.fxml");
             put("Control de Categorías","/fxml/EquipmentTypeFX.fxml");
+            put("Remisiónes (Legacy)", "/fxml/DepartReportFX.fxml");
+            put("Reporte de Rechazo", "/fxml/RejectReportFX.fxml");
         }};
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
@@ -89,11 +92,13 @@ public class MainFX implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        menu_listview.getItems().setAll(msabase.getModuleDAO().list(MainApp.current_employee));
-        menu_listview.getSelectionModel().selectFirst();
         
-        setTabs(menu_listview.getSelectionModel().getSelectedItem());
-        
+        List<Module> modules = msabase.getModuleDAO().list(MainApp.current_employee);
+        for(Module module : modules){
+                menu_listview.getItems().add(module);
+        }
+                        menu_listview.getSelectionModel().selectFirst();
+                setTabs(menu_listview.getSelectionModel().getSelectedItem());
         menu_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
             setTabs(newValue);
         });
@@ -127,12 +132,13 @@ public class MainFX implements Initializable {
                     break;
                 case "Reciba":
                     tabs.add(new Tab("Reporte de Reciba"));
-                    //tabs.add(new Tab("Reciba de Compras"));
+                    tabs.add(new Tab("Reciba de Compras"));
                     tabs.add(new Tab("Reporte de Remisión"));
+                    tabs.add(new Tab("Remisiónes (Legacy)"));
                     break;
                 case "Scrap":
                     tabs.add(new Tab("Reporte de Scrap"));
-                    //tabs.add(new Tab("Reporte de Rechazo"));
+                    tabs.add(new Tab("Reporte de Rechazo"));
                     break;
                 case "Facturación":
                     tabs.add(new Tab("Facturas"));

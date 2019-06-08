@@ -10,6 +10,7 @@ import com.itextpdf.forms.fields.PdfFormField;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import dao.DAOUtil;
 import dao.JDBC.DAOFactory;
 import java.io.File;
 import java.io.InputStream;
@@ -21,11 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import model.CompanyContact;
 import model.DepartLot;
 import model.DepartReport;
+import model.DepartReport_1;
 import msa_ms.MainApp;
+import static msa_ms.MainApp.getFormattedDate;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 
 /**
@@ -36,15 +48,98 @@ import org.apache.pdfbox.multipdf.PDFMergerUtility;
 public class DepartReportFX implements Initializable {
     
     private DAOFactory msabase = DAOFactory.getInstance("msabase.jdbc");
+    @FXML
+    private GridPane root_gridpane;
+    @FXML
+    private TableView<DepartReport> departreport_tableview;
+    @FXML
+    private TableColumn<DepartReport, String> reportid_column;
+    @FXML
+    private TableColumn<DepartReport, String> employee_column;
+    @FXML
+    private TableColumn<DepartReport, String> reportdate_column;
+    @FXML
+    private TableColumn<DepartReport, String> client_column;
+    @FXML
+    private TableColumn<DepartReport, String> address_column;
+    @FXML
+    private Tab details_tab;
+    @FXML
+    private TableView<DepartLot> departlot_tableview;
+    @FXML
+    private TableColumn<DepartLot, String> partnumber_column3;
+    @FXML
+    private TableColumn<DepartLot, String> partrevision_column;
+    @FXML
+    private TableColumn<DepartLot, String> lotnumber_column2;
+    @FXML
+    private TableColumn<DepartLot, String> process_column2;
+    @FXML
+    private TableColumn<DepartLot, String> ponumber_column2;
+    @FXML
+    private TableColumn<DepartLot, String> linenumber_column2;
+    @FXML
+    private TableColumn<DepartLot, String> quantity_column3;
+    @FXML
+    private TableColumn<DepartLot, String> boxquantity_column3;
+    @FXML
+    private TableColumn<DepartLot, String> comments_column;
+    @FXML
+    private Button pdf_button3;
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        setDepartReportTable();
+        setDepartLotTable();
+        updateDepartReportTable();
+        
+        departreport_tableview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends DepartReport> observable, DepartReport oldValue, DepartReport newValue) -> {
+            updateDepartLotTable();
+        });
+        details_tab.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        pdf_button3.disableProperty().bind(departreport_tableview.getSelectionModel().selectedItemProperty().isNull());
+        
+        pdf_button3.setOnAction((ActionEvent) -> {
+            buildPDF(departlot_tableview.getItems());
+        });
     }
-/*
+    
+    public void setDepartReportTable(){
+        reportid_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getId()+""));
+        employee_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getEmployee()+""));
+        reportdate_column.setCellValueFactory(c -> new SimpleStringProperty(getFormattedDate(DAOUtil.toLocalDate(c.getValue().getReport_date()))));
+        client_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCompany().getName()+""));
+        address_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCompany_address().getAddress()+""));
+    }
+
+    public void updateDepartLotTable(){
+        try{
+            departlot_tableview.getItems().setAll(msabase.getDepartLotDAO().list(departreport_tableview.getSelectionModel().getSelectedItem()));
+        }catch(Exception e){
+            departlot_tableview.getItems().clear();
+        }
+            
+    }
+    
+    public void setDepartLotTable(){
+       partnumber_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getProduct_part().getPart_number()+""));
+       partrevision_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPart_revision().getRev()+""));
+       lotnumber_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLot_number()+""));
+       process_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getProcess()+""));
+       ponumber_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getPo_number()+""));
+       linenumber_column2.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getLine_number()+""));
+       quantity_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getQuantity()+""));
+       boxquantity_column3.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getBox_quantity()+""));
+       comments_column.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getComments()+""));
+    }
+    
+    public void updateDepartReportTable(){
+        departreport_tableview.getItems().setAll(msabase.getDepartReportDAO().list());
+    }
+    
     public void buildPDF(List<DepartLot> departlot_list){
             try{
                 Path output = Files.createTempFile("RemisionPDF", ".pdf");
@@ -140,5 +235,5 @@ public class DepartReportFX implements Initializable {
             pdf.close();
             
             return output.toFile();
-    }*/
+    }
 }

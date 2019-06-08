@@ -17,46 +17,51 @@ public interface SpecificationDAO {
     // Actions ------------------------------------------------------------------------------------
     
     /**
-     * Returns the Specification from the database matching the given ID, otherwise null.
-     * @param id The ID of the Specification to be returned.
-     * @return The Specification from the database matching the given ID, otherwise null.
-     * @throws DAOException If something fails at database level.
+     * Returns Specification from ID.
+     * @param id
+     * @return Specification
+     * @throws DAOException
      */
     public Specification find(Integer id) throws DAOException;
     
     /**
-     * Returns a list of all Specification from the database ordered by Specification ID. The list is never null and
-     * is empty when the database does not contain any Specification.
-     * @return A list of all Specification from the database ordered by Specification ID.
-     * @throws DAOException If something fails at database level.
-     */        
+     * Returns List.
+     * @return List(Of Specification)
+     * @throws DAOException
+     */         
     public List<Specification> list() throws DAOException;
-    public List<Specification> list(String specification_number, String specification_name, String process) throws DAOException;
     
     /**
-     * Create the given Specification in the database.
-     * The Specification ID must not be null otherwise it will throw IllegalArgumentException.
-     * After creating, the DAO will set the obtained ID in the given Specification.
-     * @param specification The Specification to be created.
-     * @throws IllegalArgumentException If the Specification ID is not null.
-     * @throws DAOException If something fails at database level.
+     * Returns List that match search parameters
+     * @param specification_number
+     * @param specification_name
+     * @param process
+     * @return List(Of Specification)
+     * @throws IllegalArgumentException
+     * @throws DAOException
      */    
+    public List<Specification> search(String specification_number, String specification_name, String process) throws DAOException;
+    
+    /**
+     * Create New Specification.
+     * @param specification
+     * @throws IllegalArgumentException
+     * @throws DAOException 
+     */
     public void create(Specification specification) throws IllegalArgumentException, DAOException;
     
     /**
-     * Update the given Specification in the database. The Specification ID must not be null, 
-     * otherwise it will throw IllegalArgumentException.
-     * @param specification The Specification to be updated.
-     * @throws IllegalArgumentException If the Specification ID is null.
-     * @throws DAOException If something fails at database level.
-     */    
+     * Update Specification.
+     * @param specification
+     * @throws IllegalArgumentException
+     * @throws DAOException
+     */      
     public void update(Specification specification) throws IllegalArgumentException, DAOException;
     
     /**
-     * Delete the given Specification from the database. After deleting, the DAO will set the ID of the given
-     * Specification to null.
-     * @param specification The Specification to be deleted from the database.
-     * @throws DAOException If something fails at database level.
+     * Disable Specification.
+     * @param specification
+     * @throws DAOException 
      */
     public void delete(Specification specification) throws DAOException;
 }
