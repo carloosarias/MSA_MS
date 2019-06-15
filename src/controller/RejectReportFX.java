@@ -29,13 +29,25 @@ public class RejectReportFX implements Initializable {
     @FXML
     private Button delete_button;
     @FXML
-    private TableView<?> scrapreport_tableview;
+    private TableView<?> rejectreport_tableview;
     @FXML
     private TableColumn<?, ?> date_column;
     @FXML
     private TableColumn<?, ?> employee_column;
     @FXML
-    private TableColumn<?, ?> qtyscrap_column;
+    private TableColumn<?, ?> departid_column;
+    @FXML
+    private TableColumn<?, ?> partnumber_column;
+    @FXML
+    private TableColumn<?, ?> lot_column;
+    @FXML
+    private TableColumn<?, ?> po_column;
+    @FXML
+    private TableColumn<?, ?> line_column;
+    @FXML
+    private TableColumn<?, ?> packing_column;
+    @FXML
+    private TableColumn<?, ?> qtyreject_column;
     @FXML
     private TableColumn<?, ?> comments_column;
     @FXML
@@ -73,11 +85,11 @@ public class RejectReportFX implements Initializable {
     @FXML
     private TextField rev_field2;
     @FXML
-    private ComboBox<?> incomingreport_combo2;
+    private ComboBox<?> departlot_combo2;
     @FXML
     private Button save_button2;
     @FXML
-    private TextField qtyscrap_field2;
+    private TextField qtysreject_field2;
     @FXML
     private DatePicker start_datepicker2;
     @FXML
@@ -86,7 +98,6 @@ public class RejectReportFX implements Initializable {
     private ComboBox<?> company_combo2;
     @FXML
     private TextField id_field2;
-
     /**
      * Initializes the controller class.
      */

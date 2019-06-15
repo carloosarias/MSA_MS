@@ -150,9 +150,9 @@ public class AddInvoiceItemFX implements Initializable {
         ArrayList<DepartLot> mergedList = new ArrayList();
         /*
         for(DepartLot depart_lot : unfilteredList){
-            if(departreport_id.contains(depart_lot.getDepartreport_id()) && partnumber.contains(depart_lot.getPart_number()) && part_revision.contains(depart_lot.getPart_revision())){
+            if(departreport_id.contains(depart_lot.getDepart_report().getId()) && partnumber.contains(depart_lot.getPart_revision().getProduct_part().getPart_number()) && part_revision.contains(depart_lot.getPart_revision().getRev())){
                 for(DepartLot listitem : mergedList){
-                    if(depart_lot.getDepartreport_id().equals(listitem.getDepartreport_id()) && depart_lot.getPart_number().equals(listitem.getPart_number()) && depart_lot.getPart_revision().equals(listitem.getPart_revision())){
+                    if(depart_lot.getDepart_report().getId().equals(listitem.getDepart_report().getId()) && depart_lot.getPart_revision().getProduct_part().getPart_number().equals(listitem.getPart_revision().getProduct_part().getPart_number()) && depart_lot.getPart_revision().equals(listitem.getPart_revision())){
                         mergedList.get(mergedList.indexOf(listitem)).setQuantity(mergedList.get(mergedList.indexOf(listitem)).getQuantity() + depart_lot.getQuantity());
                         mergedList.get(mergedList.indexOf(listitem)).setBox_quantity(mergedList.get(mergedList.indexOf(listitem)).getBox_quantity() + depart_lot.getBox_quantity());
                         break;
@@ -160,21 +160,20 @@ public class AddInvoiceItemFX implements Initializable {
                 }
             }
             else{
-                departreport_id.add(depart_lot.getDepartreport_id());
-                partnumber.add(depart_lot.getPart_number());
-                part_revision.add(depart_lot.getPart_revision());
+                departreport_id.add(depart_lot.getDepart_report().getId());
+                partnumber.add(depart_lot.getPart_revision().getProduct_part().getPart_number());
+                part_revision.add(depart_lot.getPart_revision().getRev());
                 
                 DepartLot item = new DepartLot();
-                item.setPartrevision_id(depart_lot.getPartrevision_id());
-                item.setDepartreport_id(depart_lot.getDepartreport_id());
-                item.setPart_number(depart_lot.getPart_number());
+                item.setPart_revision(depart_lot.getPart_revision());
+                item.setDepart_report(depart_lot.getDepart_report());
+                //item.setPart_revision(depart_lot.getPart_revision());
                 item.setPart_revision(depart_lot.getPart_revision());
                 item.setQuantity(depart_lot.getQuantity());
                 item.setBox_quantity(depart_lot.getBox_quantity());
                 mergedList.add(item);
             }
-        }
-        */
+        }*/
         return mergedList;
     }
 }

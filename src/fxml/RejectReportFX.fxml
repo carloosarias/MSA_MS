@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RejectReportFX">
+<GridPane fx:id="root_gridpane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RejectReportFX">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" />
    </columnConstraints>
@@ -39,17 +39,17 @@
             </Button>
          </children>
       </GridPane>
-      <TableView fx:id="scrapreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+      <TableView fx:id="rejectreport_tableview" editable="true" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
          <columns>
             <TableColumn fx:id="date_column" minWidth="-Infinity" prefWidth="100.0" text="Fecha" />
             <TableColumn fx:id="employee_column" minWidth="-Infinity" prefWidth="120.0" text="Empleado" />
-            <TableColumn prefWidth="75.0" text="Remisión#" />
-            <TableColumn prefWidth="75.0" text="Núm de Parte" />
-            <TableColumn prefWidth="75.0" text="Núm de Lote" />
-            <TableColumn prefWidth="75.0" text="PO#" />
-            <TableColumn prefWidth="75.0" text="Line/Rel" />
-            <TableColumn prefWidth="75.0" text="Packing#" />
-            <TableColumn fx:id="qtyscrap_column" minWidth="-Infinity" prefWidth="100.0" text="Qty. Rechazo" />
+            <TableColumn fx:id="departid_column" minWidth="-Infinity" prefWidth="75.0" text="Remisión#" />
+            <TableColumn fx:id="partnumber_column" minWidth="-Infinity" prefWidth="100.0" text="Núm de Parte" />
+            <TableColumn fx:id="lot_column" minWidth="-Infinity" prefWidth="100.0" text="Núm de Lote" />
+            <TableColumn fx:id="po_column" minWidth="-Infinity" prefWidth="75.0" text="PO#" />
+            <TableColumn fx:id="line_column" minWidth="-Infinity" prefWidth="75.0" text="Line/Rel" />
+            <TableColumn fx:id="packing_column" minWidth="-Infinity" prefWidth="75.0" text="Packing#" />
+            <TableColumn fx:id="qtyreject_column" minWidth="-Infinity" prefWidth="100.0" text="Qty. Rechazo" />
             <TableColumn fx:id="comments_column" minWidth="-Infinity" prefWidth="250.0" text="Comentarios" />
          </columns>
          <GridPane.margin>
@@ -256,7 +256,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ComboBox fx:id="incomingreport_combo2" disable="true" prefWidth="350.0" promptText="Registro de Remisión">
+                              <ComboBox fx:id="departlot_combo2" disable="true" prefWidth="350.0" promptText="Registro de Remisión">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
@@ -266,7 +266,7 @@
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>
                               </Button>
-                              <TextField fx:id="qtyscrap_field2" disable="true" promptText="Cantidad" GridPane.columnIndex="1">
+                              <TextField fx:id="qtysreject_field2" disable="true" promptText="Cantidad" GridPane.columnIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                                  </GridPane.margin>

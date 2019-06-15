@@ -97,8 +97,8 @@ public class MainFX implements Initializable {
         for(Module module : modules){
                 menu_listview.getItems().add(module);
         }
-                        menu_listview.getSelectionModel().selectFirst();
-                setTabs(menu_listview.getSelectionModel().getSelectedItem());
+        menu_listview.getSelectionModel().selectFirst();
+        setTabs(menu_listview.getSelectionModel().getSelectedItem());
         menu_listview.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Module> observable, Module oldValue, Module newValue) -> {
             setTabs(newValue);
         });
